@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+     <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/cairo_bold"
+        android:gravity="center"
+        android:text="@string/fragment_shooping_add_address_text1"
+        android:textColor="#707070"
+        android:textSize="14sp" />
+
+     <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="71dp"
+        android:fontFamily="@font/cairo_bold"
+        android:gravity="center"
+        android:text="@string/fragment_shooping_add_address_text0"
+        android:textColor="#707070"
+        android:textSize="12sp" />
+
+     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/fragment_shooping_add_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#047AC0"
+        android:fontFamily="@font/cairo_bold"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="@string/fragment_shooping_add_address_text"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "111490685260",
+    "firebase_url": "https://eldalel.firebaseio.com",
+    "project_id": "eldalel",
+    "storage_bucket": "eldalel.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:111490685260:android:10927111076d4efa",
+        "android_client_info": {
+          "package_name": "com.zeidex.eldalel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "111490685260-id8r06ddrjc1cs15gum69k46av29m8mm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zeidex.eldalel",
+            "certificate_hash": "af11e5aa9cd8b2ba12b6bcf0e0589cf501b2b8dd"
+          }
+        },
+        {
+          "client_id": "111490685260-rssuvrb008oh7j6651g0vmkgsink8ho2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsr8kNLqn82kxUFbl4ypcpYPi6OhqXCr0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "111490685260-rssuvrb008oh7j6651g0vmkgsink8ho2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

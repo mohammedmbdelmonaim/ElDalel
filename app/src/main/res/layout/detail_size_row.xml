@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="88dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="5dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:layout_marginEnd="12dp"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="5dp">
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/detail_size_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@drawable/row_detail_change_color"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+            android:id="@+id/detail_size_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="64"
+            android:textColor="#41A8E5"
+            android:textSize="12sp"
+            android:fontFamily="@font/cairo_bold"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:visibility="gone"
+            android:textSize="12sp"
+            android:textColor="#41A8E5"
+            android:layout_gravity="center"
+            android:text="غيغابايت"
+            android:fontFamily="@font/cairo_bold"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FFFFFF"
+    android:paddingBottom="20dp"
+    android:layout_marginBottom="8dp"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/order_element_img"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/harddisk"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        android:id="@+id/order_element_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="زندور"
+        android:textColor="#AAAAAA"
+        android:layout_marginStart="12dp"
+        android:textSize="10sp"
+        android:fontFamily="@font/cairo_bold"
+        app:layout_constraintStart_toEndOf="@id/order_element_img"
+        app:layout_constraintTop_toTopOf="@id/order_element_img"/>
+
+    <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        android:id="@+id/order_element_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="شاحن بنك طاقة متنقل مدخل تايب سى"
+        android:textColor="#232222"
+        android:textSize="12sp"
+        android:fontFamily="@font/cairo_bold"
+        app:layout_constraintStart_toStartOf="@+id/order_element_name"
+        app:layout_constraintTop_toBottomOf="@+id/order_element_name"/>
+
+    <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        android:id="@+id/order_element_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/cairo_bold"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:text="177.45"
+        android:textColor="#232222"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/order_element_desc"
+        app:layout_constraintTop_toBottomOf="@+id/order_element_desc" />
+
+    <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        android:id="@+id/order_element_currency_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:fontFamily="@font/cairo_bold"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:text="@string/currancy_label"
+        android:textColor="#232222"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/order_element_price"
+        app:layout_constraintStart_toEndOf="@+id/order_element_price"
+        app:layout_constraintTop_toTopOf="@+id/order_element_price" />
+
+    <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        android:id="@+id/order_element_currency_price_before"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:fontFamily="@font/cairo_bold"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:text="190.00"
+        android:textColor="#AAAAAA"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/order_element_currency_price"
+        app:layout_constraintTop_toTopOf="@+id/order_element_currency_price" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0.8dp"
+        android:background="#AAAAAA"
+        app:layout_constraintBottom_toBottomOf="@+id/order_element_currency_price_before"
+        app:layout_constraintEnd_toEndOf="@+id/order_element_currency_price_before"
+        app:layout_constraintStart_toStartOf="@+id/order_element_currency_price_before"
+        app:layout_constraintTop_toTopOf="@+id/order_element_currency_price_before" />
+
+    <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        android:id="@+id/order_element_currency_before_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:fontFamily="@font/cairo_bold"
+        android:text="@string/currancy_label"
+        android:textColor="#AAAAAA"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/order_element_currency_price_before"
+        app:layout_constraintStart_toEndOf="@+id/order_element_currency_price_before"
+        app:layout_constraintTop_toTopOf="@+id/order_element_currency_price_before" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0.8dp"
+        android:layout_marginTop="1dp"
+        android:background="#AAAAAA"
+        app:layout_constraintBottom_toBottomOf="@+id/order_element_currency_before_label"
+        app:layout_constraintEnd_toEndOf="@+id/order_element_currency_before_label"
+        app:layout_constraintStart_toStartOf="@+id/order_element_currency_before_label"
+        app:layout_constraintTop_toTopOf="@+id/order_element_currency_before_label" />
+
+    <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        android:id="@+id/order_element_currency_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:textSize="12sp"
+        android:textColor="#606060"
+        android:text="العدد"
+        android:fontFamily="@font/cairo_bold"
+        app:layout_constraintTop_toBottomOf="@+id/order_element_price"
+        app:layout_constraintStart_toStartOf="@+id/order_element_price"/>
+
+    <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        android:id="@+id/order_element_currency_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="#606060"
+        android:layout_marginStart="10dp"
+        android:text="2"
+        android:fontFamily="@font/cairo_bold"
+        app:layout_constraintTop_toTopOf="@+id/order_element_currency_arrow"
+        app:layout_constraintBottom_toBottomOf="@+id/order_element_currency_arrow"
+        app:layout_constraintStart_toEndOf="@+id/order_element_currency_arrow"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

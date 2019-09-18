@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:paddingBottom="20dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/activity_elements_orders_header_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#219FE9"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/item_elements_orders_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="20dp"
+            app:srcCompat="@drawable/ic_arrow_back" />
+
+         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+            android:id="@+id/activity_elements_orders_header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginStart="22dp"
+            android:layout_weight="1"
+
+            android:fontFamily="@font/cairo_bold"
+            android:gravity="center_vertical|start"
+            android:text="@string/activity_elements_orders_header_text"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FAFAFA">
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/elements_order_info_linear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                     <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/elements_order_number_order_text"
+                        android:textColor="#606060"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/cairo_bold"/>
+                     <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                        android:id="@+id/elements_order_number_order_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="546987456321"
+                        android:textColor="#AAAAAA"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/cairo_bold"/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                     <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/elements_order_date_text"
+                        android:textColor="#606060"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/cairo_bold"/>
+                     <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                        android:id="@+id/elements_order_date_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="18/6/2019"
+                        android:textColor="#AAAAAA"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/cairo_bold"/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                     <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/elements_order_state_text"
+                        android:textColor="#606060"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/cairo_bold"/>
+                     <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                        android:id="@+id/elements_order_state_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="تم التوصيل"
+                        android:textColor="#047AC0"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/cairo_bold"/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/activity_elemetnts_orders_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/elements_order_info_linear"></androidx.recyclerview.widget.RecyclerView>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/activity_elemetnts_orders_total_price_products_linear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/activity_elemetnts_orders_recycler">
+
+                 <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="6dp"
+
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="@string/fragment_basket_total_price_products_label"
+                    android:textColor="#606060"
+                    android:textSize="12sp" />
+
+                 <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                    android:id="@+id/activity_elemetnts_orders_total_price_products_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="360.00"
+                    android:layout_marginEnd="10dp"
+                    android:textColor="#606060"
+                    android:textSize="12sp" />
+
+                 <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="@string/currancy_label"
+                    android:textColor="#606060"
+                    android:textSize="12sp" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <View
+                android:id="@+id/activity_elemetnts_orders_total_price_products_view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E8E8E8"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/activity_elemetnts_orders_total_price_products_linear"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/activity_elemetnts_orders_total_shipments_linear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/activity_elemetnts_orders_total_price_products_view">
+
+                 <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="6dp"
+                    android:fontFamily="@font/cairo_regular"
+
+                    android:text="@string/fragment_basket_total_shipments_label"
+                    android:textColor="#606060"
+                    android:textSize="12sp" />
+
+                 <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                    android:id="@+id/activity_elemetnts_orders_total_shipments_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="0"
+                    android:layout_marginEnd="40dp"
+                    android:textColor="#606060"
+                    android:textSize="12sp" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <View
+                android:id="@+id/activity_elemetnts_orders_total_shipments_view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E8E8E8"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/activity_elemetnts_orders_total_shipments_linear"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/activity_elemetnts_orders_tax_linear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/activity_elemetnts_orders_total_shipments_view">
+
+                 <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="6dp"
+                    android:fontFamily="@font/cairo_regular"
+
+                    android:text="@string/fragment_basket_tax_label"
+                    android:textColor="#606060"
+                    android:textSize="12sp" />
+
+                 <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                    android:id="@+id/activity_elemetnts_orders_tax_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="0"
+                    android:layout_marginEnd="40dp"
+                    android:textColor="#606060"
+                    android:textSize="12sp" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <View
+                android:id="@+id/activity_elemetnts_orders_tax_view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E8E8E8"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/activity_elemetnts_orders_tax_linear"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/activity_elemetnts_orders_total_price_linear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/activity_elemetnts_orders_tax_view">
+
+                 <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="6dp"
+
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/fragment_basket_total_price_label"
+                    android:textColor="#606060"
+                    android:textSize="12sp" />
+
+                 <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                    android:id="@+id/activity_elemetnts_orders_total_price_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="360.00"
+                    android:layout_marginEnd="30dp"
+                    android:textColor="#606060"
+                    android:textSize="12sp" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

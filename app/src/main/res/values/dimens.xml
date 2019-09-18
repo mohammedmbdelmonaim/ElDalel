@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="mrginend_splash_label1">41dp</dimen>
+    <dimen name="size_splash_label1">10sp</dimen>
+    <dimen name="mrginend_splash_label2">10dp</dimen>
+    <dimen name="sp16">16sp</dimen>
+    <dimen name="sp14">14sp</dimen>
+    <dimen name="dp1">1dp</dimen>
+    <dimen name="dp14">14dp</dimen>
+    <dimen name="slider_offer_name_size">18sp</dimen>
+    <dimen name="slider_home_offer_price_size">14sp</dimen>
+    <dimen name="slider_home_old_price_size">12sp</dimen>
+    <dimen name="no_products_to_show_text_size">18sp</dimen>
+</resources>

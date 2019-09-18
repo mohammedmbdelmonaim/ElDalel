@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FAFAFA">
+
+    <LinearLayout
+        android:id="@+id/linear_header_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#219FE9"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/item_fragment_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_arrow_back"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="20dp"/>
+
+         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+            android:id="@+id/title_header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginStart="22dp"
+            android:layout_weight="1"
+
+            android:fontFamily="@font/cairo_bold"
+            android:gravity="center_vertical|start"
+            android:text="بطاريات متنقله"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_header_categories_img"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content"
+            style="@style/SearchViewStyle"
+            android:textAlignment="center"
+            android:iconifiedByDefault="false"
+            android:queryHint="@string/search_here"/>
+    </LinearLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vpPager_item"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear_header_item">
+
+        <!--<androidx.viewpager.widget.PagerTabStrip-->
+        <!--android:id="@+id/pager_header"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="#FFFFFF"-->
+        <!--android:layout_gravity="top"-->
+        <!--android:paddingBottom="10dp"-->
+        <!--android:paddingTop="18dp" />-->
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/view_pager_tab_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:background="#FFFFFF"
+            android:elevation="4dp"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="#219FE9"
+            app:tabMaxWidth="0dp"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="#219FE9"
+            app:tabTextColor="#606060" />
+    </androidx.viewpager.widget.ViewPager>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

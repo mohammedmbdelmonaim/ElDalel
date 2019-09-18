@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="20dp">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/offers_header_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#219FE9"
+        android:orientation="horizontal">
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/offer_item_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="20dp"
+            app:srcCompat="@drawable/ic_arrow_back" />
+
+         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+            android:id="@+id/offer_item_header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginStart="22dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/cairo_bold"
+            android:gravity="center_vertical|start"
+            android:text="إكسسوارات الجوالات"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/offer_item_search"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content"
+            style="@style/SearchViewStyle"
+            android:textAlignment="center"
+            android:iconifiedByDefault="false"
+            android:queryHint="@string/search_here"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FAFAFA">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/offer_item_recycler_categories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:background="#FFFFFF"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+            android:id="@+id/offer_category_text_label_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="11dp"
+            android:fontFamily="@font/cairo_bold"
+            android:text="205"
+            android:textColor="#606060"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/offer_item_recycler_categories" />
+
+         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+            android:id="@+id/offer_category_text_label_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="11dp"
+            android:fontFamily="@font/cairo_bold"
+            android:text="@string/category_text_label_text"
+            android:textColor="#606060"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/offer_category_text_label_count"
+            app:layout_constraintTop_toBottomOf="@+id/offer_item_recycler_categories" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/offer_descendant_items_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            app:srcCompat="@drawable/ic_descendant"
+            android:layout_marginTop="11dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/offer_item_recycler_categories"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/offer_search_items_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_filter"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="11dp"
+            app:layout_constraintEnd_toStartOf="@+id/offer_descendant_items_category"
+            app:layout_constraintTop_toBottomOf="@+id/offer_item_recycler_categories"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/offer_category_item_recycler_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="22dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/offer_category_text_label_text"></androidx.recyclerview.widget.RecyclerView>
+
+        <RelativeLayout
+            android:id="@+id/offer_no_items_layout"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="22dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/offer_category_text_label_text">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="@dimen/no_products_to_show_text_size"
+                android:fontFamily="@font/cairo_regular"
+                android:textColor="@color/colorPrimary"
+                android:text="@string/no_items_text"/>
+        </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

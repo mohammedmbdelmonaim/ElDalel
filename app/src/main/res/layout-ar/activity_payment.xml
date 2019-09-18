@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FAFAFA"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/activity_profile_header_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#219FE9"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/item_activity_payment_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="20dp"
+            app:srcCompat="@drawable/ic_arrow_back" />
+
+         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+            android:id="@+id/activity_profile_header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginStart="22dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/cairo_bold"
+            android:gravity="center_vertical|start"
+            android:text="الدفع"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/activity_payment_steps_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.shuhart.stepview.StepView
+            android:id="@+id/step_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            app:sv_animationType="Line"
+            app:sv_doneCircleColor="#41A8E5"
+            app:sv_doneCircleRadius="12dp"
+            app:sv_doneStepLineColor="#E8E8E8"
+            app:sv_doneStepMarkColor="#FFFFFF"
+            app:sv_nextStepCircleEnabled="true"
+            app:sv_nextStepLineColor="#E8E8E8"
+            app:sv_nextTextColor="#707070"
+            app:sv_selectedCircleColor="#FFFFFF"
+            app:sv_selectedCircleRadius="12dp"
+            app:sv_selectedStepNumberColor="#000"
+            app:sv_doneTextColor="#707070"
+            app:sv_selectedTextColor="#41A8E5"
+            app:sv_stepLineWidth="1dp"
+            app:sv_stepNumberTextSize="12sp"
+            app:sv_stepPadding="4dp"
+            app:sv_textSize="12sp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/payment_constrant"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</androidx.appcompat.widget.LinearLayoutCompat>

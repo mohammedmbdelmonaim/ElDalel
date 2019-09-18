@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="160dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="12dp"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/phone_image_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="10dp"
+            android:button="@drawable/state_of_like_checkbox"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/phone_img_url"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/harddisk"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/phone_image_like"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/discount_linear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/row_dicount_bg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/phone_image_like" >
+
+         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+            android:id="@+id/discount_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/cairo_bold"
+            android:text="@string/discount_phone_txt"
+            android:textSize="10sp"/>
+
+             <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                android:id="@+id/discount_result"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cairo_bold"
+                android:text="10"
+                android:textSize="10sp"/>
+
+             <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cairo_bold"
+                android:text="%"
+                android:textSize="10sp"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+            android:id="@+id/phone_text_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/cairo_bold"
+            android:text="زندور"
+            android:textColor="#AAAAAA"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/phone_image_like"
+            app:layout_constraintTop_toBottomOf="@+id/phone_img_url" />
+
+         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+            android:id="@+id/phone_text_name"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:fontFamily="@font/cairo_bold"
+            android:text="شاحن بنك طاقة متنقل مدخل تايب سى"
+            android:textColor="#232222"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/phone_image_like"
+            app:layout_constraintTop_toBottomOf="@+id/phone_text_type" />
+
+         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+            android:id="@+id/phone_text_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/cairo_bold"
+            android:maxLength="9"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:text="177.45"
+            android:textColor="#232222"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/phone_image_like"
+            app:layout_constraintTop_toBottomOf="@+id/phone_text_name" />
+
+         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:fontFamily="@font/cairo_bold"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:text="@string/currancy_label"
+            android:textColor="#232222"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/phone_text_price"
+            app:layout_constraintStart_toEndOf="@+id/phone_text_price"
+            app:layout_constraintTop_toTopOf="@+id/phone_text_price" />
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/phone_text_price_before_linear"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="@+id/phone_text_price"
+            app:layout_constraintTop_toBottomOf="@+id/phone_text_price">
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="7dp">
+                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/phone_text_price_before"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    android:gravity="center"
+                    android:layout_marginStart="3dp"
+                    android:fontFamily="@font/cairo_bold"
+                    android:paddingTop="2dp"
+                    android:text="1000"
+                    android:paddingBottom="2dp"
+                    android:textColor="#AAAAAA"
+                    android:textSize="10sp" />
+
+                <View
+                    android:id="@+id/phone_text_price_before_view"
+                    android:layout_width="20dp"
+                    android:layout_gravity="center"
+                    android:layout_height="0.8dp"
+                    android:visibility="visible"
+                    android:background="#AAAAAA" />
+            </FrameLayout>
+
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="3dp">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/phone_text_price_before_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_marginStart="3dp"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/currancy_label"
+                    android:visibility="visible"
+                    android:textColor="#AAAAAA"
+                    android:textSize="10sp" />
+
+                <View
+                    android:id="@+id/phone_text_price_before_label_view"
+                    android:layout_width="20dp"
+                    android:layout_height="0.8dp"
+                    android:visibility="visible"
+
+                    android:layout_gravity="center"
+                    android:background="#AAAAAA" />
+            </FrameLayout>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/phone_row_add_to_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/row_add_to_car_bg"
+            android:fontFamily="@font/cairo_regular"
+            android:gravity="center"
+            android:text="@string/phone_row_add_to_card_txt"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/phone_text_price_before_linear" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

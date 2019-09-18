@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/address_row_constraint"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="25dp"
+    android:paddingStart="16dp"
+    android:paddingTop="25dp"
+    android:background="#FFFFFF"
+    android:paddingEnd="16dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/maps_payment_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_maps_payment"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/unchecked_payment_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_unchecked_payment"
+        app:layout_constraintTop_toTopOf="@+id/maps_payment_img"
+        app:layout_constraintBottom_toBottomOf="@id/maps_payment_img"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        android:id="@+id/name_payment_addresses_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#AAAAAA"
+        android:text="الإسم : "
+        android:layout_marginStart="11dp"
+        android:textSize="12sp"
+        android:fontFamily="@font/cairo_bold"
+        app:layout_constraintStart_toEndOf="@id/maps_payment_img"
+        app:layout_constraintTop_toTopOf="@id/maps_payment_img"
+        app:layout_constraintBottom_toBottomOf="@id/maps_payment_img"/>
+
+    <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        android:id="@+id/name_payment_addresses_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#AAAAAA"
+        android:text="محمد عبد المنعم محمد"
+        android:layout_marginStart="11dp"
+        android:textSize="12sp"
+        android:fontFamily="@font/cairo_bold"
+        app:layout_constraintStart_toEndOf="@id/name_payment_addresses_text"
+        app:layout_constraintTop_toTopOf="@id/maps_payment_img"
+        app:layout_constraintBottom_toBottomOf="@id/maps_payment_img"/>
+
+    <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        android:id="@+id/address_payment_addresses_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#AAAAAA"
+        android:text="العنوان : "
+        android:layout_marginStart="11dp"
+        android:textSize="12sp"
+        android:fontFamily="@font/cairo_bold"
+        app:layout_constraintStart_toEndOf="@id/maps_payment_img"
+        app:layout_constraintTop_toBottomOf="@+id/name_payment_addresses_text"/>
+
+    <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        android:id="@+id/address_payment_addresses_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#AAAAAA"
+        android:text="14 شارع غرناطة - الدمام"
+        android:layout_marginStart="11dp"
+        android:textSize="12sp"
+        android:fontFamily="@font/cairo_bold"
+        app:layout_constraintStart_toEndOf="@id/address_payment_addresses_text"
+        app:layout_constraintTop_toBottomOf="@+id/name_payment_addresses_text"/>
+
+    <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        android:id="@+id/mobile_payment_addresses_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#AAAAAA"
+        android:text="رقم الجوال : "
+        android:layout_marginStart="11dp"
+        android:textSize="12sp"
+        android:fontFamily="@font/cairo_bold"
+        app:layout_constraintStart_toEndOf="@id/maps_payment_img"
+        app:layout_constraintTop_toBottomOf="@+id/address_payment_addresses_textView"/>
+
+    <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        android:id="@+id/mobile_payment_addresses_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#AAAAAA"
+        android:text="+966-59-5390323"
+        android:layout_marginStart="11dp"
+        android:textSize="12sp"
+        android:fontFamily="@font/cairo_bold"
+        app:layout_constraintStart_toEndOf="@id/mobile_payment_addresses_text"
+        app:layout_constraintTop_toBottomOf="@+id/address_payment_addresses_textView"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/delete_payment_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_delete_payment"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/edit_payment_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="17dp"
+        app:srcCompat="@drawable/ic_edit_payment"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/delete_payment_img"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

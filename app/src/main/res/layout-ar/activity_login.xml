@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:fillViewport="true">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash"
+    tools:context=".LoginActivity">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/login_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="67dp"
+        android:src="@drawable/logologo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+     <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        android:id="@+id/login_text_welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_text_welcome"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:fontFamily="@font/cairo_bold"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_logo" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/login_mail_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
+        android:background="@drawable/fragment_basket_edittext_bg"
+        android:elevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_text_welcome">
+
+     <androidx.appcompat.widget.AppCompatEditText android:textAlignment="viewStart"
+        android:id="@+id/login_mail_edittext"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:paddingStart="15dp"
+
+        android:inputType="textEmailAddress"
+        android:drawableStart="@drawable/ic_mail"
+        android:drawablePadding="10dp"
+        android:fontFamily="@font/cairo_regular"
+        android:hint="@string/login_mail_edittext"
+        android:textColor="#AAAAAA"
+        android:textColorHint="#AAAAAA"
+        android:textSize="15sp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/login_pass_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
+        android:background="@drawable/fragment_basket_edittext_bg"
+        android:elevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_mail_linear">
+
+         <androidx.appcompat.widget.AppCompatEditText android:textAlignment="viewStart"
+            android:id="@+id/login_pass_edittext"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+
+            android:background="@null"
+            android:paddingStart="15dp"
+            android:inputType="textPassword"
+            android:drawableStart="@drawable/ic_unlocked"
+            android:drawablePadding="10dp"
+            android:fontFamily="@font/cairo_regular"
+            android:hint="@string/login_pass_edittext"
+            android:textColor="#AAAAAA"
+            android:textColorHint="#AAAAAA"
+            android:textSize="15sp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/login_remember_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/cairo_bold"
+        android:textSize="12sp"
+        android:buttonTint="#FFFFFF"
+        android:text="تذكرنى"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_pass_linear"/>
+
+     <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        android:id="@+id/login_text_forget_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/login_text_forget_pass"
+        android:textColor="#FFFFFF"
+        android:layout_marginEnd="16dp"
+        android:textSize="12sp"
+        android:fontFamily="@font/cairo_bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_pass_linear" />
+
+     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/login_go_enter_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="#458DF8"
+        android:padding="10dp"
+        android:text="@string/login_go_enter_text"
+        android:textSize="14sp"
+        android:fontFamily="@font/cairo_bold"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:background="@drawable/fragment_basket_edittext_bg"
+        android:elevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_text_forget_pass"/>
+
+     <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        android:id="@+id/login_no_have_account_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/login_no_have_account_text"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:fontFamily="@font/cairo_bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_go_enter_text" />
+
+     <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        android:id="@+id/login_not_now_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/login_not_now_text"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:fontFamily="@font/cairo_bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_no_have_account_text" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
