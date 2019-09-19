@@ -54,7 +54,7 @@ import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
 public class OfferItemActivity extends BaseActivity implements CategoryItemAdapter.CategoryItemOperation, SubCategoriesAdapter.SubCategoryOperation {
 
-    public static final String OFFERS = "offers";
+    public static final String OFFERS = "offer";
     @BindView(R.id.offer_item_recycler_categories)
     RecyclerView offer_item_recycler_categories;
 
@@ -335,4 +335,3 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
         }
     }
 }
-

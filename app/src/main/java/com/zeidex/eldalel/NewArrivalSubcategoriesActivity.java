@@ -95,7 +95,7 @@ public class NewArrivalSubcategoriesActivity extends BaseActivity {
     private void showEmptyView() {
         vpPager.setVisibility(View.GONE);
         view_pager_tab.setVisibility(View.GONE);
-        noItemsLayout.setVisibility(View.GONE);
+        noItemsLayout.setVisibility(View.VISIBLE);
     }
 
     public void initializeViewPager() {
