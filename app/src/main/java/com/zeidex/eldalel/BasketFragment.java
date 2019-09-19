@@ -27,6 +27,7 @@ import com.zeidex.eldalel.services.ChangeQuantityApi;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.PreferenceUtils;
+import com.zeidex.eldalel.utils.PriceFormatter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -150,8 +151,10 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                     basketElementsAdapter = new BasketElementsAdapter(getActivity(), basketProducts);
                     basketElementsAdapter.setBasketOperation(BasketFragment.this);
                     fragment_basket_elements_recycler.setAdapter(basketElementsAdapter);
-                    fragment_basket_total_price_products_text.setText(getBasketProducts.getTotal());
-                    fragment_basket_total_price_text.setText(getBasketProducts.getTotal());
+                    double totalDouble = Double.parseDouble(getBasketProducts.getTotal());
+                    String totalString = PriceFormatter.toDecimalRsString(totalDouble, getActivity().getApplicationContext());
+                    fragment_basket_total_price_products_text.setText(totalString);
+                    fragment_basket_total_price_text.setText(totalString);
                 }
                 reloadDialog.dismiss();
             }
