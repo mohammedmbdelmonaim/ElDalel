@@ -70,6 +70,11 @@ public class CategoryItemAdapter extends RecyclerView.Adapter<CategoryItemAdapte
 
         holder.offerItemNameText.setText(currentOffer.getName());
 
+        String price = currentOffer.getPrice();
+        if (price != null) {
+            double priceDouble = Double.parseDouble(price);
+            holder.offerItemPriceText.setText(PriceFormatter.toDecimalRsString(priceDouble, context.getApplicationContext()));
+        }
 
         String oldPrice = currentOffer.getPrice_before();
         if (oldPrice == null) {
@@ -82,12 +87,6 @@ public class CategoryItemAdapter extends RecyclerView.Adapter<CategoryItemAdapte
             holder.offerItemOldPriceText.setText(PriceFormatter.toDecimalRsString(priceDouble, context.getApplicationContext()));
         }
 
-        String price = currentOffer.getPrice();
-        if (price != null) {
-            double priceDouble = Double.parseDouble(price);
-            holder.offerItemPriceText.setText(PriceFormatter.toDecimalRsString(priceDouble, context.getApplicationContext()));
-        }
-
         String discount = currentOffer.getDiscount();
         if (discount == null) {
             holder.offerItemDiscountText.setVisibility(View.GONE);
@@ -95,7 +94,7 @@ public class CategoryItemAdapter extends RecyclerView.Adapter<CategoryItemAdapte
             double discountDouble = Double.parseDouble(discount);
             holder.offerItemDiscountText.setVisibility(View.VISIBLE);
             holder.offerItemDiscountText.setText(discount);
-            holder.offerItemPriceText.setText(PriceFormatter.toRightNumber(discountDouble, context.getApplicationContext()));
+            holder.offerItemDiscountText.setText(PriceFormatter.toRightNumber(discountDouble, context.getApplicationContext()));
         }
 
         holder.categoryItemTypeText.setText(currentOffer.getType());

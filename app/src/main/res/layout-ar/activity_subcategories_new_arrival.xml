@@ -69,4 +69,27 @@
             app:tabTextColor="#606060" />
     </androidx.viewpager.widget.ViewPager>
 
+    <RelativeLayout
+        android:id="@+id/categories_no_items_layout"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linear_header_item">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="@dimen/no_products_to_show_text_size"
+            android:fontFamily="@font/cairo_regular"
+            android:textColor="@color/colorPrimary"
+            android:text="@string/no_items_text"/>
+    </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

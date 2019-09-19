@@ -5,8 +5,10 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.viewpager.widget.ViewPager;
@@ -36,6 +38,8 @@ public class NewArrivalSubcategoriesActivity extends BaseActivity {
     TabLayout view_pager_tab;
     @BindView(R.id.title_header_text)
     AppCompatTextView titleHeaderTextView;
+    @BindView(R.id.categories_no_items_layout)
+    RelativeLayout noItemsLayout;
 
     List<String> cat_names;
     List<String> cat_ids;
@@ -82,8 +86,16 @@ public class NewArrivalSubcategoriesActivity extends BaseActivity {
         subcategories = getIntent().getParcelableArrayListExtra(SUBCATEGORIES_INTENT_EXTRA_KEY);
         if (subcategories != null && subcategories.size() > 0) {
             initializeViewPager();
+        } else {
+            showEmptyView();
         }
 
+    }
+
+    private void showEmptyView() {
+        vpPager.setVisibility(View.GONE);
+        view_pager_tab.setVisibility(View.GONE);
+        noItemsLayout.setVisibility(View.GONE);
     }
 
     public void initializeViewPager() {

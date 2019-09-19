@@ -198,10 +198,6 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
         productsAdapter = new ProductsCategory3Adapter(getActivity(), products);
         productsAdapter.setProductsCategory3Operation(NewArrivalProductsFragment.this);
         category_item_recycler_list.setAdapter(productsAdapter);
-//        categoryAdapter = new CategoryItemAdapter(getActivity());
-//        categoryAdapter.setCategoryOperation(this);
-//        category_item_recycler_list.setAdapter(categoryAdapter);
-
     }
 
     private void showDialog() {
@@ -211,13 +207,6 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
         reloadDialog.setCancelable(false);
         reloadDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
-
-
-//    @Override
-//    public void onClickCategory(int position) {
-//        startActivity(new Intent(getActivity(), DetailItemActivity.class));
-//        Animatoo.animateSwipeLeft(getActivity());
-//    }
 
     @Override
     public void onClickProduct3(int id, int pos) {
