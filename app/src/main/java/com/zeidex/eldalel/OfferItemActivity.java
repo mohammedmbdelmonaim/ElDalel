@@ -16,19 +16,28 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.zeidex.eldalel.adapters.CategoryItemAdapter;
+import com.zeidex.eldalel.adapters.ProductsCategory3Adapter;
 import com.zeidex.eldalel.adapters.SubCategoriesAdapter;
+import com.zeidex.eldalel.models.ProductsCategory;
 import com.zeidex.eldalel.models.Subcategory;
 import com.zeidex.eldalel.models.Subsubcategory;
+import com.zeidex.eldalel.response.GetAddToCardResponse;
+import com.zeidex.eldalel.response.GetAddToFavouriteResponse;
 import com.zeidex.eldalel.response.GetCategorizedOffers;
+import com.zeidex.eldalel.services.AddToCardApi;
+import com.zeidex.eldalel.services.AddToFavouriteApi;
 import com.zeidex.eldalel.services.OffersAPI;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.Animatoo;
+import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.GridSpacingItemDecoration;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,9 +49,10 @@ import retrofit2.Response;
 
 import static com.zeidex.eldalel.OffersFragment.CATEGORY_NAME_INTENT_EXTRA;
 import static com.zeidex.eldalel.OffersFragment.SUBCATEGORIES_INTENT_EXTRA_KEY;
+import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
-public class OfferItemActivity extends BaseActivity implements CategoryItemAdapter.CategoryOperation, SubCategoriesAdapter.SubCategoryOperation {
+public class OfferItemActivity extends BaseActivity implements ProductsCategory3Adapter.ProductsCategory3Operation, SubCategoriesAdapter.SubCategoryOperation {
 
     public static final String OFFERS = "offers";
     @BindView(R.id.offer_item_recycler_categories)
@@ -57,12 +67,17 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
     @BindView(R.id.offer_no_items_layout)
     RelativeLayout offerNoItemsLayout;
 
-    CategoryItemAdapter categoryAdapter;
+//    CategoryItemAdapter categoryAdapter;
+    ProductsCategory3Adapter productsAdapter;
     SubCategoriesAdapter subCategoriesAdapter;
 
     Dialog reloadDialog;
     String token = "";
     private List<Subcategory> subcategories;
+
+    Map<String, String> cartPost;
+    Map<String, String> likePost;
+    private ArrayList<ProductsCategory> productsCategory;
 
 
     @Override
@@ -112,13 +127,12 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
                     int code = response.body().getCode();
                     if (code == 200) {
                         List<GetCategorizedOffers.Products.Data> offers = response.body().getProducts().getData();
-
                         if (offers.size() > 0) {
-                            categoryAdapter = new CategoryItemAdapter(OfferItemActivity.this, offers);
-                            categoryAdapter.setCategoryOperation(OfferItemActivity.this);
-                            offer_category_item_recycler_list.setAdapter(categoryAdapter);
+                            productsCategory = getProductsFromResponse(offers);
+                            productsAdapter.setProductsList(productsCategory);
+                            productsAdapter.notifyDataSetChanged();
                             showRecycler();
-                        }else{
+                        } else {
                             showEmptyView();
                         }
                     }
@@ -134,6 +148,60 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
         });
     }
 
+    private ArrayList<ProductsCategory> getProductsFromResponse(List<GetCategorizedOffers.Products.Data> productsResponse) {
+        ArrayList<ProductsCategory> products = new ArrayList<>();
+
+        Locale locale = ChangeLang.getLocale(getResources());
+        String loo = locale.getLanguage();
+
+        if (loo.equalsIgnoreCase("ar")) {
+            for (int j = 0; j < productsResponse.size(); j++) { // product loop
+
+                GetCategorizedOffers.Products.Data currentProductResponse = productsResponse.get(j);
+                String arr[] = currentProductResponse.getNameAr().split(" ", 2); // get first word
+                String firstWord = arr[0];
+
+                if (productsResponse.get(j).getPhotos().size() == 0) {
+                    products.add(new ProductsCategory(String.valueOf(currentProductResponse.getId()), "",
+                            String.valueOf(currentProductResponse.getDiscount()), firstWord, currentProductResponse.getNameAr(),
+                            String.valueOf(currentProductResponse.getPrice()), String.valueOf(currentProductResponse.getOldPrice()),
+                            String.valueOf(currentProductResponse.getFavorite()), String.valueOf(currentProductResponse.getCart()),
+                            String.valueOf(currentProductResponse.getAvailableQuantity())));
+                } else {
+                    products.add(new ProductsCategory(String.valueOf(currentProductResponse.getId()), currentProductResponse.getPhotos().get(0).getFilename(),
+                            String.valueOf(currentProductResponse.getDiscount()), firstWord, currentProductResponse.getNameAr(),
+                            String.valueOf(currentProductResponse.getPrice()), String.valueOf(currentProductResponse.getOldPrice()),
+                            String.valueOf(currentProductResponse.getFavorite()), String.valueOf(currentProductResponse.getCart()),
+                            String.valueOf(currentProductResponse.getAvailableQuantity())));
+                }
+            }
+        } else {
+            for (int j = 0; j < productsResponse.size(); j++) { // product loop
+
+                GetCategorizedOffers.Products.Data currentProductResponse = productsResponse.get(j);
+                String arr[] = currentProductResponse.getName().split(" ", 2); // get first word
+                String firstWord = arr[0];
+
+                if (productsResponse.get(j).getPhotos().size() == 0) {
+                    products.add(new ProductsCategory(String.valueOf(currentProductResponse.getId()), "",
+                            String.valueOf(currentProductResponse.getDiscount()), firstWord, currentProductResponse.getName(),
+                            String.valueOf(currentProductResponse.getPrice()), String.valueOf(currentProductResponse.getOldPrice()),
+                            String.valueOf(currentProductResponse.getFavorite()), String.valueOf(currentProductResponse.getCart()),
+                            String.valueOf(currentProductResponse.getAvailableQuantity())));
+
+                } else {
+                    products.add(new ProductsCategory(String.valueOf(currentProductResponse.getId()), currentProductResponse.getPhotos().get(0).getFilename(),
+                            String.valueOf(currentProductResponse.getDiscount()), firstWord, currentProductResponse.getName(),
+                            String.valueOf(currentProductResponse.getPrice()), String.valueOf(currentProductResponse.getOldPrice()),
+                            String.valueOf(currentProductResponse.getFavorite()), String.valueOf(currentProductResponse.getCart()),
+                            String.valueOf(currentProductResponse.getAvailableQuantity())));
+                }
+            }
+        }
+
+        return products;
+    }
+
     private void showEmptyView() {
         offer_category_item_recycler_list.setVisibility(View.GONE);
         offerNoItemsLayout.setVisibility(View.VISIBLE);
@@ -145,8 +213,6 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
     }
 
     public void initializeRecycler() {
-
-
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         offer_category_item_recycler_list.setLayoutManager(mLayoutManager);
         offer_category_item_recycler_list.setItemAnimator(new DefaultItemAnimator());
@@ -159,8 +225,10 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
 //        categoryAdapter = new CategoryItemAdapter(this);
 //        categoryAdapter.setCategoryOperation(this);
 //        offer_category_item_recycler_list.setAdapter(categoryAdapter);
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        productsAdapter = new ProductsCategory3Adapter(this);
+        productsAdapter.setProductsCategory3Operation(OfferItemActivity.this);
+        offer_category_item_recycler_list.setAdapter(productsAdapter);
         offer_item_recycler_categories.setLayoutManager(layoutManager);
         offer_item_recycler_categories.setItemAnimator(new DefaultItemAnimator());
     }
@@ -175,13 +243,6 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
 
 
     @Override
-    public void onClickCategory(int position) {
-        startActivity(new Intent(this, DetailItemActivity.class));
-        Animatoo.animateSwipeLeft(this);
-    }
-
-
-    @Override
     public void onClickSubCategory(int subcategoryId, String subcategoryName) {
         getSubcategoryProducts(subcategoryId);
     }
@@ -190,4 +251,90 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
     public void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subcategoryName) {
 
     }
+
+    @Override
+    public void onClickProduct3(int id, int pos) {
+        startActivityForResult(new Intent(this, DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
+        Animatoo.animateSwipeLeft(this);
+    }
+
+    @Override
+    public void onCliickProductsCategory3Like(int id) {
+        reloadDialog.show();
+        prepareLikeMap(id);
+        AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
+        Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(likePost);
+        getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
+            @Override
+            public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
+                GetAddToFavouriteResponse getAddToFavouriteResponse = response.body();
+                if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
+                    Toasty.success(OfferItemActivity.this, getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetAddToFavouriteResponse> call, Throwable t) {
+                Toasty.error(OfferItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void onAddToProductCategory3Cart(int id, int position) {
+        prepareCartMap(id);
+        AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
+        Call<GetAddToCardResponse> getAddToCardResponseCall = addToCardApi.getAddToFavourite(cartPost);
+        getAddToCardResponseCall.enqueue(new Callback<GetAddToCardResponse>() {
+            @Override
+            public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
+                GetAddToCardResponse getAddToCardResponse = response.body();
+                if (getAddToCardResponse.getCode() == 200) {
+                    Toasty.success(OfferItemActivity.this, getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
+                    productsAdapter.getProductsCategoryList().get(position).setCart(String.valueOf(CART_NOT_EMPTY));
+                    productsAdapter.notifyItemChanged(position);
+                    PreferenceUtils.saveCountOfItemsBasket(OfferItemActivity.this, Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetAddToCardResponse> call, Throwable t) {
+                Toasty.error(OfferItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
+    }
+
+    public void prepareCartMap(int id) {
+        cartPost = new HashMap<>();
+        if (PreferenceUtils.getUserLogin(OfferItemActivity.this)) {
+            String token = PreferenceUtils.getUserToken(OfferItemActivity.this);
+            cartPost.put("product_id", String.valueOf(id));
+            cartPost.put("token", token);
+            cartPost.put("quantity", "1");
+        } else if (PreferenceUtils.getCompanyLogin(OfferItemActivity.this)) {
+            String token = PreferenceUtils.getCompanyToken(OfferItemActivity.this);
+            cartPost.put("product_id", String.valueOf(id));
+            cartPost.put("token", token);
+            cartPost.put("quantity", "1");
+        }
+        reloadDialog.show();
+    }
+
+    private void prepareLikeMap(int id) {
+        likePost = new HashMap<>();
+        if (PreferenceUtils.getUserLogin(OfferItemActivity.this)) {
+            String token = PreferenceUtils.getUserToken(OfferItemActivity.this);
+            likePost.put("product_id", String.valueOf(id));
+            likePost.put("token", token);
+        } else if (PreferenceUtils.getCompanyLogin(OfferItemActivity.this)) {
+            String token = PreferenceUtils.getCompanyToken(OfferItemActivity.this);
+            likePost.put("product_id", String.valueOf(id));
+            likePost.put("token", token);
+        }
+    }
 }
+

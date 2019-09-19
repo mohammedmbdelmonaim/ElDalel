@@ -28,12 +28,15 @@ import static com.zeidex.eldalel.utils.Constants.NOT_AVAILABLE;
 
 public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCategory3Adapter.ProductsCategory3Holder> {
     private Context context;
+    List<ProductsCategory> productsCategoryList;
 
     public List<ProductsCategory> getProductsCategoryList() {
         return productsCategoryList;
     }
+    public void setProductsList(List<ProductsCategory> productsCategoryList){
+        this.productsCategoryList = productsCategoryList;
+    }
 
-    List<ProductsCategory> productsCategoryList;
     View view;
 
     private ProductsCategory3Operation productsCategory3Operation;
