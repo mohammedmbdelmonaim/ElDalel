@@ -1,50 +1,58 @@
 package com.zeidex.eldalel.adapters;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.zeidex.eldalel.R;
-import com.zeidex.eldalel.response.GetCategorizedOffers;
-import com.zeidex.eldalel.response.GetProducts;
-import com.zeidex.eldalel.utils.ChangeLang;
+import com.zeidex.eldalel.models.ProductsCategory;
+import com.zeidex.eldalel.utils.PreferenceUtils;
 import com.zeidex.eldalel.utils.PriceFormatter;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import es.dmoral.toasty.Toasty;
+
+import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
+import static com.zeidex.eldalel.utils.Constants.NOT_AVAILABLE;
 
 public class CategoryItemAdapter extends RecyclerView.Adapter<CategoryItemAdapter.CategoryHolder> {
     private Context context;
-    List<GetCategorizedOffers.Products.Data> offerList;
-    List<GetProducts.Data> productsList;
+//    List<GetCategorizedOffers.Products.Data> offerList;
+    List<ProductsCategory> productsList;
     View view;
-    private CategoryOperation categoryOperation;
+    private CategoryItemOperation categoryOperation;
 
-    public List<GetCategorizedOffers.Products.Data> getOfferList() {
-        return offerList;
+    public List<ProductsCategory> getProductsList() {
+        return productsList;
     }
+    public void setProductsList(List<ProductsCategory> productsList){this.productsList = productsList;}
 
-    public void setCategoryOperation(CategoryOperation categoryOperation) {
+    public void setCategoryOperation(CategoryItemOperation categoryOperation) {
         this.categoryOperation = categoryOperation;
     }
 
-    public CategoryItemAdapter(Context context, List<GetCategorizedOffers.Products.Data> offers) {
+    public CategoryItemAdapter(Context context, List<ProductsCategory> productsList) {
         this.context = context;
-        offerList = offers;
+        this.productsList = productsList;
     }
 
     public CategoryItemAdapter(Context context) {
         this.context = context;
+        productsList = new ArrayList<>();
     }
 
     @NonNull
@@ -57,70 +65,58 @@ public class CategoryItemAdapter extends RecyclerView.Adapter<CategoryItemAdapte
 
     @Override
     public void onBindViewHolder(@NonNull CategoryHolder holder, int position) {
-        GetCategorizedOffers.Products.Data currentOffer = offerList.get(position);
+        ProductsCategory currentOffer = productsList.get(position);
 
-        Locale locale = ChangeLang.getLocale(context.getResources());
-        String loo = locale.getLanguage();
+        holder.offerItemNameText.setText(currentOffer.getName());
 
-        if (loo.equalsIgnoreCase("ar")) {
-            holder.offerItemNameText.setText(currentOffer.getNameAr());
-        } else {
-            holder.offerItemNameText.setText(currentOffer.getName());
-        }
 
-        Double oldPrice = (Double) currentOffer.getOldPrice();
-        if (oldPrice == null) {
+        String oldPrice = currentOffer.getPrice_before();
+        if (TextUtils.isEmpty(oldPrice)) {
             holder.offerItemOldPriceText.setVisibility(View.INVISIBLE);
             holder.discountLabel.setVisibility(View.INVISIBLE);
         } else {
+//            double priceDouble = Double.parseDouble(oldPrice);
             holder.offerItemOldPriceText.setVisibility(View.VISIBLE);
             holder.discountLabel.setVisibility(View.VISIBLE);
-            holder.offerItemOldPriceText.setText(PriceFormatter.toDecimalRsString(oldPrice, context.getApplicationContext()));
+            holder.offerItemOldPriceText.setText(oldPrice);
         }
 
-        Double price = currentOffer.getPrice();
-        if (price != null) {
-            holder.offerItemPriceText.setText(PriceFormatter.toDecimalRsString(price, context.getApplicationContext()));
+        String price = currentOffer.getPrice();
+        if (!TextUtils.isEmpty(price)) {
+            double priceDouble = Double.parseDouble(price);
+            holder.offerItemPriceText.setText(PriceFormatter.toDecimalRsString(priceDouble, context.getApplicationContext()));
         }
 
-        if (currentOffer.getDiscount() == null) {
+        String discount = currentOffer.getDiscount();
+        if (TextUtils.isEmpty(discount)) {
             holder.offerItemDiscountText.setVisibility(View.GONE);
         } else {
+//            double discountDouble = Double.parseDouble(discount);
             holder.offerItemDiscountText.setVisibility(View.VISIBLE);
-            holder.offerItemDiscountText.setText(PriceFormatter.toRightNumber((double)currentOffer.getDiscount(), context.getApplicationContext()));
+            holder.offerItemDiscountText.setText(discount);
         }
 
-        if (loo.equalsIgnoreCase("ar")) {
-            holder.categoryItemTypeText.setText(currentOffer.getSubcategory().getNameAr());
-        } else {
-            holder.categoryItemTypeText.setText(currentOffer.getSubcategory().getName());
-        }
+        holder.categoryItemTypeText.setText(currentOffer.getType());
 
-        if (currentOffer.getPhotos().size() > 0) {
+
+        if (!TextUtils.isEmpty(currentOffer.getImgUrl())) {
             Glide.with(context)
-                    .load("https://www.dleel-sh.com/homepages/get/" + currentOffer.getPhotos().get(0).getFilename())
+                    .load("https://www.dleel-sh.com/homepages/get/" + currentOffer.getImgUrl())
                     .placeholder(R.drawable.condition_logo)
                     .centerCrop()
                     .into(holder.offerItemImage);
         }
-
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                categoryOperation.onClickCategory(position);
-            }
-        });
     }
 
     @Override
     public int getItemCount() {
-        return offerList.size() > 0 ? offerList.size() : 0;
+        return productsList.size() > 0 ? productsList.size() : 0;
     }
 
     public class CategoryHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.category_item_image_like)
-        AppCompatImageView offerItemLikeImage;
+        AppCompatCheckBox offerItemLikeImage;
         @BindView(R.id.category_item_img_url)
         AppCompatImageView offerItemImage;
         @BindView(R.id.category_item_discount_text)
@@ -138,23 +134,61 @@ public class CategoryItemAdapter extends RecyclerView.Adapter<CategoryItemAdapte
         @BindView(R.id.discount_label)
         View discountLabel;
 
-//        public AppCompatImageView notification_row_roundimage;
-//        public TextView notification_row_text_notifi, notification_row_text_time;
-//        public CardView notification_row_cardview;
-//        public RelativeLayout relative;
-
         public CategoryHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-//            notification_row_roundimage = itemView.findViewById(R.id.notification_row_roundimage);
-//            notification_row_text_notifi = itemView.findViewById(R.id.notification_row_text_notifi);
-//            notification_row_text_time = itemView.findViewById(R.id.notification_row_text_time);
-//            notification_row_cardview = itemView.findViewById(R.id.notification_row_cardview);
-//            relativelative = itemView.findViewById(R.id.relative);
+
+            offerItemAddToCart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!PreferenceUtils.getUserLogin(context) && !PreferenceUtils.getCompanyLogin(context)) {
+                        Toasty.error(context, context.getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context))) {
+                        if (!productsList.get(getAdapterPosition()).getCart().equals(String.valueOf(CART_NOT_EMPTY)) &&
+                                !productsList.get(getAdapterPosition()).getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE)))
+                            categoryOperation.onAddToProductCart(Integer.parseInt(productsList.get(getAdapterPosition()).getId()), getAdapterPosition());
+                    }
+                }
+            });
+
+            offerItemLikeImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Boolean isChecked = offerItemLikeImage.isChecked();
+
+                    if (!PreferenceUtils.getUserLogin(context) && isChecked && !PreferenceUtils.getCompanyLogin(context)) {
+                        Toasty.error(context, context.getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
+                        offerItemLikeImage.setChecked(false);
+                        return;
+                    }
+                    if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) && !isChecked) {
+                        Toasty.error(context, context.getString(R.string.unlike_fiv), Toast.LENGTH_LONG).show();
+                        offerItemLikeImage.setChecked(true);
+                        return;
+                    }
+                    if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) && isChecked) {
+                        categoryOperation.onClickProductLike(Integer.parseInt(productsList.get(getAdapterPosition()).getId()));
+                    }
+
+                }
+            });
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    categoryOperation.onClickProduct(Integer.parseInt(productsList.get(getAdapterPosition()).getId()), getAdapterPosition());
+                }
+            });
         }
     }
 
-    public interface CategoryOperation {
-        void onClickCategory(int position);
+    public interface CategoryItemOperation {
+        void onClickProduct(int id, int pos);
+
+        void onClickProductLike(int id);
+
+        void onAddToProductCart(int id, int position);
     }
 }

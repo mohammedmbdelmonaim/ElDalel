@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.zeidex.eldalel.adapters.ProductsCategory3Adapter;
+import com.zeidex.eldalel.adapters.CategoryItemAdapter;
 import com.zeidex.eldalel.adapters.SubCategoriesAdapter;
 import com.zeidex.eldalel.models.ProductsCategory;
 import com.zeidex.eldalel.models.Subcategory;
@@ -52,7 +52,7 @@ import static com.zeidex.eldalel.OffersFragment.SUBCATEGORIES_INTENT_EXTRA_KEY;
 import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
-public class OfferItemActivity extends BaseActivity implements ProductsCategory3Adapter.ProductsCategory3Operation, SubCategoriesAdapter.SubCategoryOperation {
+public class OfferItemActivity extends BaseActivity implements CategoryItemAdapter.CategoryItemOperation, SubCategoriesAdapter.SubCategoryOperation {
 
     public static final String OFFERS = "offers";
     @BindView(R.id.offer_item_recycler_categories)
@@ -67,8 +67,8 @@ public class OfferItemActivity extends BaseActivity implements ProductsCategory3
     @BindView(R.id.offer_no_items_layout)
     RelativeLayout offerNoItemsLayout;
 
-//    CategoryItemAdapter categoryAdapter;
-    ProductsCategory3Adapter productsAdapter;
+    //    CategoryItemAdapter categoryAdapter;
+    CategoryItemAdapter productsAdapter;
     SubCategoriesAdapter subCategoriesAdapter;
 
     Dialog reloadDialog;
@@ -162,11 +162,11 @@ public class OfferItemActivity extends BaseActivity implements ProductsCategory3
                 String firstWord = arr[0];
 
                 if (productsResponse.get(j).getPhotos().size() == 0) {
-                    products.add(new ProductsCategory(String.valueOf(currentProductResponse.getId()), "",
-                            String.valueOf(currentProductResponse.getDiscount()), firstWord, currentProductResponse.getNameAr(),
-                            String.valueOf(currentProductResponse.getPrice()), String.valueOf(currentProductResponse.getOldPrice()),
-                            String.valueOf(currentProductResponse.getFavorite()), String.valueOf(currentProductResponse.getCart()),
-                            String.valueOf(currentProductResponse.getAvailableQuantity())));
+                    products.add(new ProductsCategory(new ProductsCategory(currentProductResponse.getId(), "",
+                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getNameAr(),
+                            currentProductResponse.getPrice(), currentProductResponse.getOldPrice(),
+                            currentProductResponse.getFavorite(), String.valueOf(currentProductResponse.getCart()),
+                            currentProductResponse.getAvailableQuantity())));
                 } else {
                     products.add(new ProductsCategory(String.valueOf(currentProductResponse.getId()), currentProductResponse.getPhotos().get(0).getFilename(),
                             String.valueOf(currentProductResponse.getDiscount()), firstWord, currentProductResponse.getNameAr(),
@@ -226,8 +226,8 @@ public class OfferItemActivity extends BaseActivity implements ProductsCategory3
 //        categoryAdapter.setCategoryOperation(this);
 //        offer_category_item_recycler_list.setAdapter(categoryAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        productsAdapter = new ProductsCategory3Adapter(this);
-        productsAdapter.setProductsCategory3Operation(OfferItemActivity.this);
+        productsAdapter = new CategoryItemAdapter(this);
+        productsAdapter.setCategoryOperation(OfferItemActivity.this);
         offer_category_item_recycler_list.setAdapter(productsAdapter);
         offer_item_recycler_categories.setLayoutManager(layoutManager);
         offer_item_recycler_categories.setItemAnimator(new DefaultItemAnimator());
@@ -253,13 +253,13 @@ public class OfferItemActivity extends BaseActivity implements ProductsCategory3
     }
 
     @Override
-    public void onClickProduct3(int id, int pos) {
+    public void onClickProduct(int id, int pos) {
         startActivityForResult(new Intent(this, DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
         Animatoo.animateSwipeLeft(this);
     }
 
     @Override
-    public void onCliickProductsCategory3Like(int id) {
+    public void onClickProductLike(int id) {
         reloadDialog.show();
         prepareLikeMap(id);
         AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
@@ -283,7 +283,7 @@ public class OfferItemActivity extends BaseActivity implements ProductsCategory3
     }
 
     @Override
-    public void onAddToProductCategory3Cart(int id, int position) {
+    public void onAddToProductCart(int id, int position) {
         prepareCartMap(id);
         AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
         Call<GetAddToCardResponse> getAddToCardResponseCall = addToCardApi.getAddToFavourite(cartPost);
@@ -293,7 +293,7 @@ public class OfferItemActivity extends BaseActivity implements ProductsCategory3
                 GetAddToCardResponse getAddToCardResponse = response.body();
                 if (getAddToCardResponse.getCode() == 200) {
                     Toasty.success(OfferItemActivity.this, getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
-                    productsAdapter.getProductsCategoryList().get(position).setCart(String.valueOf(CART_NOT_EMPTY));
+                    productsAdapter.getProductsList().get(position).setCart(String.valueOf(CART_NOT_EMPTY));
                     productsAdapter.notifyItemChanged(position);
                     PreferenceUtils.saveCountOfItemsBasket(OfferItemActivity.this, Integer.parseInt(getAddToCardResponse.getItemsCount()));
                 }
