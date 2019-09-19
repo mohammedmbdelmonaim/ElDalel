@@ -105,32 +105,6 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
                 .into(holder.phone_img_url);
 
 
-//        view.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                productsCategory3Operation.onClickProduct3(Integer.parseInt(productsCategory.getId()), position);
-//            }
-//        });
-
-//        holder.phone_image_like.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (!PreferenceUtils.getUserLogin(context) && isChecked && !PreferenceUtils.getCompanyLogin(context)) {
-//                    Toasty.error(context, context.getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
-//                    holder.phone_image_like.setChecked(false);
-//                    return;
-//                }
-//                if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) && !isChecked) {
-//                    Toasty.error(context, context.getString(R.string.unlike_fiv), Toast.LENGTH_LONG).show();
-//                    holder.phone_image_like.setChecked(true);
-//                    return;
-//                }
-//                if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) && isChecked) {
-//                    productsCategory3Operation.onCliickProductsCategory3Like(Integer.parseInt(productsCategory.getId()));
-//                }
-//            }
-//        });
-
         String cartStatus = productsCategory.getCart();
         if (cartStatus.equals(String.valueOf(CART_EMPTY))) {
             if (productsCategory.getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE))) {
@@ -144,20 +118,6 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
             holder.phone_row_add_to_card.setBackgroundResource(R.drawable.row_already_added_cart);
             holder.phone_row_add_to_card.setText(R.string.add_to_card);
         }
-
-//        holder.phone_row_add_to_card.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (!PreferenceUtils.getUserLogin(context) && !PreferenceUtils.getCompanyLogin(context)) {
-//                    Toasty.error(context, context.getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
-//                    return;
-//                }
-//                if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context))) {
-//                    if (!productsCategory.getCart().equals(String.valueOf(CART_NOT_EMPTY)) && !productsCategory.getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE)))
-//                        productsCategory3Operation.onAddToProductCategory3Cart(Integer.parseInt(productsCategory.getId()), position);
-//                }
-//            }
-//        });
     }
 
     @Override

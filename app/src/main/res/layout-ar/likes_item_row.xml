@@ -30,41 +30,45 @@
             app:layout_constraintStart_toEndOf="@+id/like_item_image_delete"
             app:layout_constraintTop_toTopOf="parent" />
 
-         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/like_item_discount_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/row_dicount_bg"
             android:fontFamily="@font/cairo_bold"
             android:text="خصم ١٠٪"
+            android:textAlignment="viewStart"
             android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/like_item_image_delete" />
 
-         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/like_item_text_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/cairo_bold"
             android:text="زندور"
+            android:textAlignment="viewStart"
             android:textColor="#AAAAAA"
             android:textSize="10sp"
             app:layout_constraintStart_toStartOf="@+id/like_item_image_delete"
             app:layout_constraintTop_toBottomOf="@+id/like_item_img_url" />
 
-         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/like_item_text_name"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:fontFamily="@font/cairo_bold"
             android:text="شاحن بنك طاقة متنقل مدخل تايب سى"
+            android:textAlignment="viewStart"
             android:textColor="#232222"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/like_item_image_delete"
             app:layout_constraintTop_toBottomOf="@+id/like_item_text_type" />
 
-         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/like_item_text_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,12 +76,13 @@
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
             android:text="177.45"
+            android:textAlignment="viewStart"
             android:textColor="#232222"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="@+id/like_item_image_delete"
             app:layout_constraintTop_toBottomOf="@+id/like_item_text_name" />
 
-         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
@@ -85,13 +90,14 @@
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
             android:text="@string/currancy_label"
+            android:textAlignment="viewStart"
             android:textColor="#232222"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/like_item_text_price"
             app:layout_constraintStart_toEndOf="@+id/like_item_text_price"
             app:layout_constraintTop_toTopOf="@+id/like_item_text_price" />
 
-         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/like_item_text_price_before"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -100,12 +106,14 @@
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
             android:text="190.00"
+            android:textAlignment="viewStart"
             android:textColor="#AAAAAA"
             android:textSize="10sp"
             app:layout_constraintStart_toStartOf="@+id/like_item_text_price"
             app:layout_constraintTop_toBottomOf="@+id/like_item_text_price" />
 
         <View
+            android:id="@+id/like_item_price_before_label"
             android:layout_width="0dp"
             android:layout_height="0.8dp"
             android:background="#AAAAAA"
@@ -114,30 +122,31 @@
             app:layout_constraintStart_toStartOf="@+id/like_item_text_price_before"
             app:layout_constraintTop_toTopOf="@+id/like_item_text_price_before" />
 
-         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
-            android:id="@+id/like_item_text_price_before_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
-            android:fontFamily="@font/cairo_bold"
-            android:text="@string/currancy_label"
-            android:textColor="#AAAAAA"
-            android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="@+id/like_item_text_price_before"
-            app:layout_constraintStart_toEndOf="@+id/like_item_text_price_before"
-            app:layout_constraintTop_toTopOf="@+id/like_item_text_price_before" />
+        <!--<androidx.appcompat.widget.AppCompatTextView-->
+        <!--android:id="@+id/like_item_text_price_before_label"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginStart="3dp"-->
+        <!--android:fontFamily="@font/cairo_bold"-->
+        <!--android:text="@string/currancy_label"-->
+        <!--android:textAlignment="viewStart"-->
+        <!--android:textColor="#AAAAAA"-->
+        <!--android:textSize="10sp"-->
+        <!--app:layout_constraintBottom_toBottomOf="@+id/like_item_text_price_before"-->
+        <!--app:layout_constraintStart_toEndOf="@+id/like_item_text_price_before"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/like_item_text_price_before" />-->
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0.8dp"
-            android:layout_marginTop="1dp"
-            android:background="#AAAAAA"
-            app:layout_constraintBottom_toBottomOf="@+id/like_item_text_price_before_label"
-            app:layout_constraintEnd_toEndOf="@+id/like_item_text_price_before_label"
-            app:layout_constraintStart_toStartOf="@+id/like_item_text_price_before_label"
-            app:layout_constraintTop_toTopOf="@+id/like_item_text_price_before_label" />
+        <!--<View-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="0.8dp"-->
+        <!--android:layout_marginTop="1dp"-->
+        <!--android:background="#AAAAAA"-->
+        <!--app:layout_constraintBottom_toBottomOf="@+id/like_item_text_price_before_label"-->
+        <!--app:layout_constraintEnd_toEndOf="@+id/like_item_text_price_before_label"-->
+        <!--app:layout_constraintStart_toStartOf="@+id/like_item_text_price_before_label"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/like_item_text_price_before_label" />-->
 
-         <androidx.appcompat.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/like_item_text_add_to_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -151,7 +160,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/like_item_text_price_before_label" />
+            app:layout_constraintTop_toBottomOf="@+id/like_item_text_price_before" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
