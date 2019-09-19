@@ -26,6 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 
+import static com.zeidex.eldalel.utils.Constants.CART_EMPTY;
 import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
 import static com.zeidex.eldalel.utils.Constants.NOT_AVAILABLE;
 
@@ -71,33 +72,53 @@ public class CategoryItemAdapter extends RecyclerView.Adapter<CategoryItemAdapte
 
 
         String oldPrice = currentOffer.getPrice_before();
-        if (TextUtils.isEmpty(oldPrice)) {
+        if (oldPrice == null) {
             holder.offerItemOldPriceText.setVisibility(View.INVISIBLE);
             holder.discountLabel.setVisibility(View.INVISIBLE);
         } else {
-//            double priceDouble = Double.parseDouble(oldPrice);
+            double priceDouble = Double.parseDouble(oldPrice);
             holder.offerItemOldPriceText.setVisibility(View.VISIBLE);
             holder.discountLabel.setVisibility(View.VISIBLE);
-            holder.offerItemOldPriceText.setText(oldPrice);
+            holder.offerItemOldPriceText.setText(PriceFormatter.toDecimalRsString(priceDouble, context.getApplicationContext()));
         }
 
         String price = currentOffer.getPrice();
-        if (!TextUtils.isEmpty(price)) {
+        if (price != null) {
             double priceDouble = Double.parseDouble(price);
             holder.offerItemPriceText.setText(PriceFormatter.toDecimalRsString(priceDouble, context.getApplicationContext()));
         }
 
         String discount = currentOffer.getDiscount();
-        if (TextUtils.isEmpty(discount)) {
+        if (discount == null) {
             holder.offerItemDiscountText.setVisibility(View.GONE);
         } else {
-//            double discountDouble = Double.parseDouble(discount);
+            double discountDouble = Double.parseDouble(discount);
             holder.offerItemDiscountText.setVisibility(View.VISIBLE);
             holder.offerItemDiscountText.setText(discount);
+            holder.offerItemPriceText.setText(PriceFormatter.toRightNumber(discountDouble, context.getApplicationContext()));
         }
 
         holder.categoryItemTypeText.setText(currentOffer.getType());
 
+        if (currentOffer.getLike().equalsIgnoreCase("1")) {
+            holder.offerItemLikeImage.setChecked(true);
+        } else {
+            holder.offerItemLikeImage.setChecked(false);
+        }
+
+        String cartStatus = currentOffer.getCart();
+        if (cartStatus.equals(String.valueOf(CART_EMPTY))) {
+            if (currentOffer.getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE))) {
+                holder.offerItemAddToCart.setBackgroundResource(R.drawable.row_out_of_stock_cart);
+                holder.offerItemAddToCart.setText(R.string.cart_out_of_stock_label);
+            } else {
+                holder.offerItemAddToCart.setBackgroundResource(R.drawable.row_add_to_car_bg);
+                holder.offerItemAddToCart.setText(R.string.phone_row_add_to_card_txt);
+            }
+        } else if (cartStatus.equals(String.valueOf(CART_NOT_EMPTY))) {
+            holder.offerItemAddToCart.setBackgroundResource(R.drawable.row_already_added_cart);
+            holder.offerItemAddToCart.setText(R.string.add_to_card);
+        }
 
         if (!TextUtils.isEmpty(currentOffer.getImgUrl())) {
             Glide.with(context)

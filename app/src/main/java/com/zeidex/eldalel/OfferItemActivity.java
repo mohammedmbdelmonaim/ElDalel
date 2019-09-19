@@ -23,7 +23,7 @@ import com.zeidex.eldalel.models.Subcategory;
 import com.zeidex.eldalel.models.Subsubcategory;
 import com.zeidex.eldalel.response.GetAddToCardResponse;
 import com.zeidex.eldalel.response.GetAddToFavouriteResponse;
-import com.zeidex.eldalel.response.GetCategorizedOffers;
+import com.zeidex.eldalel.response.GetProducts;
 import com.zeidex.eldalel.services.AddToCardApi;
 import com.zeidex.eldalel.services.AddToFavouriteApi;
 import com.zeidex.eldalel.services.OffersAPI;
@@ -120,13 +120,13 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
     public void getSubcategoryProducts(int subcategoryId) {
         reloadDialog.show();
         OffersAPI offersAPI = APIClient.getClient(SERVER_API_TEST).create(OffersAPI.class);
-        offersAPI.getOffersProducts(OFFERS, subcategoryId, token).enqueue(new Callback<GetCategorizedOffers>() {
+        offersAPI.getOffersProducts(OFFERS, subcategoryId, token).enqueue(new Callback<GetProducts>() {
             @Override
-            public void onResponse(Call<GetCategorizedOffers> call, Response<GetCategorizedOffers> response) {
+            public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {
                     int code = response.body().getCode();
                     if (code == 200) {
-                        List<GetCategorizedOffers.Products.Data> offers = response.body().getProducts().getData();
+                        List<GetProducts.Data> offers = response.body().getProducts().getDataAll();
                         if (offers.size() > 0) {
                             productsCategory = getProductsFromResponse(offers);
                             productsAdapter.setProductsList(productsCategory);
@@ -141,14 +141,14 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
             }
 
             @Override
-            public void onFailure(Call<GetCategorizedOffers> call, Throwable t) {
+            public void onFailure(Call<GetProducts> call, Throwable t) {
                 Toasty.error(OfferItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
     }
 
-    private ArrayList<ProductsCategory> getProductsFromResponse(List<GetCategorizedOffers.Products.Data> productsResponse) {
+    private ArrayList<ProductsCategory> getProductsFromResponse(List<GetProducts.Data> productsResponse) {
         ArrayList<ProductsCategory> products = new ArrayList<>();
 
         Locale locale = ChangeLang.getLocale(getResources());
@@ -157,44 +157,42 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
         if (loo.equalsIgnoreCase("ar")) {
             for (int j = 0; j < productsResponse.size(); j++) { // product loop
 
-                GetCategorizedOffers.Products.Data currentProductResponse = productsResponse.get(j);
-                String arr[] = currentProductResponse.getNameAr().split(" ", 2); // get first word
+                GetProducts.Data currentProductResponse = productsResponse.get(j);
+                String arr[] = currentProductResponse.getName_ar().split(" ", 2); // get first word
                 String firstWord = arr[0];
 
                 if (productsResponse.get(j).getPhotos().size() == 0) {
-                    products.add(new ProductsCategory(new ProductsCategory(currentProductResponse.getId(), "",
-                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getNameAr(),
-                            currentProductResponse.getPrice(), currentProductResponse.getOldPrice(),
+                    products.add(new ProductsCategory(currentProductResponse.getId(), "",
+                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName_ar(),
+                            currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
                             currentProductResponse.getFavorite(), String.valueOf(currentProductResponse.getCart()),
-                            currentProductResponse.getAvailableQuantity())));
+                            currentProductResponse.getAvailable_quantity()));
                 } else {
-                    products.add(new ProductsCategory(String.valueOf(currentProductResponse.getId()), currentProductResponse.getPhotos().get(0).getFilename(),
-                            String.valueOf(currentProductResponse.getDiscount()), firstWord, currentProductResponse.getNameAr(),
-                            String.valueOf(currentProductResponse.getPrice()), String.valueOf(currentProductResponse.getOldPrice()),
-                            String.valueOf(currentProductResponse.getFavorite()), String.valueOf(currentProductResponse.getCart()),
-                            String.valueOf(currentProductResponse.getAvailableQuantity())));
+                    products.add(new ProductsCategory(currentProductResponse.getId(), currentProductResponse.getPhotos().get(0).getFilename(),
+                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName_ar(),
+                            currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
+                            currentProductResponse.getFavorite(), String.valueOf(currentProductResponse.getCart()), currentProductResponse.getAvailable_quantity()));
                 }
             }
         } else {
             for (int j = 0; j < productsResponse.size(); j++) { // product loop
 
-                GetCategorizedOffers.Products.Data currentProductResponse = productsResponse.get(j);
+                GetProducts.Data currentProductResponse = productsResponse.get(j);
                 String arr[] = currentProductResponse.getName().split(" ", 2); // get first word
                 String firstWord = arr[0];
 
                 if (productsResponse.get(j).getPhotos().size() == 0) {
-                    products.add(new ProductsCategory(String.valueOf(currentProductResponse.getId()), "",
-                            String.valueOf(currentProductResponse.getDiscount()), firstWord, currentProductResponse.getName(),
-                            String.valueOf(currentProductResponse.getPrice()), String.valueOf(currentProductResponse.getOldPrice()),
-                            String.valueOf(currentProductResponse.getFavorite()), String.valueOf(currentProductResponse.getCart()),
-                            String.valueOf(currentProductResponse.getAvailableQuantity())));
+                    products.add(new ProductsCategory(currentProductResponse.getId(), "",
+                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName(),
+                            currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
+                            currentProductResponse.getFavorite(), String.valueOf(currentProductResponse.getCart()),
+                            currentProductResponse.getAvailable_quantity()));
 
                 } else {
-                    products.add(new ProductsCategory(String.valueOf(currentProductResponse.getId()), currentProductResponse.getPhotos().get(0).getFilename(),
-                            String.valueOf(currentProductResponse.getDiscount()), firstWord, currentProductResponse.getName(),
-                            String.valueOf(currentProductResponse.getPrice()), String.valueOf(currentProductResponse.getOldPrice()),
-                            String.valueOf(currentProductResponse.getFavorite()), String.valueOf(currentProductResponse.getCart()),
-                            String.valueOf(currentProductResponse.getAvailableQuantity())));
+                    products.add(new ProductsCategory(currentProductResponse.getId(), currentProductResponse.getPhotos().get(0).getFilename(),
+                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName(),
+                            currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
+                            currentProductResponse.getFavorite(), String.valueOf(currentProductResponse.getCart()), currentProductResponse.getAvailable_quantity()));
                 }
             }
         }
