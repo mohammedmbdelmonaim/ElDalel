@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -57,6 +59,14 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     RecyclerView category_item_recycler_list;
     @BindView(R.id.categories_no_items_layout)
     RelativeLayout noItemsLayout;
+    @BindView(R.id.category_item_details_header)
+    RelativeLayout itemDetailsHeader;
+    @BindView(R.id.category_text_label_count)
+    AppCompatTextView labelCountText;
+    @BindView(R.id.descendant_items_category)
+    AppCompatImageView descendantItemsCategoryImage;
+    @BindView(R.id.search_items_category)
+    AppCompatImageView searchItemsCategoryImage;
 
     Dialog reloadDialog;
     String token = "";
@@ -107,7 +117,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
             getProductsFromSubSubCategory(subsubcategoryId);
         } else if (subcategoryId != -1) {
             getProductsFromSubCategory(subcategoryId);
-        } else if (categoryId != -1){
+        } else if (categoryId != -1) {
             getProductsFromCategory(categoryId);
         }
     }
@@ -173,6 +183,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     private void showEmptyView() {
         noItemsLayout.setVisibility(View.VISIBLE);
         category_item_recycler_list.setVisibility(View.GONE);
+        itemDetailsHeader.setVisibility(View.INVISIBLE);
     }
 
     private void getProductsFromSubCategory(int subCategoryId) {
@@ -269,6 +280,9 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
         productsAdapter = new ProductsCategory3Adapter(getActivity(), products);
         productsAdapter.setProductsCategory3Operation(ProductsFragment.this);
         category_item_recycler_list.setAdapter(productsAdapter);
+
+        labelCountText.setText(String.valueOf(products.size()));
+        itemDetailsHeader.setVisibility(View.VISIBLE);
 //        categoryAdapter = new CategoryItemAdapter(getActivity());
 //        categoryAdapter.setCategoryOperation(this);
 //        category_item_recycler_list.setAdapter(categoryAdapter);
