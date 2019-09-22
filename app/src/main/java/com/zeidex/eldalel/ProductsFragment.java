@@ -46,6 +46,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
 import static com.zeidex.eldalel.adapters.CategoriesItemAdapter.SUBCATEGORY_ID_INTENT_EXTRA;
 import static com.zeidex.eldalel.adapters.CategoriesItemAdapter.SUB_SUBCATEGORY_ID_INTENT_EXTRA;
 import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
@@ -68,6 +69,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     Map<String, String> cartPost;
     Map<String, String> likePost;
     private ArrayList<ProductsCategory> productsCategory;
+    private int categoryId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,9 +93,10 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
             token = PreferenceUtils.getUserToken(getActivity());
         }
 
+        categoryId = getArguments().getInt(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
         subcategoryId = getArguments().getInt(SUBCATEGORY_ID_INTENT_EXTRA, -1);
         subsubcategoryId = getArguments().getInt(SUB_SUBCATEGORY_ID_INTENT_EXTRA, -1);
-        String sara = "sara";
+
 
         showDialog();
         onLoadPage();
@@ -104,7 +107,38 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
             getProductsFromSubSubCategory(subsubcategoryId);
         } else if (subcategoryId != -1) {
             getProductsFromSubCategory(subcategoryId);
+        } else if (categoryId != -1){
+            getProductsFromCategory(categoryId);
         }
+    }
+
+    private void getProductsFromCategory(int categoryId) {
+        reloadDialog.show();
+        ProductsAPI productsAPI = APIClient.getClient(SERVER_API_TEST).create(ProductsAPI.class);
+        productsAPI.getProductsFromCategory(categoryId, token).enqueue(new Callback<GetProducts>() {
+            @Override
+            public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
+                if (response.body() != null) {
+                    int code = response.body().getCode();
+                    if (code == 200) {
+                        List<GetProducts.Data> products = response.body().getProducts().getDataAll();
+                        if (products.size() > 0) {
+                            productsCategory = getProductsFromResponse(products);
+                            initializeRecycler(productsCategory);
+                        } else {
+                            showEmptyView();
+                        }
+                    }
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetProducts> call, Throwable t) {
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
     }
 
     private void getProductsFromSubSubCategory(int subsubCategoryId) {
@@ -144,7 +178,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     private void getProductsFromSubCategory(int subCategoryId) {
         reloadDialog.show();
         ProductsAPI productsAPI = APIClient.getClient(SERVER_API_TEST).create(ProductsAPI.class);
-        productsAPI.getProducts(subCategoryId, token).enqueue(new Callback<GetProducts>() {
+        productsAPI.getProductsFromSubcategory(subCategoryId, token).enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {

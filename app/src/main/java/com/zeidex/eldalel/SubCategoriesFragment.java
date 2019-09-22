@@ -9,10 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -22,15 +24,20 @@ import com.zeidex.eldalel.adapters.SubCategoriesAdapter;
 import com.zeidex.eldalel.models.Subcategory;
 import com.zeidex.eldalel.models.Subsubcategory;
 import com.zeidex.eldalel.utils.Animatoo;
+import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
+import static com.zeidex.eldalel.OffersFragment.CATEGORY_NAME_INTENT_EXTRA;
 import static com.zeidex.eldalel.OffersFragment.SUBCATEGORIES_INTENT_EXTRA_KEY;
+import static com.zeidex.eldalel.adapters.CategoriesAdapter.CATEGORY_NAME_AR_INTENT_EXTRA;
 
 public class SubCategoriesFragment extends Fragment implements SubCategoriesAdapter.SubCategoryOperation {
 
@@ -40,11 +47,15 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
 
     @BindView(R.id.category_recycler_list)
     RecyclerView category_recycler_list;
-    @BindView(R.id.categories_no_items_layout)
-    RelativeLayout noItemsLayout;
+    @BindView(R.id.category_card_item)
+    CardView categoryCardItem;
+    @BindView(R.id.offer_category_item_img)
+    AppCompatImageView categoryCardImage;
+    @BindView(R.id.offer_category_item_text)
+    AppCompatTextView categoryCardText;
 
     SubCategoriesAdapter subCategoryAdapter;
-//    String id;
+    //    String id;
     List<Subcategory> subCategories;
 
     Dialog reloadDialog;
@@ -65,14 +76,37 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
         if (subCategories != null && subCategories.size() > 0) {
             initializeRecycler();
             findViews();
-        }else{
-            showEmptyView();
+        } else {
+            //If there are no subcategories, pass the category id to get the products based on it
+            int categoryId = getArguments().getInt(CATEGORY_ID_INTENT_EXTRA_KEY);
+            String categoryName;
+            Locale locale = ChangeLang.getLocale(getResources());
+            String loo = locale.getLanguage();
+            if (loo.equalsIgnoreCase("ar")) {
+                categoryName = getArguments().getString(CATEGORY_NAME_AR_INTENT_EXTRA);
+            } else {
+                categoryName = getArguments().getString(CATEGORY_NAME_INTENT_EXTRA);
+            }
+            showCategoryCard(categoryId, categoryName);
+//            Intent intent = new Intent(getActivity(), ProductsActivity.class);
+//            intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
+//            getActivity().startActivity(intent);
+//            Animatoo.animateSwipeLeft(getActivity());
         }
     }
 
-    private void showEmptyView() {
-        noItemsLayout.setVisibility(View.VISIBLE);
-        category_recycler_list.setVisibility(View.GONE);
+    private void showCategoryCard(int categoryId, String categoryName) {
+        categoryCardText.setText(categoryName);
+        categoryCardItem.setVisibility(View.VISIBLE);
+        categoryCardItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ProductsActivity.class);
+                intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
+                getActivity().startActivity(intent);
+                Animatoo.animateSwipeLeft(getActivity());
+            }
+        });
     }
 
     private void findViews() {
