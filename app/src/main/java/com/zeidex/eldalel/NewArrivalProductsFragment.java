@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -48,6 +50,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.zeidex.eldalel.NewArrivalsFragment.NEW_ARRIVAL;
+import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
+import static com.zeidex.eldalel.adapters.CategoriesItemAdapter.SUBCATEGORY_ID_INTENT_EXTRA;
 import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
@@ -60,6 +64,14 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
     RecyclerView category_item_recycler_list;
     @BindView(R.id.categories_no_items_layout)
     RelativeLayout noItemsLayout;
+    @BindView(R.id.category_item_details_header)
+    RelativeLayout itemDetailsHeader;
+    @BindView(R.id.category_text_label_count)
+    AppCompatTextView labelCountText;
+    @BindView(R.id.descendant_items_category)
+    AppCompatImageView descendantItemsCategoryImage;
+    @BindView(R.id.search_items_category)
+    AppCompatImageView searchItemsCategoryImage;
 
     Dialog reloadDialog;
     String token = "";
@@ -68,7 +80,7 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
     Map<String, String> likePost;
 
     ProductsCategory3Adapter productsAdapter;
-    private int id;
+//    private int subcategoryId;
     private ArrayList<ProductsCategory> productsCategory;
 
     @Override
@@ -83,8 +95,6 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-
-        id = Integer.parseInt(getArguments().getString("id"));
         findViews();
     }
 
@@ -94,15 +104,26 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
         } else if (PreferenceUtils.getUserLogin(getActivity())) {
             token = PreferenceUtils.getUserToken(getActivity());
         }
-
         showDialog();
         onLoadPage();
     }
 
     private void onLoadPage() {
+
+        String subcategoryIdString = getArguments().getString(SUBCATEGORY_ID_INTENT_EXTRA);
+        if (subcategoryIdString != null) {
+            int subcategoryId = Integer.parseInt(subcategoryIdString);
+            getProductsFromSubcategory(subcategoryId);
+        }else{
+            int categoryId = getArguments().getInt(CATEGORY_ID_INTENT_EXTRA_KEY);
+            getProductsFromCategory(categoryId);
+        }
+    }
+
+    private void getProductsFromCategory(int categoryId) {
         reloadDialog.show();
         NewArrivalsAPI newArrivalsAPI = APIClient.getClient(SERVER_API_TEST).create(NewArrivalsAPI.class);
-        newArrivalsAPI.getNewArrivalsProducts(id, NEW_ARRIVAL, token).enqueue(new Callback<GetProducts>() {
+        newArrivalsAPI.getNewArrivalsProductsFromCategory(categoryId, NEW_ARRIVAL, token).enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {
@@ -112,7 +133,36 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
                         if (products.size() > 0) {
                             productsCategory = getProductsFromResponse(products);
                             initializeRecycler(productsCategory);
-                        }else{
+                        } else {
+                            showEmptyView();
+                        }
+                    }
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetProducts> call, Throwable t) {
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
+    }
+
+    private void getProductsFromSubcategory(int subcategoryId) {
+        reloadDialog.show();
+        NewArrivalsAPI newArrivalsAPI = APIClient.getClient(SERVER_API_TEST).create(NewArrivalsAPI.class);
+        newArrivalsAPI.getNewArrivalsProductsFromSubCategory(subcategoryId, NEW_ARRIVAL, token).enqueue(new Callback<GetProducts>() {
+            @Override
+            public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
+                if (response.body() != null) {
+                    int code = response.body().getCode();
+                    if (code == 200) {
+                        List<GetProducts.Data> products = response.body().getProducts().getDataAll();
+                        if (products.size() > 0) {
+                            productsCategory = getProductsFromResponse(products);
+                            initializeRecycler(productsCategory);
+                        } else {
                             showEmptyView();
                         }
                     }
@@ -131,6 +181,7 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
     private void showEmptyView() {
         noItemsLayout.setVisibility(View.VISIBLE);
         category_item_recycler_list.setVisibility(View.GONE);
+        itemDetailsHeader.setVisibility(View.INVISIBLE);
     }
 
     private ArrayList<ProductsCategory> getProductsFromResponse(List<GetProducts.Data> productsResponse) {
@@ -198,6 +249,9 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
         productsAdapter = new ProductsCategory3Adapter(getActivity(), products);
         productsAdapter.setProductsCategory3Operation(NewArrivalProductsFragment.this);
         category_item_recycler_list.setAdapter(productsAdapter);
+
+        labelCountText.setText(String.valueOf(products.size()));
+        itemDetailsHeader.setVisibility(View.VISIBLE);
     }
 
     private void showDialog() {
