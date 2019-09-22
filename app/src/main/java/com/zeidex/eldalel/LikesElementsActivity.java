@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.zeidex.eldalel.adapters.LikesElementsAdapter;
 import com.zeidex.eldalel.models.GetFavorites;
 import com.zeidex.eldalel.models.ProductsCategory;
+import com.zeidex.eldalel.response.DeleteFavoriteResponse;
 import com.zeidex.eldalel.response.GetAddToCardResponse;
 import com.zeidex.eldalel.services.AddToCardApi;
 import com.zeidex.eldalel.services.FavoritesAPI;
@@ -136,7 +137,7 @@ public class LikesElementsActivity extends BaseActivity implements LikesElements
                 String priceBeforeString = priceBefore != null ? PriceFormatter.toDecimalRsString(priceBefore, getApplicationContext()) : null;
 
 //                if (productsResponse.get(j).getPhotos().size() == 0) {
-                products.add(new ProductsCategory(String.valueOf(currentProductResponse.getId()), "",
+                products.add(new ProductsCategory(String.valueOf(currentProductResponse.getProduct().getId()), "",
                         discountString, firstWord, currentProductResponse.getProduct().getNameAr(),
                         priceString, priceBeforeString,
                         "", "",
@@ -161,7 +162,7 @@ public class LikesElementsActivity extends BaseActivity implements LikesElements
                 String priceBeforeString = priceBefore != null ? String.valueOf(priceBefore) : null;
 
 //                if (productsResponse.get(j).getPhotos().size() == 0) {
-                products.add(new ProductsCategory(String.valueOf(currentProductResponse.getId()), "",
+                products.add(new ProductsCategory(String.valueOf(currentProductResponse.getProduct().getId()), "",
                         discountString, firstWord, currentProductResponse.getProduct().getName(),
                         String.valueOf(currentProductResponse.getProduct().getPrice()), priceBeforeString,
                         "", "",
@@ -206,6 +207,33 @@ public class LikesElementsActivity extends BaseActivity implements LikesElements
 
             @Override
             public void onFailure(Call<GetAddToCardResponse> call, Throwable t) {
+                Toasty.error(LikesElementsActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void onRemoveFavorite(int id, int position) {
+        reloadDialog.show();
+        FavoritesAPI favoritesAPI = APIClient.getClient(SERVER_API_TEST).create(FavoritesAPI.class);
+        favoritesAPI.deleteFavorite(id, token).enqueue(new Callback<DeleteFavoriteResponse>() {
+            @Override
+            public void onResponse(Call<DeleteFavoriteResponse> call, Response<DeleteFavoriteResponse> response) {
+                DeleteFavoriteResponse deleteFavoriteResponse = response.body();
+                if(deleteFavoriteResponse != null){
+                    int code = deleteFavoriteResponse.getCode();
+                    if(code == 200){
+                        Toasty.success(LikesElementsActivity.this, getString(R.string.remove_from_favorite), Toast.LENGTH_LONG).show();
+                        likesElementsAdapter.getProductsList().remove(position);
+                        likesElementsAdapter.notifyItemRemoved(position);
+                    }
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<DeleteFavoriteResponse> call, Throwable t) {
                 Toasty.error(LikesElementsActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }

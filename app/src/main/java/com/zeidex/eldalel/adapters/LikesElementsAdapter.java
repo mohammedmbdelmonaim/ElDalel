@@ -36,11 +36,11 @@ public class LikesElementsAdapter extends RecyclerView.Adapter<LikesElementsAdap
         this.likesOperation = likesOperation;
     }
 
-    public void setProductList(List<ProductsCategory> productList){
-    this.productList = productList;
+    public void setProductList(List<ProductsCategory> productList) {
+        this.productList = productList;
     }
 
-    public List<ProductsCategory> getProductsList(){
+    public List<ProductsCategory> getProductsList() {
         return productList;
     }
 
@@ -115,7 +115,7 @@ public class LikesElementsAdapter extends RecyclerView.Adapter<LikesElementsAdap
 
     @Override
     public int getItemCount() {
-        return productList != null && productList.size() > 0 ? productList.size(): 0;
+        return productList != null && productList.size() > 0 ? productList.size() : 0;
     }
 
     public class CategoryHolder extends RecyclerView.ViewHolder {
@@ -163,12 +163,27 @@ public class LikesElementsAdapter extends RecyclerView.Adapter<LikesElementsAdap
                     }
                 }
             });
+
+            likeItemImageDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!PreferenceUtils.getUserLogin(context) && !PreferenceUtils.getCompanyLogin(context)) {
+                        Toasty.error(context, context.getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context))) {
+                        likesOperation.onRemoveFavorite(Integer.parseInt(productList.get(getAdapterPosition()).getId()), getAdapterPosition());
+                    }
+                }
+            });
         }
     }
 
-    public interface LikesOperation{
+    public interface LikesOperation {
         void onClickProduct(int id, int pos);
 
         void onAddToCart(int id, int position);
+
+        void onRemoveFavorite(int id, int position);
     }
 }
