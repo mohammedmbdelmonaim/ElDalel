@@ -216,22 +216,22 @@ public class GetFavorites {
         private String nameAr;
         @SerializedName("price")
         @Expose
-        private Integer price;
+        private Double price;
         @SerializedName("old_price")
         @Expose
-        private Object oldPrice;
+        private Double oldPrice;
         @SerializedName("wholesale_price")
         @Expose
         private Integer wholesalePrice;
         @SerializedName("wholesale_old_price")
         @Expose
-        private Object wholesaleOldPrice;
+        private Double wholesaleOldPrice;
         @SerializedName("weight")
         @Expose
-        private Object weight;
+        private Double weight;
         @SerializedName("cartDesc")
         @Expose
-        private Object cartDesc;
+        private String cartDesc;
         @SerializedName("shortDesc")
         @Expose
         private String shortDesc;
@@ -270,7 +270,7 @@ public class GetFavorites {
         private Object discountContentEn;
         @SerializedName("discount")
         @Expose
-        private Object discount;
+        private Double discount;
         @SerializedName("content_ar")
         @Expose
         private Object contentAr;
@@ -370,19 +370,19 @@ public class GetFavorites {
             this.nameAr = nameAr;
         }
 
-        public Integer getPrice() {
+        public Double getPrice() {
             return price;
         }
 
-        public void setPrice(Integer price) {
+        public void setPrice(Double price) {
             this.price = price;
         }
 
-        public Object getOldPrice() {
+        public Double getOldPrice() {
             return oldPrice;
         }
 
-        public void setOldPrice(Object oldPrice) {
+        public void setOldPrice(Double oldPrice) {
             this.oldPrice = oldPrice;
         }
 
@@ -394,27 +394,27 @@ public class GetFavorites {
             this.wholesalePrice = wholesalePrice;
         }
 
-        public Object getWholesaleOldPrice() {
+        public Double getWholesaleOldPrice() {
             return wholesaleOldPrice;
         }
 
-        public void setWholesaleOldPrice(Object wholesaleOldPrice) {
+        public void setWholesaleOldPrice(Double wholesaleOldPrice) {
             this.wholesaleOldPrice = wholesaleOldPrice;
         }
 
-        public Object getWeight() {
+        public Double getWeight() {
             return weight;
         }
 
-        public void setWeight(Object weight) {
+        public void setWeight(Double weight) {
             this.weight = weight;
         }
 
-        public Object getCartDesc() {
+        public String getCartDesc() {
             return cartDesc;
         }
 
-        public void setCartDesc(Object cartDesc) {
+        public void setCartDesc(String cartDesc) {
             this.cartDesc = cartDesc;
         }
 
@@ -514,11 +514,11 @@ public class GetFavorites {
             this.discountContentEn = discountContentEn;
         }
 
-        public Object getDiscount() {
+        public Double getDiscount() {
             return discount;
         }
 
-        public void setDiscount(Object discount) {
+        public void setDiscount(Double discount) {
             this.discount = discount;
         }
 

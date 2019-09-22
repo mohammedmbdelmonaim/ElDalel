@@ -11,11 +11,9 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.zeidex.eldalel.R;
 import com.zeidex.eldalel.models.ProductsCategory;
 import com.zeidex.eldalel.utils.PreferenceUtils;
-import com.zeidex.eldalel.utils.PriceFormatter;
 
 import java.util.List;
 
@@ -40,6 +38,10 @@ public class LikesElementsAdapter extends RecyclerView.Adapter<LikesElementsAdap
 
     public void setProductList(List<ProductsCategory> productList){
     this.productList = productList;
+    }
+
+    public List<ProductsCategory> getProductsList(){
+        return productList;
     }
 
     public LikesElementsAdapter(Context context) {
@@ -67,16 +69,13 @@ public class LikesElementsAdapter extends RecyclerView.Adapter<LikesElementsAdap
         if (discount == null) {
             holder.likeItemDiscountText.setVisibility(View.GONE);
         } else {
-            double discountDouble = Double.parseDouble(discount);
             holder.likeItemDiscountText.setVisibility(View.VISIBLE);
             holder.likeItemDiscountText.setText(discount);
-            holder.likeItemDiscountText.setText(PriceFormatter.toRightNumber(discountDouble, context.getApplicationContext()));
         }
 
         String price = productsCategory.getPrice();
         if (price != null) {
-            double priceDouble = Double.parseDouble(price);
-            holder.likeItemPriceText.setText(PriceFormatter.toDecimalRsString(priceDouble, context.getApplicationContext()));
+            holder.likeItemPriceText.setText(price);
         }
 
         String oldPrice = productsCategory.getPrice_before();
@@ -84,20 +83,19 @@ public class LikesElementsAdapter extends RecyclerView.Adapter<LikesElementsAdap
             holder.likeItemPriceBeforeText.setVisibility(View.INVISIBLE);
             holder.likeItemPriceBeforeLabel.setVisibility(View.INVISIBLE);
         } else {
-            double priceDouble = Double.parseDouble(oldPrice);
             holder.likeItemPriceBeforeText.setVisibility(View.VISIBLE);
             holder.likeItemPriceBeforeLabel.setVisibility(View.VISIBLE);
-            holder.likeItemPriceBeforeText.setText(PriceFormatter.toDecimalRsString(priceDouble, context.getApplicationContext()));
+            holder.likeItemPriceBeforeText.setText(oldPrice);
         }
 
         holder.likeItemNameText.setText(productsCategory.getName());
         holder.likeItemTypeText.setText(productsCategory.getType());
 
-        Glide.with(context)
-                .load("https://www.dleel-sh.com/homepages/get/" + productsCategory.getImgUrl())
-                .placeholder(R.drawable.condition_logo)
-                .centerCrop()
-                .into(holder.likeItemImageView);
+//        Glide.with(context)
+//                .load("https://www.dleel-sh.com/homepages/get/" + productsCategory.getImgUrl())
+//                .placeholder(R.drawable.condition_logo)
+//                .centerCrop()
+//                .into(holder.likeItemImageView);
 
 
         String cartStatus = productsCategory.getCart();
@@ -117,7 +115,7 @@ public class LikesElementsAdapter extends RecyclerView.Adapter<LikesElementsAdap
 
     @Override
     public int getItemCount() {
-        return productList.size() > 0 ? productList.size(): 0;
+        return productList != null && productList.size() > 0 ? productList.size(): 0;
     }
 
     public class CategoryHolder extends RecyclerView.ViewHolder {

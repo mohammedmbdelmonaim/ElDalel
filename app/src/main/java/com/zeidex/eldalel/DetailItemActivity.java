@@ -26,7 +26,7 @@ import com.smarteist.autoimageslider.SliderView;
 import com.zeidex.eldalel.adapters.DetailColorsItemAdapter;
 import com.zeidex.eldalel.adapters.DetailDescriptionsAdapter;
 import com.zeidex.eldalel.adapters.DetailSizeItemAdapter;
-import com.zeidex.eldalel.adapters.PhonesAdapter;
+import com.zeidex.eldalel.adapters.ProductsCategory3Adapter;
 import com.zeidex.eldalel.adapters.SliderAdapter;
 import com.zeidex.eldalel.models.ColorProduct;
 import com.zeidex.eldalel.models.ProductsCategory;
@@ -55,7 +55,7 @@ import retrofit2.Response;
 
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
-public class DetailItemActivity extends BaseActivity implements PhonesAdapter.PhonesOperation, DetailColorsItemAdapter.DetailColorsOperation {
+public class DetailItemActivity extends BaseActivity implements ProductsCategory3Adapter.ProductsCategory3Operation, DetailColorsItemAdapter.DetailColorsOperation {
     @BindView(R.id.imageSlider)
     SliderView imageSlider;
 
@@ -117,7 +117,7 @@ public class DetailItemActivity extends BaseActivity implements PhonesAdapter.Ph
     View detail_text_price_before_label_view;
 
 
-    PhonesAdapter phonesAdapter;
+    ProductsCategory3Adapter phonesAdapter;
     DetailSizeItemAdapter detailSizeItemAdapter;
     DetailColorsItemAdapter detailColorsItemAdapter;
     List<String> desc_names;
@@ -359,8 +359,8 @@ public class DetailItemActivity extends BaseActivity implements PhonesAdapter.Ph
                         detail_like_img.setChecked(false);
                     }
 
-                    phonesAdapter = new PhonesAdapter(DetailItemActivity.this, getIntent().getParcelableArrayListExtra("similar_products"));
-                    phonesAdapter.setnPhones(DetailItemActivity.this);
+                    phonesAdapter = new ProductsCategory3Adapter(DetailItemActivity.this, getIntent().getParcelableArrayListExtra("similar_products"));
+                    phonesAdapter.setProductsCategory3Operation(DetailItemActivity.this);
                     details_recycler_like_too.setAdapter(phonesAdapter);
 
                     detailDescriptionsAdapter = new DetailDescriptionsAdapter(desc_names, getSupportFragmentManager(), desc_options, full_desc);
@@ -392,7 +392,12 @@ public class DetailItemActivity extends BaseActivity implements PhonesAdapter.Ph
     }
 
     @Override
-    public void onClickPhone(int id , int pos) {
+    public void onClickColor(int position) {
+        getDetarServer(Integer.parseInt(colors.get(position).getProduct_id()), true);
+    }
+
+    @Override
+    public void onClickProduct3(int id, int pos) {
         ProductsCategory productsCategory = (ProductsCategory) getIntent().getParcelableArrayListExtra("similar_products").get(pos);
         String like = productsCategory.getLike();
         startActivity(new Intent(this, DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", getIntent().getParcelableArrayListExtra("similar_products")).putExtra("getLike" , like).putExtra("pos" , pos).putExtra("samethis",true));
@@ -400,7 +405,7 @@ public class DetailItemActivity extends BaseActivity implements PhonesAdapter.Ph
     }
 
     @Override
-    public void onCliickPhoneLike(int id) {
+    public void onCliickProductsCategory3Like(int id) {
         reloadDialog.show();
         convertDaraToJson(id);
         AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
@@ -424,12 +429,7 @@ public class DetailItemActivity extends BaseActivity implements PhonesAdapter.Ph
     }
 
     @Override
-    public void onAddToPhoneCart(int id, int position) {
+    public void onAddToProductCategory3Cart(int id, int position) {
 
-    }
-
-    @Override
-    public void onClickColor(int position) {
-        getDetarServer(Integer.parseInt(colors.get(position).getProduct_id()), true);
     }
 }
