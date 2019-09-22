@@ -16,5 +16,7 @@ public interface OffersAPI {
     @GET("products")
     Call<GetProducts> getOffersProducts(@Query("status") String status, @Query("subcat_id") int subCategoryId, @Query("token") String token);
 
+    @GET("products")
+    Call<GetProducts> getOffersProductsFromCategories(@Query("status") String status, @Query("cat_id") int categoryId, @Query("token") String token);
 
 }

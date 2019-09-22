@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.zeidex.eldalel.R;
 import com.zeidex.eldalel.models.ProductsCategory;
 import com.zeidex.eldalel.utils.PreferenceUtils;
+import com.zeidex.eldalel.utils.PriceFormatter;
 
 import java.util.List;
 
@@ -91,12 +92,14 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
             holder.phone_text_price_before_view.setVisibility(View.VISIBLE);
             holder.phone_text_price_before_label_view.setVisibility(View.VISIBLE);
             holder.phone_text_price_before.setVisibility(View.VISIBLE);
-            holder.phone_text_price_before.setText(productsCategory.getPrice_before());
+            Double priceBefore = Double.parseDouble(productsCategory.getPrice_before());
+            holder.phone_text_price_before.setText(PriceFormatter.toDecimalString(priceBefore, context.getApplicationContext()));
         }
 
         holder.phone_text_name.setText(productsCategory.getName());
         holder.phone_text_type.setText(productsCategory.getType());
-        holder.phone_text_price.setText(productsCategory.getPrice());
+        double price = Double.parseDouble(productsCategory.getPrice());
+        holder.phone_text_price.setText(PriceFormatter.toDecimalString(price, context.getApplicationContext()));
 
         Glide.with(context)
                 .load("https://www.dleel-sh.com/homepages/get/" + productsCategory.getImgUrl())

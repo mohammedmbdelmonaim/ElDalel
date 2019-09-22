@@ -47,6 +47,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
 import static com.zeidex.eldalel.OffersFragment.CATEGORY_NAME_INTENT_EXTRA;
 import static com.zeidex.eldalel.OffersFragment.SUBCATEGORIES_INTENT_EXTRA_KEY;
 import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
@@ -64,8 +65,14 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
     @BindView(R.id.offer_item_header_text)
     AppCompatTextView offerItemHeaderText;
 
+    @BindView(R.id.offer_item_details_header)
+    RelativeLayout offerItemDetailsHeader;
+
     @BindView(R.id.offer_no_items_layout)
     RelativeLayout offerNoItemsLayout;
+
+    @BindView(R.id.offer_category_text_label_count)
+    AppCompatTextView labelCountText;
 
     //    CategoryItemAdapter categoryAdapter;
     CategoryItemAdapter productsAdapter;
@@ -113,8 +120,43 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
             subCategoriesAdapter.setSubCategoryOperation(this);
             offer_item_recycler_categories.setAdapter(subCategoriesAdapter);
             getSubcategoryProducts(subcategories.get(0).getId());
+        } else {
+            int categoryId = getIntent().getIntExtra(CATEGORY_ID_INTENT_EXTRA_KEY, 0);
+            getCategoryProducts(categoryId);
         }
 
+    }
+
+    private void getCategoryProducts(int categoryId) {
+        reloadDialog.show();
+        OffersAPI offersAPI = APIClient.getClient(SERVER_API_TEST).create(OffersAPI.class);
+        offersAPI.getOffersProductsFromCategories(OFFERS, categoryId, token).enqueue(new Callback<GetProducts>() {
+            @Override
+            public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
+                if (response.body() != null) {
+                    int code = response.body().getCode();
+                    if (code == 200) {
+                        List<GetProducts.Data> offers = response.body().getProducts().getDataAll();
+                        if (offers.size() > 0) {
+                            labelCountText.setText(String.valueOf(offers.size()));
+                            productsCategory = getProductsFromResponse(offers);
+                            productsAdapter.setProductsList(productsCategory);
+                            productsAdapter.notifyDataSetChanged();
+                            showRecycler();
+                        } else {
+                            showEmptyView();
+                        }
+                    }
+                    reloadDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetProducts> call, Throwable t) {
+                Toasty.error(OfferItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
     }
 
     public void getSubcategoryProducts(int subcategoryId) {
@@ -128,6 +170,7 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
                     if (code == 200) {
                         List<GetProducts.Data> offers = response.body().getProducts().getDataAll();
                         if (offers.size() > 0) {
+                            labelCountText.setText(String.valueOf(offers.size()));
                             productsCategory = getProductsFromResponse(offers);
                             productsAdapter.setProductsList(productsCategory);
                             productsAdapter.notifyDataSetChanged();
@@ -202,11 +245,13 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
 
     private void showEmptyView() {
         offer_category_item_recycler_list.setVisibility(View.GONE);
+        offerItemDetailsHeader.setVisibility(View.INVISIBLE);
         offerNoItemsLayout.setVisibility(View.VISIBLE);
     }
 
     private void showRecycler() {
         offer_category_item_recycler_list.setVisibility(View.VISIBLE);
+        offerItemDetailsHeader.setVisibility(View.VISIBLE);
         offerNoItemsLayout.setVisibility(View.GONE);
     }
 

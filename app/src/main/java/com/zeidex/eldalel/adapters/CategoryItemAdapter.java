@@ -73,7 +73,7 @@ public class CategoryItemAdapter extends RecyclerView.Adapter<CategoryItemAdapte
         String price = currentOffer.getPrice();
         if (price != null) {
             double priceDouble = Double.parseDouble(price);
-            holder.offerItemPriceText.setText(PriceFormatter.toDecimalRsString(priceDouble, context.getApplicationContext()));
+            holder.offerItemPriceText.setText(PriceFormatter.toDecimalString(priceDouble, context.getApplicationContext()));
         }
 
         String oldPrice = currentOffer.getPrice_before();
