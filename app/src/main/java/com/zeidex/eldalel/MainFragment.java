@@ -393,14 +393,14 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
 
             @Override
             public void onFailure(Call<GetHomeProducts> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
-                reloadDialog.dismiss();
-                Fragment frg = null;
-                frg = getActivity().getSupportFragmentManager().findFragmentByTag("main_fragment");
-                final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.detach(frg);
-                ft.attach(frg);
-                ft.commitAllowingStateLoss();
+                    Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                    reloadDialog.dismiss();
+                    Fragment frg = null;
+                    frg = getActivity().getSupportFragmentManager().findFragmentByTag("main_fragment");
+                    final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                    ft.detach(frg);
+                    ft.attach(frg);
+                    ft.commitAllowingStateLoss();
             }
         });
 

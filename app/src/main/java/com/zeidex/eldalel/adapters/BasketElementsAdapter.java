@@ -16,6 +16,7 @@ import com.zeidex.eldalel.R;
 import com.zeidex.eldalel.models.BasketProducts;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BasketElementsAdapter extends RecyclerView.Adapter<BasketElementsAdapter.BasketElementsHolder> {
     View view;
@@ -26,6 +27,10 @@ public class BasketElementsAdapter extends RecyclerView.Adapter<BasketElementsAd
 
     public void setBasketOperation(BasketOperation basketOperation) {
         this.basketOperation = basketOperation;
+    }
+
+    public List<BasketProducts> getBasketProducts(){
+        return basketProducts;
     }
 
     public BasketElementsAdapter(Context context , ArrayList<BasketProducts> basketProducts) {
@@ -46,13 +51,13 @@ public class BasketElementsAdapter extends RecyclerView.Adapter<BasketElementsAd
         BasketProducts basketProductsModel = basketProducts.get(position);
 
 
-        if (basketProductsModel.getPrice_before() == null) {
-            holder.basket_element_currency_linear.setVisibility(View.GONE);
-
-        } else {
-            holder.basket_element_currency_linear.setVisibility(View.VISIBLE);
-            holder.basket_element_currency_price_before.setText(basketProductsModel.getPrice_before());
-        }
+//        if (basketProductsModel.getPrice_before() == null) {
+//            holder.basket_element_currency_linear.setVisibility(View.GONE);
+//
+//        } else {
+//            holder.basket_element_currency_linear.setVisibility(View.VISIBLE);
+//            holder.basket_element_currency_price_before.setText(basketProductsModel.getPrice_before());
+//        }
 
         holder.basket_element_name.setText(basketProductsModel.getTitle());
         holder.basket_element_desc.setText(basketProductsModel.getName());
