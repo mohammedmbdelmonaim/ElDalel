@@ -25,7 +25,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
+import com.zeidex.eldalel.adapters.AccessoriesAdapter;
 import com.zeidex.eldalel.adapters.HomeSliderAdapter;
+import com.zeidex.eldalel.adapters.PhonesAdapter;
 import com.zeidex.eldalel.adapters.ProductsCategory3Adapter;
 import com.zeidex.eldalel.models.ProductsCategory;
 import com.zeidex.eldalel.response.GetAddToCardResponse;
@@ -58,7 +60,7 @@ import retrofit2.Response;
 import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
-public class MainFragment extends androidx.fragment.app.Fragment implements ProductsCategory3Adapter.ProductsCategory3Operation {
+public class MainFragment extends androidx.fragment.app.Fragment implements ProductsCategory3Adapter.ProductsCategory3Operation, PhonesAdapter.PhonesOperation, AccessoriesAdapter.AccessoriesOperation{
     @BindView(R.id.main_recycler_accessories)
     RecyclerView main_recycler_accessories;
 
@@ -106,9 +108,9 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
 //            ft.commit();
     }
 
-    ProductsCategory3Adapter accessoriesAdapter;
+    AccessoriesAdapter accessoriesAdapter;
 
-    ProductsCategory3Adapter phonesAdapter;
+    PhonesAdapter phonesAdapter;
 
     ProductsCategory3Adapter category3Adapter;
 
@@ -379,13 +381,13 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                 main_recycler_category3.setAdapter(category3Adapter);
                 category3_label.setText(categories_names.get(2));
 
-                phonesAdapter = new ProductsCategory3Adapter(getActivity(), home_category2);
-                phonesAdapter.setProductsCategory3Operation(MainFragment.this);
+                phonesAdapter = new PhonesAdapter(getActivity(), home_category2);
+                phonesAdapter.setnPhones(MainFragment.this);
                 main_recycler_phones.setAdapter(phonesAdapter);
                 phones_label.setText(categories_names.get(1));
 
-                accessoriesAdapter = new ProductsCategory3Adapter(getActivity(), home_category1);
-                accessoriesAdapter.setProductsCategory3Operation(MainFragment.this);
+                accessoriesAdapter = new AccessoriesAdapter(getActivity(), home_category1);
+                accessoriesAdapter.setAccessoriesOperation(MainFragment.this);
                 main_recycler_accessories.setAdapter(accessoriesAdapter);
                 accessories_label.setText(categories_names.get(0));
                 reloadDialog.dismiss();
@@ -393,14 +395,16 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
 
             @Override
             public void onFailure(Call<GetHomeProducts> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
-                reloadDialog.dismiss();
-                Fragment frg = null;
-                frg = getActivity().getSupportFragmentManager().findFragmentByTag("main_fragment");
-                final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.detach(frg);
-                ft.attach(frg);
-                ft.commitAllowingStateLoss();
+                if (getActivity() != null) {
+                    Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                    reloadDialog.dismiss();
+                    Fragment frg = null;
+                    frg = getActivity().getSupportFragmentManager().findFragmentByTag("main_fragment");
+                    final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                    ft.detach(frg);
+                    ft.attach(frg);
+                    ft.commitAllowingStateLoss();
+                }
             }
         });
 
@@ -480,8 +484,10 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
 
             @Override
             public void onFailure(Call<GetOffers> call, Throwable t) {
-                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
-                reloadDialog.dismiss();
+                if (getActivity() != null) {
+                    Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                    reloadDialog.dismiss();
+                }
             }
         });
     }
@@ -583,6 +589,150 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
             }
         });
     }
+
+    @Override
+    public void onClickPhone(int id, int pos) {
+        position_detail = pos;
+        startActivityForResult(new Intent(getActivity(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", home_category2).putExtra("getLike", home_category2.get(pos).getLike()).putExtra("pos", pos), 111);
+        Animatoo.animateSwipeLeft(getActivity());
+    }
+
+    @Override
+    public void onCliickPhoneLike(int id) {
+        reloadDialog.show();
+        convertDaraToJson(id);
+        AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
+        Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(post);
+        getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
+            @Override
+            public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
+                GetAddToFavouriteResponse getAddToFavouriteResponse = response.body();
+                if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
+                    Toasty.success(getActivity(), getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetAddToFavouriteResponse> call, Throwable t) {
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+                Fragment frg = null;
+                frg = getActivity().getSupportFragmentManager().findFragmentByTag("main_fragment");
+                final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.detach(frg);
+                ft.attach(frg);
+                ft.commit();
+            }
+        });
+    }
+
+    @Override
+    public void onAddToPhoneCart(int id, int position) {
+        prepareCartMap(id);
+        AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
+        Call<GetAddToCardResponse> getAddToCardResponseCall = addToCardApi.getAddToFavourite(post);
+        getAddToCardResponseCall.enqueue(new Callback<GetAddToCardResponse>() {
+            @Override
+            public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
+                GetAddToCardResponse getAddToCardResponse = response.body();
+                if (getAddToCardResponse.getCode() == 200) {
+                    Toasty.success(getActivity(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
+                    phonesAdapter.getPhoneList().get(position).setCart(String.valueOf(CART_NOT_EMPTY));
+                    phonesAdapter.notifyItemChanged(position);
+                    fragment_main_basket_top_txt.setText(getAddToCardResponse.getItemsCount());
+                    fragment_main_basket_top_txt.setVisibility(View.VISIBLE);
+                    PreferenceUtils.saveCountOfItemsBasket(getActivity(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetAddToCardResponse> call, Throwable t) {
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+                Fragment frg = null;
+                frg = getActivity().getSupportFragmentManager().findFragmentByTag("main_fragment");
+                final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.detach(frg);
+                ft.attach(frg);
+                ft.commit();
+            }
+        });
+    }
+
+    @Override
+    public void onClickAcssesory(int id, int pos) {
+        position_detail = pos;
+        startActivityForResult(new Intent(getActivity(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", home_category1).putExtra("getLike", home_category1.get(pos).getLike()).putExtra("pos", pos), 11111);
+        Animatoo.animateSwipeLeft(getActivity());
+    }
+
+    @Override
+    public void onCliickAccessoryLike(int id) {
+        reloadDialog.show();
+        convertDaraToJson(id);
+        AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
+        Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(post);
+        getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
+            @Override
+            public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
+                GetAddToFavouriteResponse getAddToFavouriteResponse = response.body();
+                if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
+                    Toasty.success(getActivity(), getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetAddToFavouriteResponse> call, Throwable t) {
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+                Fragment frg = null;
+                frg = getActivity().getSupportFragmentManager().findFragmentByTag("main_fragment");
+                final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.detach(frg);
+                ft.attach(frg);
+                ft.commit();
+
+            }
+        });
+    }
+
+    @Override
+    public void onAddToAccessoryCart(int id, int position) {
+        prepareCartMap(id);
+        AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
+        Call<GetAddToCardResponse> getAddToCardResponseCall = addToCardApi.getAddToFavourite(post);
+        getAddToCardResponseCall.enqueue(new Callback<GetAddToCardResponse>() {
+            @Override
+            public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
+                GetAddToCardResponse getAddToCardResponse = response.body();
+                if (getAddToCardResponse.getCode() == 200) {
+                    Toasty.success(getActivity(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
+                    accessoriesAdapter.getAccessoryList().get(position).setCart(String.valueOf(CART_NOT_EMPTY));
+                    accessoriesAdapter.notifyItemChanged(position);
+                    fragment_main_basket_top_txt.setText(getAddToCardResponse.getItemsCount());
+                    fragment_main_basket_top_txt.setVisibility(View.VISIBLE);
+                    PreferenceUtils.saveCountOfItemsBasket(getActivity(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetAddToCardResponse> call, Throwable t) {
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+                Fragment frg = null;
+                frg = getActivity().getSupportFragmentManager().findFragmentByTag("main_fragment");
+                final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.detach(frg);
+                ft.attach(frg);
+                ft.commit();
+            }
+        });
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

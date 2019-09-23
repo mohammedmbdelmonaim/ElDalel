@@ -146,4 +146,5 @@
     <string name="remove_from_favorite">تم الحذف من المفضلة</string>
     <string name="add_address">أضف العنوان</string>
     <string name="postal_code">الرقم البريدي</string>
+    <string name="delete_cart_toast">تم حذف المنتج من السلة بنجاح</string>
 </resources>

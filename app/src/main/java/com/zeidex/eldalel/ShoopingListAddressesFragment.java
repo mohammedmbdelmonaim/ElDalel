@@ -12,12 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zeidex.eldalel.adapters.AddressesAdapter;
-import com.zeidex.eldalel.adapters.CategoryAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,7 +63,7 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
         int id = v.getId();
         switch (id){
             case R.id.fragment_shooping_list_addresses_text_add:{
-                Fragment fragment = new PaymentPhoneNumberFragment();
+                Fragment fragment = new AddNewAddressFragment();
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
                 ft.replace(R.id.payment_constrant, fragment, fragment.getTag());
