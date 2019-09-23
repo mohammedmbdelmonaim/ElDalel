@@ -107,7 +107,6 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
         subcategoryId = getArguments().getInt(SUBCATEGORY_ID_INTENT_EXTRA, -1);
         subsubcategoryId = getArguments().getInt(SUB_SUBCATEGORY_ID_INTENT_EXTRA, -1);
 
-
         showDialog();
         onLoadPage();
     }
