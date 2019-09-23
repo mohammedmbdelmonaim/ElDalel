@@ -5,7 +5,7 @@
     <string name="bottomnavigation_label_main">الرئيسية</string>
     <string name="bottomnavigation_label_cate">الفئات</string>
     <string name="bottomnavigation_label_offers">العروض</string>
-    <string name="bottomnavigation_label_basket">سلة التسوق</string>
+    <string name="bottomnavigation_label_basket">السلة</string>
     <string name="bottomnavigation_label_account">حسابى</string>
 
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
@@ -148,4 +148,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="remove_from_favorite">تم الحذف من المفضلة</string>
+    <string name="add_address">أضف العنوان</string>
+    <string name="postal_code">الرقم البريدي</string>
+    <string name="add_address_sucess">تم إضافة الأعلان بنجاح</string>
 </resources>
