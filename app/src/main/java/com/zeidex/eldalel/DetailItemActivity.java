@@ -304,6 +304,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                         detail_item_text_price_before.setText(getDetailProduct.getData().getProduct().getOld_price());
                     }
 
+
                     detail_item_text_price.setText(getDetailProduct.getData().getProduct().getPrice());
 
                     Locale locale = ChangeLang.getLocale(getResources());

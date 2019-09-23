@@ -69,28 +69,6 @@ public class BasketElementsAdapter extends RecyclerView.Adapter<BasketElementsAd
                 .into(holder.basket_element_img);
 
         holder.basket_element_currency_number.setText(basketProductsModel.getItem_count());
-
-
-        holder.basket_element_currency_linear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                basketOperation.onChangeQuantity(Integer.parseInt(basketProductsModel.getProduct_id()) , position);
-            }
-        });
-
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                basketOperation.onClickBasketProduct(Integer.parseInt(basketProductsModel.getProduct_id()) , position);
-            }
-        });
-
-        holder.basket_element_currency_img_delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                basketOperation.onDeleteItem(Integer.parseInt(basketProductsModel.getCart_id()) , position);
-            }
-        });
     }
 
     @Override
@@ -114,6 +92,27 @@ public class BasketElementsAdapter extends RecyclerView.Adapter<BasketElementsAd
             basket_element_currency_linear = itemView.findViewById(R.id.basket_element_currency_linear);
             basket_element_price = itemView.findViewById(R.id.basket_element_price);
             basket_element_currency_number = itemView.findViewById(R.id.basket_element_currency_number);
+
+            basket_element_currency_linear.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    basketOperation.onChangeQuantity(Integer.parseInt(basketProducts.get(getAdapterPosition()).getProduct_id()) , getAdapterPosition());
+                }
+            });
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    basketOperation.onClickBasketProduct(Integer.parseInt(basketProducts.get(getAdapterPosition()).getProduct_id()) , getAdapterPosition());
+                }
+            });
+
+            basket_element_currency_img_delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    basketOperation.onDeleteItem(Integer.parseInt(basketProducts.get(getAdapterPosition()).getCart_id()) , getAdapterPosition());
+                }
+            });
         }
     }
 

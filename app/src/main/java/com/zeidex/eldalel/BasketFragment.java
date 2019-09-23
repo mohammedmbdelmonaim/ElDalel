@@ -287,12 +287,14 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
         deleteBasketResponseCall.enqueue(new Callback<DeleteBasketResponse>() {
             @Override
             public void onResponse(Call<DeleteBasketResponse> call, Response<DeleteBasketResponse> response) {
-                if(response!= null && response.body().getCode() == 200){
+                DeleteBasketResponse responseBody = response.body();
+                if(response!= null && responseBody.getCode() == 200){
                     basketElementsAdapter.getBasketProducts().remove(pos);
                     basketElementsAdapter.notifyItemRemoved(pos);
-                    String totalString = PriceFormatter.toDecimalRsString(response.body().getData().getOrderTotalPrice(), getActivity().getApplicationContext());
+                    String totalString = PriceFormatter.toDecimalRsString(responseBody.getData().getOrderTotalPrice(), getActivity().getApplicationContext());
                     fragment_basket_total_price_products_text.setText(totalString);
                     fragment_basket_total_price_text.setText(totalString);
+                    PreferenceUtils.saveCountOfItemsBasket(getContext().getApplicationContext(), responseBody.getData().getAllCartItemsCount());
                     Toasty.success(getActivity(), getString(R.string.delete_cart_toast) , Toast.LENGTH_LONG).show();
                 }
                 reloadDialog.dismiss();
