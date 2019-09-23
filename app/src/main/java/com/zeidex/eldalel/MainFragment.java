@@ -393,6 +393,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
 
             @Override
             public void onFailure(Call<GetHomeProducts> call, Throwable t) {
+                if (getActivity() != null) {
                     Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                     reloadDialog.dismiss();
                     Fragment frg = null;
@@ -401,6 +402,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                     ft.detach(frg);
                     ft.attach(frg);
                     ft.commitAllowingStateLoss();
+                }
             }
         });
 
@@ -480,8 +482,10 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
 
             @Override
             public void onFailure(Call<GetOffers> call, Throwable t) {
-                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
-                reloadDialog.dismiss();
+                if (getActivity() != null) {
+                    Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                    reloadDialog.dismiss();
+                }
             }
         });
     }

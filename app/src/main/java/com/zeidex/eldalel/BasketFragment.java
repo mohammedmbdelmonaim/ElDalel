@@ -203,7 +203,6 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
 
     @Override
     public void onClickBasketProduct(int id, int pos) {
-
     }
 
 
@@ -291,6 +290,9 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                 if(response!= null && response.body().getCode() == 200){
                     basketElementsAdapter.getBasketProducts().remove(pos);
                     basketElementsAdapter.notifyItemRemoved(pos);
+                    String totalString = PriceFormatter.toDecimalRsString(response.body().getData().getOrderTotalPrice(), getActivity().getApplicationContext());
+                    fragment_basket_total_price_products_text.setText(totalString);
+                    fragment_basket_total_price_text.setText(totalString);
                     Toasty.success(getActivity(), getString(R.string.delete_cart_toast) , Toast.LENGTH_LONG).show();
                 }
                 reloadDialog.dismiss();
