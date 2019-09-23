@@ -6,7 +6,7 @@
     <string name="bottomnavigation_label_main">الرئيسية</string>
     <string name="bottomnavigation_label_cate">الفئات</string>
     <string name="bottomnavigation_label_offers">العروض</string>
-    <string name="bottomnavigation_label_basket">سلة التسوق</string>
+    <string name="bottomnavigation_label_basket">السلة</string>
     <string name="bottomnavigation_label_account">حسابى</string>
 
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
