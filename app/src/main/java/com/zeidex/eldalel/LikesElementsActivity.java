@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,6 +48,13 @@ import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 public class LikesElementsActivity extends BaseActivity implements LikesElementsAdapter.LikesOperation {
     @BindView(R.id.likes_item_recycler_list)
     RecyclerView likes_item_recycler_list;
+    @BindView(R.id.likes_text_label_count)
+    AppCompatTextView likes_text_label_count;
+    @BindView(R.id.likes_text_label_text)
+    AppCompatTextView likes_text_label_text;
+    @BindView(R.id.favorites_no_items_layout)
+    RelativeLayout noItemsLayout;
+
     LikesElementsAdapter likesElementsAdapter;
 
     String token = "";
@@ -83,9 +93,14 @@ public class LikesElementsActivity extends BaseActivity implements LikesElements
                     if (code == 200) {
                         List<GetFavorites.Favorite> favorites = response.body().getData().getFavorites();
                         if (favorites != null && favorites.size() > 0) {
+                            noItemsLayout.setVisibility(View.GONE);
+                            likes_text_label_count.setText(String.valueOf(favorites.size()));
+                            likes_text_label_text.setVisibility(View.VISIBLE);
                             products = getProductsFromResponse(favorites);
                             likesElementsAdapter.setProductList(products);
                             likesElementsAdapter.notifyDataSetChanged();
+                        } else {
+                            noItemsLayout.setVisibility(View.VISIBLE);
                         }
                     }
                 }
@@ -221,12 +236,20 @@ public class LikesElementsActivity extends BaseActivity implements LikesElements
             @Override
             public void onResponse(Call<DeleteFavoriteResponse> call, Response<DeleteFavoriteResponse> response) {
                 DeleteFavoriteResponse deleteFavoriteResponse = response.body();
-                if(deleteFavoriteResponse != null){
+                if (deleteFavoriteResponse != null) {
                     int code = deleteFavoriteResponse.getCode();
-                    if(code == 200){
+                    if (code == 200) {
                         Toasty.success(LikesElementsActivity.this, getString(R.string.remove_from_favorite), Toast.LENGTH_LONG).show();
                         likesElementsAdapter.getProductsList().remove(position);
                         likesElementsAdapter.notifyItemRemoved(position);
+                        int remainingProductsCount = likesElementsAdapter.getProductsList().size();
+                        if (remainingProductsCount > 0)
+                            likes_text_label_count.setText(String.valueOf(remainingProductsCount));
+                        else {
+                            likes_text_label_count.setVisibility(View.GONE);
+                            likes_text_label_text.setVisibility(View.GONE);
+                            noItemsLayout.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
                 reloadDialog.dismiss();

@@ -27,61 +27,58 @@ import static com.zeidex.eldalel.utils.Constants.CART_EMPTY;
 import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
 import static com.zeidex.eldalel.utils.Constants.NOT_AVAILABLE;
 
-public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCategory3Adapter.ProductsCategory3Holder> {
+public class PhonesAdapter extends RecyclerView.Adapter<PhonesAdapter.PhoneHolder> {
     private Context context;
-    List<ProductsCategory> productsCategoryList;
 
-    public List<ProductsCategory> getProductsCategoryList() {
-        return productsCategoryList;
-    }
-    public void setProductsList(List<ProductsCategory> productsCategoryList){
-        this.productsCategoryList = productsCategoryList;
+    public List<ProductsCategory> getPhoneList() {
+        return phoneList;
     }
 
+    List<ProductsCategory> phoneList;
     View view;
 
-    private ProductsCategory3Operation productsCategory3Operation;
+    private PhonesOperation phonesOperation;
 
-    public void setProductsCategory3Operation(ProductsCategory3Operation productsCategory3Operation) {
-        this.productsCategory3Operation = productsCategory3Operation;
+    public void setnPhones(PhonesOperation phonesOperation) {
+        this.phonesOperation = phonesOperation;
     }
 
-    public ProductsCategory3Adapter(Context context) {
+    public PhonesAdapter(Context context) {
         this.context = context;
     }
 
-    public ProductsCategory3Adapter(Context context, List<ProductsCategory> productsCategoryList) {
+    public PhonesAdapter(Context context, List<ProductsCategory> phoneList) {
         this.context = context;
-        this.productsCategoryList = productsCategoryList;
+        this.phoneList = phoneList;
     }
 
     @NonNull
     @Override
-    public ProductsCategory3Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PhoneHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         view = LayoutInflater.from(context).inflate(R.layout.phone_row, parent, false);
-        final ProductsCategory3Holder productsCategory3Holder = new ProductsCategory3Holder(view);
-        return productsCategory3Holder;
+        final PhoneHolder phoneHolder = new PhoneHolder(view);
+        return phoneHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ProductsCategory3Holder holder, int position) {
-        ProductsCategory productsCategory = productsCategoryList.get(position);
-        if (productsCategory.getLike() == null) {
+    public void onBindViewHolder(@NonNull PhoneHolder holder, int position) {
+        ProductsCategory phoneModel = phoneList.get(position);
+        if (phoneModel.getLike() == null) {
 
-        } else if (productsCategory.getLike().equalsIgnoreCase("1")) {
+        } else if (phoneModel.getLike().equalsIgnoreCase("1")) {
             holder.phone_image_like.setChecked(true);
         } else {
             holder.phone_image_like.setChecked(false);
         }
 
-        if (productsCategory.getDiscount() == null) {
+        if (phoneModel.getDiscount() == null) {
             holder.discount_linear.setVisibility(View.GONE);
         } else {
             holder.discount_linear.setVisibility(View.VISIBLE);
-            holder.discount_result.setText(productsCategory.getDiscount());
+            holder.discount_result.setText(phoneModel.getDiscount());
         }
 
-        if (productsCategory.getPrice_before() == null) {
+        if (phoneModel.getPrice_before() == null) {
             holder.phone_text_price_before.setVisibility(View.GONE);
             holder.phone_text_price_before_label.setVisibility(View.GONE);
             holder.phone_text_price_before_view.setVisibility(View.GONE);
@@ -92,25 +89,26 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
             holder.phone_text_price_before_view.setVisibility(View.VISIBLE);
             holder.phone_text_price_before_label_view.setVisibility(View.VISIBLE);
             holder.phone_text_price_before.setVisibility(View.VISIBLE);
-            Double priceBefore = Double.parseDouble(productsCategory.getPrice_before());
+            Double priceBefore = Double.parseDouble(phoneModel.getPrice_before());
             holder.phone_text_price_before.setText(PriceFormatter.toDecimalString(priceBefore, context.getApplicationContext()));
         }
 
-        holder.phone_text_name.setText(productsCategory.getName());
-        holder.phone_text_type.setText(productsCategory.getType());
-        double price = Double.parseDouble(productsCategory.getPrice());
+        holder.phone_text_name.setText(phoneModel.getName());
+        holder.phone_text_type.setText(phoneModel.getType());
+
+        double price = Double.parseDouble(phoneModel.getPrice());
         holder.phone_text_price.setText(PriceFormatter.toDecimalString(price, context.getApplicationContext()));
+        holder.phone_text_price_before.setText(phoneModel.getPrice_before());
 
         Glide.with(context)
-                .load("https://www.dleel-sh.com/homepages/get/" + productsCategory.getImgUrl())
+                .load("https://www.dleel-sh.com/homepages/get/" + phoneModel.getImgUrl())
                 .placeholder(R.drawable.condition_logo)
                 .centerCrop()
                 .into(holder.phone_img_url);
 
-
-        String cartStatus = productsCategory.getCart();
+        String cartStatus = phoneModel.getCart();
         if (cartStatus.equals(String.valueOf(CART_EMPTY))) {
-            if (productsCategory.getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE))) {
+            if (phoneModel.getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE))) {
                 holder.phone_row_add_to_card.setBackgroundResource(R.drawable.row_out_of_stock_cart);
                 holder.phone_row_add_to_card.setText(R.string.cart_out_of_stock_label);
             } else {
@@ -125,17 +123,17 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
 
     @Override
     public int getItemCount() {
-        return productsCategoryList.size();
+        return phoneList.size();
     }
 
-    public class ProductsCategory3Holder extends RecyclerView.ViewHolder {
+    public class PhoneHolder extends RecyclerView.ViewHolder {
         public AppCompatImageView phone_img_url;
         public AppCompatCheckBox phone_image_like;
         public AppCompatTextView discount_result, phone_text_type, phone_text_name, phone_text_price, phone_text_price_before, phone_text_price_before_label, phone_row_add_to_card;
         View phone_text_price_before_view, phone_text_price_before_label_view;
         LinearLayoutCompat discount_linear;
 
-        public ProductsCategory3Holder(View itemView) {
+        public PhoneHolder(View itemView) {
             super(itemView);
             phone_img_url = itemView.findViewById(R.id.phone_img_url);
             phone_image_like = itemView.findViewById(R.id.phone_image_like);
@@ -158,9 +156,9 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
                         return;
                     }
                     if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context))) {
-                        if (!productsCategoryList.get(getAdapterPosition()).getCart().equals(String.valueOf(CART_NOT_EMPTY)) &&
-                                !productsCategoryList.get(getAdapterPosition()).getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE)))
-                            productsCategory3Operation.onAddToProductCategory3Cart(Integer.parseInt(productsCategoryList.get(getAdapterPosition()).getId()), getAdapterPosition());
+                        if (!phoneList.get(getAdapterPosition()).getCart().equals(String.valueOf(CART_NOT_EMPTY)) &&
+                                !phoneList.get(getAdapterPosition()).getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE)))
+                            phonesOperation.onAddToPhoneCart(Integer.parseInt(phoneList.get(getAdapterPosition()).getId()), getAdapterPosition());
                     }
                 }
             });
@@ -181,7 +179,7 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
                         return;
                     }
                     if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) && isChecked) {
-                        productsCategory3Operation.onCliickProductsCategory3Like(Integer.parseInt(productsCategoryList.get(getAdapterPosition()).getId()));
+                        phonesOperation.onCliickPhoneLike(Integer.parseInt(phoneList.get(getAdapterPosition()).getId()));
                     }
 
                 }
@@ -190,17 +188,17 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    productsCategory3Operation.onClickProduct3(Integer.parseInt(productsCategoryList.get(getAdapterPosition()).getId()), getAdapterPosition());
+                    phonesOperation.onClickPhone(Integer.parseInt(phoneList.get(getAdapterPosition()).getId()), getAdapterPosition());
                 }
             });
         }
     }
 
-    public interface ProductsCategory3Operation {
-        void onClickProduct3(int id, int pos);
+    public interface PhonesOperation {
+        void onClickPhone(int id, int position);
 
-        void onCliickProductsCategory3Like(int id);
+        void onCliickPhoneLike(int id);
 
-        void onAddToProductCategory3Cart(int id, int position);
+        void onAddToPhoneCart(int id, int position);
     }
 }

@@ -16,9 +16,12 @@ import com.zeidex.eldalel.utils.SmartFragmentStatePagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
+import static com.zeidex.eldalel.OffersFragment.CATEGORY_NAME_INTENT_EXTRA;
 import static com.zeidex.eldalel.OffersFragment.SUBCATEGORIES_INTENT_EXTRA_KEY;
 
 public class CategoriesAdapter extends SmartFragmentStatePagerAdapter {
+    public static final String CATEGORY_NAME_AR_INTENT_EXTRA = "category_name_ar";
     List<String> ids, names;
     List<GetAllCategories.Category> categories;
 
@@ -36,8 +39,10 @@ public class CategoriesAdapter extends SmartFragmentStatePagerAdapter {
 
         if (position != 0) {
             ArrayList<Subcategory> subCategoriesModel = new ArrayList<>();
+            GetAllCategories.Category currentCategory = categories.get(position - 1);
+
             //we subtract 1 from position to get the actual position for categories as new arrival is taking the first position
-            for (GetAllCategories.Subcategory subcategory : categories.get(position - 1).getSubcategories()) {
+            for (GetAllCategories.Subcategory subcategory : currentCategory.getSubcategories()) {
                 Subcategory subcategoryModel = new Subcategory(subcategory.getId(), subcategory.getNameAr(),
                         subcategory.getName(), "");
 
@@ -50,11 +55,12 @@ public class CategoriesAdapter extends SmartFragmentStatePagerAdapter {
                     }
                     subcategoryModel.setListSubSubCategory(subsubcategories);
                 }
-
                 subCategoriesModel.add(subcategoryModel);
             }
             bundle.putParcelableArrayList(SUBCATEGORIES_INTENT_EXTRA_KEY, subCategoriesModel);
-//            bundle.putString("id", ids.get(position));
+            bundle.putInt(CATEGORY_ID_INTENT_EXTRA_KEY, currentCategory.getId());
+            bundle.putString(CATEGORY_NAME_INTENT_EXTRA, currentCategory.getName());
+            bundle.putString(CATEGORY_NAME_AR_INTENT_EXTRA, currentCategory.getNameAr());
             subCategoriesFragment.setArguments(bundle);
             return subCategoriesFragment;
         } else {
