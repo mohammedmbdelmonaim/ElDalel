@@ -2,22 +2,17 @@ package com.zeidex.eldalel.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.zeidex.eldalel.R;
 import com.zeidex.eldalel.models.ColorProduct;
 
@@ -60,17 +55,22 @@ public class DetailColorsItemAdapter extends RecyclerView.Adapter<DetailColorsIt
             holder.detail_color_label.setTextColor(Color.parseColor("#606060"));
         }
 
-        if (colors.get(position).getName().equalsIgnoreCase("black")){
-            holder.detail_color_img_url.setColorFilter(context.getResources().getColor(R.color.black_color));
-        }else if (colors.get(position).getName().equalsIgnoreCase("blue")){
-            holder.detail_color_img_url.setColorFilter(context.getResources().getColor(R.color.blue_color));
-        }else if (colors.get(position).getName().equalsIgnoreCase("GREEN")){
-            holder.detail_color_img_url.setColorFilter(context.getResources().getColor(R.color.green_color));
-        }else if (colors.get(position).getName().equalsIgnoreCase("grey")){
-            holder.detail_color_img_url.setColorFilter(context.getResources().getColor(R.color.gray_color));
-        }else if (colors.get(position).getName().equalsIgnoreCase("red")){
-            holder.detail_color_img_url.setColorFilter(context.getResources().getColor(R.color.red_color));
-        }
+//        if (colors.get(position).getName().equalsIgnoreCase("black")){
+//            holder.detail_color_img_url.setColorFilter(context.getResources().getColor(R.color.black_color));
+//        }else if (colors.get(position).getName().equalsIgnoreCase("blue")){
+//            holder.detail_color_img_url.setColorFilter(context.getResources().getColor(R.color.blue_color));
+//        }else if (colors.get(position).getName().equalsIgnoreCase("GREEN")){
+//            holder.detail_color_img_url.setColorFilter(context.getResources().getColor(R.color.green_color));
+//        }else if (colors.get(position).getName().equalsIgnoreCase("grey")){
+//            holder.detail_color_img_url.setColorFilter(context.getResources().getColor(R.color.gray_color));
+//        }else if (colors.get(position).getName().equalsIgnoreCase("red")){
+//            holder.detail_color_img_url.setColorFilter(context.getResources().getColor(R.color.red_color));
+//        }
+
+        Glide.with(context)
+                .load("https://www.dleel-sh.com/homepages/get/" + colors.get(position).getPhoto())
+                .into(holder.detail_color_img_url);
+
 
         holder.detail_color_label.setText(colors.get(position).getName());
         holder.detail_colores_linear.setOnClickListener(new View.OnClickListener() {

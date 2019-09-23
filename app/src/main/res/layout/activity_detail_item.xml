@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -14,34 +15,36 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/item_detail_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="20dp"
+            android:padding="10dp"
             app:srcCompat="@drawable/ic_arrow_back" />
 
-        <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/detail_title_header_text"
             android:layout_width="wrap_content"
             android:layout_height="60dp"
-            android:maxLength="25"
             android:layout_marginStart="22dp"
             android:layout_weight="1"
             android:fontFamily="@font/cairo_bold"
             android:gravity="center_vertical|start"
-            android:text="… زندور اي8, بنك طاقة, 4مداخل"
+            android:maxLines="1"
+            android:textAlignment="viewStart"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:text="… زندور اي8, بنك طاقة, 4مداخل" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/detail_search_header_categories_img"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_height="wrap_content"
             style="@style/SearchViewStyle"
-            android:textAlignment="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:iconifiedByDefault="false"
-            android:queryHint="@string/search_here"/>
+            android:queryHint="@string/search_here"
+            android:textAlignment="center" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.core.widget.NestedScrollView
@@ -82,6 +85,7 @@
                     android:layout_height="300dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+
                     app:layout_constraintTop_toTopOf="parent"
                     app:sliderAnimationDuration="600"
                     app:sliderAutoCycleDirection="back_and_forth"
@@ -102,38 +106,42 @@
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/detailـdiscount_linear"
                     android:layout_width="wrap_content"
-                    android:paddingEnd="12dp"
-                    android:paddingStart="30dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginTop="15dp"
                     android:background="@drawable/row_dicount_bg"
+                    android:orientation="horizontal"
+                    android:paddingStart="30dp"
+                    android:paddingEnd="12dp"
+                    android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" >
+                    app:layout_constraintTop_toTopOf="parent">
 
-                    <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/discount_phone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/cairo_bold"
                         android:text="@string/discount_phone_txt"
-                        android:textSize="10sp"/>
+                        android:textAlignment="viewStart"
+                        android:textSize="10sp" />
 
-                    <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/detail_discound_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="3dp"
                         android:layout_marginEnd="1dp"
                         android:fontFamily="@font/cairo_bold"
-                        android:textSize="10sp"/>
+                        android:textAlignment="viewStart"
+                        android:textSize="10sp" />
 
-                    <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/cairo_bold"
                         android:text="%"
-                        android:textSize="10sp"/>
+                        android:textAlignment="viewStart"
+                        android:textSize="10sp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -157,19 +165,20 @@
                     app:layout_constraintTop_toBottomOf="@+id/detail_like_img"
                     app:srcCompat="@drawable/ic_share" />
 
-                <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/detail_name_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="23dp"
                     android:layout_marginTop="13dp"
                     android:fontFamily="@font/cairo_bold"
+                    android:textAlignment="viewStart"
                     android:textColor="#047AC0"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/imageSlider" />
 
-                <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/detail_sescription_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -177,6 +186,7 @@
                     android:layout_marginTop="3dp"
                     android:layout_marginEnd="10dp"
                     android:fontFamily="@font/cairo_bold"
+                    android:textAlignment="viewStart"
 
                     android:textColor="#232222"
                     android:textSize="14sp"
@@ -184,20 +194,21 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/detail_name_text" />
 
-                <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/detail_item_text_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/cairo_regular"
+                    android:maxLength="10"
                     android:paddingTop="2dp"
                     android:paddingBottom="2dp"
-                    android:maxLength="10"
+                    android:textAlignment="viewStart"
                     android:textColor="#232222"
                     android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="@+id/detail_sescription_text"
                     app:layout_constraintTop_toBottomOf="@+id/detail_sescription_text" />
 
-                <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="3dp"
@@ -205,13 +216,12 @@
                     android:paddingTop="2dp"
                     android:paddingBottom="2dp"
                     android:text="@string/currancy_label"
+                    android:textAlignment="viewStart"
                     android:textColor="#232222"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="@+id/detail_item_text_price"
                     app:layout_constraintStart_toEndOf="@+id/detail_item_text_price"
                     app:layout_constraintTop_toTopOf="@+id/detail_item_text_price" />
-
-
 
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -223,30 +233,32 @@
                     app:layout_constraintBottom_toBottomOf="@+id/detail_item_text_price"
                     app:layout_constraintStart_toEndOf="@+id/detail_item_text_price"
                     app:layout_constraintTop_toTopOf="@+id/detail_item_text_price">
+
                     <FrameLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginStart="7dp">
+
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/detail_item_text_price_before"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:visibility="visible"
-                            android:gravity="center"
                             android:layout_marginStart="3dp"
                             android:fontFamily="@font/cairo_bold"
+                            android:gravity="center"
                             android:paddingTop="2dp"
                             android:paddingBottom="2dp"
                             android:textColor="#AAAAAA"
-                            android:textSize="10sp" />
+                            android:textSize="10sp"
+                            android:visibility="visible" />
 
                         <View
                             android:id="@+id/detail_text_price_before_view"
                             android:layout_width="20dp"
-                            android:layout_gravity="center"
                             android:layout_height="0.8dp"
-                            android:visibility="visible"
-                            android:background="#AAAAAA" />
+                            android:layout_gravity="center"
+                            android:background="#AAAAAA"
+                            android:visibility="visible" />
                     </FrameLayout>
 
 
@@ -254,31 +266,30 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginStart="3dp">
+
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/detail_item_text_price_before_label"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:gravity="center"
                             android:layout_marginStart="3dp"
                             android:fontFamily="@font/cairo_bold"
+                            android:gravity="center"
                             android:text="@string/currancy_label"
-                            android:visibility="visible"
                             android:textColor="#AAAAAA"
-                            android:textSize="10sp" />
+                            android:textSize="10sp"
+                            android:visibility="visible" />
 
                         <View
                             android:id="@+id/detail_text_price_before_label_view"
                             android:layout_width="20dp"
                             android:layout_height="0.8dp"
-                            android:visibility="visible"
-
                             android:layout_gravity="center"
-                            android:background="#AAAAAA" />
+
+                            android:background="#AAAAAA"
+                            android:visibility="visible" />
                     </FrameLayout>
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
-
-
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -297,13 +308,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/detail_constraint_top">
 
-                <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/cairo_bold"
                     android:text="@string/detail_color"
+                    android:textAlignment="viewStart"
                     android:textColor="#606060"
                     android:textSize="14sp" />
 
@@ -311,12 +323,12 @@
                     android:id="@+id/detail_recycler_colors_item"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="30dp"
                     android:layout_marginStart="8dp"
-                    android:clipToPadding="false"
-                    android:layout_marginBottom="15dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginEnd="8dp" />
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="15dp"
+                    android:clipToPadding="false"
+                    android:paddingStart="30dp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -333,13 +345,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/detail_linear_colors_item">
 
-                <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/cairo_bold"
                     android:text="@string/detail_size_label"
+                    android:textAlignment="viewStart"
                     android:textColor="#606060"
                     android:textSize="14sp" />
 
@@ -348,11 +361,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:paddingStart="30dp"
-                    android:clipToPadding="false"
-                    android:layout_marginBottom="22dp"
                     android:layout_marginTop="14dp"
-                    android:layout_marginEnd="8dp" />
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="22dp"
+                    android:clipToPadding="false"
+                    android:paddingStart="30dp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.viewpager.widget.ViewPager
@@ -360,10 +373,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:layout_marginStart="16dp"
-                android:padding="8dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:background="#FFFFFF"
+                android:padding="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/detail_linear_size_item">
@@ -442,7 +455,7 @@
                     android:textSize="12sp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/details_like_too"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -450,79 +463,88 @@
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/cairo_bold"
                 android:text="@string/details_like_too"
+                android:textAlignment="viewStart"
                 android:textColor="#606060"
                 android:textSize="12sp"
-                app:layout_constraintTop_toBottomOf="@+id/details_methods"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/details_methods" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/details_recycler_linear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="#EFEFEF"
                 android:layout_marginTop="10dp"
+                android:background="#EFEFEF"
+                android:orientation="vertical"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                app:layout_constraintTop_toBottomOf="@+id/details_like_too"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintTop_toBottomOf="@+id/details_like_too">
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/details_recycler_like_too"
-                    android:paddingStart="16dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/details_add_to_cart_whole_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/details_recycler_linear"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/details_recycler_linear">
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/details_add_to_card"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:text="@string/details_add_to_card_label"
+            android:background="#047AC0"
+            android:fontFamily="@font/cairo_bold"
             android:gravity="center"
             android:padding="20dp"
-            android:background="#047AC0"
+            android:text="@string/details_add_to_card_label"
             android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:fontFamily="@font/cairo_bold"/>
+            android:textSize="14sp" />
+
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/cart_count_linear_layout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
             android:background="#0672B3"
+            android:gravity="center"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/details_quantaty_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/details_quantaty_txt_label"
+                android:fontFamily="@font/cairo_bold"
                 android:gravity="center"
+                android:text="@string/details_quantaty_txt_label"
                 android:textColor="#FFFFFF"
-                android:textSize="10sp"
-                android:fontFamily="@font/cairo_bold"/>
+                android:textSize="10sp" />
 
-            <androidx.appcompat.widget.AppCompatEditText android:textAlignment="viewStart"
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/details_quantaty_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#FFFFFF"
+                android:fontFamily="@font/cairo_bold"
                 android:inputType="number"
-                android:textSize="16sp"
                 android:text="1"
-                android:textColorHint="#FFFFFF"
+                android:textAlignment="viewStart"
                 android:textColor="#FFFFFF"
-                android:fontFamily="@font/cairo_bold"/>
+                android:textColorHint="#FFFFFF"
+                android:textSize="16sp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>

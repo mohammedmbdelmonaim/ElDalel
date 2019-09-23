@@ -145,4 +145,5 @@
     <string name="new_arrival_header_text">وصل حديثاً</string>
     <string name="remove_from_favorite">تم الحذف من المفضلة</string>
     <string name="delete_cart_toast">تم حذف المنتج من السلة بنجاح</string>
+    <string name="quantity_not_available_toast">الكمية المطلوبة أكبر من الكمية المتوفرة لدينا، الكمية المتاحة هي </string>
 </resources>

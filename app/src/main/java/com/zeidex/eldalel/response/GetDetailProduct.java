@@ -110,10 +110,10 @@ public class GetDetailProduct {
         String name_ar;
 
         @SerializedName("price")
-        String price;
+        Double price;
 
         @SerializedName("old_price")
-        String old_price;
+        Double old_price;
 
         @SerializedName("shortDesc")
         String shortDesc;
@@ -150,6 +150,12 @@ public class GetDetailProduct {
 
         @SerializedName("colors")
         List<Color> colors;
+
+        @SerializedName("cart")
+        Integer cart;
+
+        @SerializedName("available_quantity")
+        Integer availableQuantity;
 
         @SerializedName("capacities")
         List<String> capacities;
@@ -218,19 +224,19 @@ public class GetDetailProduct {
             this.name_ar = name_ar;
         }
 
-        public String getPrice() {
+        public Double getPrice() {
             return price;
         }
 
-        public void setPrice(String price) {
+        public void setPrice(Double price) {
             this.price = price;
         }
 
-        public String getOld_price() {
+        public Double getOld_price() {
             return old_price;
         }
 
-        public void setOld_price(String old_price) {
+        public void setOld_price(Double old_price) {
             this.old_price = old_price;
         }
 
@@ -298,6 +304,22 @@ public class GetDetailProduct {
             this.discount = discount;
         }
 
+        public Integer getCart() {
+            return cart;
+        }
+
+        public void setCart(Integer cart) {
+            this.cart = cart;
+        }
+
+        public Integer getAvailableQuantity() {
+            return availableQuantity;
+        }
+
+        public void setAvailableQuantity(Integer availableQuantity) {
+            this.availableQuantity = availableQuantity;
+        }
+
         public List<Photo> getPhotos() {
             return photos;
         }
@@ -326,6 +348,17 @@ public class GetDetailProduct {
 
         @SerializedName("product_id")
         String product_id;
+
+        @SerializedName("photo")
+        String photo;
+
+        public String getPhoto() {
+            return photo;
+        }
+
+        public void setPhoto(String photo) {
+            this.photo = photo;
+        }
 
         public String getName() {
             return name;
