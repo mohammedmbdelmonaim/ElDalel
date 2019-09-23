@@ -30,17 +30,18 @@
         app:layout_constraintStart_toEndOf="@id/basket_element_img"
         app:layout_constraintTop_toTopOf="@id/basket_element_img" />
 
-    <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/basket_element_desc"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/cairo_bold"
         android:text="شاحن بنك طاقة متنقل مدخل تايب سى شاحن بنك طاقة متنقل مدخل تايب سى"
+        android:textAlignment="viewStart"
         android:textColor="#232222"
         android:textSize="12sp"
-        android:fontFamily="@font/cairo_bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/basket_element_name"
-        app:layout_constraintTop_toBottomOf="@+id/basket_element_name"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/basket_element_name" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/basket_element_price"
@@ -79,9 +80,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:orientation="horizontal"
-        android:visibility="gone"
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
+        android:visibility="gone"
         app:layout_constraintStart_toEndOf="@+id/basket_element_currency_price"
         app:layout_constraintTop_toTopOf="@+id/basket_element_currency_price">
 
@@ -144,39 +145,45 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/basket_element_currency_linear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <!--<androidx.appcompat.widget.LinearLayoutCompat-->
+    <!--android:id="@+id/basket_element_currency_linear"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginTop="14dp"-->
+    <!--android:orientation="horizontal"-->
+    <!--app:layout_constraintStart_toStartOf="@+id/basket_element_price"-->
+    <!--app:layout_constraintTop_toBottomOf="@+id/basket_element_price">-->
+
+    <!--<androidx.appcompat.widget.AppCompatImageView-->
+    <!--android:id="@+id/basket_element_currency_arrow"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_gravity="center"-->
+    <!--app:layout_constraintStart_toStartOf="@+id/basket_element_price"-->
+    <!--app:layout_constraintTop_toBottomOf="@+id/basket_element_price"-->
+    <!--app:srcCompat="@drawable/ic_arrow_down_" />-->
+
+    <!--<androidx.appcompat.widget.AppCompatTextView-->
+    <!--android:id="@+id/basket_element_currency_number"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginStart="10dp"-->
+    <!--android:fontFamily="@font/cairo_bold"-->
+    <!--android:layout_marginBottom="3dp"-->
+    <!--android:textAlignment="viewStart"-->
+    <!--android:textColor="#606060"-->
+    <!--android:textSize="16sp"-->
+    <!--app:layout_constraintBottom_toBottomOf="@+id/basket_element_currency_arrow"-->
+    <!--app:layout_constraintStart_toEndOf="@+id/basket_element_currency_arrow"-->
+    <!--app:layout_constraintTop_toTopOf="@+id/basket_element_currency_arrow" />-->
+    <!--</androidx.appcompat.widget.LinearLayoutCompat>-->
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_marginTop="14dp"
-        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="@+id/basket_element_price"
-        app:layout_constraintTop_toBottomOf="@+id/basket_element_price">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/basket_element_currency_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            app:layout_constraintStart_toStartOf="@+id/basket_element_price"
-            app:layout_constraintTop_toBottomOf="@+id/basket_element_price"
-            app:srcCompat="@drawable/ic_arrow_down_" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/basket_element_currency_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:fontFamily="@font/cairo_bold"
-            android:layout_marginBottom="3dp"
-            android:textAlignment="viewStart"
-            android:textColor="#606060"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/basket_element_currency_arrow"
-            app:layout_constraintStart_toEndOf="@+id/basket_element_currency_arrow"
-            app:layout_constraintTop_toTopOf="@+id/basket_element_currency_arrow" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
+        app:layout_constraintTop_toBottomOf="@+id/basket_element_price" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/basket_element_currency_img_delete"
