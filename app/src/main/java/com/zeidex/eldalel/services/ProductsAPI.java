@@ -10,9 +10,12 @@ import retrofit2.http.Query;
 public interface ProductsAPI {
 
     @GET("products")
-    Call<GetProducts> getProducts(@Query("subcat_id") int subcategoryId, @Query("token") String token);
+    Call<GetProducts> getProductsFromSubcategory(@Query("subcat_id") int subcategoryId, @Query("token") String token);
 
     @GET("products")
-    Call<GetProducts> getProductsFromSubSubCategory(@Query("sub_subcat_id") int subcategoryId, @Query("token") String token);
+    Call<GetProducts> getProductsFromCategory(@Query("cat_id") int categoryId, @Query("token") String token);
+
+    @GET("products")
+    Call<GetProducts> getProductsFromSubSubCategory(@Query("sub_subcat_id") int subsubcategoryId, @Query("token") String token);
 
 }

@@ -23,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
 import static com.zeidex.eldalel.SubCategoriesFragment.SUBCATEGORY_ID_EXTRA_KEY;
 import static com.zeidex.eldalel.SubCategoriesFragment.SUBCATEGORY_NAME_EXTRA_KEY;
 import static com.zeidex.eldalel.SubCategoriesFragment.SUBSUBCATEGORIES_INTENT_EXTRA_KEY;
@@ -37,7 +38,7 @@ public class ProductsActivity extends BaseActivity {
 
     List<String> cat_names;
     List<String> cat_ids;
-    CategoriesItemAdapter categoriesAdapter;
+    CategoriesItemAdapter categoriesItemAdapter;
 
     String token = "";
 
@@ -77,8 +78,13 @@ public class ProductsActivity extends BaseActivity {
 
     public void initializeViewPagerWithoutSubSubCategories() {
         int subCategoryId = getIntent().getIntExtra(SUBCATEGORY_ID_EXTRA_KEY, 0);
-        categoriesAdapter = new CategoriesItemAdapter(getSupportFragmentManager(), subCategoryId);
-        vpPager.setAdapter(categoriesAdapter);
+        if (subCategoryId == 0) {//meaning it has no subcategory, so we fetch products from category id
+            int categoryId = getIntent().getIntExtra(CATEGORY_ID_INTENT_EXTRA_KEY, 0);
+            categoriesItemAdapter = new CategoriesItemAdapter(categoryId, getSupportFragmentManager());
+        } else {
+            categoriesItemAdapter = new CategoriesItemAdapter(getSupportFragmentManager(), subCategoryId);
+        }
+        vpPager.setAdapter(categoriesItemAdapter);
         view_pager_tab.setVisibility(View.GONE);
     }
 
@@ -99,8 +105,8 @@ public class ProductsActivity extends BaseActivity {
             }
         }
 
-        categoriesAdapter = new CategoriesItemAdapter(getSupportFragmentManager(), cat_ids, cat_names);
-        vpPager.setAdapter(categoriesAdapter);
+        categoriesItemAdapter = new CategoriesItemAdapter(getSupportFragmentManager(), cat_ids, cat_names);
+        vpPager.setAdapter(categoriesItemAdapter);
         view_pager_tab.setTabMode(TabLayout.MODE_SCROLLABLE);
         view_pager_tab.setVisibility(View.VISIBLE);
         LinearLayout linearLayout = (LinearLayout) view_pager_tab.getChildAt(0);

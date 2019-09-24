@@ -1,6 +1,8 @@
 package com.zeidex.eldalel;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -13,8 +15,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,10 +25,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.zeidex.eldalel.adapters.ProductsCategory3Adapter;
 import com.zeidex.eldalel.models.ProductsCategory;
 import com.zeidex.eldalel.response.GetAddToCardResponse;
+import com.zeidex.eldalel.response.GetAddToFavouriteResponse;
 import com.zeidex.eldalel.response.GetProducts;
 import com.zeidex.eldalel.services.AddToCardApi;
+import com.zeidex.eldalel.services.AddToFavouriteApi;
 import com.zeidex.eldalel.services.ProductsAPI;
+import com.zeidex.eldalel.services.SearchProductAPI;
 import com.zeidex.eldalel.utils.APIClient;
+import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.GridSpacingItemDecoration;
 import com.zeidex.eldalel.utils.PreferenceUtils;
@@ -43,6 +50,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
+import static com.zeidex.eldalel.SearchActivity.SEARCH_NAME_ARGUMENT;
 import static com.zeidex.eldalel.adapters.CategoriesItemAdapter.SUBCATEGORY_ID_INTENT_EXTRA;
 import static com.zeidex.eldalel.adapters.CategoriesItemAdapter.SUB_SUBCATEGORY_ID_INTENT_EXTRA;
 import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
@@ -53,6 +62,14 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     RecyclerView category_item_recycler_list;
     @BindView(R.id.categories_no_items_layout)
     RelativeLayout noItemsLayout;
+    @BindView(R.id.category_item_details_header)
+    RelativeLayout itemDetailsHeader;
+    @BindView(R.id.category_text_label_count)
+    AppCompatTextView labelCountText;
+    @BindView(R.id.descendant_items_category)
+    AppCompatImageView descendantItemsCategoryImage;
+    @BindView(R.id.search_items_category)
+    AppCompatImageView searchItemsCategoryImage;
 
     Dialog reloadDialog;
     String token = "";
@@ -62,7 +79,12 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     ProductsCategory3Adapter productsAdapter;
     private int subcategoryId;
     private int subsubcategoryId;
-    Map<String, String> post;
+    Map<String, String> cartPost;
+    Map<String, String> likePost;
+    private ArrayList<ProductsCategory> productsCategory;
+    private int categoryId;
+    private int position_detail;
+    private String searchName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,9 +108,10 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
             token = PreferenceUtils.getUserToken(getActivity());
         }
 
+        categoryId = getArguments().getInt(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
         subcategoryId = getArguments().getInt(SUBCATEGORY_ID_INTENT_EXTRA, -1);
         subsubcategoryId = getArguments().getInt(SUB_SUBCATEGORY_ID_INTENT_EXTRA, -1);
-        String sara = "menem";
+        searchName = getArguments().getString(SEARCH_NAME_ARGUMENT);
 
         showDialog();
         onLoadPage();
@@ -99,7 +122,69 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
             getProductsFromSubSubCategory(subsubcategoryId);
         } else if (subcategoryId != -1) {
             getProductsFromSubCategory(subcategoryId);
+        } else if (categoryId != -1) {
+            getProductsFromCategory(categoryId);
+        } else if (searchName != null){
+            getProductsFromSearch(searchName);
         }
+    }
+
+    private void getProductsFromSearch(String searchName) {
+        reloadDialog.show();
+        SearchProductAPI searchAPI = APIClient.getClient(SERVER_API_TEST).create(SearchProductAPI.class);
+        searchAPI.getProductsFromNameSearch(searchName, token).enqueue(new Callback<GetProducts>() {
+            @Override
+            public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
+                if (response.body() != null) {
+                    int code = response.body().getCode();
+                    if (code == 200) {
+                        List<GetProducts.Data> products = response.body().getProducts().getDataAll();
+                        if (products.size() > 0) {
+                            productsCategory = getProductsFromResponse(products);
+                            initializeRecycler(productsCategory);
+                        } else {
+                            showEmptyView();
+                        }
+                    }
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetProducts> call, Throwable t) {
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
+    }
+
+    private void getProductsFromCategory(int categoryId) {
+        reloadDialog.show();
+        ProductsAPI productsAPI = APIClient.getClient(SERVER_API_TEST).create(ProductsAPI.class);
+        productsAPI.getProductsFromCategory(categoryId, token).enqueue(new Callback<GetProducts>() {
+            @Override
+            public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
+                if (response.body() != null) {
+                    int code = response.body().getCode();
+                    if (code == 200) {
+                        List<GetProducts.Data> products = response.body().getProducts().getDataAll();
+                        if (products.size() > 0) {
+                            productsCategory = getProductsFromResponse(products);
+                            initializeRecycler(productsCategory);
+                        } else {
+                            showEmptyView();
+                        }
+                    }
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetProducts> call, Throwable t) {
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
     }
 
     private void getProductsFromSubSubCategory(int subsubCategoryId) {
@@ -113,7 +198,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
                     if (code == 200) {
                         List<GetProducts.Data> products = response.body().getProducts().getDataAll();
                         if (products.size() > 0) {
-                            ArrayList<ProductsCategory> productsCategory = getProductsFromResponse(products);
+                            productsCategory = getProductsFromResponse(products);
                             initializeRecycler(productsCategory);
                         } else {
                             showEmptyView();
@@ -134,12 +219,13 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     private void showEmptyView() {
         noItemsLayout.setVisibility(View.VISIBLE);
         category_item_recycler_list.setVisibility(View.GONE);
+        itemDetailsHeader.setVisibility(View.INVISIBLE);
     }
 
     private void getProductsFromSubCategory(int subCategoryId) {
         reloadDialog.show();
         ProductsAPI productsAPI = APIClient.getClient(SERVER_API_TEST).create(ProductsAPI.class);
-        productsAPI.getProducts(subCategoryId, token).enqueue(new Callback<GetProducts>() {
+        productsAPI.getProductsFromSubcategory(subCategoryId, token).enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {
@@ -147,7 +233,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
                     if (code == 200) {
                         List<GetProducts.Data> products = response.body().getProducts().getDataAll();
                         if (products.size() > 0) {
-                            ArrayList<ProductsCategory> productsCategory = getProductsFromResponse(products);
+                            productsCategory = getProductsFromResponse(products);
                             initializeRecycler(productsCategory);
                         } else {
                             showEmptyView();
@@ -230,6 +316,9 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
         productsAdapter = new ProductsCategory3Adapter(getActivity(), products);
         productsAdapter.setProductsCategory3Operation(ProductsFragment.this);
         category_item_recycler_list.setAdapter(productsAdapter);
+
+        labelCountText.setText(String.valueOf(products.size()));
+        itemDetailsHeader.setVisibility(View.VISIBLE);
 //        categoryAdapter = new CategoryItemAdapter(getActivity());
 //        categoryAdapter.setCategoryOperation(this);
 //        category_item_recycler_list.setAdapter(categoryAdapter);
@@ -253,46 +342,40 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
 
     @Override
     public void onClickProduct3(int id, int pos) {
-//        position_detail = pos;
-//        startActivityForResult(new Intent(getActivity(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", home_category3).putExtra("getLike", home_category3.get(pos).getLike()).putExtra("pos", pos), 1111);
-//        Animatoo.animateSwipeLeft(getActivity());
+        position_detail = pos;
+        startActivityForResult(new Intent(getActivity(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
+        Animatoo.animateSwipeLeft(getActivity());
     }
-//
+
     @Override
-    public void onCliickProductsCategory3Like(int id) {
-//        reloadDialog.show();
-//        convertDaraToJson(id);
-//        AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
-//        Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(post);
-//        getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
-//            @Override
-//            public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
-//                GetAddToFavouriteResponse getAddToFavouriteResponse = response.body();
-//                if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
-//                    Toasty.success(getActivity(), getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
-//                }
-//                reloadDialog.dismiss();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<GetAddToFavouriteResponse> call, Throwable t) {
-//                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
-//                reloadDialog.dismiss();
-//                Fragment frg = null;
-//                frg = getActivity().getSupportFragmentManager().findFragmentByTag("main_fragment");
-//                final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-//                ft.detach(frg);
-//                ft.attach(frg);
-//                ft.commit();
-//            }
-//        });
+    public void onCliickProductsCategory3Like(int id, int pos) {
+        reloadDialog.show();
+        prepareLikeMap(id);
+        AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
+        Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(likePost);
+        getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
+            @Override
+            public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
+                GetAddToFavouriteResponse getAddToFavouriteResponse = response.body();
+                if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
+                    Toasty.success(getActivity(), getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetAddToFavouriteResponse> call, Throwable t) {
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
     }
 
     @Override
     public void onAddToProductCategory3Cart(int id, int position) {
         prepareCartMap(id);
         AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
-        Call<GetAddToCardResponse> getAddToCardResponseCall = addToCardApi.getAddToFavourite(post);
+        Call<GetAddToCardResponse> getAddToCardResponseCall = addToCardApi.getAddToFavourite(cartPost);
         getAddToCardResponseCall.enqueue(new Callback<GetAddToCardResponse>() {
             @Override
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
@@ -310,29 +393,51 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
             public void onFailure(Call<GetAddToCardResponse> call, Throwable t) {
                 Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
-                Fragment frg = null;
-                frg = getActivity().getSupportFragmentManager().findFragmentByTag("main_fragment");
-                final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.detach(frg);
-                ft.attach(frg);
-                ft.commit();
             }
         });
     }
 
     public void prepareCartMap(int id) {
-        post = new HashMap<>();
+        cartPost = new HashMap<>();
         if (PreferenceUtils.getUserLogin(getActivity())) {
             String token = PreferenceUtils.getUserToken(getActivity());
-            post.put("product_id", String.valueOf(id));
-            post.put("token", token);
-            post.put("quantity", "1");
+            cartPost.put("product_id", String.valueOf(id));
+            cartPost.put("token", token);
+            cartPost.put("quantity", "1");
         } else if (PreferenceUtils.getCompanyLogin(getActivity())) {
             String token = PreferenceUtils.getCompanyToken(getActivity());
-            post.put("product_id", String.valueOf(id));
-            post.put("token", token);
-            post.put("quantity", "1");
+            cartPost.put("product_id", String.valueOf(id));
+            cartPost.put("token", token);
+            cartPost.put("quantity", "1");
         }
         reloadDialog.show();
+    }
+
+    private void prepareLikeMap(int id) {
+        likePost = new HashMap<>();
+        if (PreferenceUtils.getUserLogin(getActivity())) {
+            String token = PreferenceUtils.getUserToken(getActivity());
+            likePost.put("product_id", String.valueOf(id));
+            likePost.put("token", token);
+        } else if (PreferenceUtils.getCompanyLogin(getActivity())) {
+            String token = PreferenceUtils.getCompanyToken(getActivity());
+            likePost.put("product_id", String.valueOf(id));
+            likePost.put("token", token);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1111) {
+            if (data.getBooleanExtra("databack", false)) {
+                productsCategory.get(position_detail).setLike("1");
+                productsAdapter.notifyItemChanged(position_detail);
+            }
+            if (data.getBooleanExtra("added_to_cart", false)) {
+                productsCategory.get(position_detail).setCart(String.valueOf(CART_NOT_EMPTY));
+                productsAdapter.notifyItemChanged(position_detail);
+            }
+        }
     }
 }

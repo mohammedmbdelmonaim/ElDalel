@@ -5,7 +5,9 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.widget.AppCompatTextView;
@@ -27,6 +29,7 @@ import butterknife.OnClick;
 
 import static com.zeidex.eldalel.NewArrivalsFragment.CATEGORY_NAME_INTENT_EXTRA;
 import static com.zeidex.eldalel.NewArrivalsFragment.SUBCATEGORIES_INTENT_EXTRA_KEY;
+import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
 
 public class NewArrivalSubcategoriesActivity extends BaseActivity {
 
@@ -36,6 +39,8 @@ public class NewArrivalSubcategoriesActivity extends BaseActivity {
     TabLayout view_pager_tab;
     @BindView(R.id.title_header_text)
     AppCompatTextView titleHeaderTextView;
+    @BindView(R.id.products_framelayout)
+    FrameLayout productsFrameLayout;
 
     List<String> cat_names;
     List<String> cat_ids;
@@ -44,6 +49,7 @@ public class NewArrivalSubcategoriesActivity extends BaseActivity {
     Dialog reloadDialog;
     String token = "";
     List<Subcategory> subcategories;
+    private int categoryId;
 
 
     @Override
@@ -80,9 +86,26 @@ public class NewArrivalSubcategoriesActivity extends BaseActivity {
     private void onLoadPage() {
 
         subcategories = getIntent().getParcelableArrayListExtra(SUBCATEGORIES_INTENT_EXTRA_KEY);
+        categoryId = getIntent().getIntExtra(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
         if (subcategories != null && subcategories.size() > 0) {
-            initializeViewPager();
+            initializeViewPager(); //with subcategories
+        } else {
+            vpPager.setVisibility(View.GONE);
+            initializeProductsFragment(); //with category products
         }
+
+    }
+
+    private void initializeProductsFragment() {
+        int categoryId = getIntent().getIntExtra(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
+        NewArrivalProductsFragment newArrivalProductsFragment = new NewArrivalProductsFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
+        newArrivalProductsFragment.setArguments(bundle);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.products_framelayout, newArrivalProductsFragment).commit();
+        productsFrameLayout.setVisibility(View.VISIBLE);
 
     }
 

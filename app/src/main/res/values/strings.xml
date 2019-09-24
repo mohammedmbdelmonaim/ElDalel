@@ -145,6 +145,8 @@
     <string name="discount_label">Discount</string>
     <string name="new_arrival_header_text">New Arrival</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="remove_from_favorite">تم الحذف من المفضلة</string>
+    <string name="delete_cart_toast">تم حذف المنتج من السلة بنجاح</string>
+    <string name="quantity_not_available_toast"> الكمية المطلوبة أكبر من الكمية المتوفرة لدينا، الكمية المتاحة هي</string>
+    <string name="cart_no_quantity_chosen_toast">من فضلك قم بادخال الكمية المطلوبة</string>
 </resources>

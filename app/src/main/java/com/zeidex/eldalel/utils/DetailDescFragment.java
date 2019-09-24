@@ -1,6 +1,7 @@
 package com.zeidex.eldalel.utils;
 
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class DetailDescFragment extends Fragment {
         if (position == 0) {
             detail_description_desc.setText(desc_options);
         } else {
-            detail_description_desc.setText(full_desc);
+            detail_description_desc.setText(Html.fromHtml(full_desc));
         }
     }
 }

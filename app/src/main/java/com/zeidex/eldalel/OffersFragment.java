@@ -42,6 +42,7 @@ import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 public class OffersFragment extends androidx.fragment.app.Fragment implements OffersAdapter.OffersOperation {
     public static final String OFFER = "offer";
     public static final String SUBCATEGORIES_INTENT_EXTRA_KEY = "subcategories";
+    public static final String CATEGORY_ID_INTENT_EXTRA_KEY = "category_id";
     public static final String CATEGORY_NAME_INTENT_EXTRA = "category_name";
     @BindView(R.id.ofeers_recycler)
     RecyclerView ofeers_recycler;
@@ -133,10 +134,10 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
 
         Intent intent = new Intent(getActivity(), OfferItemActivity.class);
         intent.putParcelableArrayListExtra(SUBCATEGORIES_INTENT_EXTRA_KEY, subCategoriesModel);
+        intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, category.getId());
 
         Locale locale = ChangeLang.getLocale(getResources());
         String loo = locale.getLanguage();
-
         if (loo.equalsIgnoreCase("ar")) {
             intent.putExtra(CATEGORY_NAME_INTENT_EXTRA, category.getNameAr());
         } else {

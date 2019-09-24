@@ -20,13 +20,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.zeidex.eldalel.adapters.BasketElementsAdapter;
 import com.zeidex.eldalel.models.BasketProducts;
+import com.zeidex.eldalel.response.DeleteBasketResponse;
 import com.zeidex.eldalel.response.GetBasketProducts;
 import com.zeidex.eldalel.response.GetChangeQuantityResponse;
 import com.zeidex.eldalel.services.BasketProductsApi;
 import com.zeidex.eldalel.services.ChangeQuantityApi;
+import com.zeidex.eldalel.services.DeleteBasketAPI;
 import com.zeidex.eldalel.utils.APIClient;
+import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.PreferenceUtils;
+import com.zeidex.eldalel.utils.PriceFormatter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -150,8 +154,10 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                     basketElementsAdapter = new BasketElementsAdapter(getActivity(), basketProducts);
                     basketElementsAdapter.setBasketOperation(BasketFragment.this);
                     fragment_basket_elements_recycler.setAdapter(basketElementsAdapter);
-                    fragment_basket_total_price_products_text.setText(getBasketProducts.getTotal());
-                    fragment_basket_total_price_text.setText(getBasketProducts.getTotal());
+                    double totalDouble = Double.parseDouble(getBasketProducts.getTotal());
+                    String totalString = PriceFormatter.toDecimalRsString(totalDouble, getActivity().getApplicationContext());
+                    fragment_basket_total_price_products_text.setText(totalString);
+                    fragment_basket_total_price_text.setText(totalString);
                 }
                 reloadDialog.dismiss();
             }
@@ -198,7 +204,8 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
 
     @Override
     public void onClickBasketProduct(int id, int pos) {
-
+        startActivity(new Intent(getActivity(), DetailItemActivity.class).putExtra("id", id));
+        Animatoo.animateSwipeLeft(getActivity());
     }
 
 
@@ -240,21 +247,27 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                                     basketProductsModel.setItem_count(changeQuantityResponse.getProdcutQuantity());
                                     basketProducts.set(pos, basketProductsModel);
                                     basketElementsAdapter.notifyItemChanged(pos);
-                                }else {
-                                    Toasty.success(getActivity(), changeQuantityResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                    PreferenceUtils.saveCountOfItemsBasket(getContext().getApplicationContext(), Integer.parseInt(changeQuantityResponse.getAllCartItemsCount()));
+                                    reloadDialog.dismiss();
+                                    changeQuantity.dismiss();
+                                } else {
+                                    Toasty.error(getActivity(), changeQuantityResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                    reloadDialog.dismiss();
+                                    changeQuantity.dismiss();
                                 }
                             }
                         }
 
                         @Override
                         public void onFailure(Call<GetChangeQuantityResponse> call, Throwable t) {
-
+                            Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                            reloadDialog.dismiss();
                         }
                     });
                 }
             }
         });
-
+        changeQuantity.show();
 
     }
 
@@ -272,6 +285,30 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
 
     @Override
     public void onDeleteItem(int id, int pos) {
+        reloadDialog.show();
+        DeleteBasketAPI deleteBasketAPI = APIClient.getClient(SERVER_API_TEST).create(DeleteBasketAPI.class);
+        Call<DeleteBasketResponse> deleteBasketResponseCall = deleteBasketAPI.deleteBasketProduct(String.valueOf(id), token);
+        deleteBasketResponseCall.enqueue(new Callback<DeleteBasketResponse>() {
+            @Override
+            public void onResponse(Call<DeleteBasketResponse> call, Response<DeleteBasketResponse> response) {
+                DeleteBasketResponse responseBody = response.body();
+                if(response!= null && responseBody.getCode() == 200){
+                    basketElementsAdapter.getBasketProducts().remove(pos);
+                    basketElementsAdapter.notifyItemRemoved(pos);
+                    String totalString = PriceFormatter.toDecimalRsString(responseBody.getData().getOrderTotalPrice(), getActivity().getApplicationContext());
+                    fragment_basket_total_price_products_text.setText(totalString);
+                    fragment_basket_total_price_text.setText(totalString);
+                    PreferenceUtils.saveCountOfItemsBasket(getContext().getApplicationContext(), responseBody.getData().getAllCartItemsCount());
+                    Toasty.success(getActivity(), getString(R.string.delete_cart_toast) , Toast.LENGTH_LONG).show();
+                }
+                reloadDialog.dismiss();
+            }
 
+            @Override
+            public void onFailure(Call<DeleteBasketResponse> call, Throwable t) {
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
     }
 }

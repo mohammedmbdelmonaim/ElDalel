@@ -30,6 +30,9 @@ public class AccountAfterLoginFragment extends androidx.fragment.app.Fragment im
     @BindView(R.id.fragment_account_after_login_likes_linear)
     LinearLayoutCompat fragment_account_after_login_likes_linear;
 
+    @BindView(R.id.ragment_account_after_login_pay_linear)
+    LinearLayoutCompat fragment_account_after_login_pay_linear;
+
 
 
 
@@ -55,6 +58,7 @@ public class AccountAfterLoginFragment extends androidx.fragment.app.Fragment im
         fragment_account_after_login_profile_linear.setOnClickListener(this);
         fragment_account_after_login_orders_linear.setOnClickListener(this);
         fragment_account_after_login_likes_linear.setOnClickListener(this);
+        fragment_account_after_login_pay_linear.setOnClickListener(this);
     }
 
     @Override
@@ -83,6 +87,11 @@ public class AccountAfterLoginFragment extends androidx.fragment.app.Fragment im
             }
             case R.id.fragment_account_after_login_likes_linear:{
                 startActivity(new Intent(getActivity(), LikesElementsActivity.class));
+                Animatoo.animateSwipeLeft(getActivity());
+                break;
+            }
+            case R.id.ragment_account_after_login_pay_linear:{
+                startActivity(new Intent(getActivity(), PaymentActivity.class));
                 Animatoo.animateSwipeLeft(getActivity());
                 break;
             }

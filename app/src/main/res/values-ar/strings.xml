@@ -143,4 +143,8 @@
     <string name="no_items_text">لا يوجد منتجات لعرضها في الوقت الحالي</string>
     <string name="discount_label">خصم</string>
     <string name="new_arrival_header_text">وصل حديثاً</string>
+    <string name="remove_from_favorite">تم الحذف من المفضلة</string>
+    <string name="delete_cart_toast">تم حذف المنتج من السلة بنجاح</string>
+    <string name="quantity_not_available_toast">الكمية المطلوبة أكبر من الكمية المتوفرة لدينا، الكمية المتاحة هي </string>
+    <string name="cart_no_quantity_chosen_toast">من فضلك قم بادخال الكمية المطلوبة</string>
 </resources>

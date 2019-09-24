@@ -13,7 +13,9 @@ public interface NewArrivalsAPI {
     Call<GetOffersCategories> getNewArrivalsCategories(@Query("without_products") int withoutProducts, @Query("status") String status);
 
     @GET("products")
-    Call<GetProducts> getNewArrivalsProducts(@Query("subcat_id") int subcategoryId, @Query("status") String status, @Query("token") String token);
+    Call<GetProducts> getNewArrivalsProductsFromSubCategory(@Query("subcat_id") int subcategoryId, @Query("status") String status, @Query("token") String token);
 
+    @GET("products")
+    Call<GetProducts> getNewArrivalsProductsFromCategory(@Query("cat_id") int categoryId, @Query("status") String status, @Query("token") String token);
 
 }
