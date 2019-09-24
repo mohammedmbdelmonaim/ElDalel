@@ -28,6 +28,7 @@ import com.zeidex.eldalel.services.ChangeQuantityApi;
 import com.zeidex.eldalel.services.DeleteBasketAPI;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.ChangeLang;
+import com.zeidex.eldalel.utils.KeyboardUtils;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 import com.zeidex.eldalel.utils.PriceFormatter;
 
@@ -172,6 +173,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
 
     @Override
     public void onClick(View v) {
+
         int id = v.getId();
         switch (id) {
             case R.id.fragment_basket_paying: {

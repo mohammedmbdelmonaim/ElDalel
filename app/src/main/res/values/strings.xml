@@ -151,4 +151,15 @@
     <string name="add_address">أضف العنوان</string>
     <string name="postal_code">الرقم البريدي</string>
     <string name="delete_cart_toast">تم حذف المنتج من السلة بنجاح</string>
+    <string name="add_address_sucess">تم إضافة العنوان بنجاح</string>
+    <string name="mobile_payment_addresses_text">رقم الجوال :</string>
+    <string name="address_payment_addresses_text">العنوان :</string>
+    <string name="name_payment_addresses_text">الإسم :</string>
+    <string name="ask_to_change_adress">هل تريد تغيير العنوان الأساسي بهذا العنوان؟</string>
+    <string name="activity_payment_header_text">الدفع</string>
+    <string name="address_add_go_update_text">عدل العنوان</string>
+    <string name="change_primary_address_success">تم تغيير العنوان الأساسي بهذا العنوان بنجاح</string>
+    <string name="edit_address_success">تم تعديل العنوان بنجاح</string>
+    <string name="fragment_shooping_list_addresses_text_next">التالى</string>
+    <string name="no_addresse_text">لا يوجد عنواين في الوقت الحالي</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.zeidex.eldalel.adapters;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,23 +13,32 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zeidex.eldalel.R;
-import com.zeidex.eldalel.models.ProductsCategory;
+import com.zeidex.eldalel.response.GetAddresses;
 
 import java.util.List;
 
 public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.AddressesHolder> {
     private Context context;
-    List<ProductsCategory> accessoryList;
     View view;
+    String state_addresses;
 
+    List<GetAddresses.Address> addresses;
+    int selectedPos = 0;
+
+    private AddressOperation addressOperation;
+
+    public void setAddressOperation(AddressOperation addressOperation) {
+        this.addressOperation = addressOperation;
+    }
 
     public AddressesAdapter(Context context) {
         this.context = context;
     }
 
-    public AddressesAdapter(Context context, List<ProductsCategory> accessoryList) {
+    public AddressesAdapter(Context context, List<GetAddresses.Address> addresses ,String state_addresses) {
         this.context = context;
-        this.accessoryList = accessoryList;
+        this.addresses = addresses;
+        this.state_addresses = state_addresses;
     }
 
     @NonNull
@@ -41,17 +51,37 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.Addr
 
     @Override
     public void onBindViewHolder(@NonNull AddressesHolder holder, int position) {
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
+        GetAddresses.Address address = addresses.get(position);
+        if (selectedPos == position){
+            holder.address_row_constraint.setSelected(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                holder.unchecked_payment_img.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_check_address, context.getApplicationContext().getTheme()));
+            } else {
+                holder.unchecked_payment_img.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_check_address));
             }
-        });
+        }else {
+            holder.address_row_constraint.setSelected(false);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                holder.unchecked_payment_img.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_unchecked_payment, context.getApplicationContext().getTheme()));
+            } else {
+                holder.unchecked_payment_img.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_unchecked_payment));
+            }
+        }
+
+        if (state_addresses.equalsIgnoreCase("address")){
+            holder.edit_payment_img.setVisibility(View.VISIBLE);
+        }else if(state_addresses.equalsIgnoreCase("payment")){
+            holder.edit_payment_img.setVisibility(View.GONE);
+        }
+        holder.name_payment_addresses_textView.setText(address.getFullName());
+        holder.address_payment_addresses_textView.setText(address.getAddress());
+        holder.mobile_payment_addresses_textView.setText(address.getMobile());
+
     }
 
     @Override
     public int getItemCount() {
-        return 15;
+        return addresses.size();
     }
 
     public class AddressesHolder extends RecyclerView.ViewHolder {
@@ -73,8 +103,29 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.Addr
             mobile_payment_addresses_textView = itemView.findViewById(R.id.mobile_payment_addresses_textView);
             address_row_constraint = itemView.findViewById(R.id.address_row_constraint);
 
-        }
-    }
+            address_row_constraint.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    notifyItemChanged(selectedPos);
+                    selectedPos = getAdapterPosition();
+                    notifyItemChanged(selectedPos);
+                    addressOperation.onClickAddress(getAdapterPosition() , addresses.get(getAdapterPosition()).getId());
+                }
+            });
 
+            edit_payment_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addressOperation.onEditAddress(getAdapterPosition() , addresses.get(getAdapterPosition()).getId());
+                }
+            });
+        }
+
+
+    }
+    public interface AddressOperation{
+        void onClickAddress(int position , int address_id);
+        void onEditAddress(int position , int address_id);
+    }
 
 }

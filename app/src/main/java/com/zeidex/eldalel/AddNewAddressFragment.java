@@ -29,12 +29,14 @@ import com.zeidex.eldalel.response.GetRegions;
 import com.zeidex.eldalel.services.AddAddressApi;
 import com.zeidex.eldalel.services.CitiesApi;
 import com.zeidex.eldalel.services.CountriesApi;
+import com.zeidex.eldalel.services.EditAddressApi;
 import com.zeidex.eldalel.services.RegionsApi;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -143,17 +145,38 @@ public class AddNewAddressFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_add_new_address, container, false);
 
     }
-
+    String state_addresses;
+    int address_id;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+
+        Bundle args = getArguments();
+        state_addresses = args.getString("from");
+        address_id = args.getInt("id");
+
+        if (address_id > 0){
+            address_add_go_enter_text.setText(getString(R.string.address_add_go_update_text));
+            getDataAddress(args);
+
+        }
+
+        if (state_addresses.equalsIgnoreCase("address")){
+            ((AddressesActivity)getActivity()).activity_address_header_item.setVisibility(View.GONE);
+        }else if(state_addresses.equalsIgnoreCase("payment")){
+            ((PaymentActivity)getActivity()).activity_payment_steps_linear.setVisibility(View.GONE);
+            ((PaymentActivity)getActivity()).activity_payment_header_item.setVisibility(View.GONE);
+        }
+
 
         if (PreferenceUtils.getCompanyLogin(getActivity())) {
             token = PreferenceUtils.getCompanyToken(getActivity());
         } else if (PreferenceUtils.getUserLogin(getActivity())) {
             token = PreferenceUtils.getUserToken(getActivity());
         }
+
+
 
         showDialog();
         getCountries();
@@ -180,11 +203,11 @@ public class AddNewAddressFragment extends Fragment {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
-                    case R.id.radio_ar_register:
+                    case R.id.radio_ar_address_add:
                         // do operations specific to this selection
                         lang = "arabic";
                         break;
-                    case R.id.radio_en_register:
+                    case R.id.radio_en_address_add:
                         // do operations specific to this selection
                         lang = "english";
                         break;
@@ -195,7 +218,97 @@ public class AddNewAddressFragment extends Fragment {
 
     @OnClick(R.id.address_add_go_enter_text)
     public void onAddAddress() {
-        checkAddresses();
+        if (address_id > 0){
+            editAddress();
+        }else {
+            checkAddresses();
+        }
+
+    }
+
+    public void getDataAddress(Bundle args){
+        address_add_first_name_edittext.setText(args.getString("first_name"));
+        address_add_last_name_edittext.setText(args.getString("last_name"));
+        address_add_address_edittext.setText(args.getString("address"));
+        address_add_postal_code_edittext.setText(args.getString("postal_code"));
+        address_add_mobile_edittext.setText(args.getString("mobile"));
+
+        Locale locale = ChangeLang.getLocale(getResources());
+        String loo = locale.getLanguage();
+        if (loo.equalsIgnoreCase("ar")){
+            lang = "arabic";
+            address_add_radio_group2.check(R.id.radio_ar_address_add);
+        }else if (loo.equalsIgnoreCase("en")){
+            lang = "english";
+            address_add_radio_group2.check(R.id.radio_en_address_add);
+        }
+
+        id_country = args.getInt("country_id");
+        id_region = args.getInt("subsidiary_id");
+        id_city = args.getInt("city_id");
+    }
+
+    public void editAddress(){
+        if (lang.equalsIgnoreCase("")) {
+            Toasty.error(getActivity(), getString(R.string.choose_lang), Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (id_country == -1) {
+            Toasty.error(getActivity(), getString(R.string.choose_country), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (id_region == -1) {
+            Toasty.error(getActivity(), getString(R.string.choose_region), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (id_city == -1) {
+            Toasty.error(getActivity(), getString(R.string.choose_city), Toast.LENGTH_LONG).show();
+            return;
+        }
+        final boolean fieldscomOK = validate(new EditText[]{address_add_first_name_edittext, address_add_last_name_edittext, address_add_address_edittext, address_add_mobile_edittext, address_add_postal_code_edittext});
+
+        if (fieldscomOK && id_country != -1 && id_region != -1 && id_city != -1) {
+
+            reloadDialog.show();
+            convertDaraToJson();
+            address_post.put("id", String.valueOf(address_id));
+            EditAddressApi editAddressApi = APIClient.getClient(SERVER_API_TEST).create(EditAddressApi.class);
+            Call<GetAddAddressResponse> getEditAddressResponseCall = editAddressApi.editAddressApi(address_post);
+            getEditAddressResponseCall.enqueue(new Callback<GetAddAddressResponse>() {
+                @Override
+                public void onResponse(Call<GetAddAddressResponse> call, Response<GetAddAddressResponse> response) {
+                    GetAddAddressResponse getAddAddressResponse = response.body();
+                    if (getAddAddressResponse.isSuccess()){
+                        Toasty.success(getActivity(), getString(R.string.edit_address_success), Toast.LENGTH_LONG).show();
+                        Fragment fragment = new ShoopingListAddressesFragment();
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
+                        if (state_addresses.equalsIgnoreCase("address")){
+                            ft.replace(R.id.activity_address_constraint, fragment, fragment.getTag());
+                        }else if(state_addresses.equalsIgnoreCase("payment")){
+                            ft.replace(R.id.payment_constrant, fragment, fragment.getTag());
+                        }
+//                        ft.addToBackStack(null);
+                        ft.commit();
+                    }else {
+                        String errors = "";
+                        for (String errorText : getAddAddressResponse.getError()){
+                            errors += errorText;
+                        }
+                        Toasty.error(getActivity(), errors, Toast.LENGTH_LONG).show();
+                    }
+                    reloadDialog.dismiss();
+                }
+
+                @Override
+                public void onFailure(Call<GetAddAddressResponse> call, Throwable t) {
+                    Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                    reloadDialog.dismiss();
+                }
+            });
+        }
     }
 
     String lang = "";
@@ -208,9 +321,9 @@ public class AddNewAddressFragment extends Fragment {
         String address = address_add_address_edittext.getText().toString();
         String mobile = address_add_mobile_edittext.getText().toString();
         String postal_code = address_add_postal_code_edittext.getText().toString();
-        address_post.put("firstName", name);
+        address_post.put("first_name", name);
         address_post.put("token", token);
-        address_post.put("lastName", last_name);
+        address_post.put("last_name", last_name);
         address_post.put("address", address);
         address_post.put("mobile", mobile);
         address_post.put("postal_code", postal_code);
@@ -255,15 +368,23 @@ public class AddNewAddressFragment extends Fragment {
                 public void onResponse(Call<GetAddAddressResponse> call, Response<GetAddAddressResponse> response) {
                     GetAddAddressResponse getAddAddressResponse = response.body();
                     if (getAddAddressResponse.isSuccess()){
-                        Toasty.error(getActivity(), getString(R.string.add_address_sucess), Toast.LENGTH_LONG).show();
-                        Fragment fragment = new PaymentPhoneNumberFragment();
+                        Toasty.success(getActivity(), getString(R.string.add_address_sucess), Toast.LENGTH_LONG).show();
+                        Fragment fragment = new ShoopingListAddressesFragment();
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
-                        ft.replace(R.id.payment_constrant, fragment, fragment.getTag());
-                        ft.addToBackStack(null);
+                        if (state_addresses.equalsIgnoreCase("address")){
+                            ft.replace(R.id.activity_address_constraint, fragment, fragment.getTag());
+                        }else if(state_addresses.equalsIgnoreCase("payment")){
+                            ft.replace(R.id.payment_constrant, fragment, fragment.getTag());
+                        }
+//                        ft.addToBackStack(null);
                         ft.commit();
                     }else {
-//                        Toasty.error(getActivity(), errors, Toast.LENGTH_LONG).show();
+                        String errors = "";
+                        for (String errorText : getAddAddressResponse.getError()){
+                            errors += errorText;
+                        }
+                        Toasty.error(getActivity(), errors, Toast.LENGTH_LONG).show();
                     }
                     reloadDialog.dismiss();
                 }
@@ -305,6 +426,13 @@ public class AddNewAddressFragment extends Fragment {
                             countries.add(getCountries.getData().getCountries().get(i).getName_ar());
                             ids_countries.add(Integer.parseInt(getCountries.getData().getCountries().get(i).getId()));
                         }
+                    }
+
+                    if (ids_countries.contains(id_country)){
+                        int index = ids_countries.indexOf(id_country);
+                        Collections.swap(ids_countries , 0 , index);
+                        Collections.swap(countries , 0 , index);
+                        getRegions(id_country);
                     }
                     spinner_address_add_country.setItems(countries);
                     spinner_address_add_country.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
@@ -354,6 +482,13 @@ public class AddNewAddressFragment extends Fragment {
                             ids_regions.add(Integer.parseInt(getRegions.getData().getSubsidiaries().get(i).getId()));
                         }
                     }
+                    if (ids_regions.contains(id_region)){
+                        int index = ids_regions.indexOf(id_region);
+                        Collections.swap(ids_regions , 0 , index);
+                        Collections.swap(regions , 0 , index);
+                        getCities(id_region);
+                    }
+
                     spinner_address_add_region.setItems(regions);
                     spinner_address_add_region.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
                         @Override
@@ -401,6 +536,12 @@ public class AddNewAddressFragment extends Fragment {
                         ids_cities.add(Integer.parseInt(getCities.getCities().get(i).getId()));
                     }
                 }
+                if (ids_cities.contains(id_city)){
+                    int index = ids_cities.indexOf(id_city);
+                    Collections.swap(ids_cities , 0 , index);
+                    Collections.swap(cities , 0 , index);
+                }
+
                 spinner_address_add_city.setItems(cities);
                 spinner_address_add_city.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
                     @Override

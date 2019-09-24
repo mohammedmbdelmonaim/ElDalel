@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FAFAFA"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="#FAFAFA">
+
      <androidx.recyclerview.widget.RecyclerView
          android:id="@+id/fragment_shooping_list_addresses_recycler"
          android:layout_width="match_parent"
          android:layout_height="0dp"
          android:layout_marginBottom="5dp"
-         app:layout_constraintTop_toTopOf="parent"
-         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintBottom_toTopOf="@+id/fragment_shooping_list_addresses_linear_add"
          app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintBottom_toTopOf="@+id/fragment_shooping_list_addresses_linear_add"/>
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toTopOf="parent" />
 
 
      <androidx.appcompat.widget.LinearLayoutCompat
@@ -23,23 +24,23 @@
          android:layout_marginBottom="50dp"
          android:orientation="horizontal"
          app:layout_constraintBottom_toTopOf="@+id/fragment_shooping_list_addresses_text_next"
-         app:layout_constraintStart_toStartOf="parent"
-         >
+         app:layout_constraintStart_toStartOf="parent">
 
           <androidx.appcompat.widget.AppCompatImageView
               android:id="@+id/fragment_shooping_list_addresses_img_add"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              app:srcCompat="@drawable/ic_plus_payment"
-              android:layout_gravity="center"/>
+              android:layout_gravity="center"
+              app:srcCompat="@drawable/ic_plus_payment" />
 
-          <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+          <androidx.appcompat.widget.AppCompatTextView
               android:id="@+id/fragment_shooping_list_addresses_text_add"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
+              android:layout_marginStart="10dp"
               android:fontFamily="@font/cairo_bold"
               android:text="@string/fragment_shooping_list_addresses_text_add"
-              android:layout_marginStart="10dp"
+              android:textAlignment="viewStart"
               android:textColor="#41A8E5"
               android:textSize="14sp" />
      </androidx.appcompat.widget.LinearLayoutCompat>
@@ -53,11 +54,27 @@
          android:gravity="center"
          android:paddingTop="10dp"
          android:paddingBottom="10dp"
-         android:text="التالى"
+         android:text="@string/fragment_shooping_list_addresses_text_next"
          android:textColor="#FFFFFF"
          android:textSize="14sp"
          app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent" />
+
+
+     <androidx.appcompat.widget.AppCompatTextView
+         android:id="@+id/no_addresses"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:textSize="15sp"
+         android:text="@string/no_addresse_text"
+         android:textColor="@color/colorPrimary"
+         android:visibility="gone"
+         android:fontFamily="@font/cairo_bold"
+         android:textAlignment="center"
+         app:layout_constraintTop_toTopOf="parent"
          app:layout_constraintStart_toStartOf="parent"
-         app:layout_constraintEnd_toEndOf="parent"/>
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

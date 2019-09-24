@@ -10,6 +10,6 @@ import retrofit2.http.POST;
 
 public interface AddAddressApi {
 
-    @POST("register/user")
+    @POST("user/create/new/address")
     Call<GetAddAddressResponse> getAddressApi(@Body Map<String, String> partMap);
 }
