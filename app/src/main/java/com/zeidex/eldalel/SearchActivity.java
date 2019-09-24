@@ -1,10 +1,8 @@
 package com.zeidex.eldalel;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
-import butterknife.BindView;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class SearchActivity extends AppCompatActivity {
     public static final String SEARCH_NAME_ARGUMENT = "search_name";
