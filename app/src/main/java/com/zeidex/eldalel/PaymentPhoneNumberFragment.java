@@ -131,6 +131,9 @@ public class PaymentPhoneNumberFragment extends Fragment {
                     if (getSendCodeResponse.isSuccess()) {
                         Toasty.success(getActivity(), getSendCodeResponse.getMessage(), Toast.LENGTH_LONG).show();
                         Fragment fragment = new ShoopingListAddressesFragment();
+                        Bundle args = new Bundle();
+                        args.putString("from", state_addresses);
+                        fragment.setArguments(args);
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
                         if (state_addresses.equalsIgnoreCase("address")){
