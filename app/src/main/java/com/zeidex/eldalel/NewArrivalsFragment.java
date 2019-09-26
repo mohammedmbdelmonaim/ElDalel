@@ -37,6 +37,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.zeidex.eldalel.CategoriesFragment.NO_PRODUCTS_STATUS;
+import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
 public class NewArrivalsFragment extends androidx.fragment.app.Fragment implements NewArrivalsCategoriesAdapter.CategoryOperation {
@@ -110,27 +111,28 @@ public class NewArrivalsFragment extends androidx.fragment.app.Fragment implemen
 
     @Override
     public void onClickCategory(int position) {
+        Intent intent = new Intent(getActivity(), NewArrivalSubcategoriesActivity.class);
+
         GetOffersCategories.Category category = categories.get(position);
         List<GetOffersCategories.Subcategory> subCategories = category.getSubcategories();
 
-        ArrayList<Subcategory> subCategoriesModel = new ArrayList<>();
-        for (int i = 0; i < subCategories.size(); i++) {
-            subCategoriesModel.add(new Subcategory(subCategories.get(i).getId(), subCategories.get(i).getNameAr(),
-                    subCategories.get(i).getName(), ""));
-        }
-
-
-        Intent intent = new Intent(getActivity(), NewArrivalSubcategoriesActivity.class);
-        intent.putParcelableArrayListExtra(SUBCATEGORIES_INTENT_EXTRA_KEY, subCategoriesModel);
-
         Locale locale = ChangeLang.getLocale(getResources());
         String loo = locale.getLanguage();
-
         if (loo.equalsIgnoreCase("ar")) {
             intent.putExtra(CATEGORY_NAME_INTENT_EXTRA, category.getNameAr());
         } else {
             intent.putExtra(CATEGORY_NAME_INTENT_EXTRA, category.getName());
         }
+
+        if (subCategories != null && subCategories.size() > 0) {
+            ArrayList<Subcategory> subCategoriesModel = new ArrayList<>();
+            for (int i = 0; i < subCategories.size(); i++) {
+                subCategoriesModel.add(new Subcategory(subCategories.get(i).getId(), subCategories.get(i).getNameAr(),
+                        subCategories.get(i).getName(), ""));
+            }
+            intent.putParcelableArrayListExtra(SUBCATEGORIES_INTENT_EXTRA_KEY, subCategoriesModel);
+        }
+        intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, category.getId());
         startActivity(intent);
         Animatoo.animateSwipeLeft(getActivity());
     }

@@ -11,20 +11,27 @@ import com.zeidex.eldalel.utils.SmartFragmentStatePagerAdapter;
 
 import java.util.List;
 
-public class SubcategoriesPagerAdapter extends SmartFragmentStatePagerAdapter {
-    List<String> ids, names;
+import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
+import static com.zeidex.eldalel.adapters.CategoriesItemAdapter.SUBCATEGORY_ID_INTENT_EXTRA;
 
-    public SubcategoriesPagerAdapter(FragmentManager fragmentManager, List<String> ids, List<String> names) {
+public class SubcategoriesPagerAdapter extends SmartFragmentStatePagerAdapter {
+
+    List<String> ids, names;
+    int categoryId;
+
+    public SubcategoriesPagerAdapter(FragmentManager fragmentManager, List<String> ids, List<String> names, int categoryId) {
         super(fragmentManager);
         this.ids = ids;
         this.names = names;
+        this.categoryId = categoryId;
     }
 
     @Override
     public Fragment getItem(int position) {
         NewArrivalProductsFragment newArrivalProductsFragment = new NewArrivalProductsFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("id", ids.get(position));
+        bundle.putInt(SUBCATEGORY_ID_INTENT_EXTRA, Integer.parseInt(ids.get(position)));
+        bundle.putInt(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
         newArrivalProductsFragment.setArguments(bundle);
         return newArrivalProductsFragment;
     }

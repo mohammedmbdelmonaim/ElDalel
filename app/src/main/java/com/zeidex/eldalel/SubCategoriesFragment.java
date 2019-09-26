@@ -9,28 +9,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.zeidex.eldalel.adapters.SubCategoriesAdapter;
 import com.zeidex.eldalel.models.Subcategory;
 import com.zeidex.eldalel.models.Subsubcategory;
 import com.zeidex.eldalel.utils.Animatoo;
+import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
+import static com.zeidex.eldalel.OffersFragment.CATEGORY_NAME_INTENT_EXTRA;
 import static com.zeidex.eldalel.OffersFragment.SUBCATEGORIES_INTENT_EXTRA_KEY;
+import static com.zeidex.eldalel.adapters.CategoriesAdapter.CATEGORY_IMAGE_NAME;
+import static com.zeidex.eldalel.adapters.CategoriesAdapter.CATEGORY_NAME_AR_INTENT_EXTRA;
 
 public class SubCategoriesFragment extends Fragment implements SubCategoriesAdapter.SubCategoryOperation {
 
@@ -40,15 +49,20 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
 
     @BindView(R.id.category_recycler_list)
     RecyclerView category_recycler_list;
-    @BindView(R.id.categories_no_items_layout)
-    RelativeLayout noItemsLayout;
+    @BindView(R.id.category_card_item)
+    CardView categoryCardItem;
+    @BindView(R.id.offer_category_item_img)
+    AppCompatImageView categoryCardImage;
+    @BindView(R.id.offer_category_item_text)
+    AppCompatTextView categoryCardText;
 
     SubCategoriesAdapter subCategoryAdapter;
-//    String id;
+    //    String id;
     List<Subcategory> subCategories;
 
     Dialog reloadDialog;
     String token = "";
+    private int categoryId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,17 +76,49 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         subCategories = getArguments().getParcelableArrayList(SUBCATEGORIES_INTENT_EXTRA_KEY);
+        categoryId = getArguments().getInt(CATEGORY_ID_INTENT_EXTRA_KEY);
+
         if (subCategories != null && subCategories.size() > 0) {
             initializeRecycler();
             findViews();
-        }else{
-            showEmptyView();
+        } else {
+            //If there are no subcategories, pass the category id to get the products based on it
+            String categoryName;
+            Locale locale = ChangeLang.getLocale(getResources());
+            String loo = locale.getLanguage();
+            if (loo.equalsIgnoreCase("ar")) {
+                categoryName = getArguments().getString(CATEGORY_NAME_AR_INTENT_EXTRA);
+            } else {
+                categoryName = getArguments().getString(CATEGORY_NAME_INTENT_EXTRA);
+            }
+            showCategoryCard(categoryId, categoryName);
+//            Intent intent = new Intent(getActivity(), ProductsActivity.class);
+//            intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
+//            getActivity().startActivity(intent);
+//            Animatoo.animateSwipeLeft(getActivity());
         }
     }
 
-    private void showEmptyView() {
-        noItemsLayout.setVisibility(View.VISIBLE);
-        category_recycler_list.setVisibility(View.GONE);
+    private void showCategoryCard(int categoryId, String categoryName) {
+        categoryCardText.setText(categoryName);
+        String imageName = getArguments().getString(CATEGORY_IMAGE_NAME);
+        if(imageName != null){
+            Glide.with(getActivity())
+                    .load("https://www.dleel-sh.com/homepages/get/" + imageName)
+                    .placeholder(R.drawable.condition_logo)
+                    .centerCrop()
+                    .into(categoryCardImage);
+        }
+        categoryCardItem.setVisibility(View.VISIBLE);
+        categoryCardItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ProductsActivity.class);
+                intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
+                getActivity().startActivity(intent);
+                Animatoo.animateSwipeLeft(getActivity());
+            }
+        });
     }
 
     private void findViews() {
@@ -112,6 +158,7 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
     @Override
     public void onClickSubCategory(int subCategoryId, String subCategoryName) {
         Intent intent = new Intent(getActivity(), ProductsActivity.class);
+        intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
         intent.putExtra(SUBCATEGORY_ID_EXTRA_KEY, subCategoryId);
         intent.putExtra(SUBCATEGORY_NAME_EXTRA_KEY, subCategoryName);
         getActivity().startActivity(intent);
@@ -119,10 +166,12 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
     }
 
     @Override
-    public void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subCategoryName) {
+    public void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subCategoryName, int subcategoryId) {
         Intent intent = new Intent(getActivity(), ProductsActivity.class);
-        intent.putParcelableArrayListExtra(SUBSUBCATEGORIES_INTENT_EXTRA_KEY, subsubcategories);
+        intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
+        intent.putExtra(SUBCATEGORY_ID_EXTRA_KEY, subcategoryId);
         intent.putExtra(SUBCATEGORY_NAME_EXTRA_KEY, subCategoryName);
+        intent.putParcelableArrayListExtra(SUBSUBCATEGORIES_INTENT_EXTRA_KEY, subsubcategories);
         getActivity().startActivity(intent);
         Animatoo.animateSwipeLeft(getActivity());
     }

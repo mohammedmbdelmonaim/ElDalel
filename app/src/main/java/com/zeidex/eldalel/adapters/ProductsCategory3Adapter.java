@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.zeidex.eldalel.R;
 import com.zeidex.eldalel.models.ProductsCategory;
 import com.zeidex.eldalel.utils.PreferenceUtils;
+import com.zeidex.eldalel.utils.PriceFormatter;
 
 import java.util.List;
 
@@ -28,12 +29,16 @@ import static com.zeidex.eldalel.utils.Constants.NOT_AVAILABLE;
 
 public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCategory3Adapter.ProductsCategory3Holder> {
     private Context context;
+    List<ProductsCategory> productsCategoryList;
 
     public List<ProductsCategory> getProductsCategoryList() {
         return productsCategoryList;
     }
 
-    List<ProductsCategory> productsCategoryList;
+    public void setProductsList(List<ProductsCategory> productsCategoryList) {
+        this.productsCategoryList = productsCategoryList;
+    }
+
     View view;
 
     private ProductsCategory3Operation productsCategory3Operation;
@@ -88,12 +93,12 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
             holder.phone_text_price_before_view.setVisibility(View.VISIBLE);
             holder.phone_text_price_before_label_view.setVisibility(View.VISIBLE);
             holder.phone_text_price_before.setVisibility(View.VISIBLE);
-            holder.phone_text_price_before.setText(productsCategory.getPrice_before());
+            holder.phone_text_price_before.setText(PriceFormatter.toDecimalString(Double.parseDouble(productsCategory.getPrice_before()), context.getApplicationContext()));
         }
 
         holder.phone_text_name.setText(productsCategory.getName());
         holder.phone_text_type.setText(productsCategory.getType());
-        holder.phone_text_price.setText(productsCategory.getPrice());
+        holder.phone_text_price.setText(PriceFormatter.toDecimalString(Double.parseDouble(productsCategory.getPrice()), context.getApplicationContext()));
 
         Glide.with(context)
                 .load("https://www.dleel-sh.com/homepages/get/" + productsCategory.getImgUrl())
@@ -101,32 +106,6 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
                 .centerCrop()
                 .into(holder.phone_img_url);
 
-
-//        view.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                productsCategory3Operation.onClickProduct3(Integer.parseInt(productsCategory.getId()), position);
-//            }
-//        });
-
-//        holder.phone_image_like.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (!PreferenceUtils.getUserLogin(context) && isChecked && !PreferenceUtils.getCompanyLogin(context)) {
-//                    Toasty.error(context, context.getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
-//                    holder.phone_image_like.setChecked(false);
-//                    return;
-//                }
-//                if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) && !isChecked) {
-//                    Toasty.error(context, context.getString(R.string.unlike_fiv), Toast.LENGTH_LONG).show();
-//                    holder.phone_image_like.setChecked(true);
-//                    return;
-//                }
-//                if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) && isChecked) {
-//                    productsCategory3Operation.onCliickProductsCategory3Like(Integer.parseInt(productsCategory.getId()));
-//                }
-//            }
-//        });
 
         String cartStatus = productsCategory.getCart();
         if (cartStatus.equals(String.valueOf(CART_EMPTY))) {
@@ -141,25 +120,11 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
             holder.phone_row_add_to_card.setBackgroundResource(R.drawable.row_already_added_cart);
             holder.phone_row_add_to_card.setText(R.string.add_to_card);
         }
-
-//        holder.phone_row_add_to_card.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (!PreferenceUtils.getUserLogin(context) && !PreferenceUtils.getCompanyLogin(context)) {
-//                    Toasty.error(context, context.getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
-//                    return;
-//                }
-//                if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context))) {
-//                    if (!productsCategory.getCart().equals(String.valueOf(CART_NOT_EMPTY)) && !productsCategory.getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE)))
-//                        productsCategory3Operation.onAddToProductCategory3Cart(Integer.parseInt(productsCategory.getId()), position);
-//                }
-//            }
-//        });
     }
 
     @Override
     public int getItemCount() {
-        return productsCategoryList.size();
+        return productsCategoryList.size() > 0 ? productsCategoryList.size() : 0;
     }
 
     public class ProductsCategory3Holder extends RecyclerView.ViewHolder {
@@ -215,7 +180,7 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
                         return;
                     }
                     if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) && isChecked) {
-                        productsCategory3Operation.onCliickProductsCategory3Like(Integer.parseInt(productsCategoryList.get(getAdapterPosition()).getId()));
+                        productsCategory3Operation.onCliickProductsCategory3Like(Integer.parseInt(productsCategoryList.get(getAdapterPosition()).getId()), getAdapterPosition());
                     }
 
                 }
@@ -233,7 +198,7 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
     public interface ProductsCategory3Operation {
         void onClickProduct3(int id, int pos);
 
-        void onCliickProductsCategory3Like(int id);
+        void onCliickProductsCategory3Like(int id, int pos);
 
         void onAddToProductCategory3Cart(int id, int position);
     }

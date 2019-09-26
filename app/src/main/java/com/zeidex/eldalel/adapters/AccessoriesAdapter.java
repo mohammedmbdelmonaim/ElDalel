@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.zeidex.eldalel.R;
 import com.zeidex.eldalel.models.ProductsCategory;
 import com.zeidex.eldalel.utils.PreferenceUtils;
+import com.zeidex.eldalel.utils.PriceFormatter;
 
 import java.util.List;
 
@@ -89,45 +89,19 @@ public class AccessoriesAdapter extends RecyclerView.Adapter<AccessoriesAdapter.
             holder.phone_text_price_before_view.setVisibility(View.VISIBLE);
             holder.phone_text_price_before_label_view.setVisibility(View.VISIBLE);
             holder.phone_text_price_before.setVisibility(View.VISIBLE);
-            holder.phone_text_price_before.setText(accessory.getPrice_before());
+            Double priceBefore = Double.parseDouble(accessory.getPrice_before());
+            holder.phone_text_price_before.setText(PriceFormatter.toDecimalString(priceBefore, context.getApplicationContext()));
         }
 
         holder.phone_text_name.setText(accessory.getName());
         holder.phone_text_type.setText(accessory.getType());
-        holder.phone_text_price.setText(accessory.getPrice());
+        double price = Double.parseDouble(accessory.getPrice());
+        holder.phone_text_price.setText(PriceFormatter.toDecimalString(price, context.getApplicationContext()));
         Glide.with(context)
                 .load("https://www.dleel-sh.com/homepages/get/" + accessory.getImgUrl())
                 .placeholder(R.drawable.condition_logo)
                 .centerCrop()
                 .into(holder.phone_img_url);
-
-
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                accessoriesOperation.onClickAcssesory(Integer.parseInt(accessory.getId()), position);
-            }
-        });
-
-
-        holder.phone_image_like.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!PreferenceUtils.getUserLogin(context) && isChecked && !PreferenceUtils.getCompanyLogin(context)) {
-                    Toasty.error(context, context.getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
-                    holder.phone_image_like.setChecked(false);
-                    return;
-                }
-                if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) && !isChecked) {
-                    Toasty.error(context, context.getString(R.string.unlike_fiv), Toast.LENGTH_LONG).show();
-                    holder.phone_image_like.setChecked(true);
-                    return;
-                }
-                if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) && isChecked) {
-                    accessoriesOperation.onCliickAccessoryLike(Integer.parseInt(accessory.getId()));
-                }
-            }
-        });
 
         String cartStatus = accessory.getCart();
         Log.d("cart_status", "onBindViewHolder: " + cartStatus);
@@ -143,20 +117,6 @@ public class AccessoriesAdapter extends RecyclerView.Adapter<AccessoriesAdapter.
             holder.phone_row_add_to_card.setBackgroundResource(R.drawable.row_already_added_cart);
             holder.phone_row_add_to_card.setText(R.string.add_to_card);
         }
-
-        holder.phone_row_add_to_card.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!PreferenceUtils.getUserLogin(context) && !PreferenceUtils.getCompanyLogin(context)) {
-                    Toasty.error(context, context.getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
-                    return;
-                }
-                if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context))) {
-                    if (!accessory.getCart().equals(String.valueOf(CART_NOT_EMPTY)) && !accessory.getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE)))
-                        accessoriesOperation.onAddToAccessoryCart(Integer.parseInt(accessory.getId()), position);
-                }
-            }
-        });
     }
 
     @Override
@@ -185,6 +145,50 @@ public class AccessoriesAdapter extends RecyclerView.Adapter<AccessoriesAdapter.
             phone_text_price_before_label_view = itemView.findViewById(R.id.phone_text_price_before_label_view);
             phone_text_price_before_label = itemView.findViewById(R.id.phone_text_price_before_label);
             phone_row_add_to_card = itemView.findViewById(R.id.phone_row_add_to_card);
+
+            phone_row_add_to_card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!PreferenceUtils.getUserLogin(context) && !PreferenceUtils.getCompanyLogin(context)) {
+                        Toasty.error(context, context.getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context))) {
+                        if (!accessoryList.get(getAdapterPosition()).getCart().equals(String.valueOf(CART_NOT_EMPTY)) &&
+                                !accessoryList.get(getAdapterPosition()).getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE)))
+                            accessoriesOperation.onAddToAccessoryCart(Integer.parseInt(accessoryList.get(getAdapterPosition()).getId()), getAdapterPosition());
+                    }
+                }
+            });
+
+            phone_image_like.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Boolean isChecked = phone_image_like.isChecked();
+
+                    if (!PreferenceUtils.getUserLogin(context) && isChecked && !PreferenceUtils.getCompanyLogin(context)) {
+                        Toasty.error(context, context.getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
+                        phone_image_like.setChecked(false);
+                        return;
+                    }
+                    if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) && !isChecked) {
+                        Toasty.error(context, context.getString(R.string.unlike_fiv), Toast.LENGTH_LONG).show();
+                        phone_image_like.setChecked(true);
+                        return;
+                    }
+                    if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) && isChecked) {
+                        accessoriesOperation.onCliickAccessoryLike(Integer.parseInt(accessoryList.get(getAdapterPosition()).getId()));
+                    }
+
+                }
+            });
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    accessoriesOperation.onClickAcssesory(Integer.parseInt(accessoryList.get(getAdapterPosition()).getId()), getAdapterPosition());
+                }
+            });
         }
     }
 

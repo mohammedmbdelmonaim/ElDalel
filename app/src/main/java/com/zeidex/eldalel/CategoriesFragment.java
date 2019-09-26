@@ -1,6 +1,7 @@
 package com.zeidex.eldalel;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -35,6 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.zeidex.eldalel.SearchActivity.SEARCH_NAME_ARGUMENT;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
 public class CategoriesFragment extends androidx.fragment.app.Fragment {
@@ -46,12 +49,16 @@ public class CategoriesFragment extends androidx.fragment.app.Fragment {
     @BindView(R.id.view_pager_tab)
     TabLayout view_pager_tab;
 
+    @BindView(R.id.fragment_categories_searchview)
+    SearchView fragment_categories_searchview;
+
     List<String> cat_names;
     List<String> cat_ids;
     CategoriesAdapter categoriesAdapter;
 
     Dialog reloadDialog;
     String token = "";
+    private int categoryId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,6 +91,28 @@ public class CategoriesFragment extends androidx.fragment.app.Fragment {
 
         cat_ids = new ArrayList<>();
         cat_names = new ArrayList<>();
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            categoryId = bundle.getInt("category_id", -1);
+        }
+
+        fragment_categories_searchview.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                intent.putExtra(SEARCH_NAME_ARGUMENT, query);
+                startActivity(intent);
+                fragment_categories_searchview.onActionViewCollapsed(); //to close the searchview
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
 
         showDialog();
         onLoadPage();
@@ -137,6 +166,16 @@ public class CategoriesFragment extends androidx.fragment.app.Fragment {
         categoriesAdapter = new CategoriesAdapter(getFragmentManager(), cat_ids, cat_names, categories);
         vpPager.setAdapter(categoriesAdapter);
         view_pager_tab.setTabMode(TabLayout.MODE_SCROLLABLE);
+
+        if (categoryId != -1) {
+            String categoryIdString = String.valueOf(categoryId);
+            for (String id : cat_ids) {
+                if (id.equals(categoryIdString)) {
+                    int position = cat_ids.indexOf(id);
+                    vpPager.setCurrentItem(position);
+                }
+            }
+        }
     }
 
     private void showDialog() {

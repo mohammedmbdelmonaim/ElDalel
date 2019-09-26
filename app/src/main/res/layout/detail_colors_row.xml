@@ -21,7 +21,8 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/detail_color_img_url"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="4dp"
             app:srcCompat="@drawable/ic_brightness_1_black_24dp" />
 
         <androidx.appcompat.widget.AppCompatTextView

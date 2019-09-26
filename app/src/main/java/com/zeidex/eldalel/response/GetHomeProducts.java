@@ -40,6 +40,8 @@ public class GetHomeProducts {
     public class Data{
         @SerializedName("categories")
         List<Category> categories;
+        @SerializedName("count_cart")
+        Integer countCart;
 
         public List<Category> getCategories() {
             return categories;
@@ -47,6 +49,14 @@ public class GetHomeProducts {
 
         public void setCategories(List<Category> categories) {
             this.categories = categories;
+        }
+
+        public Integer getCountCart() {
+            return countCart;
+        }
+
+        public void setCountCart(Integer countCart) {
+            this.countCart = countCart;
         }
     }
 

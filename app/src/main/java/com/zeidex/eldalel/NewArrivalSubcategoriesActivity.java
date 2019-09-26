@@ -1,19 +1,24 @@
 package com.zeidex.eldalel;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.SearchView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.zeidex.eldalel.adapters.SubcategoriesPagerAdapter;
 import com.zeidex.eldalel.models.Subcategory;
+import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 
@@ -27,6 +32,8 @@ import butterknife.OnClick;
 
 import static com.zeidex.eldalel.NewArrivalsFragment.CATEGORY_NAME_INTENT_EXTRA;
 import static com.zeidex.eldalel.NewArrivalsFragment.SUBCATEGORIES_INTENT_EXTRA_KEY;
+import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
+import static com.zeidex.eldalel.SearchActivity.SEARCH_NAME_ARGUMENT;
 
 public class NewArrivalSubcategoriesActivity extends BaseActivity {
 
@@ -36,6 +43,10 @@ public class NewArrivalSubcategoriesActivity extends BaseActivity {
     TabLayout view_pager_tab;
     @BindView(R.id.title_header_text)
     AppCompatTextView titleHeaderTextView;
+    @BindView(R.id.products_framelayout)
+    FrameLayout productsFrameLayout;
+    @BindView(R.id.search_header_categories_img)
+    SearchView search_header_categories_img;
 
     List<String> cat_names;
     List<String> cat_ids;
@@ -44,6 +55,7 @@ public class NewArrivalSubcategoriesActivity extends BaseActivity {
     Dialog reloadDialog;
     String token = "";
     List<Subcategory> subcategories;
+    private int categoryId;
 
 
     @Override
@@ -73,6 +85,24 @@ public class NewArrivalSubcategoriesActivity extends BaseActivity {
 
         titleHeaderTextView.setText(getIntent().getStringExtra(CATEGORY_NAME_INTENT_EXTRA));
 
+        search_header_categories_img.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Intent intent = new Intent(NewArrivalSubcategoriesActivity.this, SearchActivity.class);
+                intent.putExtra(SEARCH_NAME_ARGUMENT, query);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                Animatoo.animateSwipeLeft(NewArrivalSubcategoriesActivity.this);
+                search_header_categories_img.onActionViewCollapsed(); //to close the searchview
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
         showDialog();
         onLoadPage();
     }
@@ -80,9 +110,26 @@ public class NewArrivalSubcategoriesActivity extends BaseActivity {
     private void onLoadPage() {
 
         subcategories = getIntent().getParcelableArrayListExtra(SUBCATEGORIES_INTENT_EXTRA_KEY);
+        categoryId = getIntent().getIntExtra(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
         if (subcategories != null && subcategories.size() > 0) {
-            initializeViewPager();
+            initializeViewPager(); //with subcategories
+        } else {
+            vpPager.setVisibility(View.GONE);
+            initializeProductsFragment(); //with category products
         }
+
+    }
+
+    private void initializeProductsFragment() {
+        int categoryId = getIntent().getIntExtra(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
+        NewArrivalProductsFragment newArrivalProductsFragment = new NewArrivalProductsFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
+        newArrivalProductsFragment.setArguments(bundle);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.products_framelayout, newArrivalProductsFragment).commit();
+        productsFrameLayout.setVisibility(View.VISIBLE);
 
     }
 
@@ -102,7 +149,7 @@ public class NewArrivalSubcategoriesActivity extends BaseActivity {
             }
         }
 
-        subcategoriesPagerAdapter = new SubcategoriesPagerAdapter(getSupportFragmentManager(), cat_ids, cat_names);
+        subcategoriesPagerAdapter = new SubcategoriesPagerAdapter(getSupportFragmentManager(), cat_ids, cat_names, categoryId);
         vpPager.setAdapter(subcategoriesPagerAdapter);
         view_pager_tab.setTabMode(TabLayout.MODE_SCROLLABLE);
     }
