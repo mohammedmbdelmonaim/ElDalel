@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.zeidex.eldalel.R;
 import com.zeidex.eldalel.models.Subcategory;
 import com.zeidex.eldalel.models.Subsubcategory;
@@ -76,15 +77,11 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
             }
         }
 
-//        view.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int id = currentSubCategory.getId();
-//                mSubCategoryOperation.onClickSubCategory(currentSubCategory.getId(),position);
-//            }
-//        });
-
-        //TODO ADD IMAGE FOR THE SUBCATEGORY
+        Glide.with(context)
+                .load("https://www.dleel-sh.com/homepages/get/" + currentSubCategory.getImagePath())
+                .placeholder(R.drawable.condition_logo)
+                .fitCenter()
+                .into(holder.subCategoryImageView);
 
     }
 
@@ -128,7 +125,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
                         mSubCategoryOperation.onClickSubCategory(subcategoryId, subcategoryName);
                     } else {
                         if (subCategories.get(getAdapterPosition()).getListSubSubCategory() != null && subCategories.get(getAdapterPosition()).getListSubSubCategory().size() > 0) {
-                            mSubCategoryOperation.onClickSubCategoryWithSubSub(subCategories.get(getAdapterPosition()).getListSubSubCategory(), subcategoryName);
+                            mSubCategoryOperation.onClickSubCategoryWithSubSub(subCategories.get(getAdapterPosition()).getListSubSubCategory(), subcategoryName, subcategoryId);
                         } else {
                             mSubCategoryOperation.onClickSubCategory(subcategoryId, subcategoryName);
                         }
@@ -141,6 +138,6 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
     public interface SubCategoryOperation {
         void onClickSubCategory(int subcategoryId, String subcategoryName);
 
-        void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subcategoryName);
+        void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subcategoryName, int subcategoryId);
     }
 }

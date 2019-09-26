@@ -34,7 +34,8 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
     public List<ProductsCategory> getProductsCategoryList() {
         return productsCategoryList;
     }
-    public void setProductsList(List<ProductsCategory> productsCategoryList){
+
+    public void setProductsList(List<ProductsCategory> productsCategoryList) {
         this.productsCategoryList = productsCategoryList;
     }
 
@@ -92,14 +93,12 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
             holder.phone_text_price_before_view.setVisibility(View.VISIBLE);
             holder.phone_text_price_before_label_view.setVisibility(View.VISIBLE);
             holder.phone_text_price_before.setVisibility(View.VISIBLE);
-            Double priceBefore = Double.parseDouble(productsCategory.getPrice_before());
-            holder.phone_text_price_before.setText(PriceFormatter.toDecimalString(priceBefore, context.getApplicationContext()));
+            holder.phone_text_price_before.setText(PriceFormatter.toDecimalString(Double.parseDouble(productsCategory.getPrice_before()), context.getApplicationContext()));
         }
 
         holder.phone_text_name.setText(productsCategory.getName());
         holder.phone_text_type.setText(productsCategory.getType());
-        double price = Double.parseDouble(productsCategory.getPrice());
-        holder.phone_text_price.setText(PriceFormatter.toDecimalString(price, context.getApplicationContext()));
+        holder.phone_text_price.setText(PriceFormatter.toDecimalString(Double.parseDouble(productsCategory.getPrice()), context.getApplicationContext()));
 
         Glide.with(context)
                 .load("https://www.dleel-sh.com/homepages/get/" + productsCategory.getImgUrl())
@@ -125,7 +124,7 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
 
     @Override
     public int getItemCount() {
-        return productsCategoryList.size();
+        return productsCategoryList.size() > 0 ? productsCategoryList.size() : 0;
     }
 
     public class ProductsCategory3Holder extends RecyclerView.ViewHolder {
@@ -181,7 +180,7 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
                         return;
                     }
                     if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) && isChecked) {
-                        productsCategory3Operation.onCliickProductsCategory3Like(Integer.parseInt(productsCategoryList.get(getAdapterPosition()).getId()));
+                        productsCategory3Operation.onCliickProductsCategory3Like(Integer.parseInt(productsCategoryList.get(getAdapterPosition()).getId()), getAdapterPosition());
                     }
 
                 }
@@ -199,7 +198,7 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
     public interface ProductsCategory3Operation {
         void onClickProduct3(int id, int pos);
 
-        void onCliickProductsCategory3Like(int id);
+        void onCliickProductsCategory3Like(int id, int pos);
 
         void onAddToProductCategory3Cart(int id, int position);
     }

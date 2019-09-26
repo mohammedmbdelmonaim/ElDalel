@@ -5,15 +5,14 @@
     android:layout_height="match_parent"
     android:background="#FAFAFA">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <RelativeLayout
         android:id="@+id/main_linear_top"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:background="#219FE9 "
         android:orientation="horizontal"
-        android:paddingStart="16dp"
-
-        android:paddingEnd="20dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -22,7 +21,8 @@
             android:id="@+id/fragment_main_basket_top_constraint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:paddingStart="16dp">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/basket_image_top"
@@ -56,6 +56,7 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
             android:layout_weight="1"
             android:src="@drawable/logo_main" />
@@ -63,14 +64,16 @@
         <androidx.appcompat.widget.SearchView
             android:id="@+id/fragment_main_searchview"
             style="@style/SearchViewStyle"
-            android:layout_width="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_width="match_parent"
+            android:layoutDirection="rtl"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:iconifiedByDefault="false"
             android:queryHint="@string/search_here"
             android:textAlignment="center" />
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </RelativeLayout>
 
     <!--<androidx.appcompat.widget.AppCompatImageView-->
     <!--android:id="@+id/best_offers_img"-->

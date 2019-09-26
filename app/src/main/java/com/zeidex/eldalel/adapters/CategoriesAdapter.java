@@ -22,6 +22,7 @@ import static com.zeidex.eldalel.OffersFragment.SUBCATEGORIES_INTENT_EXTRA_KEY;
 
 public class CategoriesAdapter extends SmartFragmentStatePagerAdapter {
     public static final String CATEGORY_NAME_AR_INTENT_EXTRA = "category_name_ar";
+    public static final String CATEGORY_IMAGE_NAME = "category_image_name";
     List<String> ids, names;
     List<GetAllCategories.Category> categories;
 
@@ -44,7 +45,7 @@ public class CategoriesAdapter extends SmartFragmentStatePagerAdapter {
             //we subtract 1 from position to get the actual position for categories as new arrival is taking the first position
             for (GetAllCategories.Subcategory subcategory : currentCategory.getSubcategories()) {
                 Subcategory subcategoryModel = new Subcategory(subcategory.getId(), subcategory.getNameAr(),
-                        subcategory.getName(), "");
+                        subcategory.getName(), subcategory.getPhoto());
 
                 //Check if subcategory has subsubcategory, loop through them to add them to the subcategory model
                 if (subcategory.getSubsubcategories().size() > 0) {
@@ -60,6 +61,7 @@ public class CategoriesAdapter extends SmartFragmentStatePagerAdapter {
             bundle.putParcelableArrayList(SUBCATEGORIES_INTENT_EXTRA_KEY, subCategoriesModel);
             bundle.putInt(CATEGORY_ID_INTENT_EXTRA_KEY, currentCategory.getId());
             bundle.putString(CATEGORY_NAME_INTENT_EXTRA, currentCategory.getName());
+            bundle.putString(CATEGORY_IMAGE_NAME, currentCategory.getPhoto());
             bundle.putString(CATEGORY_NAME_AR_INTENT_EXTRA, currentCategory.getNameAr());
             subCategoriesFragment.setArguments(bundle);
             return subCategoriesFragment;

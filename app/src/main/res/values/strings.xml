@@ -145,12 +145,11 @@
     <string name="discount_label">Discount</string>
     <string name="new_arrival_header_text">New Arrival</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="remove_from_favorite">تم الحذف من المفضلة</string>
+
+
+    <string name="remove_fav">تم الحذف من المفضلة</string>
     <string name="add_address">أضف العنوان</string>
     <string name="postal_code">الرقم البريدي</string>
-    <string name="delete_cart_toast">تم حذف المنتج من السلة بنجاح</string>
     <string name="add_address_sucess">تم إضافة العنوان بنجاح</string>
     <string name="mobile_payment_addresses_text">رقم الجوال :</string>
     <string name="address_payment_addresses_text">العنوان :</string>
@@ -168,4 +167,14 @@
     <string name="bank_payment_txt_label">التحويل البنكى</string>
     <string name="pay_on_arrive_payment_txt_label">الدفع عند الإستلام</string>
     <string name="fragment_payid_paying_label">أدفع الآن</string>
+    <string name="delete_cart_toast">تم حذف المنتج من السلة بنجاح</string>
+    <string name="quantity_not_available_toast"> الكمية المطلوبة أكبر من الكمية المتوفرة لدينا، الكمية المتاحة هي</string>
+    <string name="cart_no_quantity_chosen_toast">من فضلك قم بادخال الكمية المطلوبة</string>
+    <string name="sort_menu_price_ascend">السعر: من الأقل الى الأكثر</string>
+    <string name="sort_menu_price_descend">السعر: من الأكثر الى الأقل</string>
+    <string name="sort_menu_date_ascend">التاريخ: من الأقدم الى الأحدث</string>
+    <string name="sort_menu_date_descend">التاريخ: من الأحدث الى الأقدم</string>
+    <string name="activity_search_header_text">نتائج البحث</string>
+    <string name="offer_radio_button_text">عرض</string>
+    <string name="no_offer_radio_button_text">بدون عرض</string>
 </resources>

@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zeidex.eldalel.adapters.LikesElementsAdapter;
-import com.zeidex.eldalel.models.GetFavorites;
+import com.zeidex.eldalel.response.GetFavorites;
 import com.zeidex.eldalel.models.ProductsCategory;
 import com.zeidex.eldalel.response.DeleteFavoriteResponse;
 import com.zeidex.eldalel.response.GetAddToCardResponse;
@@ -27,7 +27,6 @@ import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.GridSpacingItemDecoration;
 import com.zeidex.eldalel.utils.PreferenceUtils;
-import com.zeidex.eldalel.utils.PriceFormatter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,6 +75,7 @@ public class LikesElementsActivity extends BaseActivity implements LikesElements
             token = PreferenceUtils.getCompanyToken(this);
         } else if (PreferenceUtils.getUserLogin(this)) {
             token = PreferenceUtils.getUserToken(this);
+        } else {//ask user to sign in first
         }
 
         showDialog();
@@ -130,8 +130,7 @@ public class LikesElementsActivity extends BaseActivity implements LikesElements
         likes_item_recycler_list.setAdapter(likesElementsAdapter);
     }
 
-    private ArrayList<ProductsCategory> getProductsFromResponse
-            (List<GetFavorites.Favorite> productsResponse) {
+    private ArrayList<ProductsCategory> getProductsFromResponse(List<GetFavorites.Favorite> productsResponse) {
         ArrayList<ProductsCategory> products = new ArrayList<>();
 
         Locale locale = ChangeLang.getLocale(getResources());
@@ -145,24 +144,26 @@ public class LikesElementsActivity extends BaseActivity implements LikesElements
                 String firstWord = arr[0];
 
                 Double price = currentProductResponse.getProduct().getPrice();
-                String priceString = PriceFormatter.toDecimalRsString(price, getApplicationContext());
-                Double discount = currentProductResponse.getProduct().getDiscount();
-                String discountString = discount != null ? PriceFormatter.toRightNumber(discount, getApplicationContext()) : null;
+                String priceString = String.valueOf(price);
+                Integer discount = currentProductResponse.getProduct().getDiscount();
+                String discountString = discount != null ? String.valueOf(discount) : null;
                 Double priceBefore = currentProductResponse.getProduct().getOldPrice();
-                String priceBeforeString = priceBefore != null ? PriceFormatter.toDecimalRsString(priceBefore, getApplicationContext()) : null;
+                String priceBeforeString = priceBefore != null ? String.valueOf(priceBefore) : null;
 
-//                if (productsResponse.get(j).getPhotos().size() == 0) {
-                products.add(new ProductsCategory(String.valueOf(currentProductResponse.getProduct().getId()), "",
-                        discountString, firstWord, currentProductResponse.getProduct().getNameAr(),
-                        priceString, priceBeforeString,
-                        "", "",
-                        ""));
-//                } else {
-//                    products.add(new ProductsCategory(currentProductResponse.getId(), currentProductResponse.getPhotos().get(0).getFilename(),
-//                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName_ar(),
-//                            currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
-//                            currentProductResponse.getFavorite(), String.valueOf(currentProductResponse.getCart()), currentProductResponse.getAvailable_quantity()));
-//                }
+                if (currentProductResponse.getProduct().getPhotos().size() == 0) {
+                    products.add(new ProductsCategory(String.valueOf(currentProductResponse.getProduct().getId()), "",
+                            discountString, firstWord, currentProductResponse.getProduct().getNameAr(),
+                            priceString, priceBeforeString,
+                            "", currentProductResponse.getProduct().getCart() + "",
+                            currentProductResponse.getProduct().getAvailableQuantity() + ""));
+                } else {
+                    products.add(new ProductsCategory(String.valueOf(currentProductResponse.getProduct().getId()),
+                            currentProductResponse.getProduct().getPhotos().get(0).getFilename(),
+                            discountString, firstWord, currentProductResponse.getProduct().getNameAr(),
+                            priceString, priceBeforeString,
+                            "", currentProductResponse.getProduct().getCart() + "",
+                            currentProductResponse.getProduct().getAvailableQuantity() + ""));
+                }
             }
         } else {
             for (int j = 0; j < productsResponse.size(); j++) { // product loop
@@ -171,24 +172,26 @@ public class LikesElementsActivity extends BaseActivity implements LikesElements
                 String arr[] = currentProductResponse.getProduct().getName().split(" ", 2); // get first word
                 String firstWord = arr[0];
 
-                Double discount = currentProductResponse.getProduct().getDiscount();
-                String discountString = discount != null ? PriceFormatter.toRightNumber(discount, getApplicationContext()) : null;
+                Integer discount = currentProductResponse.getProduct().getDiscount();
+                String discountString = discount != null ? String.valueOf(discount) : null;
                 Double priceBefore = currentProductResponse.getProduct().getOldPrice();
                 String priceBeforeString = priceBefore != null ? String.valueOf(priceBefore) : null;
 
-//                if (productsResponse.get(j).getPhotos().size() == 0) {
-                products.add(new ProductsCategory(String.valueOf(currentProductResponse.getProduct().getId()), "",
-                        discountString, firstWord, currentProductResponse.getProduct().getName(),
-                        String.valueOf(currentProductResponse.getProduct().getPrice()), priceBeforeString,
-                        "", "",
-                        ""));
+                if (currentProductResponse.getProduct().getPhotos().size() == 0) {
+                    products.add(new ProductsCategory(String.valueOf(currentProductResponse.getProduct().getId()), "",
+                            discountString, firstWord, currentProductResponse.getProduct().getName(),
+                            String.valueOf(currentProductResponse.getProduct().getPrice()), priceBeforeString,
+                            "", currentProductResponse.getProduct().getCart() + "",
+                            currentProductResponse.getProduct().getAvailableQuantity() + ""));
 
-//                } else {
-//                    products.add(new ProductsCategory(currentProductResponse.getId(), currentProductResponse.getPhotos().get(0).getFilename(),
-//                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName(),
-//                            currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
-//                            currentProductResponse.getFavorite(), String.valueOf(currentProductResponse.getCart()), currentProductResponse.getAvailable_quantity()));
-//                }
+                } else {
+                    products.add(new ProductsCategory(String.valueOf(currentProductResponse.getProduct().getId()),
+                            currentProductResponse.getProduct().getPhotos().get(0).getFilename(),
+                            discountString, firstWord, currentProductResponse.getProduct().getName(),
+                            String.valueOf(currentProductResponse.getProduct().getPrice()), priceBeforeString,
+                            "", currentProductResponse.getProduct().getCart() + "",
+                            currentProductResponse.getProduct().getAvailableQuantity() + ""));
+                }
             }
         }
 
@@ -239,7 +242,7 @@ public class LikesElementsActivity extends BaseActivity implements LikesElements
                 if (deleteFavoriteResponse != null) {
                     int code = deleteFavoriteResponse.getCode();
                     if (code == 200) {
-                        Toasty.success(LikesElementsActivity.this, getString(R.string.remove_from_favorite), Toast.LENGTH_LONG).show();
+                        Toasty.success(LikesElementsActivity.this, getString(R.string.remove_fav), Toast.LENGTH_LONG).show();
                         likesElementsAdapter.getProductsList().remove(position);
                         likesElementsAdapter.notifyItemRemoved(position);
                         int remainingProductsCount = likesElementsAdapter.getProductsList().size();

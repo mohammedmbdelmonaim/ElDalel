@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class DetailSizeItemAdapter extends RecyclerView.Adapter<DetailSizeItemAdapter.DetailSizeItemHolder> {
     View view;
     private Context context;
-    int selectedPos = -1;
+    int selectedPos = 0;
     ArrayList<String> capicities;
 
     public DetailSizeItemAdapter(Context context, ArrayList<String> capicities) {
@@ -42,14 +42,6 @@ public class DetailSizeItemAdapter extends RecyclerView.Adapter<DetailSizeItemAd
             holder.detail_size_linear.setSelected(false);
         }
         holder.detail_size_label.setText(capicities.get(position));
-        holder.detail_size_linear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                notifyItemChanged(selectedPos);
-                selectedPos = position;
-                notifyItemChanged(selectedPos);
-            }
-        });
     }
 
     @Override
@@ -66,6 +58,15 @@ public class DetailSizeItemAdapter extends RecyclerView.Adapter<DetailSizeItemAd
             super(itemView);
             detail_size_label = itemView.findViewById(R.id.detail_size_label);
             detail_size_linear = itemView.findViewById(R.id.detail_size_linear);
+
+            detail_size_linear.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    notifyItemChanged(selectedPos);
+                    selectedPos = getAdapterPosition();
+                    notifyItemChanged(selectedPos);
+                }
+            });
         }
     }
 

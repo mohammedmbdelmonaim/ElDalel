@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -16,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -28,7 +30,9 @@ import com.zeidex.eldalel.response.GetAddToFavouriteResponse;
 import com.zeidex.eldalel.response.GetProducts;
 import com.zeidex.eldalel.services.AddToCardApi;
 import com.zeidex.eldalel.services.AddToFavouriteApi;
+import com.zeidex.eldalel.services.FilterAPI;
 import com.zeidex.eldalel.services.ProductsAPI;
+import com.zeidex.eldalel.services.SearchProductAPI;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
@@ -43,18 +47,31 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.zeidex.eldalel.FilterActivity.FILTER_CATEGORY_ID;
+import static com.zeidex.eldalel.FilterActivity.FILTER_PRICE_FROM;
+import static com.zeidex.eldalel.FilterActivity.FILTER_PRICE_TO;
+import static com.zeidex.eldalel.FilterActivity.FILTER_SUBCATEGORY_ID;
+import static com.zeidex.eldalel.OfferItemActivity.OFFERS;
 import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
+import static com.zeidex.eldalel.SearchActivity.FILTER_STATUS;
+import static com.zeidex.eldalel.SearchActivity.SEARCH_NAME_ARGUMENT;
 import static com.zeidex.eldalel.adapters.CategoriesItemAdapter.SUBCATEGORY_ID_INTENT_EXTRA;
 import static com.zeidex.eldalel.adapters.CategoriesItemAdapter.SUB_SUBCATEGORY_ID_INTENT_EXTRA;
 import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
 public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.CategoryOperation,*/ ProductsCategory3Adapter.ProductsCategory3Operation {
+    public static final int FILTER_REQUEST_CODE = 500;
+    public static final String SORT_ASC = "asc";
+    public static final String SORT_DESC = "desc";
+    public static final int SORT_DATE_DESC_INDEX = 0;
+    public static final int FINISH_ACTIVITY_CODE = 458;
     @BindView(R.id.category_item_recycler_list)
     RecyclerView category_item_recycler_list;
     @BindView(R.id.categories_no_items_layout)
@@ -80,6 +97,15 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     Map<String, String> likePost;
     private ArrayList<ProductsCategory> productsCategory;
     private int categoryId;
+    private int position_detail;
+    private String searchName;
+    private Map<String, Object> filterMap; //used to set filter or sort parameters
+    private PopupMenu dropDownMenu;
+    private int filterCategoryId;
+    private int filterPriceFrom;
+    private int filterPriceTo;
+    private int filterSubcategoryId;
+    private String filterStatus;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -106,6 +132,50 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
         categoryId = getArguments().getInt(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
         subcategoryId = getArguments().getInt(SUBCATEGORY_ID_INTENT_EXTRA, -1);
         subsubcategoryId = getArguments().getInt(SUB_SUBCATEGORY_ID_INTENT_EXTRA, -1);
+        searchName = getArguments().getString(SEARCH_NAME_ARGUMENT);
+
+        filterCategoryId = getArguments().getInt(FILTER_CATEGORY_ID, -1);
+        filterPriceFrom = getArguments().getInt(FILTER_PRICE_FROM, -1);
+        filterPriceTo = getArguments().getInt(FILTER_PRICE_TO, -1);
+        filterSubcategoryId = getArguments().getInt(FILTER_SUBCATEGORY_ID, -1);
+        filterStatus = getArguments().getString(FILTER_STATUS);
+
+        filterMap = new HashMap<>();
+
+        dropDownMenu = new PopupMenu(getActivity(), descendantItemsCategoryImage);
+        dropDownMenu.getMenuInflater().inflate(R.menu.menu_sort_dropdown, dropDownMenu.getMenu());
+        dropDownMenu.getMenu().getItem(SORT_DATE_DESC_INDEX).setChecked(true);
+
+        dropDownMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                menuItem.setChecked(true);
+                switch (menuItem.getItemId()) {
+                    case (R.id.sort_price_ascend):
+                        filterMap.put("order_price", SORT_ASC);
+                        filterMap.remove("order_date");
+                        break;
+
+                    case (R.id.sort_price_descend):
+                        filterMap.put("order_price", SORT_DESC);
+                        filterMap.remove("order_date");
+                        break;
+
+                    case (R.id.sort_date_ascend):
+                        filterMap.put("order_date", SORT_ASC);
+                        filterMap.remove("order_price");
+                        break;
+
+                    case (R.id.sort_date_descend):
+                        filterMap.put("order_date", SORT_DESC);
+                        filterMap.remove("order_price");
+                        break;
+                }
+                filterResults();
+                return true;
+            }
+        });
 
         showDialog();
         onLoadPage();
@@ -114,11 +184,56 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     private void onLoadPage() {
         if (subsubcategoryId != -1) { //meaning there are subsubcategories
             getProductsFromSubSubCategory(subsubcategoryId);
+            filterMap.put("sub_subcat_id", subsubcategoryId);
         } else if (subcategoryId != -1) {
             getProductsFromSubCategory(subcategoryId);
+            filterMap.put("subcat_id", subcategoryId);
         } else if (categoryId != -1) {
             getProductsFromCategory(categoryId);
+            filterMap.put("cat_id", categoryId);
+        } else if (searchName != null) {
+            getProductsFromSearch(searchName);
+            filterMap.put("product_name", searchName);
+        } else {
+            if (filterCategoryId != -1) filterMap.put("cat_id", filterCategoryId);
+            if (filterSubcategoryId != -1) filterMap.put("subcat_id", filterSubcategoryId);
+            if (filterPriceFrom != -1) filterMap.put("from", filterPriceFrom);
+            if (filterPriceTo != -1) filterMap.put("to", filterPriceTo);
+            if (filterStatus != null) {
+                filterMap.put(FILTER_STATUS, filterStatus);
+            }
+            initializeRecycler(new ArrayList<>());
+            filterResults();
         }
+    }
+
+    private void getProductsFromSearch(String searchName) {
+        reloadDialog.show();
+        SearchProductAPI searchAPI = APIClient.getClient(SERVER_API_TEST).create(SearchProductAPI.class);
+        searchAPI.getProductsFromNameSearch(searchName, token).enqueue(new Callback<GetProducts>() {
+            @Override
+            public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
+                if (response.body() != null) {
+                    int code = response.body().getCode();
+                    if (code == 200) {
+                        List<GetProducts.Data> products = response.body().getProducts().getDataAll();
+                        if (products.size() > 0) {
+                            productsCategory = getProductsFromResponse(products);
+                            initializeRecycler(productsCategory);
+                        } else {
+                            showEmptyView();
+                        }
+                    }
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetProducts> call, Throwable t) {
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
     }
 
     private void getProductsFromCategory(int categoryId) {
@@ -305,12 +420,13 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
 
     @Override
     public void onClickProduct3(int id, int pos) {
+        position_detail = pos;
         startActivityForResult(new Intent(getActivity(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
         Animatoo.animateSwipeLeft(getActivity());
     }
 
     @Override
-    public void onCliickProductsCategory3Like(int id) {
+    public void onCliickProductsCategory3Like(int id, int pos) {
         reloadDialog.show();
         prepareLikeMap(id);
         AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
@@ -387,4 +503,83 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
             likePost.put("token", token);
         }
     }
+
+    @OnClick(R.id.search_items_category)
+    void navigateToFilterActivity() {
+        Intent intent = new Intent(getActivity(), FilterActivity.class);
+        intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
+        intent.putExtra(SUBCATEGORY_ID_INTENT_EXTRA, subcategoryId);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivityForResult(intent, FINISH_ACTIVITY_CODE);
+        Animatoo.animateSwipeLeft(getActivity());
+    }
+
+    @OnClick(R.id.descendant_items_category)
+    void sortResults() {
+        dropDownMenu.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1111) {
+            if (data.getBooleanExtra("databack", false)) {
+                productsCategory.get(position_detail).setLike("1");
+                productsAdapter.notifyItemChanged(position_detail);
+            }
+            if (data.getBooleanExtra("added_to_cart", false)) {
+                productsCategory.get(position_detail).setCart(String.valueOf(CART_NOT_EMPTY));
+                productsAdapter.notifyItemChanged(position_detail);
+            }
+        }
+
+        if (requestCode == FINISH_ACTIVITY_CODE && data != null) {
+            boolean shouldFinishActivity = data.getBooleanExtra("should_finish_activity", false);
+            if (shouldFinishActivity) getActivity().finish();
+        }
+
+//        if (requestCode == FILTER_REQUEST_CODE && data != null) {
+//            ((ProductsActivity) getActivity()).titleHeaderText.setText("");
+//            int filterCategoryId = data.getIntExtra("filter_category_id", -1);
+//            int filterPriceFrom = data.getIntExtra("filter_price_from", -1);
+//            int filterPriceTo = data.getIntExtra("filter_price_to", -1);
+//            filterMap = new HashMap<>();
+//            if (filterCategoryId != -1) filterMap.put("cat_id", filterCategoryId);
+//            if (filterPriceFrom != -1) filterMap.put("from", filterPriceFrom);
+//            if (filterPriceTo != -1) filterMap.put("to", filterPriceTo);
+//            filterResults();
+//        }
+    }
+
+    private void filterResults() {
+        reloadDialog.show();
+        FilterAPI filterAPI = APIClient.getClient(SERVER_API_TEST).create(FilterAPI.class);
+        filterAPI.getProductsFromFilter(filterMap, token).enqueue(new Callback<GetProducts>() {
+            @Override
+            public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
+                if (response.body() != null) {
+                    int code = response.body().getCode();
+                    if (code == 200) {
+                        List<GetProducts.Data> products = response.body().getProducts().getDataAll();
+                        if (products.size() > 0) {
+                            productsCategory = getProductsFromResponse(products);
+                            productsAdapter.setProductsList(productsCategory);
+                            labelCountText.setText(String.valueOf(products.size()));
+                            productsAdapter.notifyDataSetChanged();
+                        } else {
+                            showEmptyView();
+                        }
+                    }
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetProducts> call, Throwable t) {
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
+    }
+
 }

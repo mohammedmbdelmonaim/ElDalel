@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#FAFAFA">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/linear_header_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,8 +18,8 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/item_fragment_back"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
             android:layout_marginStart="20dp"
             app:srcCompat="@drawable/ic_arrow_back" />
 
@@ -30,22 +30,24 @@
             android:layout_marginStart="22dp"
             android:layout_weight="1"
             android:fontFamily="@font/cairo_bold"
-            android:gravity="center_vertical|start"
+            android:layout_toEndOf="@id/item_fragment_back"
+            android:gravity="center"
             android:text="بطاريات متنقله"
-            android:textAlignment="viewStart"
             android:textColor="#FFFFFF"
             android:textSize="18sp" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/search_header_categories_img"
             style="@style/SearchViewStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_margin="8dp"
+            android:layoutDirection="rtl"
             android:iconifiedByDefault="false"
+            android:layout_alignParentEnd="true"
             android:queryHint="@string/search_here"
             android:textAlignment="center" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/vpPager"

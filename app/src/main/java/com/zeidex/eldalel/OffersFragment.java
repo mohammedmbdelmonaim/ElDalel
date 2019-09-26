@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -25,6 +26,7 @@ import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.GridSpacingItemDecoration;
+import com.zeidex.eldalel.utils.KeyboardUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.zeidex.eldalel.SearchActivity.SEARCH_NAME_ARGUMENT;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
 public class OffersFragment extends androidx.fragment.app.Fragment implements OffersAdapter.OffersOperation {
@@ -44,8 +47,12 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
     public static final String SUBCATEGORIES_INTENT_EXTRA_KEY = "subcategories";
     public static final String CATEGORY_ID_INTENT_EXTRA_KEY = "category_id";
     public static final String CATEGORY_NAME_INTENT_EXTRA = "category_name";
+
     @BindView(R.id.ofeers_recycler)
     RecyclerView ofeers_recycler;
+    @BindView(R.id.item_offers_search)
+    SearchView item_offers_search;
+
     OffersAdapter offersAdapter;
 
     Dialog reloadDialog;
@@ -83,6 +90,23 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
     }
 
     private void findViews() {
+        item_offers_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                intent.putExtra(SEARCH_NAME_ARGUMENT, query);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                item_offers_search.onActionViewCollapsed(); //to close the searchview
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
         showDialog();
         onLoadPage();
     }

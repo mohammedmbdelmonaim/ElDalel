@@ -27,6 +27,7 @@ import com.zeidex.eldalel.services.BasketProductsApi;
 import com.zeidex.eldalel.services.ChangeQuantityApi;
 import com.zeidex.eldalel.services.DeleteBasketAPI;
 import com.zeidex.eldalel.utils.APIClient;
+import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 import com.zeidex.eldalel.utils.PriceFormatter;
@@ -177,7 +178,6 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
 
     @Override
     public void onClick(View v) {
-
         int id = v.getId();
         switch (id) {
             case R.id.fragment_basket_paying: {
@@ -209,6 +209,8 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
 
     @Override
     public void onClickBasketProduct(int id, int pos) {
+        startActivity(new Intent(getActivity(), DetailItemActivity.class).putExtra("id", id));
+        Animatoo.animateSwipeLeft(getActivity());
     }
 
 
@@ -250,12 +252,12 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                                     basketProductsModel.setItem_count(changeQuantityResponse.getProdcutQuantity());
                                     basketProducts.set(pos, basketProductsModel);
                                     basketElementsAdapter.notifyItemChanged(pos);
+                                    PreferenceUtils.saveCountOfItemsBasket(getContext().getApplicationContext(), Integer.parseInt(changeQuantityResponse.getAllCartItemsCount()));
                                     reloadDialog.dismiss();
                                     changeQuantity.dismiss();
                                 } else {
                                     Toasty.error(getActivity(), changeQuantityResponse.getMessage(), Toast.LENGTH_LONG).show();
                                     reloadDialog.dismiss();
-                                    changeQuantity.dismiss();
                                 }
                             }
                         }

@@ -86,6 +86,9 @@ public class GetOffersCategories {
         @SerializedName("updated_at")
         @Expose
         private String updatedAt;
+        @SerializedName("photo")
+        @Expose
+        private String photo;
         @SerializedName("subcategories")
         @Expose
         private List<Subcategory> subcategories = null;
@@ -130,6 +133,14 @@ public class GetOffersCategories {
             this.updatedAt = updatedAt;
         }
 
+        public String getPhoto() {
+            return photo;
+        }
+
+        public void setPhoto(String photo) {
+            this.photo = photo;
+        }
+
         public List<Subcategory> getSubcategories() {
             return subcategories;
         }
@@ -137,6 +148,7 @@ public class GetOffersCategories {
         public void setSubcategories(List<Subcategory> subcategories) {
             this.subcategories = subcategories;
         }
+
 
     }
 

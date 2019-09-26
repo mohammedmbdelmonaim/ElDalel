@@ -1,4 +1,4 @@
-package com.zeidex.eldalel.models;
+package com.zeidex.eldalel.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -289,6 +289,15 @@ public class GetFavorites {
         @SerializedName("updated_at")
         @Expose
         private String updatedAt;
+        @SerializedName("available_quantity")
+        @Expose
+        private Integer availableQuantity;
+        @SerializedName("photos")
+        @Expose
+        List<Photo> photos;
+        @SerializedName("cart")
+        @Expose
+        private Integer cart;
 
         public Integer getId() {
             return id;
@@ -568,6 +577,98 @@ public class GetFavorites {
 
         public void setUpdatedAt(String updatedAt) {
             this.updatedAt = updatedAt;
+        }
+
+        public Integer getAvailableQuantity() {
+            return availableQuantity;
+        }
+
+        public void setAvailableQuantity(Integer availableQuantity) {
+            this.availableQuantity = availableQuantity;
+        }
+
+        public List<Photo> getPhotos() {
+            return photos;
+        }
+
+        public void setPhotos(List<Photo> photos) {
+            this.photos = photos;
+        }
+
+        public Integer getCart() {
+            return cart;
+        }
+
+        public void setCart(Integer cart) {
+            this.cart = cart;
+        }
+    }
+
+    public class Photo {
+        @SerializedName("id")
+        String id;
+
+        @SerializedName("product_id")
+        String product_id;
+
+        @SerializedName("option_id")
+        String option_id;
+
+        @SerializedName("filename")
+        String filename;
+
+        @SerializedName("mime")
+        String mime;
+
+        @SerializedName("original_filename")
+        String original_filename;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getProduct_id() {
+            return product_id;
+        }
+
+        public void setProduct_id(String product_id) {
+            this.product_id = product_id;
+        }
+
+        public String getOption_id() {
+            return option_id;
+        }
+
+        public void setOption_id(String option_id) {
+            this.option_id = option_id;
+        }
+
+        public String getFilename() {
+            return filename;
+        }
+
+        public void setFilename(String filename) {
+            this.filename = filename;
+        }
+
+        public String getMime() {
+            return mime;
+        }
+
+        public void setMime(String mime) {
+            this.mime = mime;
+        }
+
+        public String getOriginal_filename() {
+            return original_filename;
+        }
+
+        public void setOriginal_filename(String original_filename) {
+            this.original_filename = original_filename;
         }
     }
 }
