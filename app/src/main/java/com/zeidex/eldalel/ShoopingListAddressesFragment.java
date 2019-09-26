@@ -176,7 +176,7 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
         reloadDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
-    int address_id;
+    public static int address_id;
     Dialog changeAddress;
     String lang;
 

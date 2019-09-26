@@ -44,7 +44,7 @@ public class PaymentActivity extends BaseActivity {
                 // You should specify only stepsNumber or steps array of strings.
                 // In case you specify both steps array is chosen.
                 .steps(new ArrayList<String>() {{
-                    add("التسوق");
+                    add("العناوين");
                     add("الدفع");
                     add("الطلب");
                 }})

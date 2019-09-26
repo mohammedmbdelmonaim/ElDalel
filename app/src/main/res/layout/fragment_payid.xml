@@ -15,52 +15,260 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/shipment_from_branch"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:elevation="4dp"
-            android:background="@drawable/payid_linear_bg"
+            android:background="@drawable/type_payment_bg"
             android:layout_marginEnd="6dp"
             android:gravity="center"
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/shipment_from_branch_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_company" />
+                app:srcCompat="@drawable/ic_company_unchecked" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/shipment_from_branch_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
-                android:text="الإستلام من الفرع"
-                android:textColor="#41A8E5"
+                android:text="@string/shipment_from_branch_text"
+                android:textColor="#AAAAAA"
                 android:fontFamily="@font/cairo_bold"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/shipment_to_address"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:elevation="4dp"
             android:gravity="center"
-            android:background="@drawable/payid_linear_bg"
+            android:background="@drawable/type_payment_bg"
             android:layout_marginStart="6dp"
             android:layout_height="match_parent"
             android:orientation="vertical">
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/shipment_to_address_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_shipped_car" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/shipment_to_address_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
-                android:text="الشحن الى العنوان"
+                android:text="@string/shipment_to_address_text"
                 android:textColor="#AAAAAA"
                 android:fontFamily="@font/cairo_bold"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/fragment_payid_linear_options_branches"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/type_payment_bg"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_payid_linear_methods"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_flag_payment"/>
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinner_address_add_country_shipment"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/cairo_regular"
+                android:textColor="#AAAAAA"
+                android:textSize="15sp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:background="#AAAAAA"/>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_regions_payment"/>
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinner_address_add_regions_shipment"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/cairo_regular"
+                android:textColor="#AAAAAA"
+                android:textSize="15sp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:background="#AAAAAA"/>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_branches_payment"/>
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinner_address_add_branches_shipment"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/cairo_regular"
+                android:textColor="#AAAAAA"
+                android:textSize="15sp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/credit_card_payment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="25dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/type_payment_method_bg"
+        android:paddingBottom="25dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_payid_linear_options_branches">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/credit_card_payment_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_credit_card"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/credit_card_payment_txt"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
+            android:fontFamily="@font/cairo_bold"
+            android:layout_marginStart="25dp"
+            android:textColor="#AAAAAA"
+            android:text="@string/credit_card_payment_txt_label"
+            android:textSize="14sp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/credit_card_payment_imgcheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_unchecked_pay_method"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/bank_payment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:background="@drawable/type_payment_method_bg"
+        android:paddingTop="25dp"
+        android:paddingBottom="25dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/credit_card_payment">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/bank_payment_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_bank_pay"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/bank_payment_txt"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
+            android:fontFamily="@font/cairo_bold"
+            android:layout_marginStart="25dp"
+            android:textColor="#AAAAAA"
+            android:text="@string/bank_payment_txt_label"
+            android:textSize="14sp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/bank_payment_imgcheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_unchecked_pay_method"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/pay_on_arrive_payment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="25dp"
+        android:background="@drawable/type_payment_method_bg"
+        android:paddingBottom="25dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bank_payment">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/pay_on_arrive_payment_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_pay_on_arrive"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/pay_on_arrive_payment_txt"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
+            android:fontFamily="@font/cairo_bold"
+            android:layout_marginStart="25dp"
+            android:textColor="#AAAAAA"
+            android:text="@string/pay_on_arrive_payment_txt_label"
+            android:textSize="14sp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/pay_on_arrive_payment_imgcheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_unchecked_pay_method"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/fragment_payid_total_price_products_linear"
@@ -72,7 +280,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_payid_linear_methods">
+        app:layout_constraintTop_toBottomOf="@+id/pay_on_arrive_payment">
 
         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
             android:layout_width="0dp"
@@ -85,22 +293,21 @@
             android:textSize="12sp" />
 
         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
-            android:id="@+id/fragment_basket_total_price_products_text"
+            android:id="@+id/fragment_payid_total_products_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:fontFamily="@font/cairo_regular"
-            android:text="360.00"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="5dp"
             android:textColor="#606060"
             android:textSize="12sp" />
 
-        <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/cairo_regular"
-            android:text="@string/currancy_label"
-            android:textColor="#606060"
-            android:textSize="12sp" />
+        <!--<androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:fontFamily="@font/cairo_regular"-->
+        <!--android:text="@string/currancy_label"-->
+        <!--android:textColor="#606060"-->
+        <!--android:textSize="12sp" />-->
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <View
@@ -235,8 +442,15 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:fontFamily="@font/cairo_bold"
-            android:text="360.00"
-            android:layout_marginEnd="30dp"
+            android:layout_marginEnd="5dp"
+            android:textColor="#606060"
+            android:textSize="12sp" />
+
+        <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/cairo_bold"
+            android:text="@string/currancy_label"
             android:textColor="#606060"
             android:textSize="12sp" />
 
@@ -248,7 +462,7 @@
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:textColor="#FFFFFF"
-        android:text="أدفع الآن"
+        android:text="@string/fragment_payid_paying_label"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:gravity="center"

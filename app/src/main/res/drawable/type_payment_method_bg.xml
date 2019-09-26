@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- ColorProduct when the row is selected -->
+    <item android:state_pressed="false" android:state_selected="true" >
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorPrimary" />
+
+            <stroke android:color="#EEEEEE" android:width="0.5dp"/>
+        </shape>
+    </item>
+    <!-- Standard background color -->
+    <item android:state_pressed="false" android:state_selected="false" >
+        <shape android:shape="rectangle">
+        <solid android:color="#FFFFFF" />
+
+        <stroke android:color="#AAAAAA" android:width="0.5dp"/>
+        </shape>
+    </item>
+</selector>

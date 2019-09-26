@@ -162,4 +162,10 @@
     <string name="edit_address_success">تم تعديل العنوان بنجاح</string>
     <string name="fragment_shooping_list_addresses_text_next">التالى</string>
     <string name="no_addresse_text">لا يوجد عنواين في الوقت الحالي</string>
+    <string name="shipment_to_address_text">الشحن الى العنوان</string>
+    <string name="shipment_from_branch_text">الإستلام من الفرع</string>
+    <string name="credit_card_payment_txt_label">البطاقة الإتمانية</string>
+    <string name="bank_payment_txt_label">التحويل البنكى</string>
+    <string name="pay_on_arrive_payment_txt_label">الدفع عند الإستلام</string>
+    <string name="fragment_payid_paying_label">أدفع الآن</string>
 </resources>
