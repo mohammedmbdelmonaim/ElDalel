@@ -48,6 +48,7 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:rotationY="180"
         android:id="@+id/search_products_results_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
