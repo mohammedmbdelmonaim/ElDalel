@@ -189,6 +189,9 @@ public class FilterActivity extends BaseActivity implements View.OnClickListener
         subCategoryId = getIntent().getIntExtra(SUBCATEGORY_ID_INTENT_EXTRA, -1);
 
         isNewArrival = getIntent().getBooleanExtra("is_new_arrival", false);
+        if(isNewArrival){
+            filter_discount_linear.setVisibility(View.GONE);
+        }
         boolean hasOffer = getIntent().getBooleanExtra("has_offer", false);
         if (hasOffer) {
             filter_offer_radio.setChecked(true);
