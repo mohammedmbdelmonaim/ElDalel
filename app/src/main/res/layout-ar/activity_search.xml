@@ -1,14 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="20dp"
     tools:context=".SearchActivity">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/activity_filter_header_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#219FE9"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/item_search_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="20dp"
+            app:srcCompat="@drawable/ic_arrow_back" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/activity_search_header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginStart="22dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/cairo_bold"
+            android:gravity="center_vertical|start"
+            android:text="@string/activity_search_header_text"
+            android:textAlignment="viewStart"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/item_filter_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="20dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_filter_search" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/search_products_results_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

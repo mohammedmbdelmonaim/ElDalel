@@ -147,4 +147,10 @@
     <string name="delete_cart_toast">تم حذف المنتج من السلة بنجاح</string>
     <string name="quantity_not_available_toast">الكمية المطلوبة أكبر من الكمية المتوفرة لدينا، الكمية المتاحة هي </string>
     <string name="cart_no_quantity_chosen_toast">من فضلك قم بادخال الكمية المطلوبة</string>
+    <string name="sort_menu_price_ascend">السعر: من الأقل الى الأكثر</string>
+    <string name="sort_menu_date_ascend">التاريخ: من الأقدم الى الأحدث</string>
+    <string name="sort_menu_date_descend">التاريخ: من الأحدث الى الأقدم</string>
+    <string name="activity_search_header_text">نتائج البحث</string>
+    <string name="offer_radio_button_text">عرض</string>
+    <string name="no_offer_radio_button_text">بدون عرض</string>
 </resources>

@@ -14,6 +14,7 @@ import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,6 +40,7 @@ import com.zeidex.eldalel.services.DetailProduct;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
+import com.zeidex.eldalel.utils.KeyboardUtils;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 import com.zeidex.eldalel.utils.PriceFormatter;
 
@@ -56,6 +58,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.zeidex.eldalel.SearchActivity.SEARCH_NAME_ARGUMENT;
 import static com.zeidex.eldalel.utils.Constants.CART_EMPTY;
 import static com.zeidex.eldalel.utils.Constants.NOT_AVAILABLE;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
@@ -131,6 +134,8 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
     @BindView(R.id.details_like_too)
     AppCompatTextView details_like_too;
 
+    @BindView(R.id.detail_search_header_categories_img)
+    SearchView detail_search_header_categories_img;
 
     ProductsCategory3Adapter phonesAdapter;
     DetailSizeItemAdapter detailSizeItemAdapter;
@@ -143,19 +148,6 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
     private GetDetailProduct.Product currentProduct;
     private boolean isAdded;
     private boolean isChanged;
-
-    @OnClick(R.id.detail_share_img)
-    public void share() {
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, currentProduct.getUrl());
-        sendIntent.setType("text/plain");
-
-        Intent shareIntent = Intent.createChooser(sendIntent, null);
-        startActivity(shareIntent);
-
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,6 +163,18 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
     @OnClick(R.id.item_detail_back)
     public void onBack() {
         onBackPressed();
+    }
+
+    @OnClick(R.id.detail_share_img)
+    public void share() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, currentProduct.getUrl());
+        sendIntent.setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(sendIntent, null);
+        startActivity(shareIntent);
+
     }
 
     Map<String, String> favourite_post;
@@ -195,6 +199,24 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
         imageSlider.setIndicatorSelectedColor(Color.parseColor("#AAAAAA"));
         imageSlider.setIndicatorUnselectedColor(Color.parseColor("#FAFAFA"));
         imageSlider.setScrollTimeInSec(4); //set scroll delay in seconds :
+
+        detail_search_header_categories_img.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Intent intent = new Intent(DetailItemActivity.this, SearchActivity.class);
+                intent.putExtra(SEARCH_NAME_ARGUMENT, query);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                Animatoo.animateSwipeLeft(DetailItemActivity.this);
+                detail_search_header_categories_img.onActionViewCollapsed(); //to close the searchview
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
 
@@ -496,7 +518,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                 GetAddToFavouriteResponse getAddToFavouriteResponse = response.body();
                 if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
                     Toasty.success(DetailItemActivity.this, getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
-                    isChanged= true;
+                    isChanged = true;
                 }
                 reloadDialog.dismiss();
             }

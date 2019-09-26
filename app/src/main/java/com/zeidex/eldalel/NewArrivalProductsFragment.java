@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -17,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -29,6 +31,7 @@ import com.zeidex.eldalel.response.GetAddToFavouriteResponse;
 import com.zeidex.eldalel.response.GetProducts;
 import com.zeidex.eldalel.services.AddToCardApi;
 import com.zeidex.eldalel.services.AddToFavouriteApi;
+import com.zeidex.eldalel.services.FilterAPI;
 import com.zeidex.eldalel.services.NewArrivalsAPI;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.Animatoo;
@@ -44,6 +47,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,6 +55,10 @@ import retrofit2.Response;
 
 import static com.zeidex.eldalel.NewArrivalsFragment.NEW_ARRIVAL;
 import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
+import static com.zeidex.eldalel.ProductsFragment.FINISH_ACTIVITY_CODE;
+import static com.zeidex.eldalel.ProductsFragment.SORT_ASC;
+import static com.zeidex.eldalel.ProductsFragment.SORT_DESC;
+import static com.zeidex.eldalel.ProductsFragment.SORT_DATE_DESC_INDEX;
 import static com.zeidex.eldalel.adapters.CategoriesItemAdapter.SUBCATEGORY_ID_INTENT_EXTRA;
 import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
@@ -79,17 +87,20 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
 
     Map<String, String> cartPost;
     Map<String, String> likePost;
+    private Map<String, Object> filterMap;
+    private PopupMenu dropDownMenu;
 
     ProductsCategory3Adapter productsAdapter;
     //    private int subcategoryId;
     private ArrayList<ProductsCategory> productsCategory;
+    private int categoryId;
+    private int subcategoryId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_new_arrival_products, container, false);
-
     }
 
     @Override
@@ -105,19 +116,55 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
         } else if (PreferenceUtils.getUserLogin(getActivity())) {
             token = PreferenceUtils.getUserToken(getActivity());
         }
+
+        filterMap = new HashMap<>();
+        filterMap.put("status", NEW_ARRIVAL);
+        dropDownMenu = new PopupMenu(getActivity(), descendantItemsCategoryImage);
+        dropDownMenu.getMenuInflater().inflate(R.menu.menu_sort_dropdown, dropDownMenu.getMenu());
+        dropDownMenu.getMenu().getItem(SORT_DATE_DESC_INDEX).setChecked(true);
+
+        dropDownMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                menuItem.setChecked(true);
+                switch (menuItem.getItemId()) {
+                    case (R.id.sort_price_ascend):
+                        filterMap.put("order_price", SORT_ASC);
+                        filterMap.remove("order_date");
+                        break;
+
+                    case (R.id.sort_price_descend):
+                        filterMap.put("order_price", SORT_DESC);
+                        filterMap.remove("order_date");
+                        break;
+
+                    case (R.id.sort_date_ascend):
+                        filterMap.put("order_date", SORT_ASC);
+                        filterMap.remove("order_price");
+                        break;
+
+                    case (R.id.sort_date_descend):
+                        filterMap.put("order_date", SORT_DESC);
+                        filterMap.remove("order_price");
+                        break;
+                }
+                filterResults();
+                return true;
+            }
+        });
         showDialog();
         onLoadPage();
     }
 
     private void onLoadPage() {
         productsCategory = new ArrayList<>();
-
-        String subcategoryIdString = getArguments().getString(SUBCATEGORY_ID_INTENT_EXTRA);
-        if (subcategoryIdString != null) {
-            int subcategoryId = Integer.parseInt(subcategoryIdString);
+        categoryId = getArguments().getInt(CATEGORY_ID_INTENT_EXTRA_KEY);
+        subcategoryId = getArguments().getInt(SUBCATEGORY_ID_INTENT_EXTRA, -1);
+        if (subcategoryId != -1) {
             getProductsFromSubcategory(subcategoryId);
+
         } else {
-            int categoryId = getArguments().getInt(CATEGORY_ID_INTENT_EXTRA_KEY);
             getProductsFromCategory(categoryId);
         }
     }
@@ -164,6 +211,37 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
                         if (products.size() > 0) {
                             productsCategory = getProductsFromResponse(products);
                             initializeRecycler(productsCategory);
+                        } else {
+                            showEmptyView();
+                        }
+                    }
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetProducts> call, Throwable t) {
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
+    }
+
+    private void filterResults() {
+        reloadDialog.show();
+        FilterAPI filterAPI = APIClient.getClient(SERVER_API_TEST).create(FilterAPI.class);
+        filterAPI.getProductsFromFilter(filterMap, token).enqueue(new Callback<GetProducts>() {
+            @Override
+            public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
+                if (response.body() != null) {
+                    int code = response.body().getCode();
+                    if (code == 200) {
+                        List<GetProducts.Data> products = response.body().getProducts().getDataAll();
+                        if (products.size() > 0) {
+                            productsCategory = getProductsFromResponse(products);
+                            productsAdapter.setProductsList(productsCategory);
+                            productsAdapter.notifyDataSetChanged();
+                            labelCountText.setText(String.valueOf(products.size()));
                         } else {
                             showEmptyView();
                         }
@@ -363,5 +441,26 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
                 productsAdapter.notifyItemChanged(position_detail);
             }
         }
+
+        if(requestCode == FINISH_ACTIVITY_CODE && data != null){
+            boolean shouldFinishActivity = data.getBooleanExtra("should_finish_activity", false);
+            if(shouldFinishActivity) getActivity().finish();
+        }
+    }
+
+
+    @OnClick(R.id.descendant_items_category)
+    void sortResults() {
+        dropDownMenu.show();
+    }
+
+    @OnClick(R.id.search_items_category)
+    void navigateToFilterActivity() {
+        Intent intent = new Intent(getActivity(), FilterActivity.class);
+        intent.putExtra("is_new_arrival", true);
+        intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
+        intent.putExtra(SUBCATEGORY_ID_INTENT_EXTRA, subcategoryId);
+        startActivityForResult(intent, FINISH_ACTIVITY_CODE);
+        Animatoo.animateSwipeLeft(getActivity());
     }
 }

@@ -253,7 +253,6 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                                 } else {
                                     Toasty.error(getActivity(), changeQuantityResponse.getMessage(), Toast.LENGTH_LONG).show();
                                     reloadDialog.dismiss();
-                                    changeQuantity.dismiss();
                                 }
                             }
                         }

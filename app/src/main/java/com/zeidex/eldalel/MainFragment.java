@@ -41,6 +41,7 @@ import com.zeidex.eldalel.services.OffersAPI;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
+import com.zeidex.eldalel.utils.KeyboardUtils;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ import static com.zeidex.eldalel.SearchActivity.SEARCH_NAME_ARGUMENT;
 import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
-public class MainFragment extends androidx.fragment.app.Fragment implements ProductsCategory3Adapter.ProductsCategory3Operation, PhonesAdapter.PhonesOperation, AccessoriesAdapter.AccessoriesOperation{
+public class MainFragment extends androidx.fragment.app.Fragment implements ProductsCategory3Adapter.ProductsCategory3Operation, PhonesAdapter.PhonesOperation, AccessoriesAdapter.AccessoriesOperation {
     @BindView(R.id.main_recycler_accessories)
     RecyclerView main_recycler_accessories;
 
@@ -88,6 +89,23 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
 
     @BindView(R.id.imageSlider)
     SliderView imageSlider;
+
+    @OnClick(R.id.acc_more)
+    void navigateToAcc(){
+        ((MainActivity)getActivity()).navigateToCategories(categories_ids.get(0));
+    }
+
+    @OnClick(R.id.phone_more)
+    void navigateToPhone(){
+        ((MainActivity)getActivity()).navigateToCategories(categories_ids.get(1));
+    }
+
+    @OnClick(R.id.category3_more)
+    void navigateToCategoryMore(){
+
+        ((MainActivity)getActivity()).navigateToCategories(categories_ids.get(2));
+    }
+
 
     @OnClick(R.id.fragment_main_basket_top_constraint)
     public void goToBasket() {
@@ -160,6 +178,8 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                 Intent intent = new Intent(getActivity(), SearchActivity.class);
                 intent.putExtra(SEARCH_NAME_ARGUMENT, query);
                 startActivity(intent);
+                Animatoo.animateSwipeLeft(getActivity());
+                fragment_main_searchview.onActionViewCollapsed(); //to close the searchview
                 return true;
             }
 
@@ -210,203 +230,208 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
             @Override
             public void onResponse(Call<GetHomeProducts> call, Response<GetHomeProducts> response) {
                 GetHomeProducts getHomeProducts = response.body();
-
-                int code = Integer.parseInt(getHomeProducts.getCode());
-                if (code == 200) {
-
-                    for (int i = 0, currentCategWithProducts = 0; i < getHomeProducts.getData().getCategories().size() && currentCategWithProducts < 3; i++) { //category loop
-                        if (getHomeProducts.getData().getCategories().get(i).getProducts().size() == 0) {
-                            continue;
-                        }
-
-                        Locale locale = ChangeLang.getLocale(getResources());
-                        String loo = locale.getLanguage();
-                        if (loo.equalsIgnoreCase("en")) {
-                            categories_ids.add(Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId()));
-                            categories_names.add(getHomeProducts.getData().getCategories().get(i).getName());
-
-                            for (int j = 0; j < getHomeProducts.getData().getCategories().get(i).getProducts().size(); j++) { // product loop
-
-                                String arr[] = getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName().split(" ", 2); // get first word
-                                String firstWord = arr[0];
-
-                                if (getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().size() == 0) {
-                                    home_category1.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), "",
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
-                                } else {
-                                    home_category1.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().get(0).getFilename(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
-                                }
-
-
-                            }
-
-                        } else if (loo.equalsIgnoreCase("ar")) {
-                            categories_ids.add(Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId()));
-                            categories_names.add(getHomeProducts.getData().getCategories().get(i).getName_ar());
-
-                            for (int j = 0; j < getHomeProducts.getData().getCategories().get(i).getProducts().size(); j++) { // product loop
-
-                                String arr[] = getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar().split(" ", 2); // get first word
-                                String firstWord = arr[0];
-
-                                if (getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().size() == 0) {
-                                    home_category1.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), "",
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
-                                } else {
-                                    home_category1.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().get(0).getFilename(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
-                                }
-
-
+                if (getHomeProducts != null) {
+                    int code = Integer.parseInt(getHomeProducts.getCode());
+                    if (code == 200) {
+                        if (!token.equalsIgnoreCase("")) {
+                            int cartCount = getHomeProducts.getData().getCountCart();
+                            if (cartCount > 0) {
+                                fragment_main_basket_top_txt.setVisibility(View.VISIBLE);
+                                fragment_main_basket_top_txt.setText(String.valueOf(cartCount));
                             }
                         }
-                        break;
+                        for (int i = 0, currentCategWithProducts = 0; i < getHomeProducts.getData().getCategories().size() && currentCategWithProducts < 3; i++) { //category loop
+                            if (getHomeProducts.getData().getCategories().get(i).getProducts().size() == 0) {
+                                continue;
+                            }
+
+                            Locale locale = ChangeLang.getLocale(getResources());
+                            String loo = locale.getLanguage();
+                            if (loo.equalsIgnoreCase("en")) {
+                                categories_ids.add(Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId()));
+                                categories_names.add(getHomeProducts.getData().getCategories().get(i).getName());
+
+                                for (int j = 0; j < getHomeProducts.getData().getCategories().get(i).getProducts().size(); j++) { // product loop
+
+                                    String arr[] = getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName().split(" ", 2); // get first word
+                                    String firstWord = arr[0];
+
+                                    if (getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().size() == 0) {
+                                        home_category1.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), "",
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                    } else {
+                                        home_category1.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().get(0).getFilename(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                    }
+
+
+                                }
+
+                            } else if (loo.equalsIgnoreCase("ar")) {
+                                categories_ids.add(Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId()));
+                                categories_names.add(getHomeProducts.getData().getCategories().get(i).getName_ar());
+
+                                for (int j = 0; j < getHomeProducts.getData().getCategories().get(i).getProducts().size(); j++) { // product loop
+
+                                    String arr[] = getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar().split(" ", 2); // get first word
+                                    String firstWord = arr[0];
+
+                                    if (getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().size() == 0) {
+                                        home_category1.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), "",
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                    } else {
+                                        home_category1.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().get(0).getFilename(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                    }
+                                }
+                            }
+                            break;
+                        }
+
+                        for (int i = 0; i < getHomeProducts.getData().getCategories().size(); i++) { //category loop
+                            if (getHomeProducts.getData().getCategories().get(i).getProducts().size() == 0) {
+                                continue;
+                            }
+                            int o = Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId());
+                            if (categories_ids.get(0) == Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId())) {
+                                continue;
+                            }
+                            Locale locale = ChangeLang.getLocale(getResources());
+                            String loo = locale.getLanguage();
+                            if (loo.equalsIgnoreCase("en")) {
+                                categories_ids.add(Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId()));
+                                categories_names.add(getHomeProducts.getData().getCategories().get(i).getName());
+
+                                for (int j = 0; j < getHomeProducts.getData().getCategories().get(i).getProducts().size(); j++) { // product loop
+
+                                    String arr[] = getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName().split(" ", 2); // get first word
+                                    String firstWord = arr[0];
+
+                                    if (getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().size() == 0) {
+                                        home_category2.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), "",
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                    } else {
+                                        home_category2.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().get(0).getFilename(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                    }
+
+                                }
+
+                            } else if (loo.equalsIgnoreCase("ar")) {
+                                categories_ids.add(Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId()));
+                                categories_names.add(getHomeProducts.getData().getCategories().get(i).getName_ar());
+
+                                for (int j = 0; j < getHomeProducts.getData().getCategories().get(i).getProducts().size(); j++) { // product loop
+
+                                    String arr[] = getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar().split(" ", 2); // get first word
+                                    String firstWord = arr[0];
+
+                                    if (getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().size() == 0) {
+                                        home_category2.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), "",
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                    } else {
+                                        home_category2.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().get(0).getFilename(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                    }
+
+                                }
+                            }
+
+                            break;
+                        }
+
+                        for (int i = 0; i < getHomeProducts.getData().getCategories().size(); i++) { //category loop
+                            if (getHomeProducts.getData().getCategories().get(i).getProducts().size() == 0) {
+                                continue;
+                            }
+                            int o = Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId());
+                            if (categories_ids.get(1) == Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId()) || categories_ids.get(0) == Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId())) {
+                                continue;
+                            }
+                            Locale locale = ChangeLang.getLocale(getResources());
+                            String loo = locale.getLanguage();
+                            if (loo.equalsIgnoreCase("en")) {
+                                categories_ids.add(Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId()));
+                                categories_names.add(getHomeProducts.getData().getCategories().get(i).getName());
+
+                                for (int j = 0; j < getHomeProducts.getData().getCategories().get(i).getProducts().size(); j++) { // product loop
+
+                                    String arr[] = getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName().split(" ", 2); // get first word
+                                    String firstWord = arr[0];
+
+                                    if (getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().size() == 0) {
+                                        home_category3.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), "",
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                    } else {
+                                        home_category3.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().get(0).getFilename(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                    }
+
+                                }
+
+                            } else if (loo.equalsIgnoreCase("ar")) {
+                                categories_ids.add(Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId()));
+                                categories_names.add(getHomeProducts.getData().getCategories().get(i).getName_ar());
+
+                                for (int j = 0; j < getHomeProducts.getData().getCategories().get(i).getProducts().size(); j++) { // product loop
+
+                                    String arr[] = getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar().split(" ", 2); // get first word
+                                    String firstWord = arr[0];
+
+                                    if (getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().size() == 0) {
+                                        home_category3.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), "",
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                    } else {
+                                        home_category3.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().get(0).getFilename(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
+                                                getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                    }
+
+                                }
+                            }
+
+                            break;
+                        }
                     }
+                    category3Adapter = new ProductsCategory3Adapter(getActivity(), home_category3);
+                    category3Adapter.setProductsCategory3Operation(MainFragment.this);
+                    main_recycler_category3.setAdapter(category3Adapter);
+                    category3_label.setText(categories_names.get(2));
 
-                    for (int i = 0; i < getHomeProducts.getData().getCategories().size(); i++) { //category loop
-                        if (getHomeProducts.getData().getCategories().get(i).getProducts().size() == 0) {
-                            continue;
-                        }
-                        int o = Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId());
-                        if (categories_ids.get(0) == Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId())) {
-                            continue;
-                        }
-                        Locale locale = ChangeLang.getLocale(getResources());
-                        String loo = locale.getLanguage();
-                        if (loo.equalsIgnoreCase("en")) {
-                            categories_ids.add(Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId()));
-                            categories_names.add(getHomeProducts.getData().getCategories().get(i).getName());
+                    phonesAdapter = new PhonesAdapter(getActivity(), home_category2);
+                    phonesAdapter.setnPhones(MainFragment.this);
+                    main_recycler_phones.setAdapter(phonesAdapter);
+                    phones_label.setText(categories_names.get(1));
 
-                            for (int j = 0; j < getHomeProducts.getData().getCategories().get(i).getProducts().size(); j++) { // product loop
-
-                                String arr[] = getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName().split(" ", 2); // get first word
-                                String firstWord = arr[0];
-
-                                if (getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().size() == 0) {
-                                    home_category2.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), "",
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
-                                } else {
-                                    home_category2.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().get(0).getFilename(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
-                                }
-
-                            }
-
-                        } else if (loo.equalsIgnoreCase("ar")) {
-                            categories_ids.add(Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId()));
-                            categories_names.add(getHomeProducts.getData().getCategories().get(i).getName_ar());
-
-                            for (int j = 0; j < getHomeProducts.getData().getCategories().get(i).getProducts().size(); j++) { // product loop
-
-                                String arr[] = getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar().split(" ", 2); // get first word
-                                String firstWord = arr[0];
-
-                                if (getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().size() == 0) {
-                                    home_category2.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), "",
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
-                                } else {
-                                    home_category2.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().get(0).getFilename(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
-                                }
-
-                            }
-                        }
-
-                        break;
-                    }
-
-                    for (int i = 0; i < getHomeProducts.getData().getCategories().size(); i++) { //category loop
-                        if (getHomeProducts.getData().getCategories().get(i).getProducts().size() == 0) {
-                            continue;
-                        }
-                        int o = Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId());
-                        if (categories_ids.get(1) == Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId()) || categories_ids.get(0) == Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId())) {
-                            continue;
-                        }
-                        Locale locale = ChangeLang.getLocale(getResources());
-                        String loo = locale.getLanguage();
-                        if (loo.equalsIgnoreCase("en")) {
-                            categories_ids.add(Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId()));
-                            categories_names.add(getHomeProducts.getData().getCategories().get(i).getName());
-
-                            for (int j = 0; j < getHomeProducts.getData().getCategories().get(i).getProducts().size(); j++) { // product loop
-
-                                String arr[] = getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName().split(" ", 2); // get first word
-                                String firstWord = arr[0];
-
-                                if (getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().size() == 0) {
-                                    home_category3.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), "",
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
-                                } else {
-                                    home_category3.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().get(0).getFilename(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
-                                }
-
-                            }
-
-                        } else if (loo.equalsIgnoreCase("ar")) {
-                            categories_ids.add(Integer.parseInt(getHomeProducts.getData().getCategories().get(i).getId()));
-                            categories_names.add(getHomeProducts.getData().getCategories().get(i).getName_ar());
-
-                            for (int j = 0; j < getHomeProducts.getData().getCategories().get(i).getProducts().size(); j++) { // product loop
-
-                                String arr[] = getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar().split(" ", 2); // get first word
-                                String firstWord = arr[0];
-
-                                if (getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().size() == 0) {
-                                    home_category3.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), "",
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
-                                } else {
-                                    home_category3.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().get(0).getFilename(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                            getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
-                                }
-
-                            }
-                        }
-
-                        break;
-                    }
+                    accessoriesAdapter = new AccessoriesAdapter(getActivity(), home_category1);
+                    accessoriesAdapter.setAccessoriesOperation(MainFragment.this);
+                    main_recycler_accessories.setAdapter(accessoriesAdapter);
+                    accessories_label.setText(categories_names.get(0));
+                    reloadDialog.dismiss();
                 }
-                category3Adapter = new ProductsCategory3Adapter(getActivity(), home_category3);
-                category3Adapter.setProductsCategory3Operation(MainFragment.this);
-                main_recycler_category3.setAdapter(category3Adapter);
-                category3_label.setText(categories_names.get(2));
-
-                phonesAdapter = new PhonesAdapter(getActivity(), home_category2);
-                phonesAdapter.setnPhones(MainFragment.this);
-                main_recycler_phones.setAdapter(phonesAdapter);
-                phones_label.setText(categories_names.get(1));
-
-                accessoriesAdapter = new AccessoriesAdapter(getActivity(), home_category1);
-                accessoriesAdapter.setAccessoriesOperation(MainFragment.this);
-                main_recycler_accessories.setAdapter(accessoriesAdapter);
-                accessories_label.setText(categories_names.get(0));
-                reloadDialog.dismiss();
             }
 
             @Override
@@ -753,7 +778,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(data.getBooleanExtra("similar_product_change", false)){
+        if (data.getBooleanExtra("similar_product_change", false)) {
             fragment_main_basket_top_txt.setText("" + PreferenceUtils.getCountOfItemsBasket(getActivity()));
             onLoadPage();
             return;
@@ -765,7 +790,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                 home_category2.set(position_detail, productsCategory);
                 phonesAdapter.notifyItemChanged(position_detail);
             }
-            if(data.getBooleanExtra("added_to_cart", false)){
+            if (data.getBooleanExtra("added_to_cart", false)) {
                 ProductsCategory productsCategory = home_category2.get(position_detail);
                 productsCategory.setCart(String.valueOf(CART_NOT_EMPTY));
                 home_category2.set(position_detail, productsCategory);
@@ -788,7 +813,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                 accessoriesAdapter.notifyItemChanged(position_detail);
                 fragment_main_basket_top_txt.setVisibility(View.VISIBLE);
                 fragment_main_basket_top_txt.setText("" + PreferenceUtils.getCountOfItemsBasket(getActivity()));
-                }
+            }
 
         } else if (requestCode == 1111) {
             if (data.getBooleanExtra("databack", false)) {
@@ -822,5 +847,11 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
             post.put("quantity", "1");
         }
         reloadDialog.show();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        fragment_main_searchview.onActionViewCollapsed(); //to close the searchview
     }
 }

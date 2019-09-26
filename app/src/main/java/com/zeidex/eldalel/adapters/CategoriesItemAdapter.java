@@ -18,22 +18,25 @@ public class CategoriesItemAdapter extends SmartFragmentStatePagerAdapter {
     public static final String SUBCATEGORY_ID_INTENT_EXTRA = "subcategory_id";
     public static final String SUB_SUBCATEGORY_ID_INTENT_EXTRA = "sub_subcategory_id";
     List<String> ids, names;
-    int subcategoryId;
-    int categoryId;
+    int subcategoryId = -1;
+    int categoryId = -1;
 //    ArrayList<ProductsCategory> products;
 
-    public CategoriesItemAdapter(FragmentManager fragmentManager, List<String> ids, List<String> names) {
+    public CategoriesItemAdapter(FragmentManager fragmentManager, List<String> ids, List<String> names, int categoryId, int subcategoryId) {
         super(fragmentManager);
         this.ids = ids;
         this.names = names;
-    }
-
-    public CategoriesItemAdapter(FragmentManager fragmentManager, int subcategoryId) {
-        super(fragmentManager);
+        this.categoryId = categoryId;
         this.subcategoryId = subcategoryId;
     }
 
-    public CategoriesItemAdapter(int categoryId, FragmentManager fragmentManager) {
+    public CategoriesItemAdapter(FragmentManager fragmentManager, int subcategoryId, int categoryId) {
+        super(fragmentManager);
+        this.subcategoryId = subcategoryId;
+        this.categoryId = categoryId;
+    }
+
+    public CategoriesItemAdapter(FragmentManager fragmentManager, int categoryId) {
         super(fragmentManager);
         this.categoryId = categoryId;
     }
@@ -48,16 +51,19 @@ public class CategoriesItemAdapter extends SmartFragmentStatePagerAdapter {
         ProductsFragment productsFragment = new ProductsFragment();
         Bundle bundle = new Bundle();
         if (ids == null) { //indicates that there are no subsubcategories
-            if (subcategoryId == 0) //indicates that there are no subcategories either
+            if (subcategoryId == -1) //indicates that there are no subcategories either
             {
                 bundle.putInt(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
             } else {
+                bundle.putInt(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
                 bundle.putInt(SUBCATEGORY_ID_INTENT_EXTRA, subcategoryId);
             }
             productsFragment.setArguments(bundle);
             return productsFragment;
         }
 
+        bundle.putInt(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
+        bundle.putInt(SUBCATEGORY_ID_INTENT_EXTRA, subcategoryId);
         bundle.putInt(SUB_SUBCATEGORY_ID_INTENT_EXTRA, Integer.valueOf(ids.get(position)));
         productsFragment.setArguments(bundle);
         return productsFragment;

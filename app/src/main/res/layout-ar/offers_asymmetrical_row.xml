@@ -16,7 +16,6 @@ app:cardElevation="4dp">
         android:id="@+id/offer_row_image"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:background="@drawable/banner_main"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

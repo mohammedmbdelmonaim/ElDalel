@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.zeidex.eldalel.R;
 import com.zeidex.eldalel.models.ProductsCategory;
 import com.zeidex.eldalel.utils.PreferenceUtils;
@@ -95,12 +96,13 @@ public class LikesElementsAdapter extends RecyclerView.Adapter<LikesElementsAdap
         holder.likeItemNameText.setText(productsCategory.getName());
         holder.likeItemTypeText.setText(productsCategory.getType());
 
-//        Glide.with(context)
-//                .load("https://www.dleel-sh.com/homepages/get/" + productsCategory.getImgUrl())
-//                .placeholder(R.drawable.condition_logo)
-//                .centerCrop()
-//                .into(holder.likeItemImageView);
-
+        if (productsCategory.getImgUrl() != null) {
+            Glide.with(context)
+                    .load("https://www.dleel-sh.com/homepages/get/" + productsCategory.getImgUrl())
+                    .placeholder(R.drawable.condition_logo)
+                    .centerCrop()
+                    .into(holder.likeItemImageView);
+        }
 
         String cartStatus = productsCategory.getCart();
         if (cartStatus.equals(String.valueOf(CART_EMPTY))) {

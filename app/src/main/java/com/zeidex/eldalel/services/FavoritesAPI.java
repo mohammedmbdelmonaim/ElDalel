@@ -1,6 +1,6 @@
 package com.zeidex.eldalel.services;
 
-import com.zeidex.eldalel.models.GetFavorites;
+import com.zeidex.eldalel.response.GetFavorites;
 import com.zeidex.eldalel.response.DeleteFavoriteResponse;
 
 import retrofit2.Call;

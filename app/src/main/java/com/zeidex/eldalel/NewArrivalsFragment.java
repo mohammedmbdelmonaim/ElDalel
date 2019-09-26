@@ -124,17 +124,15 @@ public class NewArrivalsFragment extends androidx.fragment.app.Fragment implemen
             intent.putExtra(CATEGORY_NAME_INTENT_EXTRA, category.getName());
         }
 
-        if(subCategories != null && subCategories.size() >0) {
+        if (subCategories != null && subCategories.size() > 0) {
             ArrayList<Subcategory> subCategoriesModel = new ArrayList<>();
             for (int i = 0; i < subCategories.size(); i++) {
                 subCategoriesModel.add(new Subcategory(subCategories.get(i).getId(), subCategories.get(i).getNameAr(),
                         subCategories.get(i).getName(), ""));
             }
             intent.putParcelableArrayListExtra(SUBCATEGORIES_INTENT_EXTRA_KEY, subCategoriesModel);
-        } else { //If the category has no subcategories
-            intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, category.getId());
         }
-
+        intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, category.getId());
         startActivity(intent);
         Animatoo.animateSwipeLeft(getActivity());
     }

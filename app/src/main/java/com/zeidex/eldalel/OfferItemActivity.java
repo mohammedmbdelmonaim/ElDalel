@@ -5,12 +5,16 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,6 +30,7 @@ import com.zeidex.eldalel.response.GetAddToFavouriteResponse;
 import com.zeidex.eldalel.response.GetProducts;
 import com.zeidex.eldalel.services.AddToCardApi;
 import com.zeidex.eldalel.services.AddToFavouriteApi;
+import com.zeidex.eldalel.services.FilterAPI;
 import com.zeidex.eldalel.services.OffersAPI;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.Animatoo;
@@ -50,6 +55,12 @@ import retrofit2.Response;
 import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
 import static com.zeidex.eldalel.OffersFragment.CATEGORY_NAME_INTENT_EXTRA;
 import static com.zeidex.eldalel.OffersFragment.SUBCATEGORIES_INTENT_EXTRA_KEY;
+import static com.zeidex.eldalel.ProductsFragment.FINISH_ACTIVITY_CODE;
+import static com.zeidex.eldalel.ProductsFragment.SORT_ASC;
+import static com.zeidex.eldalel.ProductsFragment.SORT_DESC;
+import static com.zeidex.eldalel.ProductsFragment.SORT_DATE_DESC_INDEX;
+import static com.zeidex.eldalel.SearchActivity.SEARCH_NAME_ARGUMENT;
+import static com.zeidex.eldalel.adapters.CategoriesItemAdapter.SUBCATEGORY_ID_INTENT_EXTRA;
 import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
@@ -74,7 +85,15 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
     @BindView(R.id.offer_category_text_label_count)
     AppCompatTextView labelCountText;
 
-    //    CategoryItemAdapter categoryAdapter;
+    @BindView(R.id.offer_descendant_items_category)
+    AppCompatImageView offer_descendant_items_category;
+
+    @BindView(R.id.offer_search_items_category)
+    AppCompatImageView offer_search_items_category;
+
+    @BindView(R.id.offer_item_search)
+    SearchView offer_item_search;
+
     CategoryItemAdapter productsAdapter;
     SubCategoriesAdapter subCategoriesAdapter;
 
@@ -87,6 +106,10 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
     Map<String, String> cartPost;
     Map<String, String> likePost;
     private ArrayList<ProductsCategory> productsCategory;
+    private Map<String, Object> filterMap;
+    private PopupMenu dropDownMenu;
+    private int subcategoryId;
+    private int categoryId;
 
 
     @Override
@@ -110,6 +133,59 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
             token = PreferenceUtils.getUserToken(this);
         }
 
+        offer_item_search.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Intent intent = new Intent(OfferItemActivity.this, SearchActivity.class);
+                intent.putExtra(SEARCH_NAME_ARGUMENT, query);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                offer_item_search.onActionViewCollapsed(); //to close the searchview
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        filterMap = new HashMap<>();
+        filterMap.put("status", OFFERS);
+        dropDownMenu = new PopupMenu(this, offer_descendant_items_category);
+        dropDownMenu.getMenuInflater().inflate(R.menu.menu_sort_dropdown, dropDownMenu.getMenu());
+        dropDownMenu.getMenu().getItem(SORT_DATE_DESC_INDEX).setChecked(true);
+
+        dropDownMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                menuItem.setChecked(true);
+                switch (menuItem.getItemId()) {
+                    case (R.id.sort_price_ascend):
+                        filterMap.put("order_price", SORT_ASC);
+                        filterMap.remove("order_date");
+                        break;
+
+                    case (R.id.sort_price_descend):
+                        filterMap.put("order_price", SORT_DESC);
+                        filterMap.remove("order_date");
+                        break;
+
+                    case (R.id.sort_date_ascend):
+                        filterMap.put("order_date", SORT_ASC);
+                        filterMap.remove("order_price");
+                        break;
+
+                    case (R.id.sort_date_descend):
+                        filterMap.put("order_date", SORT_DESC);
+                        filterMap.remove("order_price");
+                        break;
+                }
+                filterResults();
+                return true;
+            }
+        });
         showDialog();
         onLoadPage();
     }
@@ -121,9 +197,13 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
             subCategoriesAdapter = new SubCategoriesAdapter(this, subcategories, true);
             subCategoriesAdapter.setSubCategoryOperation(this);
             offer_item_recycler_categories.setAdapter(subCategoriesAdapter);
-            getSubcategoryProducts(subcategories.get(0).getId());
+            subcategoryId = subcategories.get(0).getId();
+            categoryId = getIntent().getIntExtra(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
+            filterMap.put("subcat_id", subcategoryId);
+            getSubcategoryProducts(subcategoryId);
         } else {
-            int categoryId = getIntent().getIntExtra(CATEGORY_ID_INTENT_EXTRA_KEY, 0);
+            categoryId = getIntent().getIntExtra(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
+            filterMap.put("cat_id", categoryId);
             getCategoryProducts(categoryId);
         }
 
@@ -192,6 +272,38 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
             }
         });
     }
+
+    private void filterResults() {
+        reloadDialog.show();
+        FilterAPI filterAPI = APIClient.getClient(SERVER_API_TEST).create(FilterAPI.class);
+        filterAPI.getProductsFromFilter(filterMap, token).enqueue(new Callback<GetProducts>() {
+            @Override
+            public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
+                if (response.body() != null) {
+                    int code = response.body().getCode();
+                    if (code == 200) {
+                        List<GetProducts.Data> products = response.body().getProducts().getDataAll();
+                        if (products.size() > 0) {
+                            productsCategory = getProductsFromResponse(products);
+                            productsAdapter.setProductsList(productsCategory);
+                            productsAdapter.notifyDataSetChanged();
+                            labelCountText.setText(String.valueOf(products.size()));
+                        } else {
+                            showEmptyView();
+                        }
+                    }
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetProducts> call, Throwable t) {
+                Toasty.error(OfferItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
+    }
+
 
     private ArrayList<ProductsCategory> getProductsFromResponse(List<GetProducts.Data> productsResponse) {
         ArrayList<ProductsCategory> products = new ArrayList<>();
@@ -289,11 +401,13 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
 
     @Override
     public void onClickSubCategory(int subcategoryId, String subcategoryName) {
+        this.subcategoryId = subcategoryId;
+        filterMap.put("subcat_id", subcategoryId);
         getSubcategoryProducts(subcategoryId);
     }
 
     @Override
-    public void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subcategoryName) {
+    public void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subcategoryName, int subcategoryId) {
 
     }
 
@@ -396,5 +510,37 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
                 productsAdapter.notifyItemChanged(position_detail);
             }
         }
+
+        if (requestCode == FINISH_ACTIVITY_CODE && data != null) {
+            boolean shouldFinishActivity = data.getBooleanExtra("should_finish_activity", false);
+            if (shouldFinishActivity) finish();
+        }
+//        } else if (requestCode == FILTER_REQUEST_CODE && data != null) {
+//            offerItemHeaderText.setText("");
+//            int filterCategoryId = data.getIntExtra("filter_category_id", -1);
+//            int filterPriceFrom = data.getIntExtra("filter_price_from", -1);
+//            int filterPriceTo = data.getIntExtra("filter_price_to", -1);
+//            filterMap = new HashMap<>();
+//            if (filterCategoryId != -1) filterMap.put("cat_id", filterCategoryId);
+//            if (filterPriceFrom != -1) filterMap.put("from", filterPriceFrom);
+//            if (filterPriceTo != -1) filterMap.put("to", filterPriceTo);
+//            filterResults();
+//        }
     }
+
+    @OnClick(R.id.offer_descendant_items_category)
+    void sortResults() {
+        dropDownMenu.show();
+    }
+
+    @OnClick(R.id.offer_search_items_category)
+    void navigateToFilterActivity() {
+        Intent intent = new Intent(this, FilterActivity.class);
+        intent.putExtra("has_offer", true);
+        intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
+        intent.putExtra(SUBCATEGORY_ID_INTENT_EXTRA, subcategoryId);
+        startActivityForResult(intent, FINISH_ACTIVITY_CODE);
+        Animatoo.animateSwipeLeft(this);
+    }
+
 }

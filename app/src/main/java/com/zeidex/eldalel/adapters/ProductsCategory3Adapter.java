@@ -34,7 +34,8 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
     public List<ProductsCategory> getProductsCategoryList() {
         return productsCategoryList;
     }
-    public void setProductsList(List<ProductsCategory> productsCategoryList){
+
+    public void setProductsList(List<ProductsCategory> productsCategoryList) {
         this.productsCategoryList = productsCategoryList;
     }
 
@@ -123,7 +124,7 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
 
     @Override
     public int getItemCount() {
-        return productsCategoryList.size();
+        return productsCategoryList.size() > 0 ? productsCategoryList.size() : 0;
     }
 
     public class ProductsCategory3Holder extends RecyclerView.ViewHolder {

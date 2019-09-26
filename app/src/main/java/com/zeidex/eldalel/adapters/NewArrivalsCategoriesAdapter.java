@@ -10,6 +10,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.zeidex.eldalel.R;
 import com.zeidex.eldalel.response.GetOffersCategories;
 import com.zeidex.eldalel.utils.ChangeLang;
@@ -54,7 +55,11 @@ public class NewArrivalsCategoriesAdapter extends RecyclerView.Adapter<NewArriva
             holder.categoryTextView.setText(currentCategory.getName());
         }
 
-        //TODO ADD BINDING FOR THE IMAGE
+        Glide.with(context)
+                .load("https://www.dleel-sh.com/homepages/get/" + currentCategory.getPhoto())
+                .placeholder(R.drawable.condition_logo)
+                .fitCenter()
+                .into(holder.categoryImageView);
 
     }
 
