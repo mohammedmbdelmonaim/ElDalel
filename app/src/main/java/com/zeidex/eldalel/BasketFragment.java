@@ -101,6 +101,9 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
     String language;
     ArrayList<BasketProducts> basketProducts;
 
+
+    public static String total_price;
+    public static String total_products;
     public void onLoadPage() {
         if (PreferenceUtils.getUserLogin(getActivity())) {
             token = PreferenceUtils.getUserToken(getActivity());
@@ -154,10 +157,12 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                     basketElementsAdapter = new BasketElementsAdapter(getActivity(), basketProducts);
                     basketElementsAdapter.setBasketOperation(BasketFragment.this);
                     fragment_basket_elements_recycler.setAdapter(basketElementsAdapter);
-                    double totalDouble = Double.parseDouble(getBasketProducts.getTotal());
-                    String totalString = PriceFormatter.toDecimalRsString(totalDouble, getActivity().getApplicationContext());
-                    fragment_basket_total_price_products_text.setText(totalString);
-                    fragment_basket_total_price_text.setText(totalString);
+                    total_price = getBasketProducts.getTotal();
+                    total_products = getBasketProducts.getCartCount();
+//                    double totalDouble = Double.parseDouble(getBasketProducts.getTotal());
+//                    String totalString = PriceFormatter.toDecimalRsString(totalDouble, getActivity().getApplicationContext());
+                    fragment_basket_total_price_products_text.setText(getBasketProducts.getCartCount());
+                    fragment_basket_total_price_text.setText(getBasketProducts.getTotal());
                 }
                 reloadDialog.dismiss();
             }

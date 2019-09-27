@@ -242,7 +242,7 @@ public class LikesElementsActivity extends BaseActivity implements LikesElements
                 if (deleteFavoriteResponse != null) {
                     int code = deleteFavoriteResponse.getCode();
                     if (code == 200) {
-                        Toasty.success(LikesElementsActivity.this, getString(R.string.remove_from_favorite), Toast.LENGTH_LONG).show();
+                        Toasty.success(LikesElementsActivity.this, getString(R.string.remove_fav), Toast.LENGTH_LONG).show();
                         likesElementsAdapter.getProductsList().remove(position);
                         likesElementsAdapter.notifyItemRemoved(position);
                         int remainingProductsCount = likesElementsAdapter.getProductsList().size();

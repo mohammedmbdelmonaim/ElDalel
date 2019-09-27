@@ -6,7 +6,7 @@
     <string name="bottomnavigation_label_main">الرئيسية</string>
     <string name="bottomnavigation_label_cate">الفئات</string>
     <string name="bottomnavigation_label_offers">العروض</string>
-    <string name="bottomnavigation_label_basket">سلة التسوق</string>
+    <string name="bottomnavigation_label_basket">السلة</string>
     <string name="bottomnavigation_label_account">حسابى</string>
 
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
@@ -19,11 +19,19 @@
     <string name="detail_color">اللون</string>
     <string name="detail_size_label">السعة</string>
     <string name="details_like_too">قد يعجبك أيضا</string>
+    <string name="title_activity_maps">Map</string>
     <string name="fragment_account_label">حسابى</string>
     <string name="fragment_account_text_login">تسجيل الدخول</string>
     <string name="fragment_account_text_register">إشترك الآن</string>
     <string name="fragment_account_region_name">الدولة</string>
     <string name="fragment_account_language_label">اللغة</string>
+    <string name="fragment_shooping_add_address_text0">أضف عنواناً الأن لنتمكن من توصيل طلبك</string>
+    <string name="sort_menu_price_descend">السعر: من الأكثر الى الأقل</string>
+
+
+
+    <string name="remove_fav">تم الحذف من المفضلة</string>
+
     <string name="fragment_account_contact_us_label">إتصل بنا</string>
     <string name="fragment_account_contact_us_help_linear_label">المساعدة</string>
     <string name="fragment_account_contact_us_help_linear_label_la">إتصل بنا</string>
@@ -143,7 +151,26 @@
     <string name="no_items_text">لا يوجد منتجات لعرضها في الوقت الحالي</string>
     <string name="discount_label">خصم</string>
     <string name="new_arrival_header_text">وصل حديثاً</string>
-    <string name="remove_from_favorite">تم الحذف من المفضلة</string>
+    <string name="add_address">أضف العنوان</string>
+    <string name="postal_code">الرقم البريدي</string>
+    <string name="add_address_sucess">تم إضافة العنوان بنجاح</string>
+    <string name="mobile_payment_addresses_text">رقم الجوال :</string>
+    <string name="address_payment_addresses_text">العنوان :</string>
+    <string name="name_payment_addresses_text">الإسم :</string>
+    <string name="ask_to_change_adress">هل تريد تغيير العنوان الأساسي بهذا العنوان؟</string>
+    <string name="activity_payment_header_text">الدفع</string>
+    <string name="address_add_go_update_text">عدل العنوان</string>
+    <string name="change_primary_address_success">تم تغيير العنوان الأساسي بهذا العنوان بنجاح</string>
+    <string name="edit_address_success">تم تعديل العنوان بنجاح</string>
+    <string name="fragment_shooping_list_addresses_text_next">التالى</string>
+    <string name="no_addresse_text">لا يوجد عنواين في الوقت الحالي</string>
+    <string name="shipment_to_address_text">الشحن الى العنوان</string>
+    <string name="shipment_from_branch_text">الإستلام من الفرع</string>
+    <string name="credit_card_payment_txt_label">البطاقة الإتمانية</string>
+    <string name="bank_payment_txt_label">التحويل البنكى</string>
+    <string name="pay_on_arrive_payment_txt_label">الدفع عند الإستلام</string>
+    <string name="fragment_payid_paying_label">أدفع الآن</string>
+
     <string name="delete_cart_toast">تم حذف المنتج من السلة بنجاح</string>
     <string name="quantity_not_available_toast">الكمية المطلوبة أكبر من الكمية المتوفرة لدينا، الكمية المتاحة هي </string>
     <string name="cart_no_quantity_chosen_toast">من فضلك قم بادخال الكمية المطلوبة</string>

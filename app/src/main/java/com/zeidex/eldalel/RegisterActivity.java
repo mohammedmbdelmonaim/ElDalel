@@ -275,6 +275,16 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             return;
         }
 
+        if (type_radio.equalsIgnoreCase("")) {
+            Toasty.error(this, getString(R.string.choose_type), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (lang.equalsIgnoreCase("")) {
+            Toasty.error(this, getString(R.string.choose_lang), Toast.LENGTH_LONG).show();
+            return;
+        }
+
         RegisterApi registerApi = null;
         Call<GetRegisterResponse> getRegisterResponseCall = null;
         if (type_radio.equals("individual")) {
@@ -373,15 +383,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             }
 
         }
-        if (type_radio.equalsIgnoreCase("")) {
-            Toasty.error(this, getString(R.string.choose_type), Toast.LENGTH_LONG).show();
-            return;
-        }
 
-        if (lang.equalsIgnoreCase("")) {
-            Toasty.error(this, getString(R.string.choose_lang), Toast.LENGTH_LONG).show();
-            return;
-        }
     }
 
     ArrayList<String> countries;

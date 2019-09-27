@@ -16,6 +16,7 @@ import com.zeidex.eldalel.utils.PreferenceUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class AccountAfterLoginFragment extends androidx.fragment.app.Fragment implements View.OnClickListener {
     @BindView(R.id.ragment_account_after_login_logout_linear)
@@ -50,6 +51,13 @@ public class AccountAfterLoginFragment extends androidx.fragment.app.Fragment im
         ButterKnife.bind(this, view);
         findViews();
     }
+
+    @OnClick({R.id.fragment_account_after_login_addresses_linear})
+    public void goToAddressesActivity(){
+        startActivity(new Intent(getActivity(), AddressesActivity.class));
+        Animatoo.animateSwipeLeft(getActivity());
+    }
+
     public void findViews(){
         Fragment fragment = new FragmentAccountHelpers();
         getFragmentManager().beginTransaction().replace(R.id.fragment_account_after_login_getHelers , fragment).commit();
