@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="@dimen/dimen_8dp"
     android:background="#FFFFFF"
-    android:paddingBottom="20dp">
+    android:paddingBottom="@dimen/dimen_20dp">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/basket_element_img"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="10dp"
+        android:layout_width=""@dimen/dimen_50dp""
+        android:layout_height=""@dimen/dimen_50dp""
+        android:layout_marginStart="@dimen/dimen_18dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
         android:src="@drawable/harddisk"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -21,12 +21,12 @@
         android:id="@+id/basket_element_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="@dimen/dimen_12dp"
         android:fontFamily="@font/cairo_bold"
         android:text="زندور"
         android:textAlignment="viewStart"
         android:textColor="#AAAAAA"
-        android:textSize="10sp"
+        android:textSize="@dimen/dimen_10sp"
         app:layout_constraintStart_toEndOf="@id/basket_element_img"
         app:layout_constraintTop_toTopOf="@id/basket_element_img" />
 
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:text="شاحن بنك طاقة متنقل مدخل تايب سى شاحن بنك طاقة متنقل مدخل تايب سى"
         android:textColor="#232222"
-        android:textSize="12sp"
+        android:textSize="@dimen/dimen_12sp"
         android:fontFamily="@font/cairo_bold"
         app:layout_constraintStart_toStartOf="@+id/basket_element_name"
         app:layout_constraintTop_toBottomOf="@+id/basket_element_name"
@@ -48,11 +48,11 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/cairo_bold"
         android:maxLength="7"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
+        android:paddingTop="@dimen/dimen_2dp"
+        android:paddingBottom="@dimen/dimen_2dp"
         android:textAlignment="viewStart"
         android:textColor="#232222"
-        android:textSize="18sp"
+        android:textSize="@dimen/dimen_18sp"
         app:layout_constraintStart_toStartOf="@+id/basket_element_desc"
         app:layout_constraintTop_toBottomOf="@+id/basket_element_desc" />
 
@@ -60,14 +60,14 @@
         android:id="@+id/basket_element_currency_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
+        android:layout_marginStart="@dimen/dimen_3dp"
         android:fontFamily="@font/cairo_bold"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
+        android:paddingTop="@dimen/dimen_2dp"
+        android:paddingBottom="@dimen/dimen_2dp"
         android:text="@string/currancy_label"
         android:textAlignment="viewStart"
         android:textColor="#232222"
-        android:textSize="12sp"
+        android:textSize="@dimen/dimen_12sp"
         app:layout_constraintBottom_toBottomOf="@+id/basket_element_price"
         app:layout_constraintStart_toEndOf="@+id/basket_element_price"
         app:layout_constraintTop_toTopOf="@+id/basket_element_price" />
@@ -77,36 +77,36 @@
         android:id="@+id/phone_text_price_before_linear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="@dimen/dimen_30dp"
         android:orientation="horizontal"
         android:visibility="gone"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
+        android:paddingTop="@dimen/dimen_2dp"
+        android:paddingBottom="@dimen/dimen_2dp"
         app:layout_constraintStart_toEndOf="@+id/basket_element_currency_price"
         app:layout_constraintTop_toTopOf="@+id/basket_element_currency_price">
 
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginStart="7dp">
+            android:layout_marginStart="@dimen/dimen_7dp">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/basket_element_currency_price_before"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="3dp"
+                android:layout_marginStart="@dimen/dimen_3dp"
                 android:fontFamily="@font/cairo_bold"
                 android:gravity="center"
                 android:maxLength="7"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
+                android:paddingTop="@dimen/dimen_2dp"
+                android:paddingBottom="@dimen/dimen_2dp"
                 android:textColor="#AAAAAA"
-                android:textSize="12sp"
+                android:textSize="@dimen/dimen_12sp"
                 android:visibility="visible" />
 
             <View
                 android:id="@+id/phone_text_price_before_view"
-                android:layout_width="20dp"
+                android:layout_width="@dimen/dimen_20dp"
                 android:layout_height="0.8dp"
                 android:layout_gravity="center"
                 android:background="#AAAAAA"
@@ -117,23 +117,23 @@
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginStart="3dp">
+            android:layout_marginStart="@dimen/dimen_3dp">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/basket_element_currency_before_label"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="3dp"
+                android:layout_marginStart="@dimen/dimen_3dp"
                 android:fontFamily="@font/cairo_bold"
                 android:gravity="center"
                 android:text="@string/currancy_label"
                 android:textColor="#AAAAAA"
-                android:textSize="12sp"
+                android:textSize="@dimen/dimen_12sp"
                 android:visibility="visible" />
 
             <View
                 android:id="@+id/phone_text_price_before_label_view"
-                android:layout_width="20dp"
+                android:layout_width="@dimen/dimen_20dp"
                 android:layout_height="0.8dp"
                 android:layout_gravity="center"
 
@@ -148,7 +148,7 @@
         android:id="@+id/basket_element_currency_linear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="@dimen/dimen_14dp"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="@+id/basket_element_price"
         app:layout_constraintTop_toBottomOf="@+id/basket_element_price">
@@ -166,12 +166,12 @@
             android:id="@+id/basket_element_currency_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="@dimen/dimen_10dp"
             android:fontFamily="@font/cairo_bold"
-            android:layout_marginBottom="3dp"
+            android:layout_marginBottom="@dimen/dimen_3dp"
             android:textAlignment="viewStart"
             android:textColor="#606060"
-            android:textSize="16sp"
+            android:textSize="@dimen/dimen_16sp"
             app:layout_constraintBottom_toBottomOf="@+id/basket_element_currency_arrow"
             app:layout_constraintStart_toEndOf="@+id/basket_element_currency_arrow"
             app:layout_constraintTop_toTopOf="@+id/basket_element_currency_arrow" />
@@ -182,8 +182,8 @@
         android:id="@+id/basket_element_currency_img_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:layout_marginEnd="18dp"
+        android:layout_marginTop="@dimen/dimen_14dp"
+        android:layout_marginEnd="@dimen/dimen_18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/basket_element_price"
         app:srcCompat="@drawable/ic_delete" />

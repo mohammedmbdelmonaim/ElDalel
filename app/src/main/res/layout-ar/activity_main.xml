@@ -21,7 +21,7 @@
         app:itemTextColor="@color/item_menu_buttom_color_change"
         app:menu="@menu/menu_bottom_nav"
         app:labelVisibilityMode="labeled"
-        app:elevation="4dp"
+        app:elevation="@dimen/dimen_4dp"
 
         />
 

@@ -19,17 +19,17 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/item_detail_back"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/dimen_60dp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="@dimen/dimen_20dp"
             app:srcCompat="@drawable/ic_arrow_back" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/detail_title_header_text"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginEnd="60dp"
-            android:layout_marginStart="20dp"
+            android:layout_height="@dimen/dimen_60dp"
+            android:layout_marginEnd="@dimen/dimen_60dp"
+            android:layout_marginStart="@dimen/dimen_20dp"
             android:fontFamily="@font/cairo_bold"
             android:layout_toEndOf="@id/item_detail_back"
             android:layout_alignParentEnd="true"
@@ -37,14 +37,14 @@
             android:maxLines="1"
             tools:text="...زندور اي8, بة, 4مداخل"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="@dimen/dimen_18sp" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/detail_search_header_categories_img"
             style="@style/SearchViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="@dimen/dimen_8dp"
             android:layoutDirection="ltr"
             android:iconifiedByDefault="false"
             android:layout_alignParentEnd="true"
@@ -69,15 +69,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
-                android:elevation="4dp"
-                android:paddingBottom="10dp"
+                android:elevation="@dimen/dimen_4dp"
+                android:paddingBottom="@dimen/dimen_10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <!--<androidx.cardview.widget.CardView-->
-                <!--app:cardCornerRadius="6dp"-->
-                <!--android:layout_margin="16dp"-->
+                <!--app:cardCornerRadius="@dimen/dimen_6dp"-->
+                <!--android:layout_margin="@dimen/dimen_16dp"-->
                 <!--android:layout_width="match_parent"-->
                 <!--android:layout_height="wrap_content"-->
                 <!--app:layout_constraintTop_toTopOf="parent"-->
@@ -98,10 +98,10 @@
                     app:sliderCircularHandlerEnabled="true"
                     app:sliderIndicatorAnimationDuration="600"
                     app:sliderIndicatorGravity="center_horizontal|bottom"
-                    app:sliderIndicatorMargin="15dp"
+                    app:sliderIndicatorMargin="@dimen/dimen_15dp"
                     app:sliderIndicatorOrientation="horizontal"
-                    app:sliderIndicatorPadding="3dp"
-                    app:sliderIndicatorRadius="2dp"
+                    app:sliderIndicatorPadding="@dimen/dimen_3dp"
+                    app:sliderIndicatorRadius="@dimen/dimen_2dp"
                     app:sliderIndicatorSelectedColor="#5A5A5A"
                     app:sliderIndicatorUnselectedColor="#FFF"
                     app:sliderScrollTimeInSec="1"
@@ -112,11 +112,11 @@
                     android:id="@+id/detailـdiscount_linear"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="@dimen/dimen_15dp"
                     android:background="@drawable/row_dicount_bg"
                     android:orientation="horizontal"
-                    android:paddingStart="30dp"
-                    android:paddingEnd="12dp"
+                    android:paddingStart="@dimen/dimen_30dp"
+                    android:paddingEnd="@dimen/dimen_12dp"
                     android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -128,17 +128,17 @@
                         android:fontFamily="@font/cairo_bold"
                         android:text="@string/discount_phone_txt"
                         android:textAlignment="viewStart"
-                        android:textSize="10sp" />
+                        android:textSize="@dimen/dimen_10sp" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/detail_discound_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="3dp"
-                        android:layout_marginEnd="1dp"
+                        android:layout_marginStart="@dimen/dimen_3dp"
+                        android:layout_marginEnd="@dimen/dimen_1dp"
                         android:fontFamily="@font/cairo_bold"
                         android:textAlignment="viewStart"
-                        android:textSize="10sp" />
+                        android:textSize="@dimen/dimen_10sp" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
@@ -146,7 +146,7 @@
                         android:fontFamily="@font/cairo_bold"
                         android:text="%"
                         android:textAlignment="viewStart"
-                        android:textSize="10sp" />
+                        android:textSize="@dimen/dimen_10sp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -154,8 +154,8 @@
                     android:id="@+id/detail_like_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="@dimen/dimen_15dp"
+                    android:layout_marginEnd="@dimen/dimen_16dp"
                     android:button="@drawable/state_of_like_checkbox"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/detailـdiscount_linear" />
@@ -164,8 +164,8 @@
                     android:id="@+id/detail_share_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="@dimen/dimen_20dp"
+                    android:layout_marginEnd="@dimen/dimen_16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/detail_like_img"
                     app:srcCompat="@drawable/ic_share" />
@@ -174,12 +174,12 @@
                     android:id="@+id/detail_name_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="23dp"
-                    android:layout_marginTop="13dp"
+                    android:layout_marginStart="@dimen/dimen_23dp"
+                    android:layout_marginTop="@dimen/dimen_13dp"
                     android:fontFamily="@font/cairo_bold"
                     android:textAlignment="viewStart"
                     android:textColor="#047AC0"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/dimen_14sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/imageSlider" />
 
@@ -187,14 +187,14 @@
                     android:id="@+id/detail_sescription_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="23dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="@dimen/dimen_23dp"
+                    android:layout_marginTop="@dimen/dimen_3dp"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
                     android:fontFamily="@font/cairo_bold"
                     android:textAlignment="viewStart"
 
                     android:textColor="#232222"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/dimen_14sp"
                     app:layout_constraintEnd_toStartOf="@+id/detail_share_img"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/detail_name_text" />
@@ -205,25 +205,25 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/cairo_regular"
                     android:maxLength="10"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp"
+                    android:paddingTop="@dimen/dimen_2dp"
+                    android:paddingBottom="@dimen/dimen_2dp"
                     android:textAlignment="viewStart"
                     android:textColor="#232222"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/dimen_18sp"
                     app:layout_constraintStart_toStartOf="@+id/detail_sescription_text"
                     app:layout_constraintTop_toBottomOf="@+id/detail_sescription_text" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="3dp"
+                    android:layout_marginStart="@dimen/dimen_3dp"
                     android:fontFamily="@font/cairo_regular"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp"
+                    android:paddingTop="@dimen/dimen_2dp"
+                    android:paddingBottom="@dimen/dimen_2dp"
                     android:text="@string/currancy_label"
                     android:textAlignment="viewStart"
                     android:textColor="#232222"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/dimen_12sp"
                     app:layout_constraintBottom_toBottomOf="@+id/detail_item_text_price"
                     app:layout_constraintStart_toEndOf="@+id/detail_item_text_price"
                     app:layout_constraintTop_toTopOf="@+id/detail_item_text_price" />
@@ -233,7 +233,7 @@
                     android:id="@+id/detail_item_text_price_before_linear"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="50dp"
+                    android:layout_marginStart="@dimen/dimen_50dp"
                     android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="@+id/detail_item_text_price"
                     app:layout_constraintStart_toEndOf="@+id/detail_item_text_price"
@@ -242,24 +242,24 @@
                     <FrameLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="7dp">
+                        android:layout_marginStart="@dimen/dimen_7dp">
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/detail_item_text_price_before"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_marginStart="3dp"
+                            android:layout_marginStart="@dimen/dimen_3dp"
                             android:fontFamily="@font/cairo_bold"
                             android:gravity="center"
-                            android:paddingTop="2dp"
-                            android:paddingBottom="2dp"
+                            android:paddingTop="@dimen/dimen_2dp"
+                            android:paddingBottom="@dimen/dimen_2dp"
                             android:textColor="#AAAAAA"
-                            android:textSize="10sp"
+                            android:textSize="@dimen/dimen_10sp"
                             android:visibility="visible" />
 
                         <View
                             android:id="@+id/detail_text_price_before_view"
-                            android:layout_width="20dp"
+                            android:layout_width="@dimen/dimen_20dp"
                             android:layout_height="0.8dp"
                             android:layout_gravity="center"
                             android:background="#AAAAAA"
@@ -270,23 +270,23 @@
                     <FrameLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="3dp">
+                        android:layout_marginStart="@dimen/dimen_3dp">
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/detail_item_text_price_before_label"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_marginStart="3dp"
+                            android:layout_marginStart="@dimen/dimen_3dp"
                             android:fontFamily="@font/cairo_bold"
                             android:gravity="center"
                             android:text="@string/currancy_label"
                             android:textColor="#AAAAAA"
-                            android:textSize="10sp"
+                            android:textSize="@dimen/dimen_10sp"
                             android:visibility="visible" />
 
                         <View
                             android:id="@+id/detail_text_price_before_label_view"
-                            android:layout_width="20dp"
+                            android:layout_width="@dimen/dimen_20dp"
                             android:layout_height="0.8dp"
                             android:layout_gravity="center"
 
@@ -303,11 +303,11 @@
                 android:id="@+id/detail_linear_colors_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginTop="@dimen/dimen_16dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
                 android:background="#FFFFFF"
-                android:elevation="4dp"
+                android:elevation="@dimen/dimen_4dp"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -316,35 +316,35 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="@dimen/dimen_8dp"
+                    android:layout_marginTop="@dimen/dimen_8dp"
                     android:fontFamily="@font/cairo_bold"
                     android:text="@string/detail_color"
                     android:textAlignment="viewStart"
                     android:textColor="#606060"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/dimen_14sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/detail_recycler_colors_item"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginStart="@dimen/dimen_8dp"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_8dp"
+                    android:layout_marginBottom="@dimen/dimen_15dp"
                     android:clipToPadding="false"
-                    android:paddingStart="30dp" />
+                    android:paddingStart="@dimen/dimen_30dp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/detail_linear_size_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginTop="@dimen/dimen_16dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
                 android:background="#FFFFFF"
-                android:elevation="4dp"
+                android:elevation="@dimen/dimen_4dp"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -353,35 +353,35 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="@dimen/dimen_8dp"
+                    android:layout_marginTop="@dimen/dimen_8dp"
                     android:fontFamily="@font/cairo_bold"
                     android:text="@string/detail_size_label"
                     android:textAlignment="viewStart"
                     android:textColor="#606060"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/dimen_14sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/detail_recycler_size_item"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="14dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="22dp"
+                    android:layout_marginStart="@dimen/dimen_8dp"
+                    android:layout_marginTop="@dimen/dimen_14dp"
+                    android:layout_marginEnd="@dimen/dimen_8dp"
+                    android:layout_marginBottom="@dimen/dimen_22dp"
                     android:clipToPadding="false"
-                    android:paddingStart="30dp" />
+                    android:paddingStart="@dimen/dimen_30dp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/detail_vpPager"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginTop="@dimen/dimen_16dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
                 android:background="#FFFFFF"
-                android:padding="8dp"
+                android:padding="@dimen/dimen_8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/detail_linear_size_item">
@@ -392,15 +392,15 @@
                 <!--android:layout_height="wrap_content"-->
                 <!--android:background="#FFFFFF"-->
                 <!--android:layout_gravity="top"-->
-                <!--android:paddingBottom="10dp"-->
-                <!--android:paddingTop="18dp" />-->
+                <!--android:paddingBottom="@dimen/dimen_10dp"-->
+                <!--android:paddingTop="@dimen/dimen_18dp" />-->
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/detail_view_pager_tab"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#FFFFFF"
-                    android:elevation="4dp"
+                    android:elevation="@dimen/dimen_4dp"
                     app:tabGravity="fill"
                     app:tabIndicatorColor="#219FE9"
                     app:tabMaxWidth="0dp"
@@ -413,11 +413,11 @@
                 android:id="@+id/details_methods"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginTop="@dimen/dimen_16dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
                 android:background="@drawable/main_linear_advantages"
-                android:elevation="4dp"
+                android:elevation="@dimen/dimen_4dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -428,49 +428,49 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_shipped"
-                    android:drawablePadding="6dp"
+                    android:drawablePadding="@dimen/dimen_6dp"
                     android:fontFamily="@font/cairo_regular"
                     android:gravity="center"
                     android:text="@string/free_shipping_main_fragment"
                     android:textColor="#606060"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/dimen_12sp" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_save_money"
-                    android:drawablePadding="6dp"
+                    android:drawablePadding="@dimen/dimen_6dp"
                     android:fontFamily="@font/cairo_regular"
                     android:gravity="center"
                     android:text="@string/pay_on_arrive_main_fragment"
                     android:textColor="#606060"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/dimen_12sp" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_shield"
-                    android:drawablePadding="6dp"
+                    android:drawablePadding="@dimen/dimen_6dp"
                     android:fontFamily="@font/cairo_regular"
                     android:gravity="center"
                     android:text="@string/safety_shipping_main_fragment"
                     android:textColor="#606060"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/dimen_12sp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/details_like_too"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginTop="@dimen/dimen_16dp"
                 android:fontFamily="@font/cairo_bold"
                 android:text="@string/details_like_too"
                 android:textAlignment="viewStart"
                 android:textColor="#606060"
-                android:textSize="12sp"
+                android:textSize="@dimen/dimen_12sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/details_methods" />
 
@@ -478,11 +478,11 @@
                 android:id="@+id/details_recycler_linear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
                 android:background="#EFEFEF"
                 android:orientation="vertical"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
+                android:paddingTop="@dimen/dimen_12dp"
+                android:paddingBottom="@dimen/dimen_12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/details_like_too">
@@ -491,7 +491,7 @@
                     android:id="@+id/details_recycler_like_too"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="16dp" />
+                    android:paddingStart="@dimen/dimen_16dp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
@@ -514,10 +514,10 @@
             android:background="#047AC0"
             android:fontFamily="@font/cairo_bold"
             android:gravity="center"
-            android:padding="20dp"
+            android:padding="@dimen/dimen_20dp"
             android:text="@string/details_add_to_card_label"
             android:textColor="#FFFFFF"
-            android:textSize="14sp" />
+            android:textSize="@dimen/dimen_14sp" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/cart_count_linear_layout"
@@ -536,7 +536,7 @@
                 android:gravity="center"
                 android:text="@string/details_quantaty_txt_label"
                 android:textColor="#FFFFFF"
-                android:textSize="10sp" />
+                android:textSize="@dimen/dimen_10sp" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/details_quantaty_edit"
@@ -549,7 +549,7 @@
                 android:textAlignment="viewStart"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#FFFFFF"
-                android:textSize="16sp" />
+                android:textSize="@dimen/dimen_16sp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>

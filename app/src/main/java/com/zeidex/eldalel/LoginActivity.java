@@ -1,9 +1,5 @@
 package com.zeidex.eldalel;
 
-import androidx.appcompat.widget.AppCompatCheckBox;
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.appcompat.widget.AppCompatTextView;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,8 +11,11 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatTextView;
+
 import com.zeidex.eldalel.response.GetLoginResponse;
-import com.zeidex.eldalel.response.GetRegisterResponse;
 import com.zeidex.eldalel.services.LoginApi;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.Animatoo;
@@ -163,7 +162,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         }
 
 
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         Animatoo.animateSwipeLeft(LoginActivity.this);
 
                     }else if (status.equalsIgnoreCase("false")){

@@ -17,20 +17,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="@dimen/dimen_20dp"
             app:srcCompat="@drawable/ic_arrow_back" />
 
         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
             android:id="@+id/activity_address_header_text"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginStart="22dp"
+            android:layout_height="@dimen/dimen_60dp"
+            android:layout_marginStart="@dimen/dimen_22dp"
             android:layout_weight="1"
             android:fontFamily="@font/cairo_bold"
             android:gravity="center_vertical|start"
             android:text="@string/fragment_account_after_login_addresses_linear"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="@dimen/dimen_18sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

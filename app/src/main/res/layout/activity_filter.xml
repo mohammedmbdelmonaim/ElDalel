@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="20dp">
+    android:paddingBottom="@dimen/dimen_20dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/activity_filter_header_item"
@@ -18,27 +18,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="@dimen/dimen_20dp"
             app:srcCompat="@drawable/ic_arrow_back" />
 
         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
             android:id="@+id/activity_filter_header_text"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginStart="22dp"
+            android:layout_height="@dimen/dimen_60dp"
+            android:layout_marginStart="@dimen/dimen_22dp"
             android:layout_weight="1"
             android:fontFamily="@font/cairo_bold"
             android:gravity="center_vertical|start"
             android:text="@string/activity_filter_header_text"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="@dimen/dimen_18sp" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/item_filter_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="@dimen/dimen_20dp"
             app:srcCompat="@drawable/ic_filter_search" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -57,10 +57,10 @@
                 android:id="@+id/expand_filter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/dimen_16dp"
                 android:orientation="vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                android:paddingStart="@dimen/dimen_16dp"
+                android:paddingEnd="@dimen/dimen_16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -71,8 +71,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/row_account_notclicked"
                     android:orientation="horizontal"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp">
+                    android:paddingStart="@dimen/dimen_16dp"
+                    android:paddingEnd="@dimen/dimen_16dp">
 
                     <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
                         android:id="@+id/filter_categories_text"
@@ -80,11 +80,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:fontFamily="@font/cairo_bold"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
+                        android:paddingTop="@dimen/dimen_10dp"
+                        android:paddingBottom="@dimen/dimen_10dp"
                         android:text="@string/filter_categories_label"
                         android:textColor="#606060"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/dimen_14sp" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/filter_categories_arrow"
@@ -99,7 +99,7 @@
                     android:id="@+id/filter_categories_expandable"
                     android:layout_width="match_parent"
                     android:layout_height="240dp"
-                    android:padding="16dp"
+                    android:padding="@dimen/dimen_16dp"
                     app:ael_duration="200"
                     app:ael_expanded="false"
                     app:ael_interpolator="linear"
@@ -117,8 +117,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/row_account_notclicked"
                     android:orientation="horizontal"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp">
+                    android:paddingStart="@dimen/dimen_16dp"
+                    android:paddingEnd="@dimen/dimen_16dp">
 
                     <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
                         android:id="@+id/filter_subcategories_text"
@@ -126,11 +126,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:fontFamily="@font/cairo_bold"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
+                        android:paddingTop="@dimen/dimen_10dp"
+                        android:paddingBottom="@dimen/dimen_10dp"
                         android:text="@string/filter_flags_label"
                         android:textColor="#606060"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/dimen_14sp" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/filter_subcategories_arrow"
@@ -144,7 +144,7 @@
                     android:id="@+id/filter_subcategories_expandable"
                     android:layout_width="match_parent"
                     android:layout_height="170dp"
-                    android:padding="16dp"
+                    android:padding="@dimen/dimen_16dp"
                     app:ael_duration="200"
                     app:ael_expanded="false"
                     app:ael_interpolator="linear"
@@ -162,8 +162,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/row_account_notclicked"
                 android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+                android:paddingStart="@dimen/dimen_16dp"
+                android:paddingEnd="@dimen/dimen_16dp">
 
                 <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
                 android:id="@+id/filter_discount_text"
@@ -171,11 +171,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/cairo_bold"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_10dp"
                 android:text="خصومات"
                 android:textColor="#606060"
-                android:textSize="14sp" />
+                android:textSize="@dimen/dimen_14sp" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/filter_discount_arrow"
@@ -189,7 +189,7 @@
                     android:id="@+id/filter_discount_expandable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
+                    android:padding="@dimen/dimen_16dp"
                     app:ael_duration="100"
                     app:ael_expanded="false"
                     app:ael_interpolator="linear"
@@ -197,7 +197,7 @@
 
                     <RadioGroup
                         android:layout_width="match_parent"
-                        android:layout_height="60dp"
+                        android:layout_height="@dimen/dimen_60dp"
                         android:orientation="horizontal"
                         android:id="@+id/discount_group">
 
@@ -210,7 +210,7 @@
                         <androidx.appcompat.widget.AppCompatRadioButton
                             android:id="@+id/filter_offer_radio"
                             android:layout_width="wrap_content"
-                            android:layout_marginStart="32dp"
+                            android:layout_marginStart="@dimen/dimen_32dp"
                             android:layout_height="wrap_content"
                             android:text="@string/offer_radio_button_text" />
                     </RadioGroup>
@@ -228,8 +228,8 @@
                 <!--android:layout_height="wrap_content"-->
                 <!--android:background="@drawable/row_account_notclicked"-->
                 <!--android:orientation="horizontal"-->
-                <!--android:paddingStart="16dp"-->
-                <!--android:paddingEnd="16dp">-->
+                <!--android:paddingStart="@dimen/dimen_16dp"-->
+                <!--android:paddingEnd="@dimen/dimen_16dp">-->
 
                 <!--<androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"-->
                 <!--android:id="@+id/filter_colors_text"-->
@@ -237,11 +237,11 @@
                 <!--android:layout_height="wrap_content"-->
                 <!--android:layout_weight="1"-->
                 <!--android:fontFamily="@font/cairo_bold"-->
-                <!--android:paddingTop="10dp"-->
-                <!--android:paddingBottom="10dp"-->
+                <!--android:paddingTop="@dimen/dimen_10dp"-->
+                <!--android:paddingBottom="@dimen/dimen_10dp"-->
                 <!--android:text="@string/filter_colors_label"-->
                 <!--android:textColor="#606060"-->
-                <!--android:textSize="14sp" />-->
+                <!--android:textSize="@dimen/dimen_14sp" />-->
 
                 <!--<androidx.appcompat.widget.AppCompatImageView-->
                 <!--android:id="@+id/filter_colors_arrow"-->
@@ -255,7 +255,7 @@
                 <!--android:id="@+id/filter_colors_expandable"-->
                 <!--android:layout_width="match_parent"-->
                 <!--android:layout_height="match_parent"-->
-                <!--android:padding="16dp"-->
+                <!--android:padding="@dimen/dimen_16dp"-->
                 <!--app:ael_duration="400"-->
                 <!--app:ael_expanded="false"-->
                 <!--app:ael_interpolator="bounce"-->
@@ -273,8 +273,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/row_account_notclicked"
                     android:orientation="horizontal"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp">
+                    android:paddingStart="@dimen/dimen_16dp"
+                    android:paddingEnd="@dimen/dimen_16dp">
 
                     <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
                         android:id="@+id/filter_prices_text"
@@ -282,11 +282,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:fontFamily="@font/cairo_bold"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
+                        android:paddingTop="@dimen/dimen_10dp"
+                        android:paddingBottom="@dimen/dimen_10dp"
                         android:text="@string/filter_prices_label"
                         android:textColor="#606060"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/dimen_14sp" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/filter_prices_arrow"
@@ -300,7 +300,7 @@
                     android:id="@+id/filter_prices_expandable"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="16dp"
+                    android:padding="@dimen/dimen_16dp"
                     app:ael_duration="200"
                     app:ael_expanded="false"
                     app:ael_interpolator="linear">
@@ -322,11 +322,11 @@
                             android:background="@drawable/expand_expandable_bg"
                             android:fontFamily="@font/cairo_bold"
                             android:gravity="center"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
+                            android:paddingTop="@dimen/dimen_5dp"
+                            android:paddingBottom="@dimen/dimen_5dp"
                             android:text="20000"
                             android:textColor="#606060"
-                            android:textSize="16sp" />
+                            android:textSize="@dimen/dimen_16sp" />
 
                         <View
                             android:layout_width="0dp"
@@ -341,11 +341,11 @@
                             android:background="@drawable/expand_expandable_bg"
                             android:fontFamily="@font/cairo_bold"
                             android:gravity="center"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
+                            android:paddingTop="@dimen/dimen_5dp"
+                            android:paddingBottom="@dimen/dimen_5dp"
                             android:text="0"
                             android:textColor="#606060"
-                            android:textSize="16sp" />
+                            android:textSize="@dimen/dimen_16sp" />
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
                     <com.innovattic.rangeseekbar.RangeSeekBar
@@ -354,18 +354,18 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginTop="50dp"
+                        android:layout_marginTop=""@dimen/dimen_50dp""
                         app:layout_constraintTop_toTopOf="parent"
                         app:rsb_max="20000"
                         app:rsb_maxThumbDrawable="@drawable/circle_seekbar"
-                        app:rsb_maxThumbOffsetHorizontal="2dp"
+                        app:rsb_maxThumbOffsetHorizontal="@dimen/dimen_2dp"
                         app:rsb_minRange="10"
                         app:rsb_minThumbDrawable="@drawable/circle_seekbar"
                         app:rsb_minThumbOffsetHorizontal="-2dp"
                         app:rsb_trackColor="#E7F6FF"
                         app:rsb_trackSelectedColor="#E7F6FF"
-                        app:rsb_trackSelectedThickness="4dp"
-                        app:rsb_trackThickness="8dp" />
+                        app:rsb_trackSelectedThickness="@dimen/dimen_4dp"
+                        app:rsb_trackThickness="@dimen/dimen_8dp" />
                 </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
 
 
@@ -375,17 +375,17 @@
                 android:id="@+id/filter_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
                 android:background="#047AC0"
                 android:fontFamily="@font/cairo_bold"
                 android:gravity="center"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_10dp"
                 android:text="@string/filter_btn_label"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"
+                android:textSize="@dimen/dimen_14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/expand_filter" />

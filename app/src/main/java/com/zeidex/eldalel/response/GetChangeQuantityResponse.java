@@ -23,6 +23,9 @@ public class GetChangeQuantityResponse {
     @SerializedName("allCartItemsCount")
     @Expose
     private String allCartItemsCount;
+    @SerializedName("total_price")
+    @Expose
+    private String total_price;
 
     public Boolean getStatus() {
         return status;
@@ -72,4 +75,11 @@ public class GetChangeQuantityResponse {
         this.allCartItemsCount = allCartItemsCount;
     }
 
+    public String getTotal_price() {
+        return total_price;
+    }
+
+    public void setTotal_price(String total_price) {
+        this.total_price = total_price;
+    }
 }

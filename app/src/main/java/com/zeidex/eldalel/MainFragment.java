@@ -41,7 +41,6 @@ import com.zeidex.eldalel.services.OffersAPI;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
-import com.zeidex.eldalel.utils.KeyboardUtils;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 
 import java.util.ArrayList;
@@ -240,7 +239,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                                 fragment_main_basket_top_txt.setText(String.valueOf(cartCount));
                             }
                         }
-                        for (int i = 0, currentCategWithProducts = 0; i < getHomeProducts.getData().getCategories().size() && currentCategWithProducts < 3; i++) { //category loop
+                        for (int i = 0 ; i < getHomeProducts.getData().getCategories().size(); i++) { //category loop
                             if (getHomeProducts.getData().getCategories().get(i).getProducts().size() == 0) {
                                 continue;
                             }
@@ -409,27 +408,33 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                                                 getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
                                                 getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), String.valueOf(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart()), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
                                     }
-
                                 }
                             }
 
                             break;
                         }
                     }
-                    category3Adapter = new ProductsCategory3Adapter(getActivity(), home_category3);
-                    category3Adapter.setProductsCategory3Operation(MainFragment.this);
-                    main_recycler_category3.setAdapter(category3Adapter);
-                    category3_label.setText(categories_names.get(2));
+                    if (home_category3.size() > 0) {
+                        category3Adapter = new ProductsCategory3Adapter(getActivity(), home_category3);
+                        category3Adapter.setProductsCategory3Operation(MainFragment.this);
+                        main_recycler_category3.setAdapter(category3Adapter);
+                        category3_label.setText(categories_names.get(2));
+                    }
 
-                    phonesAdapter = new PhonesAdapter(getActivity(), home_category2);
-                    phonesAdapter.setnPhones(MainFragment.this);
-                    main_recycler_phones.setAdapter(phonesAdapter);
-                    phones_label.setText(categories_names.get(1));
 
-                    accessoriesAdapter = new AccessoriesAdapter(getActivity(), home_category1);
-                    accessoriesAdapter.setAccessoriesOperation(MainFragment.this);
-                    main_recycler_accessories.setAdapter(accessoriesAdapter);
-                    accessories_label.setText(categories_names.get(0));
+                    if (home_category2.size() > 0) {
+                        phonesAdapter = new PhonesAdapter(getActivity(), home_category2);
+                        phonesAdapter.setnPhones(MainFragment.this);
+                        main_recycler_phones.setAdapter(phonesAdapter);
+                        phones_label.setText(categories_names.get(1));
+                    }
+
+                    if (home_category1.size() > 0) {
+                        accessoriesAdapter = new AccessoriesAdapter(getActivity(), home_category1);
+                        accessoriesAdapter.setAccessoriesOperation(MainFragment.this);
+                        main_recycler_accessories.setAdapter(accessoriesAdapter);
+                        accessories_label.setText(categories_names.get(0));
+                    }
                     reloadDialog.dismiss();
                 }
             }

@@ -4,19 +4,20 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.cardview.widget.CardView;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zeidex.eldalel.R;
+import com.zeidex.eldalel.response.GetShipments;
+
+import java.util.ArrayList;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.BasketElementsHolder> {
     View view;
     private Context context;
+    ArrayList<GetShipments.Shipment> shipments;
 
     public OrdersOperation ordersOperation;
     public void setOrdersOperation(OrdersOperation ordersOperation) {
@@ -25,6 +26,11 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.BasketElem
 
     public OrdersAdapter(Context context) {
         this.context = context;
+    }
+
+    public OrdersAdapter(Context context , ArrayList<GetShipments.Shipment> shipments) {
+        this.context = context;
+        this.shipments = shipments;
     }
 
     @NonNull
@@ -37,36 +43,35 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.BasketElem
 
     @Override
     public void onBindViewHolder(@NonNull BasketElementsHolder holder, int position) {
+        GetShipments.Shipment shipment = shipments.get(position);
+        holder.order_date_text.setText(shipment.getCreatedAt());
+        holder.order_number_order_text.setText(shipment.getOrdersCount()+"");
+        holder.order_state_text.setText(shipment.getPaymentType());
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ordersOperation.onClickOrder(position);
+                ordersOperation.onClickOrder(shipment.getId());
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return 3;
+        return shipments.size();
     }
 
     public class BasketElementsHolder extends RecyclerView.ViewHolder {
-        public AppCompatImageView notification_row_roundimage;
-        public TextView notification_row_text_notifi, notification_row_text_time;
-        public CardView notification_row_cardview;
-        public RelativeLayout relative;
+        public AppCompatTextView order_number_order_text , order_date_text , order_state_text;
 
         public BasketElementsHolder(View itemView) {
             super(itemView);
-//            notification_row_roundimage = itemView.findViewById(R.id.notification_row_roundimage);
-//            notification_row_text_notifi = itemView.findViewById(R.id.notification_row_text_notifi);
-//            notification_row_text_time = itemView.findViewById(R.id.notification_row_text_time);
-//            notification_row_cardview = itemView.findViewById(R.id.notification_row_cardview);
-//            relativelative = itemView.findViewById(R.id.relative);
+            order_number_order_text = itemView.findViewById(R.id.order_number_order_text);
+            order_date_text = itemView.findViewById(R.id.order_date_text);
+            order_state_text = itemView.findViewById(R.id.order_state_text);
         }
     }
 
     public interface OrdersOperation{
-        void onClickOrder(int position);
+        void onClickOrder(int shipment_id);
     }
 }

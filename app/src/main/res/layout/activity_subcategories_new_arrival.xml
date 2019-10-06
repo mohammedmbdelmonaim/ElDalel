@@ -18,30 +18,30 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/item_fragment_back"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/dimen_60dp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="@dimen/dimen_20dp"
             app:srcCompat="@drawable/ic_arrow_back" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/title_header_text"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginStart="22dp"
+            android:layout_height="@dimen/dimen_60dp"
+            android:layout_marginStart="@dimen/dimen_22dp"
             android:layout_weight="1"
             android:fontFamily="@font/cairo_bold"
             android:layout_toEndOf="@id/item_fragment_back"
             android:gravity="center"
             android:text="بطاريات متنقله"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="@dimen/dimen_18sp" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/search_header_categories_img"
             style="@style/SearchViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="@dimen/dimen_8dp"
             android:layoutDirection="rtl"
             android:iconifiedByDefault="false"
             android:layout_alignParentEnd="true"
@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
-            android:elevation="4dp"
+            android:elevation="@dimen/dimen_4dp"
             app:tabGravity="fill"
             app:tabIndicatorColor="#219FE9"
             app:tabMaxWidth="0dp"
@@ -76,9 +76,9 @@
         android:id="@+id/products_framelayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="22dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="@dimen/dimen_16dp"
+        android:layout_marginTop="@dimen/dimen_22dp"
+        android:layout_marginEnd="@dimen/dimen_16dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

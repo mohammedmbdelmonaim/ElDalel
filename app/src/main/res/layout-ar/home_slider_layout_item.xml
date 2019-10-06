@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="175dp"
     android:background="@android:color/white"
-    android:padding="25dp">
+    android:padding="@dimen/dimen_25dp">
 
     <ImageView
         android:id="@+id/slider_product_image_view"
@@ -22,7 +22,7 @@
             android:id="@+id/slider_product_name_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/dimen_8dp"
             android:fontFamily="@font/cairo_bold"
             android:gravity="center"
             android:maxLines="1"
@@ -36,7 +36,7 @@
             android:id="@+id/slider_product_offer_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/dimen_4dp"
             android:fontFamily="@font/cairo_bold"
             android:gravity="center"
             android:textColor="@color/black_color"

@@ -2,25 +2,25 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/subcategory_item_card"
-    android:layout_width="92dp"
+    android:layout_width="@dimen/dimen_92dp"
     android:layout_height="wrap_content"
-    android:layout_marginTop="12dp"
-    android:layout_marginEnd="12dp"
-    android:layout_marginBottom="12dp"
+    android:layout_marginTop="@dimen/dimen_12dp"
+    android:layout_marginEnd="@dimen/dimen_12dp"
+    android:layout_marginBottom="@dimen/dimen_12dp"
     android:background="#FFFFFF"
-    app:cardCornerRadius="5dp"
-    app:cardElevation="4dp">
+    app:cardCornerRadius="@dimen/dimen_5dp"
+    app:cardElevation="@dimen/dimen_4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:padding="2dp"
+        android:padding="@dimen/dimen_2dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/row_detail_change_color">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/offer_category_item_img"
-            android:layout_width="92dp"
-            android:layout_height="45dp"
+            android:layout_width="@dimen/dimen_92dp"
+            android:layout_height="@dimen/dimen_45dp"
             android:src="@drawable/harddisk"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -28,14 +28,14 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/offer_category_item_text"
-            android:layout_width="92dp"
+            android:layout_width="@dimen/dimen_92dp"
             android:layout_height="match_parent"
             android:background="#FAFAFA"
             android:fontFamily="@font/cairo_bold"
             android:gravity="center"
             android:text="سماعات بلوتوث"
             android:textColor="#606060"
-            android:textSize="8sp"
+            android:textSize="@dimen/dimen_8sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/offer_category_item_img" />

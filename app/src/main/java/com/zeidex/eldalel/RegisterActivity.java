@@ -143,8 +143,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     public void findViews() {
         register_go_enter_text.setOnClickListener(this);
         showDialog();
-        getCountries();
-
         countries = new ArrayList<>();
         ids_countries = new ArrayList<>();
         countries.add(getString(R.string.country_spinner_label));
@@ -162,7 +160,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         cities.add(getString(R.string.spinner_city_label));
         ids_cities.add(-1);
         spinner_register_city.setItems(cities);
-
+        getCountries();
 
         register_radio_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override

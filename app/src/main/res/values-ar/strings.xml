@@ -180,4 +180,16 @@
     <string name="activity_search_header_text">نتائج البحث</string>
     <string name="offer_radio_button_text">عرض</string>
     <string name="no_offer_radio_button_text">بدون عرض</string>
+    <string name="branch_spinner">الفرع</string>
+    <string name="choose_branch">من فضلك أختر الفرع</string>
+    <string name="choose_payment_method">من فضلك أختر طريقة الدفع</string>
+    <string name="fragment_basket_elements_recycler_noitems">لا يوجد منتجات في السلة</string>
+    <string name="shipments_label">الشحنات</string>
+    <string name="all_shipments_label">كل الشحنات</string>
+    <string name="shipments_number_label">شحنات</string>
+    <string name="shipments_recycler_noitems_label">لا توجد شحنات</string>
+    <string name="payment_type_label">نوع الدفع</string>
+    <string name="number_orders_inshipments">عدد الطلبات</string>
+    <string name="activity_elements_orders_header_textlabel">الطلبات</string>
+    <string name="order_element_currency_arrow">العدد</string>
 </resources>

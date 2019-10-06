@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    app:cardCornerRadius="5dp"
-    app:cardElevation="4dp">
+    app:cardCornerRadius="@dimen/dimen_5dp"
+    app:cardElevation="@dimen/dimen_4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -16,8 +16,8 @@
             android:id="@+id/like_item_image_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="7dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="@dimen/dimen_7dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_delete" />
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/cairo_bold"
                 android:text="@string/discount_phone_txt"
-                android:textSize="10sp"/>
+                android:textSize="@dimen/dimen_10sp"/>
 
             <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
                 android:id="@+id/like_item_discount_text"
@@ -55,14 +55,14 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/cairo_bold"
                 tools:text="10"
-                android:textSize="10sp"/>
+                android:textSize="@dimen/dimen_10sp"/>
 
             <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/cairo_bold"
                 android:text="%"
-                android:textSize="10sp"/>
+                android:textSize="@dimen/dimen_10sp"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -70,24 +70,24 @@
             android:id="@+id/like_item_text_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
             android:fontFamily="@font/cairo_bold"
             android:text="زندور"
             android:textAlignment="viewStart"
             android:textColor="#AAAAAA"
-            android:textSize="10sp"
+            android:textSize="@dimen/dimen_10sp"
             app:layout_constraintStart_toStartOf="@+id/like_item_image_delete"
             app:layout_constraintTop_toBottomOf="@+id/like_item_img_url" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/like_item_text_name"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/dimen_40dp"
             android:fontFamily="@font/cairo_bold"
             android:text="شاحن بنك طاقة متنقل مدخل تايب سى"
             android:textAlignment="viewStart"
             android:textColor="#232222"
-            android:textSize="12sp"
+            android:textSize="@dimen/dimen_12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/like_item_image_delete"
             app:layout_constraintTop_toBottomOf="@+id/like_item_text_type" />
@@ -97,26 +97,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/cairo_bold"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
+            android:paddingTop="@dimen/dimen_2dp"
+            android:paddingBottom="@dimen/dimen_2dp"
             android:text="177.45"
             android:textAlignment="viewStart"
             android:textColor="#232222"
-            android:textSize="18sp"
+            android:textSize="@dimen/dimen_18sp"
             app:layout_constraintStart_toStartOf="@+id/like_item_image_delete"
             app:layout_constraintTop_toBottomOf="@+id/like_item_text_name" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
+            android:layout_marginStart="@dimen/dimen_3dp"
             android:fontFamily="@font/cairo_bold"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
+            android:paddingTop="@dimen/dimen_2dp"
+            android:paddingBottom="@dimen/dimen_2dp"
             android:text="@string/currancy_label"
             android:textAlignment="viewStart"
             android:textColor="#232222"
-            android:textSize="12sp"
+            android:textSize="@dimen/dimen_12sp"
             app:layout_constraintBottom_toBottomOf="@+id/like_item_text_price"
             app:layout_constraintStart_toEndOf="@+id/like_item_text_price"
             app:layout_constraintTop_toTopOf="@+id/like_item_text_price" />
@@ -125,14 +125,14 @@
             android:id="@+id/like_item_text_price_before"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
+            android:layout_marginStart="@dimen/dimen_3dp"
             android:fontFamily="@font/cairo_bold"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
+            android:paddingTop="@dimen/dimen_2dp"
+            android:paddingBottom="@dimen/dimen_2dp"
             android:text="190.00"
             android:textAlignment="viewStart"
             android:textColor="#AAAAAA"
-            android:textSize="10sp"
+            android:textSize="@dimen/dimen_10sp"
             app:layout_constraintStart_toStartOf="@+id/like_item_text_price"
             app:layout_constraintTop_toBottomOf="@+id/like_item_text_price" />
 
@@ -150,12 +150,12 @@
         <!--android:id="@+id/like_item_text_price_before_label"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginStart="3dp"-->
+        <!--android:layout_marginStart="@dimen/dimen_3dp"-->
         <!--android:fontFamily="@font/cairo_bold"-->
         <!--android:text="@string/currancy_label"-->
         <!--android:textAlignment="viewStart"-->
         <!--android:textColor="#AAAAAA"-->
-        <!--android:textSize="10sp"-->
+        <!--android:textSize="@dimen/dimen_10sp"-->
         <!--app:layout_constraintBottom_toBottomOf="@+id/like_item_text_price_before"-->
         <!--app:layout_constraintStart_toEndOf="@+id/like_item_text_price_before"-->
         <!--app:layout_constraintTop_toTopOf="@+id/like_item_text_price_before" />-->
@@ -163,7 +163,7 @@
         <!--<View-->
         <!--android:layout_width="0dp"-->
         <!--android:layout_height="0.8dp"-->
-        <!--android:layout_marginTop="1dp"-->
+        <!--android:layout_marginTop="@dimen/dimen_1dp"-->
         <!--android:background="#AAAAAA"-->
         <!--app:layout_constraintBottom_toBottomOf="@+id/like_item_text_price_before_label"-->
         <!--app:layout_constraintEnd_toEndOf="@+id/like_item_text_price_before_label"-->
@@ -174,13 +174,13 @@
             android:id="@+id/like_item_text_add_to_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
             android:background="@drawable/row_add_to_car_bg"
             android:fontFamily="@font/cairo_bold"
             android:gravity="center"
             android:text="@string/like_item_text_add_to_card"
             android:textColor="#FFFFFF"
-            android:textSize="10sp"
+            android:textSize="@dimen/dimen_10sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

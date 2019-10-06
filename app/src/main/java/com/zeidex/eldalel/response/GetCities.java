@@ -8,6 +8,9 @@ public class GetCities {
     @SerializedName("cities")
     List<City> cities;
 
+    @SerializedName("showrooms")
+    List<City> showrooms;
+
     public List<City> getCities() {
         return cities;
     }

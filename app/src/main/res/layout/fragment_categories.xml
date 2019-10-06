@@ -17,19 +17,19 @@
 
         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginStart="22dp"
+            android:layout_height="@dimen/dimen_60dp"
+            android:layout_marginStart="@dimen/dimen_22dp"
             android:fontFamily="@font/cairo_bold"
             android:gravity="center_vertical|start"
             android:text="الفئات"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="@dimen/dimen_18sp" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/fragment_categories_searchview"
             android:layout_width="match_parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="@dimen/dimen_8dp"
+            android:layout_marginBottom="@dimen/dimen_8dp"
             android:layout_height="wrap_content"
             style="@style/SearchViewStyle"
             android:layout_alignParentEnd="true"
@@ -53,15 +53,15 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:background="#FFFFFF"-->
         <!--android:layout_gravity="top"-->
-        <!--android:paddingBottom="10dp"-->
-        <!--android:paddingTop="18dp" />-->
+        <!--android:paddingBottom="@dimen/dimen_10dp"-->
+        <!--android:paddingTop="@dimen/dimen_18dp" />-->
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/view_pager_tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
-            android:elevation="4dp"
+            android:elevation="@dimen/dimen_4dp"
             app:tabGravity="fill"
             app:tabIndicatorColor="#219FE9"
             app:tabMaxWidth="0dp"

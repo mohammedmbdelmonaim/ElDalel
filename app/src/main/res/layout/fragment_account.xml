@@ -14,14 +14,14 @@
 
         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginStart="18dp"
+            android:layout_height="@dimen/dimen_60dp"
+            android:layout_marginStart="@dimen/dimen_18dp"
             android:layout_weight="1"
             android:fontFamily="@font/cairo_bold"
             android:gravity="center_vertical|start"
             android:text="@string/fragment_account_label"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="@dimen/dimen_18sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -33,16 +33,16 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="20dp"
+            android:paddingBottom="@dimen/dimen_20dp"
             android:background="#FFFFFF">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/fragment_account_loginorRegister_linear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
                 android:orientation="horizontal"
-                android:paddingBottom="20dp"
+                android:paddingBottom="@dimen/dimen_20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -65,11 +65,11 @@
                         android:id="@+id/fragment_account_text_login"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="@dimen/dimen_8dp"
                         android:fontFamily="@font/cairo_bold"
                         android:text="@string/fragment_account_text_login"
                         android:textColor="#606060"
-                        android:textSize="12sp" />
+                        android:textSize="@dimen/dimen_12sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -90,11 +90,11 @@
                         android:id="@+id/fragment_account_text_register"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="@dimen/dimen_8dp"
                         android:fontFamily="@font/cairo_bold"
                         android:text="@string/fragment_account_text_register"
                         android:textColor="#606060"
-                        android:textSize="12sp" />
+                        android:textSize="@dimen/dimen_12sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
             </androidx.appcompat.widget.LinearLayoutCompat>

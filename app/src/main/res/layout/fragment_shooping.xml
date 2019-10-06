@@ -9,23 +9,23 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="@dimen/dimen_8dp"
         android:fontFamily="@font/cairo_bold"
         android:gravity="center"
         android:text="@string/fragment_shooping_add_address_text1"
         android:textColor="#707070"
-        android:textSize="14sp" />
+        android:textSize="@dimen/dimen_14sp" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="71dp"
+        android:layout_marginBottom="@dimen/dimen_71dp"
         android:fontFamily="@font/cairo_bold"
         android:gravity="center"
         android:text="@string/fragment_shooping_add_address_text0"
         android:textColor="#707070"
-        android:textSize="12sp" />
+        android:textSize="@dimen/dimen_12sp" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/fragment_shooping_add_address"
@@ -34,10 +34,10 @@
         android:background="#047AC0"
         android:fontFamily="@font/cairo_bold"
         android:gravity="center"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:paddingTop="@dimen/dimen_10dp"
+        android:paddingBottom="@dimen/dimen_10dp"
         android:text="@string/fragment_shooping_add_address_text"
         android:textColor="#FFFFFF"
-        android:textSize="14sp" />
+        android:textSize="@dimen/dimen_14sp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

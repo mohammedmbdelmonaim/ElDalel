@@ -10,7 +10,7 @@
         android:id="@+id/category_item_details_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="11dp"
+        android:layout_marginTop="@dimen/dp11_dimen"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,38 +21,38 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="@dimen/dimen_16dp"
             android:fontFamily="@font/cairo_bold"
             android:textAlignment="viewStart"
             android:textColor="#606060"
-            android:textSize="12sp"
+            android:textSize="@dimen/dimen_12sp"
             tools:text="205" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/category_text_label_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/dimen_8dp"
             android:layout_toEndOf="@id/category_text_label_count"
             android:fontFamily="@font/cairo_bold"
             android:text="@string/category_text_label_text"
             android:textAlignment="viewStart"
             android:textColor="#606060"
-            android:textSize="12sp" />
+            android:textSize="@dimen/dimen_12sp" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/descendant_items_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="@dimen/dimen_16dp"
             app:srcCompat="@drawable/ic_descendant" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/search_items_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="@dimen/dimen_16dp"
             android:layout_toStartOf="@id/descendant_items_category"
             app:srcCompat="@drawable/ic_filter" />
 
@@ -62,9 +62,9 @@
         android:id="@+id/category_item_recycler_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="22dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="@dimen/dimen_16dp"
+        android:layout_marginTop="@dimen/dimen_22dp"
+        android:layout_marginEnd="@dimen/dimen_16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -75,9 +75,9 @@
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="22dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="@dimen/dimen_16dp"
+        android:layout_marginTop="@dimen/dimen_22dp"
+        android:layout_marginEnd="@dimen/dimen_16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

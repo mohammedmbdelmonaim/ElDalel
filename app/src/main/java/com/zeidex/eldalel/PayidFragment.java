@@ -22,18 +22,23 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
-import com.zeidex.eldalel.response.GetCities;
+import com.zeidex.eldalel.response.GetBranches;
 import com.zeidex.eldalel.response.GetCountries;
+import com.zeidex.eldalel.response.GetMakeOrderResponse;
 import com.zeidex.eldalel.response.GetRegions;
 import com.zeidex.eldalel.services.BranchesApi;
 import com.zeidex.eldalel.services.CountriesApi;
+import com.zeidex.eldalel.services.MakeOrderApi;
 import com.zeidex.eldalel.services.RegionsApi;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.ChangeLang;
+import com.zeidex.eldalel.utils.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -141,19 +146,128 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        showDialog();
+        countries = new ArrayList<>();
+        ids_countries = new ArrayList<>();
+        countries.add(getString(R.string.country_spinner_label));
+        ids_countries.add(-1);
+        spinner_address_add_country_shipment.setItems(countries);
+
+        regions = new ArrayList<>();
+        ids_regions = new ArrayList<>();
+        regions.add(getString(R.string.regions_spinner_label));
+        ids_regions.add(-1);
+        spinner_address_add_regions_shipment.setItems(regions);
+
+        branches = new ArrayList<>();
+        ids_branches = new ArrayList<>();
+        branches.add(getString(R.string.branch_spinner));
+        ids_branches.add(-1);
+        spinner_address_add_branches_shipment.setItems(branches);
         fragment_payid_total_products_text.setText(total_products);
         fragment_payid_total_price_text.setText(total_price);
         getCountries();
+
         fragment_payid_paying.setOnClickListener(this);
         shipment_to_address.setSelected(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            shipment_from_branch_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_company_unchecked));
+            shipment_to_address_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shipped_car_checked));
+
+        }else {
+            shipment_to_address_img.setImageResource(R.drawable.ic_shipped_car_checked);
+            shipment_from_branch_img.setImageResource(R.drawable.ic_company_unchecked);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            shipment_to_address_txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
+            shipment_from_branch_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
+        }else{
+            shipment_to_address_txt.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            shipment_from_branch_txt.setTextColor(getResources().getColor(R.color.colorshipmenttype));
+        }
     }
 
+    Map<String, String> payment_post;
+
+    private void convertDaraToJson() {
+        payment_post = new HashMap<>();
+        payment_post.put("payment_type", String.valueOf(shipment_method));
+        payment_post.put("address_type", String.valueOf(shipment_type));
+        payment_post.put("language", lang);
+        payment_post.put("token", token);
+        if (shipment_type == 2) {
+            payment_post.put("subsidiary_id", String.valueOf(id_region));
+            payment_post.put("showroom_id", String.valueOf(id_branch));
+        }
+    }
+
+    String lang;
+    String token;
     @Override
     public void onClick(View v) {
         int id = v.getId();
         switch (id){
             case R.id.fragment_payid_paying:{
-                ((PaymentActivity)getActivity()).goToOrderFragment();
+                if (shipment_type == 2) {
+                    if (id_country == -1) {
+                        Toasty.error(getActivity(), getString(R.string.choose_country), Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    if (id_region == -1) {
+                        Toasty.error(getActivity(), getString(R.string.choose_region), Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    if (id_branch == -1) {
+                        Toasty.error(getActivity(), getString(R.string.choose_branch), Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
+                if (shipment_method == 0){
+                    Toasty.error(getActivity(), getString(R.string.choose_payment_method), Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (PreferenceUtils.getCompanyLogin(getActivity())) {
+                    token = PreferenceUtils.getCompanyToken(getActivity());
+                } else if (PreferenceUtils.getUserLogin(getActivity())) {
+                    token = PreferenceUtils.getUserToken(getActivity());
+                }
+                Locale locale = ChangeLang.getLocale(getResources());
+                String loo = locale.getLanguage();
+                if (loo.equalsIgnoreCase("ar")){
+                    lang = "arabic";
+                }else if (loo.equalsIgnoreCase("en")) {
+                    lang = "english";
+                }
+
+                convertDaraToJson();
+
+                reloadDialog.show();
+                MakeOrderApi makeOrderApi = APIClient.getClient(SERVER_API_TEST).create(MakeOrderApi.class);
+                Call<GetMakeOrderResponse> getMakeOrderResponseCall = makeOrderApi.makeOrderResponse(payment_post);
+                getMakeOrderResponseCall.enqueue(new Callback<GetMakeOrderResponse>() {
+                    @Override
+                    public void onResponse(Call<GetMakeOrderResponse> call, Response<GetMakeOrderResponse> response) {
+                        GetMakeOrderResponse getMakeOrderResponse = response.body();
+                        if (getMakeOrderResponse.getSuccess().equalsIgnoreCase("true")){
+                            ((PaymentActivity)getActivity()).goToOrderFragment();
+                        }else{
+                            Toasty.error(getActivity(), getMakeOrderResponse.getErroe().toString(), Toast.LENGTH_LONG).show();
+                            ((PaymentActivity)getActivity()).goToOrderFragment();
+
+                        }
+                        reloadDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onFailure(Call<GetMakeOrderResponse> call, Throwable t) {
+                        Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                        reloadDialog.dismiss();
+                    }
+                });
+
+
                 break;
             }
         }
@@ -325,10 +439,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    @OnClick(R.id.fragment_payid_paying)
-    public void payNow() {
 
-    }
 
     ArrayList<String> countries;
     ArrayList<Integer> ids_countries;
@@ -447,24 +558,24 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
 
     public void getCities(int region_id) {
         reloadDialog.show();
-        BranchesApi citiesApi = APIClient.getClient(SERVER_API_TEST).create(BranchesApi.class);
-        Call<GetCities> getCitiesCall = citiesApi.getBranches(region_id);
-        getCitiesCall.enqueue(new Callback<GetCities>() {
+        BranchesApi branchesApi = APIClient.getClient(SERVER_API_TEST).create(BranchesApi.class);
+        Call<GetBranches> getBranchesCall = branchesApi.getBranches(region_id);
+        getBranchesCall.enqueue(new Callback<GetBranches>() {
             @Override
-            public void onResponse(Call<GetCities> call, Response<GetCities> response) {
-                GetCities getCities = response.body();
+            public void onResponse(Call<GetBranches> call, Response<GetBranches> response) {
+                GetBranches getBranches = response.body();
                 Locale locale = ChangeLang.getLocale(getResources());
                 String loo = locale.getLanguage();
                 if (loo.equalsIgnoreCase("en")) {
-                    for (int i = 0; i < getCities.getCities().size(); i++) { //category loop
-                        branches.add(getCities.getCities().get(i).getName_en());
-                        ids_branches.add(Integer.parseInt(getCities.getCities().get(i).getId()));
+                    for (int i = 0; i < getBranches.getData().getShowrooms().size(); i++) { //category loop
+                        branches.add(getBranches.getData().getShowrooms().get(i).getName_en());
+                        ids_branches.add(Integer.parseInt(getBranches.getData().getShowrooms().get(i).getId()));
                     }
 
                 } else if (loo.equalsIgnoreCase("ar")) {
-                    for (int i = 0; i < getCities.getCities().size(); i++) { //category loop
-                        branches.add(getCities.getCities().get(i).getName_ar());
-                        ids_branches.add(Integer.parseInt(getCities.getCities().get(i).getId()));
+                    for (int i = 0; i < getBranches.getData().getShowrooms().size(); i++) { //category loop
+                        branches.add(getBranches.getData().getShowrooms().get(i).getName_ar());
+                        ids_branches.add(Integer.parseInt(getBranches.getData().getShowrooms().get(i).getId()));
                     }
                 }
                 if (ids_branches.contains(id_branch)){
@@ -485,7 +596,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             }
 
             @Override
-            public void onFailure(Call<GetCities> call, Throwable t) {
+            public void onFailure(Call<GetBranches> call, Throwable t) {
                 Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }

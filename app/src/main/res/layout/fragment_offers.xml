@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="20dp">
+    android:paddingBottom="@dimen/dimen_20dp">
 
     <RelativeLayout
         android:id="@+id/offers_header_item"
@@ -16,20 +16,20 @@
         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
             android:id="@+id/offers_header_text"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginStart="22dp"
+            android:layout_height="@dimen/dimen_60dp"
+            android:layout_marginStart="@dimen/dimen_22dp"
             android:fontFamily="@font/cairo_bold"
             android:gravity="center_vertical|start"
             android:text="@string/offers_header_text"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="@dimen/dimen_18sp" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/item_offers_search"
             android:layout_width="match_parent"
             android:layoutDirection="rtl"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="@dimen/dimen_8dp"
+            android:layout_marginBottom="@dimen/dimen_8dp"
             android:layout_height="wrap_content"
             style="@style/SearchViewStyle"
             android:textAlignment="center"
@@ -47,12 +47,12 @@
             android:id="@+id/offers_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="4dp"
+            android:elevation="@dimen/dimen_4dp"
             android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingTop="20dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="20dp"
+            android:paddingStart="@dimen/dimen_16dp"
+            android:paddingTop="@dimen/dimen_20dp"
+            android:paddingEnd="@dimen/dimen_16dp"
+            android:paddingBottom="@dimen/dimen_20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -66,17 +66,17 @@
                 android:gravity="center"
                 android:text="@string/offers_text"
                 android:textColor="#AAAAAA"
-                android:textSize="14sp" />
+                android:textSize="@dimen/dimen_14sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/ofeers_recycler"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="10dp"
-            android:layout_margin="10dp"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginEnd="@dimen/dimen_16dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_margin="@dimen/dimen_10dp"
             app:layout_constraintTop_toBottomOf="@+id/offers_linear"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

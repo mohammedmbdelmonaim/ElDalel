@@ -62,6 +62,9 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
     @BindView(R.id.fragment_basket_total_price_text)
     AppCompatTextView fragment_basket_total_price_text;
 
+    @BindView(R.id.fragment_basket_elements_recycler_noitems)
+    AppCompatTextView fragment_basket_elements_recycler_noitems;
+
     @BindView(R.id.fragment_basket_elements_edittext)
     AppCompatEditText fragment_basket_elements_edittext;
 
@@ -153,6 +156,12 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                                         getBasketProducts.getProducts().get(i).getPrice(), getBasketProducts.getProducts().get(i).getOldPrice(), getBasketProducts.getProducts().get(i).getItemCount()));
                             }
                         }
+                    }
+                    if (basketProducts.size() == 0){
+                        fragment_basket_elements_recycler_noitems.setVisibility(View.VISIBLE);
+                        fragment_basket_paying.setVisibility(View.GONE);
+                        reloadDialog.dismiss();
+                        return;
                     }
                     basketElementsAdapter = new BasketElementsAdapter(getActivity(), basketProducts);
                     basketElementsAdapter.setBasketOperation(BasketFragment.this);
@@ -247,6 +256,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                             int code = changeQuantityResponse.getCode();
                             if (code == 200) {
                                 if (changeQuantityResponse.getStatus() == true) {
+                                    fragment_basket_total_price_text.setText(changeQuantityResponse.getTotal_price());
                                     Toasty.success(getActivity(), changeQuantityResponse.getSuccessMessage(), Toast.LENGTH_LONG).show();
                                     BasketProducts basketProductsModel = basketProducts.get(pos);
                                     basketProductsModel.setItem_count(changeQuantityResponse.getProdcutQuantity());
@@ -299,11 +309,17 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                 if(response!= null && responseBody.getCode() == 200){
                     basketElementsAdapter.getBasketProducts().remove(pos);
                     basketElementsAdapter.notifyItemRemoved(pos);
-                    String totalString = PriceFormatter.toDecimalRsString(responseBody.getData().getOrderTotalPrice(), getActivity().getApplicationContext());
-                    fragment_basket_total_price_products_text.setText(totalString);
+                    String totalString = PriceFormatter.toDecimalString(responseBody.getData().getOrderTotalPrice(), getActivity().getApplicationContext());
+                    fragment_basket_total_price_products_text.setText(responseBody.getData().getAllCartItemsCount()+"");
                     fragment_basket_total_price_text.setText(totalString);
                     PreferenceUtils.saveCountOfItemsBasket(getContext().getApplicationContext(), responseBody.getData().getAllCartItemsCount());
                     Toasty.success(getActivity(), getString(R.string.delete_cart_toast) , Toast.LENGTH_LONG).show();
+                    if (responseBody.getData().getAllCartItemsCount() == 0){
+                        fragment_basket_elements_recycler_noitems.setVisibility(View.VISIBLE);
+                        fragment_basket_paying.setVisibility(View.GONE);
+                        reloadDialog.dismiss();
+                        return;
+                    }
                 }
                 reloadDialog.dismiss();
             }

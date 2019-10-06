@@ -18,21 +18,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="@dimen/dimen_20dp"
             app:srcCompat="@drawable/ic_arrow_back" />
 
         <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
             android:id="@+id/activity_payment_header_text"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginStart="22dp"
+            android:layout_height="@dimen/dimen_60dp"
+            android:layout_marginStart="@dimen/dimen_22dp"
 
             android:layout_weight="1"
             android:fontFamily="@font/cairo_bold"
             android:gravity="center_vertical|start"
             android:text="@string/activity_payment_header_text"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="@dimen/dimen_18sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -46,24 +46,24 @@
             android:id="@+id/step_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:padding="@dimen/dimen_16dp"
             app:sv_animationType="Line"
             app:sv_doneCircleColor="#41A8E5"
-            app:sv_doneCircleRadius="12dp"
+            app:sv_doneCircleRadius="@dimen/dimen_12dp"
             app:sv_doneStepLineColor="#E8E8E8"
             app:sv_doneStepMarkColor="#FFFFFF"
             app:sv_nextStepCircleEnabled="true"
             app:sv_nextStepLineColor="#E8E8E8"
             app:sv_nextTextColor="#707070"
             app:sv_selectedCircleColor="#FFFFFF"
-            app:sv_selectedCircleRadius="12dp"
+            app:sv_selectedCircleRadius="@dimen/dimen_12dp"
             app:sv_selectedStepNumberColor="#000"
             app:sv_doneTextColor="#707070"
             app:sv_selectedTextColor="#41A8E5"
-            app:sv_stepLineWidth="1dp"
-            app:sv_stepNumberTextSize="12sp"
-            app:sv_stepPadding="4dp"
-            app:sv_textSize="12sp" />
+            app:sv_stepLineWidth="@dimen/dimen_1dp"
+            app:sv_stepNumberTextSize="@dimen/dimen_12sp"
+            app:sv_stepPadding="@dimen/dimen_4dp"
+            app:sv_textSize="@dimen/dimen_12sp" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat

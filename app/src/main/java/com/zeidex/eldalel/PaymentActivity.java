@@ -75,6 +75,7 @@ public class PaymentActivity extends BaseActivity {
 //        step_view.done(true);
         step_view.go(2 , true);
 //        step_view.go(3 , true);
+        step_view.done(true);
         Fragment fragment = new CongrateFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="20dp"
+    android:paddingBottom="@dimen/dimen_20dp"
     tools:context=".SearchActivity">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -20,28 +20,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="@dimen/dimen_20dp"
             app:srcCompat="@drawable/ic_arrow_back" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/activity_search_header_text"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginStart="22dp"
+            android:layout_height="@dimen/dimen_60dp"
+            android:layout_marginStart="@dimen/dimen_22dp"
             android:layout_weight="1"
             android:fontFamily="@font/cairo_bold"
             android:gravity="center_vertical|start"
             android:text="@string/activity_search_header_text"
             android:textAlignment="viewStart"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="@dimen/dimen_18sp" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/item_filter_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="@dimen/dimen_20dp"
             android:visibility="gone"
             app:srcCompat="@drawable/ic_filter_search" />
 

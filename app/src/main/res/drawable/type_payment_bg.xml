@@ -5,8 +5,8 @@
         <shape android:shape="rectangle">
             <solid android:color="#FFFFFF" />
 
-            <padding android:right="10dp" android:left="10dp" android:top="10dp" android:bottom="10dp"/>
-            <stroke android:color="#047AC0" android:width="2dp"/>
+            <padding android:right="@dimen/dimen_10dp" android:left="@dimen/dimen_10dp" android:top="@dimen/dimen_10dp" android:bottom="@dimen/dimen_10dp"/>
+            <stroke android:color="#047AC0" android:width="@dimen/dimen_2dp"/>
         </shape>
     </item>
     <!-- Standard background color -->
@@ -14,9 +14,9 @@
         <shape android:shape="rectangle">
         <solid android:color="#FFFFFF" />
 
-        <padding android:right="10dp" android:left="10dp" android:top="10dp" android:bottom="10dp"/>
+        <padding android:right="@dimen/dimen_10dp" android:left="@dimen/dimen_10dp" android:top="@dimen/dimen_10dp" android:bottom="@dimen/dimen_10dp"/>
 
-        <stroke android:color="#EEEEEE" android:width="2dp"/>
+        <stroke android:color="#EEEEEE" android:width="@dimen/dimen_2dp"/>
         </shape>
     </item>
 </selector>

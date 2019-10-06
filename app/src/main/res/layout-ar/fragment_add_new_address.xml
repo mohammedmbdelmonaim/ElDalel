@@ -15,7 +15,7 @@
             android:id="@+id/address_add_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="67dp"
+            android:layout_marginTop="@dimen/dimen_67dp"
             android:src="@drawable/logologo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -25,12 +25,12 @@
             android:id="@+id/address_add_text_welcome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="@dimen/dimen_30dp"
             android:fontFamily="@font/cairo_bold"
             android:text="@string/login_text_welcome"
             android:textAlignment="viewStart"
             android:textColor="#FFFFFF"
-            android:textSize="14sp"
+            android:textSize="@dimen/dimen_14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/address_add_logo" />
@@ -40,11 +40,11 @@
             android:id="@+id/address_add_first_name_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_marginEnd="@dimen/dimen_16dp"
             android:background="@drawable/fragment_basket_edittext_bg"
-            android:elevation="4dp"
+            android:elevation="@dimen/dimen_4dp"
             android:orientation="horizontal"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
@@ -54,30 +54,30 @@
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/address_add_first_name_edittext"
                 android:layout_width="0dp"
-                android:layout_height="55dp"
+                android:layout_height="@dimen/dimen_55dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:drawableStart="@drawable/ic_person_outline_black_24dp"
-                android:drawablePadding="10dp"
+                android:drawablePadding="@dimen/dimen_10dp"
 
                 android:fontFamily="@font/cairo_regular"
                 android:hint="@string/register_first_name_edittext_hint"
-                android:paddingStart="15dp"
+                android:paddingStart="@dimen/dimen_15dp"
                 android:textAlignment="viewStart"
                 android:textColor="#AAAAAA"
                 android:textColorHint="#AAAAAA"
-                android:textSize="15sp" />
+                android:textSize="@dimen/dimen_15sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/address_add_last_name_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_marginEnd="@dimen/dimen_16dp"
             android:background="@drawable/fragment_basket_edittext_bg"
-            android:elevation="4dp"
+            android:elevation="@dimen/dimen_4dp"
             android:orientation="horizontal"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
@@ -87,19 +87,19 @@
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/address_add_last_name_edittext"
                 android:layout_width="0dp"
-                android:layout_height="55dp"
+                android:layout_height="@dimen/dimen_55dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:drawableStart="@drawable/ic_person_outline_black_24dp"
-                android:drawablePadding="10dp"
+                android:drawablePadding="@dimen/dimen_10dp"
 
                 android:fontFamily="@font/cairo_regular"
                 android:hint="@string/register_last_name_edittext_hint"
-                android:paddingStart="15dp"
+                android:paddingStart="@dimen/dimen_15dp"
                 android:textAlignment="viewStart"
                 android:textColor="#AAAAAA"
                 android:textColorHint="#AAAAAA"
-                android:textSize="15sp" />
+                android:textSize="@dimen/dimen_15sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -107,12 +107,12 @@
             android:id="@+id/address_add_mail_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="@dimen/dimen_16dp"
             android:visibility="gone"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_marginEnd="@dimen/dimen_16dp"
             android:background="@drawable/fragment_basket_edittext_bg"
-            android:elevation="4dp"
+            android:elevation="@dimen/dimen_4dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -121,31 +121,31 @@
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/address_add_mail_edittext"
                 android:layout_width="0dp"
-                android:layout_height="55dp"
+                android:layout_height="@dimen/dimen_55dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:drawableStart="@drawable/ic_mail"
-                android:drawablePadding="10dp"
+                android:drawablePadding="@dimen/dimen_10dp"
                 android:fontFamily="@font/cairo_regular"
 
                 android:hint="@string/login_mail_edittext"
                 android:inputType="textEmailAddress"
-                android:paddingStart="15dp"
+                android:paddingStart="@dimen/dimen_15dp"
                 android:textAlignment="viewStart"
                 android:textColor="#AAAAAA"
                 android:textColorHint="#AAAAAA"
-                android:textSize="15sp" />
+                android:textSize="@dimen/dimen_15sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/address_add_name_company_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_marginEnd="@dimen/dimen_16dp"
             android:background="@drawable/fragment_basket_edittext_bg"
-            android:elevation="4dp"
+            android:elevation="@dimen/dimen_4dp"
             android:orientation="horizontal"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
@@ -155,30 +155,30 @@
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/address_add_name_company_edittext"
                 android:layout_width="0dp"
-                android:layout_height="55dp"
+                android:layout_height="@dimen/dimen_55dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:drawableStart="@drawable/ic_person_outline_black_24dp"
-                android:drawablePadding="10dp"
+                android:drawablePadding="@dimen/dimen_10dp"
 
                 android:fontFamily="@font/cairo_regular"
                 android:hint="@string/register_name_company_edittext_label"
-                android:paddingStart="15dp"
+                android:paddingStart="@dimen/dimen_15dp"
                 android:textAlignment="viewStart"
                 android:textColor="#AAAAAA"
                 android:textColorHint="#AAAAAA"
-                android:textSize="15sp" />
+                android:textSize="@dimen/dimen_15sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/address_add_responsible_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_marginEnd="@dimen/dimen_16dp"
             android:background="@drawable/fragment_basket_edittext_bg"
-            android:elevation="4dp"
+            android:elevation="@dimen/dimen_4dp"
             android:orientation="horizontal"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
@@ -188,30 +188,30 @@
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/address_add_responsible_edittext"
                 android:layout_width="0dp"
-                android:layout_height="55dp"
+                android:layout_height="@dimen/dimen_55dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:drawableStart="@drawable/ic_person_outline_black_24dp"
-                android:drawablePadding="10dp"
+                android:drawablePadding="@dimen/dimen_10dp"
 
                 android:fontFamily="@font/cairo_regular"
                 android:hint="@string/register_responsible_edittext_hint"
-                android:paddingStart="15dp"
+                android:paddingStart="@dimen/dimen_15dp"
                 android:textAlignment="viewStart"
                 android:textColor="#AAAAAA"
                 android:textColorHint="#AAAAAA"
-                android:textSize="15sp" />
+                android:textSize="@dimen/dimen_15sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/address_add_address_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_marginEnd="@dimen/dimen_16dp"
             android:background="@drawable/fragment_basket_edittext_bg"
-            android:elevation="4dp"
+            android:elevation="@dimen/dimen_4dp"
             android:orientation="horizontal"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
@@ -221,31 +221,31 @@
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/address_add_address_edittext"
                 android:layout_width="0dp"
-                android:layout_height="55dp"
+                android:layout_height="@dimen/dimen_55dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:drawableStart="@drawable/ic_person_outline_black_24dp"
-                android:drawablePadding="10dp"
+                android:drawablePadding="@dimen/dimen_10dp"
 
                 android:fontFamily="@font/cairo_regular"
                 android:hint="@string/register_address_edittext_label"
-                android:paddingStart="15dp"
+                android:paddingStart="@dimen/dimen_15dp"
                 android:textAlignment="viewStart"
                 android:textColor="#AAAAAA"
                 android:textColorHint="#AAAAAA"
-                android:textSize="15sp" />
+                android:textSize="@dimen/dimen_15sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/address_add_postal_code_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="@dimen/dimen_16dp"
             android:visibility="visible"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_marginEnd="@dimen/dimen_16dp"
             android:background="@drawable/fragment_basket_edittext_bg"
-            android:elevation="4dp"
+            android:elevation="@dimen/dimen_4dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -254,30 +254,30 @@
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/address_add_postal_code_edittext"
                 android:layout_width="0dp"
-                android:layout_height="55dp"
+                android:layout_height="@dimen/dimen_55dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:drawableStart="@drawable/ic_unlocked"
-                android:drawablePadding="10dp"
+                android:drawablePadding="@dimen/dimen_10dp"
                 android:fontFamily="@font/cairo_regular"
                 android:hint="@string/postal_code"
-                android:paddingStart="15dp"
+                android:paddingStart="@dimen/dimen_15dp"
                 android:textAlignment="viewStart"
                 android:textColor="#AAAAAA"
                 android:textColorHint="#AAAAAA"
-                android:textSize="15sp" />
+                android:textSize="@dimen/dimen_15sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/address_add_pass_confirm_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
             android:visibility="gone"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="@dimen/dimen_16dp"
             android:background="@drawable/fragment_basket_edittext_bg"
-            android:elevation="4dp"
+            android:elevation="@dimen/dimen_4dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -286,31 +286,31 @@
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/address_add_pass_confirm_edittext"
                 android:layout_width="0dp"
-                android:layout_height="55dp"
+                android:layout_height="@dimen/dimen_55dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:drawableStart="@drawable/ic_unlocked"
-                android:drawablePadding="10dp"
+                android:drawablePadding="@dimen/dimen_10dp"
                 android:fontFamily="@font/cairo_regular"
 
                 android:hint="@string/register_pass_confirm_edittext_hint"
                 android:inputType="textPassword"
-                android:paddingStart="15dp"
+                android:paddingStart="@dimen/dimen_15dp"
                 android:textAlignment="viewStart"
                 android:textColor="#AAAAAA"
                 android:textColorHint="#AAAAAA"
-                android:textSize="15sp" />
+                android:textSize="@dimen/dimen_15sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/linear_address_add_country"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_marginEnd="@dimen/dimen_16dp"
             android:background="@drawable/fragment_basket_edittext_bg"
-            android:elevation="4dp"
+            android:elevation="@dimen/dimen_4dp"
             android:orientation="horizontal"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
@@ -320,11 +320,11 @@
             <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/spinner_address_add_country"
                 android:layout_width="0dp"
-                android:layout_height="55dp"
+                android:layout_height="@dimen/dimen_55dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/cairo_regular"
                 android:textColor="#AAAAAA"
-                android:textSize="15sp" />
+                android:textSize="@dimen/dimen_15sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -332,11 +332,11 @@
             android:id="@+id/linear_address_add_region"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_marginEnd="@dimen/dimen_16dp"
             android:background="@drawable/fragment_basket_edittext_bg"
-            android:elevation="4dp"
+            android:elevation="@dimen/dimen_4dp"
             android:orientation="horizontal"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
@@ -346,22 +346,22 @@
             <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/spinner_address_add_region"
                 android:layout_width="0dp"
-                android:layout_height="55dp"
+                android:layout_height="@dimen/dimen_55dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/cairo_regular"
                 android:textColor="#AAAAAA"
-                android:textSize="15sp" />
+                android:textSize="@dimen/dimen_15sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/linear_address_add_city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_marginEnd="@dimen/dimen_16dp"
             android:background="@drawable/fragment_basket_edittext_bg"
-            android:elevation="4dp"
+            android:elevation="@dimen/dimen_4dp"
             android:orientation="horizontal"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
@@ -371,11 +371,11 @@
             <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/spinner_address_add_city"
                 android:layout_width="0dp"
-                android:layout_height="55dp"
+                android:layout_height="@dimen/dimen_55dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/cairo_regular"
                 android:textColor="#AAAAAA"
-                android:textSize="15sp" />
+                android:textSize="@dimen/dimen_15sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -383,11 +383,11 @@
             android:id="@+id/address_add_mobile_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_marginEnd="@dimen/dimen_16dp"
             android:background="@drawable/fragment_basket_edittext_bg"
-            android:elevation="4dp"
+            android:elevation="@dimen/dimen_4dp"
             android:orientation="horizontal"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
@@ -397,33 +397,33 @@
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/address_add_mobile_edittext"
                 android:layout_width="0dp"
-                android:layout_height="55dp"
+                android:layout_height="@dimen/dimen_55dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:drawableStart="@drawable/ic_phone_call"
-                android:drawablePadding="10dp"
+                android:drawablePadding="@dimen/dimen_10dp"
                 android:fontFamily="@font/cairo_regular"
 
                 android:hint="@string/register_mobile_edittext_label"
                 android:inputType="phone"
-                android:paddingStart="15dp"
+                android:paddingStart="@dimen/dimen_15dp"
                 android:textAlignment="viewStart"
                 android:textColor="#AAAAAA"
                 android:textColorHint="#AAAAAA"
-                android:textSize="15sp" />
+                android:textSize="@dimen/dimen_15sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/type_radio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="@dimen/dimen_30dp"
             android:fontFamily="@font/cairo_bold"
             android:text="@string/type_radio"
             android:visibility="gone"
             android:textAlignment="viewStart"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:textSize="@dimen/dimen_16sp"
             app:layout_constraintBottom_toBottomOf="@+id/address_add_radio_group"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/address_add_radio_group" />
@@ -433,8 +433,8 @@
             android:layout_width="0dp"
             android:visibility="gone"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="@dimen/dimen_20dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
@@ -445,27 +445,27 @@
                 android:id="@+id/radio_company_address_add"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="@dimen/dimen_16dp"
                 android:layout_weight="1"
                 android:buttonTint="@color/white_color"
                 android:fontFamily="@font/cairo_bold"
                 android:text="@string/radio_company_register_label"
                 android:textAlignment="viewStart"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp" />
+                android:textSize="@dimen/dimen_16sp" />
 
             <RadioButton
                 android:id="@+id/radio_indivdual_address_add"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
                 android:layout_weight="2"
                 android:buttonTint="@color/white_color"
                 android:fontFamily="@font/cairo_bold"
                 android:text="@string/radio_indivdual_register_label"
                 android:textAlignment="viewStart"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp" />
+                android:textSize="@dimen/dimen_16sp" />
         </RadioGroup>
 
 
@@ -473,13 +473,13 @@
             android:id="@+id/type_radio_lang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="@dimen/dimen_30dp"
             android:fontFamily="@font/cairo_bold"
             android:text="@string/type_radio_lang"
 
             android:textAlignment="viewStart"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:textSize="@dimen/dimen_16sp"
             app:layout_constraintBottom_toBottomOf="@+id/address_add_radio_group2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/address_add_radio_group2" />
@@ -488,8 +488,8 @@
             android:id="@+id/address_add_radio_group2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="@dimen/dimen_20dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
@@ -500,45 +500,45 @@
                 android:id="@+id/radio_ar_address_add"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="@dimen/dimen_16dp"
                 android:layout_weight="1"
                 android:buttonTint="@color/white_color"
                 android:fontFamily="@font/cairo_bold"
                 android:text="@string/radio_ar_register"
                 android:textAlignment="viewStart"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp" />
+                android:textSize="@dimen/dimen_16sp" />
 
             <RadioButton
                 android:id="@+id/radio_en_address_add"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
                 android:layout_weight="2"
                 android:buttonTint="@color/white_color"
                 android:fontFamily="@font/cairo_bold"
                 android:text="@string/radio_en_register"
                 android:textAlignment="viewStart"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp" />
+                android:textSize="@dimen/dimen_16sp" />
         </RadioGroup>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/address_add_go_enter_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_marginEnd="@dimen/dimen_16dp"
             android:background="@drawable/fragment_basket_edittext_bg"
-            android:elevation="4dp"
+            android:elevation="@dimen/dimen_4dp"
             android:fontFamily="@font/cairo_bold"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="10dp"
+            android:padding="@dimen/dimen_10dp"
             android:text="@string/add_address"
             android:textColor="#458DF8"
-            android:textSize="14sp"
+            android:textSize="@dimen/dimen_14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/address_add_radio_group2" />

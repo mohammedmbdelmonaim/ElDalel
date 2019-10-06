@@ -2,14 +2,14 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/detail_colores_cardView"
-    android:layout_width="88dp"
+    android:layout_width="@dimen/dimen_88dp"
     android:layout_height="wrap_content"
-    android:layout_marginStart="5dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginEnd="12dp"
-    android:layout_marginBottom="5dp"
-    app:cardCornerRadius="5dp"
-    app:cardElevation="4dp">
+    android:layout_marginStart="@dimen/dimen_5dp"
+    android:layout_marginTop="@dimen/dimen_5dp"
+    android:layout_marginEnd="@dimen/dimen_12dp"
+    android:layout_marginBottom="@dimen/dimen_5dp"
+    app:cardCornerRadius="@dimen/dimen_5dp"
+    app:cardElevation="@dimen/dimen_4dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/detail_colores_linear"
@@ -21,8 +21,8 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/detail_color_img_url"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="4dp"
+            android:layout_height="@dimen/dimen_40dp"
+            android:layout_marginTop="@dimen/dimen_4dp"
             app:srcCompat="@drawable/ic_brightness_1_black_24dp" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -33,7 +33,7 @@
             android:fontFamily="@font/cairo_bold"
             android:text="أسود"
             android:textColor="#606060"
-            android:textSize="10sp" />
+            android:textSize="@dimen/dimen_10sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.cardview.widget.CardView>
