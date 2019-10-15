@@ -354,7 +354,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginTop=""@dimen/dimen_50dp""
+                        android:layout_marginTop="@dimen/dimen_50dp"
                         app:layout_constraintTop_toTopOf="parent"
                         app:rsb_max="20000"
                         app:rsb_maxThumbDrawable="@drawable/circle_seekbar"

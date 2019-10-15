@@ -84,6 +84,7 @@ public class OrdersActivity extends BaseActivity implements OrdersAdapter.Orders
                 shipments = (ArrayList<GetShipments.Shipment>) getShipments.getShipments();
                 if (shipments.size() == 0){
                     shipments_recycler_noitems.setVisibility(View.VISIBLE);
+                    reloadDialog.dismiss();
                     return;
                 }
 

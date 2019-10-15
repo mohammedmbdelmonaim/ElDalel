@@ -123,7 +123,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                 GetBasketProducts getBasketProducts = response.body();
                 int code = Integer.parseInt(getBasketProducts.getCode());
                 if (code == 200) {
-                    Locale locale = ChangeLang.getLocale(getResources());
+                    Locale locale = ChangeLang.getLocale(getActivity().getResources());
                     String loo = locale.getLanguage();
                     if (loo.equalsIgnoreCase("en")) {
                         language = "english";

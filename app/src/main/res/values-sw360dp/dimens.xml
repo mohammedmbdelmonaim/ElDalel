@@ -12,7 +12,7 @@
     <dimen name="slider_home_old_price_size">12sp</dimen>
     <dimen name="no_products_to_show_text_size">18sp</dimen>
 
-    <dimen name="dp1_dimen">1dp</dimen>
+    <dimen name="dimen_1dp">1dp</dimen>
     <dimen name="dimen_2dp">2dp</dimen>
     <dimen name="dimen_3dp">3dp</dimen>
     <dimen name="dimen_4dp">4dp</dimen>
@@ -66,7 +66,18 @@
     <dimen name="dimen_92dp">92dp</dimen>
     <dimen name="dimen_100dp">100dp</dimen>
     <dimen name="dimen_108dp">108dp</dimen>
+    <dimen name="dimen_150dp">150dp</dimen>
+    <dimen name="dimen_120dp">120dp</dimen>
 
-
+    <dimen name="dimen_6sp">6sp</dimen>
+    <dimen name="dimen_8sp">8sp</dimen>
+    <dimen name="dimen_10sp">10sp</dimen>
+    <dimen name="dimen_12sp">12sp</dimen>
+    <dimen name="dimen_14sp">14sp</dimen>
+    <dimen name="dimen_15sp">15sp</dimen>
+    <dimen name="dimen_16sp">16sp</dimen>
+    <dimen name="dimen_18sp">18sp</dimen>
+    <dimen name="dimen_20sp">20sp</dimen>
+    <dimen name="dimen_24sp">24sp</dimen>
 
 </resources>

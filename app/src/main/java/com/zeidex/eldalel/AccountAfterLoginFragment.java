@@ -99,8 +99,8 @@ public class AccountAfterLoginFragment extends androidx.fragment.app.Fragment im
                 break;
             }
             case R.id.ragment_account_after_login_pay_linear:{
-                startActivity(new Intent(getActivity(), PaymentActivity.class));
-                Animatoo.animateSwipeLeft(getActivity());
+//                startActivity(new Intent(getActivity(), PaymentActivity.class));
+//                Animatoo.animateSwipeLeft(getActivity());
                 break;
             }
         }

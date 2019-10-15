@@ -105,12 +105,13 @@
             android:textColor="#606060"
             android:textSize="@dimen/dimen_12sp" />
 
-        <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/fragment_account_helper_text"
+            android:textAlignment="viewStart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dimen_14dp"
             android:fontFamily="@font/cairo_bold"
-            android:text="العربية"
             android:textColor="#606060"
             android:textSize="@dimen/dimen_12sp" />
 

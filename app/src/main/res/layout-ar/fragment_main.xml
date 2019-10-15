@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/main_linear_top"
         android:layout_width="match_parent"
-        android:layout_height="1@dimen/dimen_20dp"
+        android:layout_height="@dimen/dimen_120dp"
         android:background="#219FE9 "
         android:orientation="horizontal"
         android:paddingStart="@dimen/dimen_8dp"

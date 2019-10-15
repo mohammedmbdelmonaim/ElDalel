@@ -58,4 +58,17 @@
 	<dimen name="slider_offer_name_size">37.8sp</dimen>
 	<dimen name="slider_home_offer_price_size">29.4sp</dimen>
 	<dimen name="no_products_to_show_text_size">37.8sp</dimen>
+	<dimen name="dimen_120dp">252dp</dimen>
+	<dimen name="dimen_150dp">315dp</dimen>
+	<dimen name="dimen_1dp">2.1dp</dimen>
+	<dimen name="dimen_18sp">37.8sp</dimen>
+	<dimen name="dimen_16sp">33.6sp</dimen>
+	<dimen name="dimen_14sp">29.4sp</dimen>
+	<dimen name="dimen_15sp">31.5sp</dimen>
+	<dimen name="dimen_12sp">25.2sp</dimen>
+	<dimen name="dimen_24sp">50.4sp</dimen>
+	<dimen name="dimen_6sp">12.6sp</dimen>
+	<dimen name="dimen_10sp">21sp</dimen>
+	<dimen name="dimen_8sp">16.8sp</dimen>
+	<dimen name="dimen_20sp">42sp</dimen>
 </resources>

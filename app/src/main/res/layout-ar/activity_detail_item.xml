@@ -343,6 +343,7 @@
                 android:layout_marginStart="@dimen/dimen_16dp"
                 android:layout_marginTop="@dimen/dimen_16dp"
                 android:layout_marginEnd="@dimen/dimen_16dp"
+                android:visibility="gone"
                 android:background="#FFFFFF"
                 android:elevation="@dimen/dimen_4dp"
                 android:orientation="vertical"

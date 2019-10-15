@@ -1,7 +1,6 @@
 package com.zeidex.eldalel.services;
 
 import com.zeidex.eldalel.response.GetAddToCardResponse;
-import com.zeidex.eldalel.response.GetAddToFavouriteResponse;
 
 import java.util.Map;
 

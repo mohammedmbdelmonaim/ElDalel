@@ -57,8 +57,8 @@ import static com.zeidex.eldalel.OffersFragment.CATEGORY_NAME_INTENT_EXTRA;
 import static com.zeidex.eldalel.OffersFragment.SUBCATEGORIES_INTENT_EXTRA_KEY;
 import static com.zeidex.eldalel.ProductsFragment.FINISH_ACTIVITY_CODE;
 import static com.zeidex.eldalel.ProductsFragment.SORT_ASC;
-import static com.zeidex.eldalel.ProductsFragment.SORT_DESC;
 import static com.zeidex.eldalel.ProductsFragment.SORT_DATE_DESC_INDEX;
+import static com.zeidex.eldalel.ProductsFragment.SORT_DESC;
 import static com.zeidex.eldalel.SearchActivity.SEARCH_NAME_ARGUMENT;
 import static com.zeidex.eldalel.adapters.CategoriesItemAdapter.SUBCATEGORY_ID_INTENT_EXTRA;
 import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
@@ -126,7 +126,10 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
         onBackPressed();
     }
 
+    boolean is_offered;
+
     public void findViews() {
+       is_offered =  getIntent().getBooleanExtra("is_offered", false);
         if (PreferenceUtils.getCompanyLogin(this)) {
             token = PreferenceUtils.getCompanyToken(this);
         } else if (PreferenceUtils.getUserLogin(this)) {
@@ -151,7 +154,9 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
         });
 
         filterMap = new HashMap<>();
-        filterMap.put("status", OFFERS);
+        if (is_offered) {
+            filterMap.put("status", OFFERS);
+        }
         dropDownMenu = new PopupMenu(this, offer_descendant_items_category);
         dropDownMenu.getMenuInflater().inflate(R.menu.menu_sort_dropdown, dropDownMenu.getMenu());
         dropDownMenu.getMenu().getItem(SORT_DATE_DESC_INDEX).setChecked(true);
@@ -208,11 +213,17 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
         }
 
     }
-
+    String status = "";
     private void getCategoryProducts(int categoryId) {
         reloadDialog.show();
         OffersAPI offersAPI = APIClient.getClient(SERVER_API_TEST).create(OffersAPI.class);
-        offersAPI.getOffersProductsFromCategories(OFFERS, categoryId, token).enqueue(new Callback<GetProducts>() {
+
+        if (is_offered){
+            status = OFFERS;
+        }else{
+            status = "";
+        }
+        offersAPI.getOffersProductsFromCategories(status, categoryId, token).enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {
@@ -243,8 +254,13 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
 
     public void getSubcategoryProducts(int subcategoryId) {
         reloadDialog.show();
+        if (is_offered){
+            status = OFFERS;
+        }else{
+            status = "";
+        }
         OffersAPI offersAPI = APIClient.getClient(SERVER_API_TEST).create(OffersAPI.class);
-        offersAPI.getOffersProducts(OFFERS, subcategoryId, token).enqueue(new Callback<GetProducts>() {
+        offersAPI.getOffersProducts(status, subcategoryId, token).enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {

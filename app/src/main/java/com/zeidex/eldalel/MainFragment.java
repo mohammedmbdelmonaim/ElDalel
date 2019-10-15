@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -62,6 +63,7 @@ import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
 public class MainFragment extends androidx.fragment.app.Fragment implements ProductsCategory3Adapter.ProductsCategory3Operation, PhonesAdapter.PhonesOperation, AccessoriesAdapter.AccessoriesOperation {
+    private static final String TAG = "Toast_View";
     @BindView(R.id.main_recycler_accessories)
     RecyclerView main_recycler_accessories;
 
@@ -442,21 +444,73 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
             @Override
             public void onFailure(Call<GetHomeProducts> call, Throwable t) {
                 if (getActivity() != null) {
-                    Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                    showAToast(getString(R.string.confirm_internet));
+//                    Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                     reloadDialog.dismiss();
                     Fragment frg = null;
                     frg = getActivity().getSupportFragmentManager().findFragmentByTag("main_fragment");
                     final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                    ft.detach(frg);
-                    ft.attach(frg);
                     ft.commitAllowingStateLoss();
                 }
             }
         });
 
         getSlidersData();
+
+
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (toast != null) {
+            if (toast.getView().isShown()) {
+                toast_visibility = true;
+            } else {
+                toast_visibility = false;
+            }
+        }
+    }
+
+
+
+    public void showAToast (String st){
+        toast = Toasty.error(getActivity(), st , Toast.LENGTH_LONG);//"Toast toast" is declared in the class
+        if (toast_visibility){
+
+        }else {
+            toast.show();
+        }
+
+//        try{ toast.getView().isShown();     // true if visible
+//            toast.setText(st);
+//        } catch (Exception e) {         // invisible if exception
+//            toast = Toasty.error(getActivity(), st, Toast.LENGTH_LONG);
+//        }
+//        toast.show();  //finally display it
+    }
+
+    synchronized public void cancel() {
+        if(toast == null) {
+            Log.d(TAG, "cancel: toast is null (occurs first time only)" );
+            return;
+        }
+        final View view = toast.getView();
+        if(view == null){
+            Log.d(TAG, "cancel: view is null");
+            return;
+        }
+        if (view.isShown()) {
+            toast.cancel();
+        }else{
+            Log.d(TAG, "cancel: view is already dismissed");
+        }
+    }
+
+
+
+    public Toast toast;
+    static boolean toast_visibility;
     private List<ProductsCategory> getProducts(int categoryId, GetHomeProducts getHomeProducts) {
         ArrayList<ProductsCategory> home_category = new ArrayList<>();
 

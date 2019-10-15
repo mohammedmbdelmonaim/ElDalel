@@ -146,6 +146,11 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
         addressAPI.getAllAddresses(token).enqueue(new Callback<GetAddresses>() {
             @Override
             public void onResponse(Call<GetAddresses> call, Response<GetAddresses> response) {
+                if (response.body().getPrimaryAddress() == null && response.body().getAddresses().size() == 0){
+                    no_addresses.setVisibility(View.VISIBLE);
+                    reloadDialog.dismiss();
+                    return;
+                }
                     addresses = new ArrayList<>();
                     addresses.add(response.body().getPrimaryAddress());
                     addresses.addAll(response.body().getAddresses());
@@ -154,9 +159,6 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
                     addressesAdapter.setAddressOperation(ShoopingListAddressesFragment.this);
                     fragment_shooping_list_addresses_recycler.setAdapter(addressesAdapter);
 
-                    if (addresses.size() == 0){
-                        no_addresses.setVisibility(View.VISIBLE);
-                    }
                 reloadDialog.dismiss();
             }
 

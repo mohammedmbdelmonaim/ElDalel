@@ -189,4 +189,15 @@
     <string name="number_orders_inshipments">عدد الطلبات</string>
     <string name="activity_elements_orders_header_textlabel">الطلبات</string>
     <string name="order_element_currency_arrow">العدد</string>
+    <string name="dialog_change_language_label">من فضلك أختر اللغة</string>
+    <string name="country_spinner_label_profile">أختر الدولة</string>
+    <string name="region_spinner_label_profile">أختر المنطقة</string>
+    <string name="cities_spinner_label_profile">أختر المدينة</string>
+    <string name="change_lang_text_profile">تعديل كلمه المرور</string>
+    <string name="dialog_change_pass_old_edittext">كلمة المرور القديمة</string>
+    <string name="dialog_change_pass_new_edittext">كلمة المرور الجديدة</string>
+    <string name="dialog_change_pass_new_confirm_edittext">تأكيد كلمة المرور الجديدة</string>
+    <string name="dialog_change_pass_update_btn">تعديل</string>
+    <string name="password_update_success">تم تعديل كلمة المررور بنجاح</string>
+    <string name="update_profile_success_msg">تم تعديل المعلومات بنجاح</string>
 </resources>

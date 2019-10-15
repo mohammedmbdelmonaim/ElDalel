@@ -1,6 +1,7 @@
 package com.zeidex.eldalel;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -19,7 +20,6 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.zeidex.eldalel.response.GetAddAddressResponse;
@@ -32,6 +32,7 @@ import com.zeidex.eldalel.services.CountriesApi;
 import com.zeidex.eldalel.services.EditAddressApi;
 import com.zeidex.eldalel.services.RegionsApi;
 import com.zeidex.eldalel.utils.APIClient;
+import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 
@@ -282,16 +283,23 @@ public class AddNewAddressFragment extends Fragment {
                     GetAddAddressResponse getAddAddressResponse = response.body();
                     if (getAddAddressResponse.isSuccess()){
                         Toasty.success(getActivity(), getString(R.string.edit_address_success), Toast.LENGTH_LONG).show();
-                        Fragment fragment = new ShoopingListAddressesFragment();
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
+//                        Fragment fragment = new ShoopingListAddressesFragment();
+//                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                        ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
                         if (state_addresses.equalsIgnoreCase("address")){
-                            ft.replace(R.id.activity_address_constraint, fragment, fragment.getTag());
+                            startActivity(new Intent(getActivity(), AddressesActivity.class));
+                            Animatoo.animateSwipeLeft(getActivity());
+//                            ft.replace(R.id.activity_address_constraint, fragment, fragment.getTag());
                         }else if(state_addresses.equalsIgnoreCase("payment")){
-                            ft.replace(R.id.payment_constrant, fragment, fragment.getTag());
+                            startActivity(new Intent(getActivity(), PaymentActivity.class));
+                            Animatoo.animateSwipeLeft(getActivity());
+//                            ft.replace(R.id.payment_constrant, fragment, fragment.getTag());
                         }
-//                        ft.addToBackStack(null);
-                        ft.commit();
+////                        ft.addToBackStack(null);
+//                        ft.commit();
+
+
+
                     }else {
                         String errors = "";
                         for (String errorText : getAddAddressResponse.getError()){
@@ -369,16 +377,20 @@ public class AddNewAddressFragment extends Fragment {
                     GetAddAddressResponse getAddAddressResponse = response.body();
                     if (getAddAddressResponse.isSuccess()){
                         Toasty.success(getActivity(), getString(R.string.add_address_sucess), Toast.LENGTH_LONG).show();
-                        Fragment fragment = new ShoopingListAddressesFragment();
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
+//                        Fragment fragment = new ShoopingListAddressesFragment();
+//                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                        ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
                         if (state_addresses.equalsIgnoreCase("address")){
-                            ft.replace(R.id.activity_address_constraint, fragment, fragment.getTag());
+                            startActivity(new Intent(getActivity(), AddressesActivity.class));
+                            Animatoo.animateSwipeLeft(getActivity());
+//                            ft.replace(R.id.activity_address_constraint, fragment, fragment.getTag());
                         }else if(state_addresses.equalsIgnoreCase("payment")){
-                            ft.replace(R.id.payment_constrant, fragment, fragment.getTag());
+                            startActivity(new Intent(getActivity(), PaymentActivity.class));
+                            Animatoo.animateSwipeLeft(getActivity());
+//                            ft.replace(R.id.payment_constrant, fragment, fragment.getTag());
                         }
 //                        ft.addToBackStack(null);
-                        ft.commit();
+//                        ft.commit();
                     }else {
                         String errors = "";
                         for (String errorText : getAddAddressResponse.getError()){

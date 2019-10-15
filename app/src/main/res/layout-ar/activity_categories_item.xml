@@ -47,6 +47,22 @@
             android:textAlignment="center" />
     </RelativeLayout>
 
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/view_pager_tab_item_sub_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:elevation="@dimen/dimen_4dp"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="#219FE9"
+        app:tabMaxWidth="0dp"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="#219FE9"
+        app:tabTextColor="#606060"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear_header_item"/>
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/vpPager_item"
         android:layout_width="match_parent"
@@ -55,7 +71,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linear_header_item">
+        app:layout_constraintTop_toBottomOf="@+id/view_pager_tab_item_sub_category">
 
         <!--<androidx.viewpager.widget.PagerTabStrip-->
         <!--android:id="@+id/pager_header"-->

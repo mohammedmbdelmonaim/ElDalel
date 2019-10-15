@@ -15,7 +15,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.zeidex.eldalel.adapters.CategoriesItemAdapter;
 import com.zeidex.eldalel.models.Subsubcategory;
 import com.zeidex.eldalel.utils.ChangeLang;
-import com.zeidex.eldalel.utils.KeyboardUtils;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 
 import java.util.ArrayList;

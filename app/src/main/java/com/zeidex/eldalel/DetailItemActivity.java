@@ -40,7 +40,6 @@ import com.zeidex.eldalel.services.DetailProduct;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
-import com.zeidex.eldalel.utils.KeyboardUtils;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 import com.zeidex.eldalel.utils.PriceFormatter;
 
@@ -131,6 +130,9 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
     @BindView(R.id.details_add_to_cart_whole_layout)
     LinearLayoutCompat details_add_to_cart_whole_layout;
 
+    @BindView(R.id.detail_linear_size_item)
+    LinearLayoutCompat detail_linear_size_item;
+
     @BindView(R.id.details_like_too)
     AppCompatTextView details_like_too;
 
@@ -143,7 +145,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
     List<String> desc_names;
     DetailDescriptionsAdapter detailDescriptionsAdapter;
 
-    String token;
+    String token = "";
     private int productId;
     private GetDetailProduct.Product currentProduct;
     private boolean isAdded;
@@ -365,9 +367,11 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                             detail_item_text_price_before_linear.setVisibility(View.VISIBLE);
                             detail_item_text_price_before.setText(PriceFormatter.toDecimalString(getDetailProduct.getData().getProduct().getOld_price(), getApplicationContext()));
                         }
+                        if(!token.equalsIgnoreCase("")) {
 
                         int cartStatus = currentProduct.getCart();
                         int availableQuantity = currentProduct.getAvailableQuantity();
+
 
                         if (cartStatus == CART_EMPTY) {
                             if (availableQuantity == NOT_AVAILABLE) {
@@ -396,6 +400,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                         }
 
                         details_add_to_cart_whole_layout.setVisibility(View.VISIBLE);
+                        }
 
 
                         detail_item_text_price.setText(PriceFormatter.toDecimalString(getDetailProduct.getData().getProduct().getPrice(), getApplicationContext()));
@@ -435,11 +440,15 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                                 capicities.add(getDetailProduct.getData().getProduct().getCapacities().get(i));
                             }
 
-                            detailSizeItemAdapter = new DetailSizeItemAdapter(DetailItemActivity.this, capicities);
+                            if (capicities.size() > 0) {
+                                detail_linear_size_item.setVisibility(View.VISIBLE);
+                                detailSizeItemAdapter = new DetailSizeItemAdapter(DetailItemActivity.this, capicities);
+                                detail_recycler_size_item.setAdapter(detailSizeItemAdapter);
+                            }
                             detailColorsItemAdapter = new DetailColorsItemAdapter(DetailItemActivity.this, colors);
                             detailColorsItemAdapter.setDetailColorsOperation(DetailItemActivity.this);
 
-                            detail_recycler_size_item.setAdapter(detailSizeItemAdapter);
+
                             detail_recycler_colors_item.setAdapter(detailColorsItemAdapter);
 
                             slider_adapter = new SliderAdapter(DetailItemActivity.this, images);

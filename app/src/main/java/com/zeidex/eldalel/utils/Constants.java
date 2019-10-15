@@ -22,7 +22,7 @@ public class Constants {
     public static final int PERMISSION_REQUEST_CODE = 1240;
     public static final String  GOOGLE_API = "https://maps.googleapis.com/maps/api/";
     public static final String  SERVER_API = "https://www.dleel-sh.com/api/";
-    public static final String  SERVER_API_TEST = "http://api-ksa.com/demo/dleelweb/public/api/";
+    public static final String  SERVER_API_TEST = "https://bsamat.com/demo/dleelweb/public/api/";
     public static final int CART_EMPTY = 0;
     public static final int CART_NOT_EMPTY = 1;
     public static final int NOT_AVAILABLE = 0;

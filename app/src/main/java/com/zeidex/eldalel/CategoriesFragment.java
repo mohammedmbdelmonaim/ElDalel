@@ -40,7 +40,7 @@ import retrofit2.Response;
 import static com.zeidex.eldalel.SearchActivity.SEARCH_NAME_ARGUMENT;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
-public class CategoriesFragment extends androidx.fragment.app.Fragment {
+public class  CategoriesFragment extends androidx.fragment.app.Fragment {
     public static final String NEW_ARRIVALS_ID = "-1";
     public static final int NO_PRODUCTS_STATUS = 1;
     @BindView(R.id.vpPager)

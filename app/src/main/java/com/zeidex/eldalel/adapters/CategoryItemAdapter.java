@@ -50,10 +50,15 @@ public class CategoryItemAdapter extends RecyclerView.Adapter<CategoryItemAdapte
         this.context = context;
         this.productsList = productsList;
     }
-
+    String token = "";
     public CategoryItemAdapter(Context context) {
         this.context = context;
         productsList = new ArrayList<>();
+        if (PreferenceUtils.getUserLogin(context)) {
+            token = PreferenceUtils.getUserToken(context);
+        } else if (PreferenceUtils.getCompanyLogin(context)) {
+            token = PreferenceUtils.getCompanyToken(context);
+        }
     }
 
     @NonNull
@@ -99,24 +104,27 @@ public class CategoryItemAdapter extends RecyclerView.Adapter<CategoryItemAdapte
 
         holder.categoryItemTypeText.setText(currentOffer.getType());
 
-        if (currentOffer.getLike().equalsIgnoreCase("1")) {
-            holder.offerItemLikeImage.setChecked(true);
-        } else {
-            holder.offerItemLikeImage.setChecked(false);
-        }
 
-        String cartStatus = currentOffer.getCart();
-        if (cartStatus.equals(String.valueOf(CART_EMPTY))) {
-            if (currentOffer.getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE))) {
-                holder.offerItemAddToCart.setBackgroundResource(R.drawable.row_out_of_stock_cart);
-                holder.offerItemAddToCart.setText(R.string.cart_out_of_stock_label);
+        if (!token.equalsIgnoreCase("")) {
+            if (currentOffer.getLike().equalsIgnoreCase("1")) {
+                holder.offerItemLikeImage.setChecked(true);
             } else {
-                holder.offerItemAddToCart.setBackgroundResource(R.drawable.row_add_to_car_bg);
-                holder.offerItemAddToCart.setText(R.string.phone_row_add_to_card_txt);
+                holder.offerItemLikeImage.setChecked(false);
             }
-        } else if (cartStatus.equals(String.valueOf(CART_NOT_EMPTY))) {
-            holder.offerItemAddToCart.setBackgroundResource(R.drawable.row_already_added_cart);
-            holder.offerItemAddToCart.setText(R.string.add_to_card);
+
+            String cartStatus = currentOffer.getCart();
+            if (cartStatus.equals(String.valueOf(CART_EMPTY))) {
+                if (currentOffer.getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE))) {
+                    holder.offerItemAddToCart.setBackgroundResource(R.drawable.row_out_of_stock_cart);
+                    holder.offerItemAddToCart.setText(R.string.cart_out_of_stock_label);
+                } else {
+                    holder.offerItemAddToCart.setBackgroundResource(R.drawable.row_add_to_car_bg);
+                    holder.offerItemAddToCart.setText(R.string.phone_row_add_to_card_txt);
+                }
+            } else if (cartStatus.equals(String.valueOf(CART_NOT_EMPTY))) {
+                holder.offerItemAddToCart.setBackgroundResource(R.drawable.row_already_added_cart);
+                holder.offerItemAddToCart.setText(R.string.add_to_card);
+            }
         }
 
         if (!TextUtils.isEmpty(currentOffer.getImgUrl())) {

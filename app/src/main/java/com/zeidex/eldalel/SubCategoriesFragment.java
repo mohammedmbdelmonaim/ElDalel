@@ -29,7 +29,6 @@ import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -46,6 +45,7 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
     public static final String SUBCATEGORY_ID_EXTRA_KEY = "subcategory";
     public static final String SUBSUBCATEGORIES_INTENT_EXTRA_KEY = "subsubcategories";
     public static final String SUBCATEGORY_NAME_EXTRA_KEY = "subcategory_name";
+    public static final String SUBCATEGORY_ARRAY_EXTRA_KEY = "subcategory_array";
 
     @BindView(R.id.category_recycler_list)
     RecyclerView category_recycler_list;
@@ -58,7 +58,7 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
 
     SubCategoriesAdapter subCategoryAdapter;
     //    String id;
-    List<Subcategory> subCategories;
+    ArrayList<Subcategory> subCategories;
 
     Dialog reloadDialog;
     String token = "";
@@ -161,6 +161,7 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
         intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
         intent.putExtra(SUBCATEGORY_ID_EXTRA_KEY, subCategoryId);
         intent.putExtra(SUBCATEGORY_NAME_EXTRA_KEY, subCategoryName);
+        intent.putParcelableArrayListExtra(SUBCATEGORY_ARRAY_EXTRA_KEY , subCategories);
         getActivity().startActivity(intent);
         Animatoo.animateSwipeLeft(getActivity());
     }
@@ -172,6 +173,7 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
         intent.putExtra(SUBCATEGORY_ID_EXTRA_KEY, subcategoryId);
         intent.putExtra(SUBCATEGORY_NAME_EXTRA_KEY, subCategoryName);
         intent.putParcelableArrayListExtra(SUBSUBCATEGORIES_INTENT_EXTRA_KEY, subsubcategories);
+        intent.putParcelableArrayListExtra(SUBCATEGORY_ARRAY_EXTRA_KEY , subCategories);
         getActivity().startActivity(intent);
         Animatoo.animateSwipeLeft(getActivity());
     }

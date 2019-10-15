@@ -26,7 +26,6 @@ import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.GridSpacingItemDecoration;
-import com.zeidex.eldalel.utils.KeyboardUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,6 +166,7 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
         } else {
             intent.putExtra(CATEGORY_NAME_INTENT_EXTRA, category.getName());
         }
+        intent.putExtra("is_offered" , true);
 
         startActivity(intent);
         Animatoo.animateSwipeLeft(getActivity());

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/change_quantity_custom_dialog">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/cairo_bold"
+        android:text="@string/dialog_change_language_label"
+        android:layout_marginTop="@dimen/dimen_16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_16dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_change_quantity_dialog">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/dialog_text_active_lang"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_32dp"
+            android:layout_marginEnd="@dimen/dimen_14dp"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            android:background="@drawable/dialog_ok_background"
+            android:fontFamily="@font/arabicuitext_b"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/dimen_12sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/dialog_text_deactive_lang"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_32dp"
+            android:layout_weight="1"
+            android:background="@drawable/dialog_cancel_background"
+            android:fontFamily="@font/arabicuitext_b"
+            android:gravity="center"
+            android:layout_marginEnd="@dimen/dimen_16dp"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/dimen_12dp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <TextView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/arabicuitext_b"
+        android:text="wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+        android:textColor="#F0F0F0"
+        android:textSize="@dimen/dimen_6sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_change_quantity_linear" />
+</LinearLayout>
