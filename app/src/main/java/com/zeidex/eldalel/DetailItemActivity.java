@@ -240,7 +240,12 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                     reloadDialog.show();
                     convertDaraToJson(id);
                     AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
-                    Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(favourite_post);
+                    Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
+                    if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
+                        getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(favourite_post);
+                    }else {
+                        getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(favourite_post);
+                    }
                     getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
                         @Override
                         public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
@@ -520,7 +525,12 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
         reloadDialog.show();
         convertDaraToJson(id);
         AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
-        Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(favourite_post);
+        Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
+        if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
+            getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(favourite_post);
+        }else {
+            getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(favourite_post);
+        }
         getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
             @Override
             public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
@@ -544,7 +554,13 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
     public void onAddToProductCategory3Cart(int id, int position) {
         prepareCartMap(id, "1");
         AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
-        Call<GetAddToCardResponse> getAddToCardResponseCall = addToCardApi.getAddToFavourite(post);
+        Call<GetAddToCardResponse> getAddToCardResponseCall;
+        if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
+            post.put("language" , "arabic");
+            getAddToCardResponseCall = addToCardApi.getAddToCartcompany(post);
+        }else {
+            getAddToCardResponseCall = addToCardApi.getAddToCart(post);
+        }
         getAddToCardResponseCall.enqueue(new Callback<GetAddToCardResponse>() {
             @Override
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
@@ -579,7 +595,13 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
         reloadDialog.show();
         prepareCartMap(productId, details_quantaty_edit.getText().toString());
         AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
-        Call<GetAddToCardResponse> getAddToCardResponseCall = addToCardApi.getAddToFavourite(post);
+        Call<GetAddToCardResponse> getAddToCardResponseCall;
+        if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
+            post.put("language" , "arabic");
+            getAddToCardResponseCall = addToCardApi.getAddToCartcompany(post);
+        }else {
+            getAddToCardResponseCall = addToCardApi.getAddToCart(post);
+        }
         getAddToCardResponseCall.enqueue(new Callback<GetAddToCardResponse>() {
             @Override
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {

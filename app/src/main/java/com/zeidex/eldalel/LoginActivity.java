@@ -16,7 +16,9 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.zeidex.eldalel.response.GetLoginResponse;
+import com.zeidex.eldalel.response.GetSendDeviceTokenResponse;
 import com.zeidex.eldalel.services.LoginApi;
+import com.zeidex.eldalel.services.SendDeviceTokenApi;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
@@ -130,8 +132,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         login_post.put("language", lang);
     }
 
+    Map<String, String> device_token_post;
+    private void convertDaraToJsonToken() {
+        String dev = PreferenceUtils.getDeviceToken(this);
+        device_token_post = new HashMap<>();
+        device_token_post.put("notificationToken", PreferenceUtils.getDeviceToken(this));
+        device_token_post.put("token", token);
+//        device_token_post.put("language", lang);
+    }
 
 
+    String token = "";
     public void checkLogin(){
         final boolean fieldsOK = validate(new EditText[]{login_mail_edittext, login_pass_edittext});
         if (fieldsOK){
@@ -148,9 +159,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if (getLoginResponse.getTokenUser() != null){
                             PreferenceUtils.saveUserToken(LoginActivity.this, getLoginResponse.getTokenUser());
                             PreferenceUtils.saveUserLogin(LoginActivity.this , true);
+                            token = getLoginResponse.getTokenUser();
                         }else if (getLoginResponse.getTokenCompany() != null){
                             PreferenceUtils.saveCompanyToken(LoginActivity.this, getLoginResponse.getTokenCompany());
                             PreferenceUtils.saveCompanyLogin(LoginActivity.this , true);
+                            token = getLoginResponse.getTokenCompany();
                         }
 
                         if (checked){
@@ -161,14 +174,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             PreferenceUtils.savePassword(LoginActivity.this , "");
                         }
 
-
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                        Animatoo.animateSwipeLeft(LoginActivity.this);
+                        sendDeviceToken();
 
                     }else if (status.equalsIgnoreCase("false")){
                         Toasty.error(LoginActivity.this, getLoginResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                    reloadDialog.dismiss();
+
                 }
 
                 @Override
@@ -178,6 +189,35 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 }
             });
         }
+    }
+
+
+    public void sendDeviceToken(){
+        convertDaraToJsonToken();
+        SendDeviceTokenApi sendDeviceTokenApi = APIClient.getClient(SERVER_API_TEST).create(SendDeviceTokenApi.class);
+        Call<GetSendDeviceTokenResponse> getSendDeviceTokenResponseCall;
+        if (PreferenceUtils.getCompanyLogin(this)){
+            getSendDeviceTokenResponseCall = sendDeviceTokenApi.sendDeviceTokenResponsecompany(device_token_post);
+        }else {
+            getSendDeviceTokenResponseCall = sendDeviceTokenApi.sendDeviceTokenResponse(device_token_post);
+        }
+        getSendDeviceTokenResponseCall.enqueue(new Callback<GetSendDeviceTokenResponse>() {
+            @Override
+            public void onResponse(Call<GetSendDeviceTokenResponse> call, Response<GetSendDeviceTokenResponse> response) {
+                GetSendDeviceTokenResponse getSendDeviceTokenResponse = response.body();
+                if (getSendDeviceTokenResponse.getSuccess().equalsIgnoreCase("true")){
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    Animatoo.animateSwipeLeft(LoginActivity.this);
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetSendDeviceTokenResponse> call, Throwable t) {
+                Toasty.error(LoginActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
     }
 
 

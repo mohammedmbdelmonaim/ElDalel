@@ -15,6 +15,7 @@ public class BasketProducts {
         this.item_count = item_count;
     }
 
+
     public String getCart_id() {
         return cart_id;
     }

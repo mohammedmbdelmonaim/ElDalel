@@ -234,7 +234,7 @@ public class AddNewAddressFragment extends Fragment {
         address_add_postal_code_edittext.setText(args.getString("postal_code"));
         address_add_mobile_edittext.setText(args.getString("mobile"));
 
-        Locale locale = ChangeLang.getLocale(getResources());
+        Locale locale = ChangeLang.getLocale(getContext().getResources());
         String loo = locale.getLanguage();
         if (loo.equalsIgnoreCase("ar")){
             lang = "arabic";
@@ -276,7 +276,12 @@ public class AddNewAddressFragment extends Fragment {
             convertDaraToJson();
             address_post.put("id", String.valueOf(address_id));
             EditAddressApi editAddressApi = APIClient.getClient(SERVER_API_TEST).create(EditAddressApi.class);
-            Call<GetAddAddressResponse> getEditAddressResponseCall = editAddressApi.editAddressApi(address_post);
+            Call<GetAddAddressResponse> getEditAddressResponseCall;
+            if (PreferenceUtils.getCompanyLogin(getActivity())){
+                getEditAddressResponseCall = editAddressApi.editAddressApicompany(address_post);
+            }else {
+                getEditAddressResponseCall = editAddressApi.editAddressApi(address_post);
+            }
             getEditAddressResponseCall.enqueue(new Callback<GetAddAddressResponse>() {
                 @Override
                 public void onResponse(Call<GetAddAddressResponse> call, Response<GetAddAddressResponse> response) {
@@ -370,7 +375,12 @@ public class AddNewAddressFragment extends Fragment {
             convertDaraToJson();
 
             AddAddressApi addAddressApi = APIClient.getClient(SERVER_API_TEST).create(AddAddressApi.class);
-            Call<GetAddAddressResponse> getAddAddressResponseCall = addAddressApi.getAddressApi(address_post);
+            Call<GetAddAddressResponse> getAddAddressResponseCall;
+            if (PreferenceUtils.getCompanyLogin(getActivity())){
+                getAddAddressResponseCall = addAddressApi.getAddressApicompany(address_post);
+            }else {
+                getAddAddressResponseCall = addAddressApi.getAddressApi(address_post);
+            }
             getAddAddressResponseCall.enqueue(new Callback<GetAddAddressResponse>() {
                 @Override
                 public void onResponse(Call<GetAddAddressResponse> call, Response<GetAddAddressResponse> response) {
@@ -425,7 +435,7 @@ public class AddNewAddressFragment extends Fragment {
                 GetCountries getCountries = response.body();
                 int code = Integer.parseInt(getCountries.getCode());
                 if (code == 200) {
-                    Locale locale = ChangeLang.getLocale(getResources());
+                    Locale locale = ChangeLang.getLocale(getContext().getResources());
                     String loo = locale.getLanguage();
                     if (loo.equalsIgnoreCase("en")) {
                         for (int i = 0; i < getCountries.getData().getCountries().size(); i++) { //category loop
@@ -480,7 +490,7 @@ public class AddNewAddressFragment extends Fragment {
                 GetRegions getRegions = response.body();
                 int code = Integer.parseInt(getRegions.getCode());
                 if (code == 200) {
-                    Locale locale = ChangeLang.getLocale(getResources());
+                    Locale locale = ChangeLang.getLocale(getContext().getResources());
                     String loo = locale.getLanguage();
                     if (loo.equalsIgnoreCase("en")) {
                         for (int i = 0; i < getRegions.getData().getSubsidiaries().size(); i++) { //category loop
@@ -534,7 +544,7 @@ public class AddNewAddressFragment extends Fragment {
             @Override
             public void onResponse(Call<GetCities> call, Response<GetCities> response) {
                 GetCities getCities = response.body();
-                Locale locale = ChangeLang.getLocale(getResources());
+                Locale locale = ChangeLang.getLocale(getContext().getResources());
                 String loo = locale.getLanguage();
                 if (loo.equalsIgnoreCase("en")) {
                     for (int i = 0; i < getCities.getCities().size(); i++) { //category loop

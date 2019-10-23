@@ -267,7 +267,7 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
     private ArrayList<ProductsCategory> getProductsFromResponse(List<GetProducts.Data> productsResponse) {
         ArrayList<ProductsCategory> products = new ArrayList<>();
 
-        Locale locale = ChangeLang.getLocale(getResources());
+        Locale locale = ChangeLang.getLocale(getContext().getResources());
         String loo = locale.getLanguage();
 
         if (loo.equalsIgnoreCase("ar")) {
@@ -354,7 +354,12 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
         reloadDialog.show();
         prepareLikeMap(id);
         AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
-        Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(likePost);
+        Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
+        if (PreferenceUtils.getCompanyLogin(getActivity())) {
+            getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(likePost);
+        }else {
+            getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(likePost);
+        }
         getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
             @Override
             public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
@@ -377,7 +382,13 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
     public void onAddToProductCategory3Cart(int id, int position) {
         prepareCartMap(id);
         AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
-        Call<GetAddToCardResponse> getAddToCardResponseCall = addToCardApi.getAddToFavourite(cartPost);
+        Call<GetAddToCardResponse> getAddToCardResponseCall;
+        if (PreferenceUtils.getCompanyLogin(getActivity())) {
+            cartPost.put("language" , "arabic");
+            getAddToCardResponseCall = addToCardApi.getAddToCartcompany(cartPost);
+        }else {
+            getAddToCardResponseCall = addToCardApi.getAddToCart(cartPost);
+        }
         getAddToCardResponseCall.enqueue(new Callback<GetAddToCardResponse>() {
             @Override
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {

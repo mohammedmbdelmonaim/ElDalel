@@ -12,4 +12,7 @@ public interface MakeOrderApi {
 
     @POST("user/make/order")
     Call<GetMakeOrderResponse> makeOrderResponse(@Body Map<String, String> partMap);
+
+    @POST("company/make/order")
+    Call<GetMakeOrderResponse> makeOrderResponsecompany(@Body Map<String, String> partMap);
 }

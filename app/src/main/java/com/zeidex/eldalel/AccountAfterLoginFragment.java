@@ -34,6 +34,12 @@ public class AccountAfterLoginFragment extends androidx.fragment.app.Fragment im
     @BindView(R.id.ragment_account_after_login_pay_linear)
     LinearLayoutCompat fragment_account_after_login_pay_linear;
 
+    @BindView(R.id.fragment_account_after_login_wallet_linear)
+    LinearLayoutCompat fragment_account_after_login_wallet_linear;
+
+    @BindView(R.id.fragment_account_after_login_addresses_linear)
+    LinearLayoutCompat fragment_account_after_login_addresses_linear;
+
 
 
 
@@ -59,6 +65,12 @@ public class AccountAfterLoginFragment extends androidx.fragment.app.Fragment im
     }
 
     public void findViews(){
+
+        if (PreferenceUtils.getCompanyLogin(getActivity())) {
+            fragment_account_after_login_addresses_linear.setVisibility(View.GONE);
+            fragment_account_after_login_wallet_linear.setVisibility(View.GONE);
+        }
+
         Fragment fragment = new FragmentAccountHelpers();
         getFragmentManager().beginTransaction().replace(R.id.fragment_account_after_login_getHelers , fragment).commit();
 
@@ -67,6 +79,7 @@ public class AccountAfterLoginFragment extends androidx.fragment.app.Fragment im
         fragment_account_after_login_orders_linear.setOnClickListener(this);
         fragment_account_after_login_likes_linear.setOnClickListener(this);
         fragment_account_after_login_pay_linear.setOnClickListener(this);
+        fragment_account_after_login_wallet_linear.setOnClickListener(this);
     }
 
     @Override
@@ -101,6 +114,11 @@ public class AccountAfterLoginFragment extends androidx.fragment.app.Fragment im
             case R.id.ragment_account_after_login_pay_linear:{
 //                startActivity(new Intent(getActivity(), PaymentActivity.class));
 //                Animatoo.animateSwipeLeft(getActivity());
+                break;
+            }
+            case R.id.fragment_account_after_login_wallet_linear:{
+                startActivity(new Intent(getActivity(), WalletActivity.class));
+                Animatoo.animateSwipeLeft(getActivity());
                 break;
             }
         }

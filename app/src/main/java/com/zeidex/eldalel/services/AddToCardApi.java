@@ -11,5 +11,8 @@ import retrofit2.http.POST;
 public interface AddToCardApi {
 
     @POST("user/add/to/cart")
-    Call<GetAddToCardResponse> getAddToFavourite(@Body Map<String, String> partMap);
+    Call<GetAddToCardResponse> getAddToCart(@Body Map<String, String> partMap);
+
+    @POST("company/add/to/cart")
+    Call<GetAddToCardResponse> getAddToCartcompany(@Body Map<String, String> partMap);
 }

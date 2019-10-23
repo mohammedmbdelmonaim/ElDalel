@@ -12,4 +12,7 @@ public interface SendCodeToMobileApi {
 
     @POST("user/send/code/by/message")
     Call<GetSendCodeResponse> sendCode(@Body Map<String, String> partMap);
+
+    @POST("company/send/code/by/message")
+    Call<GetSendCodeResponse> sendCodecompany(@Body Map<String, String> partMap);
 }

@@ -7,6 +7,7 @@
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/block_constraint_register"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/splash"
@@ -322,6 +323,7 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dimen_55dp"
                 android:layout_weight="1"
+                android:textAlignment="viewStart"
                 android:fontFamily="@font/cairo_regular"
                 android:textColor="#AAAAAA"
                 android:textSize="@dimen/dimen_15sp" />
@@ -348,6 +350,7 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dimen_55dp"
                 android:layout_weight="1"
+                android:textAlignment="viewStart"
                 android:fontFamily="@font/cairo_regular"
                 android:textColor="#AAAAAA"
                 android:textSize="@dimen/dimen_15sp" />
@@ -373,6 +376,7 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dimen_55dp"
                 android:layout_weight="1"
+                android:textAlignment="viewStart"
                 android:fontFamily="@font/cairo_regular"
                 android:textColor="#AAAAAA"
                 android:textSize="@dimen/dimen_15sp" />

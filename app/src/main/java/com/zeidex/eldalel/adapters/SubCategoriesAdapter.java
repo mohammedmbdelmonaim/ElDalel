@@ -122,12 +122,12 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
                         notifyItemChanged(selectedPos);
                         selectedPos = getAdapterPosition();
                         notifyItemChanged(selectedPos);
-                        mSubCategoryOperation.onClickSubCategory(subcategoryId, subcategoryName);
+                        mSubCategoryOperation.onClickSubCategory(subcategoryId, subcategoryName , getAdapterPosition());
                     } else {
                         if (subCategories.get(getAdapterPosition()).getListSubSubCategory() != null && subCategories.get(getAdapterPosition()).getListSubSubCategory().size() > 0) {
-                            mSubCategoryOperation.onClickSubCategoryWithSubSub(subCategories.get(getAdapterPosition()).getListSubSubCategory(), subcategoryName, subcategoryId);
+                            mSubCategoryOperation.onClickSubCategoryWithSubSub(subCategories.get(getAdapterPosition()).getListSubSubCategory(), subcategoryName, subcategoryId , getAdapterPosition());
                         } else {
-                            mSubCategoryOperation.onClickSubCategory(subcategoryId, subcategoryName);
+                            mSubCategoryOperation.onClickSubCategory(subcategoryId, subcategoryName , getAdapterPosition());
                         }
                     }
                 }
@@ -136,8 +136,8 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
     }
 
     public interface SubCategoryOperation {
-        void onClickSubCategory(int subcategoryId, String subcategoryName);
+        void onClickSubCategory(int subcategoryId, String subcategoryName , int pos);
 
-        void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subcategoryName, int subcategoryId);
+        void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subcategoryName, int subcategoryId , int pos);
     }
 }

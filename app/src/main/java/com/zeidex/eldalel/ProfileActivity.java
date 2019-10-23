@@ -75,6 +75,12 @@ public class ProfileActivity extends BaseActivity {
     @BindView(R.id.activity_profile_phone_edittext)
     AppCompatEditText activity_profile_phone_edittext;
 
+    @BindView(R.id.activity_profile_name_company_edittext)
+    AppCompatEditText activity_profile_name_company_edittext;
+
+    @BindView(R.id.activity_profile_responsible_edittext)
+    AppCompatEditText activity_profile_responsible_edittext;
+
     @BindView(R.id.activity_profile_update_text)
     AppCompatTextView activity_profile_update_text;
 
@@ -83,6 +89,18 @@ public class ProfileActivity extends BaseActivity {
 
     @BindView(R.id.activity_profile_language_label)
     AppCompatTextView activity_profile_language_label;
+
+    @BindView(R.id.activity_profile_name_label)
+    LinearLayoutCompat activity_profile_name_label;
+
+    @BindView(R.id.activity_profile_name_company_label)
+    LinearLayoutCompat activity_profile_name_company_label;
+
+    @BindView(R.id.activity_profile_responsible_label)
+    LinearLayoutCompat activity_profile_responsible_label;
+
+    @BindView(R.id.activity_profile_last_name_label)
+    LinearLayoutCompat activity_profile_last_name_label;
 
     String token;
     String lang;
@@ -116,26 +134,41 @@ public class ProfileActivity extends BaseActivity {
 
         if (PreferenceUtils.getCompanyLogin(ProfileActivity.this)) {
             token = PreferenceUtils.getCompanyToken(ProfileActivity.this);
+            activity_profile_last_name_label.setVisibility(View.GONE);
+            activity_profile_name_label.setVisibility(View.GONE);
+
         } else if (PreferenceUtils.getUserLogin(ProfileActivity.this)) {
             token = PreferenceUtils.getUserToken(ProfileActivity.this);
+            activity_profile_name_company_label.setVisibility(View.GONE);
+            activity_profile_responsible_label.setVisibility(View.GONE);
         }
+
 
         Locale locale = ChangeLang.getLocale(getResources());
         String loo = locale.getLanguage();
         if (loo.equalsIgnoreCase("ar")) {
             lang = "arabic";
+            old_lang = "arabic";
+
             activity_profile_language_label.setText(getString(R.string.radio_ar_register));
         } else if (loo.equalsIgnoreCase("en")) {
             lang = "english";
+            old_lang = "english";
             activity_profile_language_label.setText(getString(R.string.radio_en_register));
         }
         onLoadProfile();
     }
-
+    String old_lang;
     private void onLoadProfile() {
         reloadDialog.show();
         ProfileInfoApi profileInfoApi = APIClient.getClient(SERVER_API_TEST).create(ProfileInfoApi.class);
-        Call<GetProfileInfo> getProfileInfoCall = profileInfoApi.getProfileInfo(token);
+        Call<GetProfileInfo> getProfileInfoCall ;
+        if (PreferenceUtils.getCompanyLogin(this)){
+            getProfileInfoCall = profileInfoApi.getProfileInfocompany(token);
+        }else {
+            getProfileInfoCall = profileInfoApi.getProfileInfo(token);
+        }
+
         getProfileInfoCall.enqueue(new Callback<GetProfileInfo>() {
             @Override
             public void onResponse(Call<GetProfileInfo> call, Response<GetProfileInfo> response) {
@@ -143,11 +176,28 @@ public class ProfileActivity extends BaseActivity {
                 id_city = getProfileInfo.getCityId();
                 id_region = getProfileInfo.getSubsidiaryId();
                 id_country = getProfileInfo.getCountryId();
+
+                if (getProfileInfo.getFirstName() !=  null)
                 activity_profile_name_edittext.setText(getProfileInfo.getFirstName());
+
+                if (getProfileInfo.getLastName() !=  null)
                 activity_profile_last_name_edittext.setText(getProfileInfo.getLastName());
+
                 activity_profile_email_edittext.setText(getProfileInfo.getEmail());
                 activity_profile_phone_edittext.setText(getProfileInfo.getMobile());
+
+                if (getProfileInfo.getAddressHome() != null)
                 activity_profile_address_edittext.setText(getProfileInfo.getAddressHome());
+
+                if (getProfileInfo.getAddress() != null)
+                    activity_profile_address_edittext.setText(getProfileInfo.getAddress());
+
+                if (getProfileInfo.getName() != null)
+                    activity_profile_name_company_edittext.setText(getProfileInfo.getName());
+
+                if (getProfileInfo.getResponsible() != null)
+                    activity_profile_responsible_edittext.setText(getProfileInfo.getResponsible());
+
                 getCountries();
             }
 
@@ -161,7 +211,7 @@ public class ProfileActivity extends BaseActivity {
 
     @OnClick(R.id.activity_profile_update_text)
     public void updateProfile() {
-        if (id_country == -1) {
+         if (id_country == -1) {
             Toasty.error(ProfileActivity.this, getString(R.string.choose_country), Toast.LENGTH_LONG).show();
             return;
         }
@@ -175,27 +225,66 @@ public class ProfileActivity extends BaseActivity {
             Toasty.error(ProfileActivity.this, getString(R.string.choose_city), Toast.LENGTH_LONG).show();
             return;
         }
-        final boolean fieldsOK = validate(new EditText[]{activity_profile_address_edittext, activity_profile_name_edittext, activity_profile_last_name_edittext, activity_profile_email_edittext, activity_profile_phone_edittext});
+        final boolean fieldsOK;
+        if (PreferenceUtils.getCompanyLogin(this)) {
+             fieldsOK = validate(new EditText[]{activity_profile_address_edittext, activity_profile_name_company_edittext, activity_profile_responsible_edittext, activity_profile_email_edittext, activity_profile_phone_edittext});
+        }else{
+             fieldsOK = validate(new EditText[]{activity_profile_address_edittext, activity_profile_name_edittext, activity_profile_last_name_edittext, activity_profile_email_edittext, activity_profile_phone_edittext});
+
+        }
         if (fieldsOK) {
             reloadDialog.show();
             UpdateProfileApi updateProfileApi = APIClient.getClient(SERVER_API_TEST).create(UpdateProfileApi.class);
-            Call<GetUpdateProfileResponse> getUpdateProfileResponseCall = updateProfileApi.updateProfile(token, lang, activity_profile_name_edittext.getText().toString(), activity_profile_last_name_edittext.getText().toString(), id_country, id_city, id_region, activity_profile_address_edittext.getText().toString(), activity_profile_phone_edittext.getText().toString(), activity_profile_email_edittext.getText().toString());
+            Call<GetUpdateProfileResponse> getUpdateProfileResponseCall;
+            if (PreferenceUtils.getCompanyLogin(this)){
+                getUpdateProfileResponseCall = updateProfileApi.updateProfilecompany(token, lang, activity_profile_name_company_edittext.getText().toString(), activity_profile_responsible_edittext.getText().toString(), id_country, id_city, id_region, activity_profile_address_edittext.getText().toString(), activity_profile_phone_edittext.getText().toString(), activity_profile_email_edittext.getText().toString());
+            }else {
+                getUpdateProfileResponseCall = updateProfileApi.updateProfile(token, lang, activity_profile_name_edittext.getText().toString(), activity_profile_last_name_edittext.getText().toString(), id_country, id_city, id_region, activity_profile_address_edittext.getText().toString(), activity_profile_phone_edittext.getText().toString(), activity_profile_email_edittext.getText().toString());
+            }
             getUpdateProfileResponseCall.enqueue(new Callback<GetUpdateProfileResponse>() {
                 @Override
                 public void onResponse(Call<GetUpdateProfileResponse> call, Response<GetUpdateProfileResponse> response) {
                     GetUpdateProfileResponse getUpdateProfileResponse = response.body();
-                    if (!getUpdateProfileResponse.getStatus()) {
-                        StringBuilder errors = new StringBuilder();
-                        for (int i = 0; i < getUpdateProfileResponse.getData().getError().size(); i++) {
-                            errors.append(getUpdateProfileResponse.getData().getError().get(i) + " , ");
+                    if (getUpdateProfileResponse.getSuccess() != null) {
+                        if (getUpdateProfileResponse.getSuccess()) {
+                            if (!old_lang.equalsIgnoreCase(lang)) {
+                                if (lang.equalsIgnoreCase("english")) {
+                                    ChangeLang.setNewLocale(ProfileActivity.this, "en");
+                                } else {
+                                    ChangeLang.setNewLocale(ProfileActivity.this, "ar");
+                                }
+                            } else {
+
+                            }
+                            Toasty.success(ProfileActivity.this, getString(R.string.update_profile_success_msg), Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+                            Animatoo.animateSwipeLeft(ProfileActivity.this);
                         }
-                        Toasty.error(ProfileActivity.this, errors, Toast.LENGTH_LONG).show();
-                    } else {
-                        Toasty.success(ProfileActivity.this, getString(R.string.update_profile_success_msg), Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(ProfileActivity.this , MainActivity.class));
-                        Animatoo.animateSwipeLeft(ProfileActivity.this);
                     }
-                    reloadDialog.dismiss();
+                    if (getUpdateProfileResponse.getStatus() != null) {
+                        if (!getUpdateProfileResponse.getStatus()) {
+                            StringBuilder errors = new StringBuilder();
+                            for (int i = 0; i < getUpdateProfileResponse.getData().getError().size(); i++) {
+                                errors.append(getUpdateProfileResponse.getData().getError().get(i) + " , ");
+                            }
+                            Toasty.error(ProfileActivity.this, errors, Toast.LENGTH_LONG).show();
+                        } else {
+                            if (!old_lang.equalsIgnoreCase(lang)) {
+                                if (lang.equalsIgnoreCase("english")) {
+                                    ChangeLang.setNewLocale(ProfileActivity.this, "en");
+                                } else {
+                                    ChangeLang.setNewLocale(ProfileActivity.this, "ar");
+                                }
+                            } else {
+
+                            }
+                            Toasty.success(ProfileActivity.this, getString(R.string.update_profile_success_msg), Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+                            Animatoo.animateSwipeLeft(ProfileActivity.this);
+                        }
+                    }
+                        reloadDialog.dismiss();
+
                 }
 
                 @Override
@@ -238,7 +327,12 @@ public class ProfileActivity extends BaseActivity {
                 final boolean fieldsOK = validate(new EditText[]{dialog_change_pass_old_edittext, dialog_change_pass_new_edittext, dialog_change_pass_new_confirm_edittext});
                 if (fieldsOK) {
                     UpdatePasswordApi updatePasswordApi = APIClient.getClient(SERVER_API_TEST).create(UpdatePasswordApi.class);
-                    Call<GetUpdatePasswordResponse> getUpdatePasswordResponseCall = updatePasswordApi.editPasswordsApi(token, lang, dialog_change_pass_old_edittext.getText().toString(), dialog_change_pass_new_edittext.getText().toString(), dialog_change_pass_new_confirm_edittext.getText().toString(), PreferenceUtils.getEmail(ProfileActivity.this));
+                    Call<GetUpdatePasswordResponse> getUpdatePasswordResponseCall;
+                    if (PreferenceUtils.getCompanyLogin(ProfileActivity.this)){
+                        getUpdatePasswordResponseCall = updatePasswordApi.editPasswordsApicompany(token, lang, dialog_change_pass_old_edittext.getText().toString(), dialog_change_pass_new_edittext.getText().toString(), dialog_change_pass_new_confirm_edittext.getText().toString(), PreferenceUtils.getEmail(ProfileActivity.this));
+                    }else {
+                        getUpdatePasswordResponseCall = updatePasswordApi.editPasswordsApi(token, lang, dialog_change_pass_old_edittext.getText().toString(), dialog_change_pass_new_edittext.getText().toString(), dialog_change_pass_new_confirm_edittext.getText().toString(), PreferenceUtils.getEmail(ProfileActivity.this));
+                    }
                     getUpdatePasswordResponseCall.enqueue(new Callback<GetUpdatePasswordResponse>() {
                         @Override
                         public void onResponse(Call<GetUpdatePasswordResponse> call, Response<GetUpdatePasswordResponse> response) {

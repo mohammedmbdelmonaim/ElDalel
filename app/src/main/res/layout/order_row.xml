@@ -59,7 +59,7 @@
                 android:fontFamily="@font/cairo_bold"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <androidx.appcompat.widget.LinearLayoutCompa
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -79,7 +79,7 @@
                 android:textColor="#047AC0"
                 android:textSize="@dimen/dimen_12sp"
                 android:fontFamily="@font/cairo_bold"/>
-        </androidx.appcompat.widget.LinearLayoutCompa>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.constraintlayout.widget.ConstraintLayout>

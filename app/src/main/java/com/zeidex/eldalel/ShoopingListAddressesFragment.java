@@ -111,7 +111,63 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
                 break;
             }
             case R.id.fragment_shooping_list_addresses_text_next: {
-                ((PaymentActivity) getActivity()).goToPayidFragment();
+                Locale locale = ChangeLang.getLocale(getContext().getResources());
+                String loo = locale.getLanguage();
+                if (loo.equalsIgnoreCase("en")) {
+                    lang = "english";
+                    convertDaraToJson("english" , address_id);
+                }else{
+                    lang = "arabic";
+                    convertDaraToJson("arabic" , address_id);
+                }
+                ChangeAddressToPrimaryApi changeAddressToPrimaryApi = APIClient.getClient(SERVER_API_TEST).create(ChangeAddressToPrimaryApi.class);
+                Call<GetChangeAddressResponse> getChangeAddressResponseCall;
+                if (PreferenceUtils.getCompanyLogin(getActivity())){
+                    getChangeAddressResponseCall = changeAddressToPrimaryApi.updateAddressApicompany(update_post);
+                }else {
+                    getChangeAddressResponseCall = changeAddressToPrimaryApi.updateAddressApi(update_post);
+                }
+                getChangeAddressResponseCall.enqueue(new Callback<GetChangeAddressResponse>() {
+                    @Override
+                    public void onResponse(Call<GetChangeAddressResponse> call, Response<GetChangeAddressResponse> response) {
+                        GetChangeAddressResponse getChangeAddressResponse = response.body();
+                        if (getChangeAddressResponse.isSuccess()){
+                            if (getChangeAddressResponse.getVerify() == 0) {
+                                Fragment fragment = new PaymentPhoneNumberFragment();
+                                Bundle args = new Bundle();
+                                args.putString("mobile", mobile);
+                                args.putString("from", state_addresses);
+                                fragment.setArguments(args);
+                                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                                ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
+                                if (state_addresses.equalsIgnoreCase("address")) {
+                                    ft.replace(R.id.activity_address_constraint, fragment, fragment.getTag());
+                                } else if (state_addresses.equalsIgnoreCase("payment")) {
+                                    ft.replace(R.id.payment_constrant, fragment, fragment.getTag());
+                                }
+
+//                        ft.addToBackStack(null);
+                                ft.commit();
+                            }else{
+                                ((PaymentActivity) getActivity()).goToPayidFragment();
+                            }
+
+                        }else {
+                            String errors = "";
+                            for (String errorText : getChangeAddressResponse.getError()){
+                                errors += errorText;
+                            }
+                            Toasty.error(getActivity(), errors, Toast.LENGTH_LONG).show();
+                        }
+                        reloadDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onFailure(Call<GetChangeAddressResponse> call, Throwable t) {
+                        Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                        reloadDialog.dismiss();
+                    }
+                });
                 break;
             }
         }
@@ -139,11 +195,17 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
         showDialog();
         onLoadPage();
     }
-
+    String mobile;
     private void onLoadPage() {
         reloadDialog.show();
         AddressAPI addressAPI = APIClient.getClient(SERVER_API_TEST).create(AddressAPI.class);
-        addressAPI.getAllAddresses(token).enqueue(new Callback<GetAddresses>() {
+        Call<GetAddresses> getAllAddresses;
+        if (PreferenceUtils.getCompanyLogin(getActivity())){
+            getAllAddresses = addressAPI.getAllAddressescompany(token);
+        }else {
+            getAllAddresses = addressAPI.getAllAddresses(token);
+        }
+       getAllAddresses.enqueue(new Callback<GetAddresses>() {
             @Override
             public void onResponse(Call<GetAddresses> call, Response<GetAddresses> response) {
                 if (response.body().getPrimaryAddress() == null && response.body().getAddresses().size() == 0){
@@ -155,6 +217,7 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
                     addresses.add(response.body().getPrimaryAddress());
                     addresses.addAll(response.body().getAddresses());
                     address_id = response.body().getPrimaryAddress().getId();
+                    mobile = response.body().getPrimaryAddress().getMobile() ;
                     addressesAdapter = new AddressesAdapter(getActivity() , addresses , state_addresses);
                     addressesAdapter.setAddressOperation(ShoopingListAddressesFragment.this);
                     fragment_shooping_list_addresses_recycler.setAdapter(addressesAdapter);
@@ -190,7 +253,7 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
         update_post.put("language", lang);
         update_post.put("token", token);
     }
-
+    int verify = 0;
     @Override
     public void onClickAddress(int position, int address_id) {
         if (changeAddress != null){
@@ -215,7 +278,7 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
                 public void onClick(View v) {
                     changeAddress.dismiss();
                     reloadDialog.show();
-                    Locale locale = ChangeLang.getLocale(getResources());
+                    Locale locale = ChangeLang.getLocale(getContext().getResources());
                     String loo = locale.getLanguage();
                     if (loo.equalsIgnoreCase("en")) {
                         lang = "english";
@@ -225,24 +288,29 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
                         convertDaraToJson("arabic" , address_id);
                     }
                     ChangeAddressToPrimaryApi changeAddressToPrimaryApi = APIClient.getClient(SERVER_API_TEST).create(ChangeAddressToPrimaryApi.class);
-                    Call<GetChangeAddressResponse> getChangeAddressResponseCall = changeAddressToPrimaryApi.updateAddressApi(update_post);
+                    Call<GetChangeAddressResponse> getChangeAddressResponseCall;
+                    if (PreferenceUtils.getCompanyLogin(getActivity())){
+                        getChangeAddressResponseCall = changeAddressToPrimaryApi.updateAddressApicompany(update_post);
+                    }else {
+                        getChangeAddressResponseCall = changeAddressToPrimaryApi.updateAddressApi(update_post);
+                    }
                     getChangeAddressResponseCall.enqueue(new Callback<GetChangeAddressResponse>() {
                         @Override
                         public void onResponse(Call<GetChangeAddressResponse> call, Response<GetChangeAddressResponse> response) {
                             GetChangeAddressResponse getChangeAddressResponse = response.body();
                             if (getChangeAddressResponse.isSuccess()){
                                 Toasty.success(getActivity(), getString(R.string.change_primary_address_success), Toast.LENGTH_LONG).show();
-                                if (getChangeAddressResponse.getVerify() == 0){
+                                if (getChangeAddressResponse.getVerify() == 0) {
                                     Fragment fragment = new PaymentPhoneNumberFragment();
                                     Bundle args = new Bundle();
                                     args.putString("mobile", addresses.get(position).getMobile());
-                                    args.putString("from" , state_addresses);
+                                    args.putString("from", state_addresses);
                                     fragment.setArguments(args);
                                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                                     ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
-                                    if (state_addresses.equalsIgnoreCase("address")){
+                                    if (state_addresses.equalsIgnoreCase("address")) {
                                         ft.replace(R.id.activity_address_constraint, fragment, fragment.getTag());
-                                    }else if(state_addresses.equalsIgnoreCase("payment")){
+                                    } else if (state_addresses.equalsIgnoreCase("payment")) {
                                         ft.replace(R.id.payment_constrant, fragment, fragment.getTag());
                                     }
 

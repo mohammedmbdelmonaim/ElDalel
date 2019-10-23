@@ -141,8 +141,8 @@
                     android:id="@+id/fragment_basket_total_price_products_text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="@dimen/dimen_40dp"
-                    android:fontFamily="@font/cairo_regular"
+                    android:layout_marginEnd="@dimen/dimen_5dp"
+                    android:fontFamily="@font/cairo_bold"
                     android:text="0"
                     android:textAlignment="viewStart"
                     android:textColor="#606060"
@@ -195,9 +195,9 @@
                     android:id="@+id/fragment_basket_total_shipments_text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:fontFamily="@font/cairo_regular"
+                     android:layout_marginEnd="@dimen/dimen_5dp"
+                     android:fontFamily="@font/cairo_bold"
                     android:text="0"
-                    android:layout_marginEnd="@dimen/dimen_40dp"
                     android:textColor="#606060"
                     android:textSize="@dimen/dimen_12sp" />
 
@@ -241,9 +241,9 @@
                     android:id="@+id/fragment_basket_tax_text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:fontFamily="@font/cairo_regular"
                     android:text="0"
-                    android:layout_marginEnd="@dimen/dimen_40dp"
+                     android:layout_marginEnd="@dimen/dimen_5dp"
+                     android:fontFamily="@font/cairo_bold"
                     android:textColor="#606060"
                     android:textSize="@dimen/dimen_12sp" />
 
@@ -297,13 +297,13 @@
                     android:textColor="#606060"
                     android:textSize="@dimen/dimen_12sp" />
 
-                <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@font/cairo_bold"
-                    android:text="@string/currancy_label"
-                    android:textColor="#606060"
-                    android:textSize="@dimen/dimen_12sp" />
+                <!--<androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:fontFamily="@font/cairo_bold"-->
+                    <!--android:text="@string/currancy_label"-->
+                    <!--android:textColor="#606060"-->
+                    <!--android:textSize="@dimen/dimen_12sp" />-->
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 

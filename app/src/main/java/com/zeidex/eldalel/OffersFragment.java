@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.zeidex.eldalel.adapters.OffersAdapter;
 import com.zeidex.eldalel.models.Subcategory;
+import com.zeidex.eldalel.models.Subsubcategory;
 import com.zeidex.eldalel.response.GetOffersCategories;
 import com.zeidex.eldalel.services.OffersCategoriesAPI;
 import com.zeidex.eldalel.utils.APIClient;
@@ -142,16 +143,20 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
         reloadDialog.setCancelable(false);
         reloadDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
-
+    ArrayList<Subsubcategory> subsubcategories;
     @Override
     public void onClickOffer(int position) {
+        subsubcategories = new ArrayList<>();
         GetOffersCategories.Category category = categories.get(position);
         List<GetOffersCategories.Subcategory> subCategories = category.getSubcategories();
 
         ArrayList<Subcategory> subCategoriesModel = new ArrayList<>();
         for (int i = 0; i < subCategories.size(); i++) {
+            for (GetOffersCategories.Subsubcategory subsubcategory : subCategories.get(i).getSubsubcategories()){
+                subsubcategories.add(new Subsubcategory(subsubcategory.getId() , subsubcategory.getName() , subsubcategory.getNameAr()));
+            }
             subCategoriesModel.add(new Subcategory(subCategories.get(i).getId(), subCategories.get(i).getNameAr(),
-                    subCategories.get(i).getName(), ""));
+                    subCategories.get(i).getName(), subCategories.get(i).getPhoto() , subsubcategories));
         }
 
 
@@ -159,7 +164,7 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
         intent.putParcelableArrayListExtra(SUBCATEGORIES_INTENT_EXTRA_KEY, subCategoriesModel);
         intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, category.getId());
 
-        Locale locale = ChangeLang.getLocale(getResources());
+        Locale locale = ChangeLang.getLocale(getContext().getResources());
         String loo = locale.getLanguage();
         if (loo.equalsIgnoreCase("ar")) {
             intent.putExtra(CATEGORY_NAME_INTENT_EXTRA, category.getNameAr());

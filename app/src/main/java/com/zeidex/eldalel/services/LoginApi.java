@@ -1,7 +1,6 @@
 package com.zeidex.eldalel.services;
 
 import com.zeidex.eldalel.response.GetLoginResponse;
-import com.zeidex.eldalel.response.GetRegisterResponse;
 
 import java.util.Map;
 

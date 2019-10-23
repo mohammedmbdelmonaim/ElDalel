@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="175dp"
-    android:background="@android:color/white"
+    android:elevation="4dp"
+    android:background="@drawable/slider_home_bg"
     android:padding="@dimen/dimen_25dp">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/slider_product_image_view"
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -18,7 +19,7 @@
         android:layout_height="match_parent"
         android:layout_weight="0.6">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/slider_product_name_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,7 +33,7 @@
             tools:layout_editor_absoluteX="0dp"
             tools:text="Huawei P9 Lite" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/slider_product_offer_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,7 +46,7 @@
             tools:layout_editor_absoluteX="0dp"
             tools:text="3128 R.S" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/slider_old_price_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,4 +60,4 @@
             tools:text="3300 R.S" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

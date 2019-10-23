@@ -76,7 +76,7 @@ public class FragmentAccountHelpers extends Fragment implements View.OnClickList
     String lang;
 
     public void findViews() {
-        Locale locale = ChangeLang.getLocale(getResources());
+        Locale locale = ChangeLang.getLocale(getContext().getResources());
         String loo = locale.getLanguage();
         if (loo.equalsIgnoreCase("ar")) {
             lang = "arabic";

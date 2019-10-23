@@ -416,14 +416,14 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
 
 
     @Override
-    public void onClickSubCategory(int subcategoryId, String subcategoryName) {
+    public void onClickSubCategory(int subcategoryId, String subcategoryName , int pos) {
         this.subcategoryId = subcategoryId;
         filterMap.put("subcat_id", subcategoryId);
         getSubcategoryProducts(subcategoryId);
     }
 
     @Override
-    public void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subcategoryName, int subcategoryId) {
+    public void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subcategoryName, int subcategoryId , int pos) {
 
     }
 
@@ -439,7 +439,12 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
         reloadDialog.show();
         prepareLikeMap(id);
         AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
-        Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(likePost);
+        Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
+        if (PreferenceUtils.getCompanyLogin(OfferItemActivity.this)) {
+            getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(likePost);
+        }else {
+            getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(likePost);
+        }
         getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
             @Override
             public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
@@ -462,7 +467,14 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
     public void onAddToProductCart(int id, int position) {
         prepareCartMap(id);
         AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
-        Call<GetAddToCardResponse> getAddToCardResponseCall = addToCardApi.getAddToFavourite(cartPost);
+
+        Call<GetAddToCardResponse> getAddToCardResponseCall;
+        if (PreferenceUtils.getCompanyLogin(OfferItemActivity.this)) {
+            cartPost.put("language" , "arabic");
+            getAddToCardResponseCall = addToCardApi.getAddToCartcompany(cartPost);
+        }else {
+            getAddToCardResponseCall = addToCardApi.getAddToCart(cartPost);
+        }
         getAddToCardResponseCall.enqueue(new Callback<GetAddToCardResponse>() {
             @Override
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {

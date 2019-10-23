@@ -76,7 +76,12 @@ public class OrdersActivity extends BaseActivity implements OrdersAdapter.Orders
             token = PreferenceUtils.getUserToken(this);
         }
         ShipmentsApi shipmentsApi = APIClient.getClient(SERVER_API_TEST).create(ShipmentsApi.class);
-        Call<GetShipments> getShipmentsCall = shipmentsApi.getShipments(token);
+        Call<GetShipments> getShipmentsCall;
+        if (PreferenceUtils.getCompanyLogin(OrdersActivity.this)) {
+            getShipmentsCall = shipmentsApi.getShipmentscompany(token);
+        }else {
+            getShipmentsCall = shipmentsApi.getShipments(token);
+        }
         getShipmentsCall.enqueue(new Callback<GetShipments>() {
             @Override
             public void onResponse(Call<GetShipments> call, Response<GetShipments> response) {

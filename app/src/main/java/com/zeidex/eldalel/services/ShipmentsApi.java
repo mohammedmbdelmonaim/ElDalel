@@ -10,4 +10,7 @@ public interface ShipmentsApi {
 
     @GET("user/shipments")
     Call<GetShipments> getShipments(@Query("token") String token);
+
+    @GET("company/shipments")
+    Call<GetShipments> getShipmentscompany(@Query("token") String token);
 }

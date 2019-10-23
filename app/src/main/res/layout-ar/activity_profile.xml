@@ -81,6 +81,82 @@
                     android:textSize="@dimen/dimen_10sp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/activity_profile_name_company_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/row_account"
+                android:elevation="@dimen/dimen_4dp"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/dimen_16dp"
+                android:paddingTop="@dimen/dimen_14dp"
+                android:paddingEnd="@dimen/dimen_16dp"
+                android:paddingBottom="@dimen/dimen_14dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/activity_profile_info_label">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/activity_profile_name_company_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/register_name_company_edittext_label"
+                    android:textAlignment="viewStart"
+                    android:textColor="#606060"
+                    android:textSize="@dimen/dimen_12sp" />
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/activity_profile_name_company_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/dimen_8dp"
+                    android:background="@null"
+                    android:fontFamily="@font/cairo_bold"
+                    android:inputType="text"
+                    android:textAlignment="viewStart"
+                    android:textColor="#AAAAAA"
+                    android:textColorHint="#AAAAAA"
+                    android:textSize="@dimen/dimen_12sp" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/activity_profile_responsible_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/row_account"
+                android:elevation="@dimen/dimen_4dp"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/dimen_16dp"
+                android:paddingTop="@dimen/dimen_14dp"
+                android:paddingEnd="@dimen/dimen_16dp"
+                android:paddingBottom="@dimen/dimen_14dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/activity_profile_name_company_label">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/activity_profile_responsible_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/register_responsible_edittext_hint"
+                    android:textAlignment="viewStart"
+                    android:textColor="#606060"
+                    android:textSize="@dimen/dimen_12sp" />
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/activity_profile_responsible_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/dimen_8dp"
+                    android:background="@null"
+                    android:fontFamily="@font/cairo_bold"
+                    android:inputType="text"
+                    android:textAlignment="viewStart"
+                    android:textColor="#AAAAAA"
+                    android:textColorHint="#AAAAAA"
+                    android:textSize="@dimen/dimen_12sp" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/activity_profile_name_label"
                 android:layout_width="match_parent"
@@ -94,7 +170,7 @@
                 android:paddingBottom="@dimen/dimen_14dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/activity_profile_info_label">
+                app:layout_constraintTop_toBottomOf="@+id/activity_profile_responsible_label">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/activity_profile_name_text"
@@ -312,6 +388,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/dimen_8dp"
+                    android:textAlignment="viewStart"
                     android:fontFamily="@font/cairo_regular"
                     android:textColor="#AAAAAA"
                     android:textSize="@dimen/dimen_12sp" />
@@ -346,6 +423,7 @@
                     android:id="@+id/spinner_activity_profile_region"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textAlignment="viewStart"
                     android:layout_marginTop="@dimen/dimen_8dp"
                     android:fontFamily="@font/cairo_regular"
                     android:textColor="#AAAAAA"
@@ -382,6 +460,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/dimen_8dp"
+                    android:textAlignment="viewStart"
                     android:fontFamily="@font/cairo_regular"
                     android:textColor="#AAAAAA"
                     android:textSize="@dimen/dimen_12sp" />

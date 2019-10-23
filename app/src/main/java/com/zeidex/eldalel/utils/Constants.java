@@ -14,6 +14,7 @@ public class Constants {
     public static final String USERNAME = "user_name";
     public static final String USEREMAIL = "user_email";
     public static final String USERPASSWORD = "user_pass";
+    public static final String COPOUNDATA = "copoun";
     public static final String USERPHONE = "user_phone";
     public static final String USERIMAGE = "user_image";
     public static final String CountOfItemsBasket = "count_items_basket";

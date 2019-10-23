@@ -91,6 +91,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.credit_card_payment_txt)
     AppCompatTextView credit_card_payment_txt;
 
+    @BindView(R.id.fragment_payid_tax_text)
+    AppCompatTextView fragment_payid_tax_text;
+
     @BindView(R.id.credit_card_payment_img)
     AppCompatImageView credit_card_payment_img;
 
@@ -130,8 +133,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
     int shipment_type = 1;
     int shipment_method = 0;
     int address_id = ShoopingListAddressesFragment.address_id;
-    String total_price = BasketFragment.total_price;
-    String total_products = BasketFragment.total_products;
+    String total_price = BasketFragment.totalString;
+    String total_products = BasketFragment.totalwithoutString;
+    String tax = BasketFragment.taxString;
 
 
     @Override
@@ -166,6 +170,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         spinner_address_add_branches_shipment.setItems(branches);
         fragment_payid_total_products_text.setText(total_products);
         fragment_payid_total_price_text.setText(total_price);
+        fragment_payid_tax_text.setText(tax);
         getCountries();
 
         fragment_payid_paying.setOnClickListener(this);
@@ -182,8 +187,8 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             shipment_to_address_txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
             shipment_from_branch_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
         }else{
-            shipment_to_address_txt.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-            shipment_from_branch_txt.setTextColor(getResources().getColor(R.color.colorshipmenttype));
+            shipment_to_address_txt.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
+            shipment_from_branch_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
         }
     }
 
@@ -198,6 +203,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         if (shipment_type == 2) {
             payment_post.put("subsidiary_id", String.valueOf(id_region));
             payment_post.put("showroom_id", String.valueOf(id_branch));
+        }
+        if (!PreferenceUtils.getCoupoun(getActivity()).equalsIgnoreCase("")){
+            payment_post.put("coupon", PreferenceUtils.getCoupoun(getActivity()));
         }
     }
 
@@ -233,7 +241,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                 } else if (PreferenceUtils.getUserLogin(getActivity())) {
                     token = PreferenceUtils.getUserToken(getActivity());
                 }
-                Locale locale = ChangeLang.getLocale(getResources());
+                Locale locale = ChangeLang.getLocale(getContext().getResources());
                 String loo = locale.getLanguage();
                 if (loo.equalsIgnoreCase("ar")){
                     lang = "arabic";
@@ -245,16 +253,23 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
 
                 reloadDialog.show();
                 MakeOrderApi makeOrderApi = APIClient.getClient(SERVER_API_TEST).create(MakeOrderApi.class);
-                Call<GetMakeOrderResponse> getMakeOrderResponseCall = makeOrderApi.makeOrderResponse(payment_post);
+                Call<GetMakeOrderResponse> getMakeOrderResponseCall;
+                if (PreferenceUtils.getCompanyLogin(getActivity())){
+                    getMakeOrderResponseCall = makeOrderApi.makeOrderResponsecompany(payment_post);
+                }else{
+                    getMakeOrderResponseCall = makeOrderApi.makeOrderResponse(payment_post);
+                }
+
                 getMakeOrderResponseCall.enqueue(new Callback<GetMakeOrderResponse>() {
                     @Override
                     public void onResponse(Call<GetMakeOrderResponse> call, Response<GetMakeOrderResponse> response) {
                         GetMakeOrderResponse getMakeOrderResponse = response.body();
                         if (getMakeOrderResponse.getSuccess().equalsIgnoreCase("true")){
                             ((PaymentActivity)getActivity()).goToOrderFragment();
+                            PreferenceUtils.saveCoupon(getActivity() , "");
+                            PreferenceUtils.saveCountOfItemsBasket(getActivity() , 0);
                         }else{
-                            Toasty.error(getActivity(), getMakeOrderResponse.getErroe().toString(), Toast.LENGTH_LONG).show();
-                            ((PaymentActivity)getActivity()).goToOrderFragment();
+                            Toasty.error(getActivity(), getMakeOrderResponse.getErroe(), Toast.LENGTH_LONG).show();
 
                         }
                         reloadDialog.dismiss();
@@ -291,8 +306,8 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                 shipment_to_address_txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorshipmenttype));
                 shipment_from_branch_txt.setTextColor(getActivity().getColor(R.color.colorPrimaryDark));
             }else{
-                shipment_to_address_txt.setTextColor(getResources().getColor(R.color.colorshipmenttype));
-                shipment_from_branch_txt.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                shipment_to_address_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+                shipment_from_branch_txt.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
             }
 
     }
@@ -316,8 +331,8 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             shipment_to_address_txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
             shipment_from_branch_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
         }else{
-            shipment_to_address_txt.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-            shipment_from_branch_txt.setTextColor(getResources().getColor(R.color.colorshipmenttype));
+            shipment_to_address_txt.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
+            shipment_from_branch_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
         }
     }
 
@@ -354,9 +369,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             bank_payment_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
             pay_on_arrive_payment_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
         }else{
-            credit_card_payment_txt.setTextColor(getResources().getColor(R.color.white_color));
-            bank_payment_txt.setTextColor(getResources().getColor(R.color.colorshipmenttype));
-            pay_on_arrive_payment_txt.setTextColor(getResources().getColor(R.color.colorshipmenttype));
+            credit_card_payment_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
+            bank_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            pay_on_arrive_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
         }
     }
 
@@ -393,9 +408,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             bank_payment_txt.setTextColor(getActivity().getColor(R.color.white_color));
             pay_on_arrive_payment_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
         }else{
-            credit_card_payment_txt.setTextColor(getResources().getColor(R.color.colorshipmenttype));
-            bank_payment_txt.setTextColor(getResources().getColor(R.color.white_color));
-            pay_on_arrive_payment_txt.setTextColor(getResources().getColor(R.color.colorshipmenttype));
+            credit_card_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            bank_payment_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
+            pay_on_arrive_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
         }
     }
 
@@ -432,9 +447,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             bank_payment_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
             pay_on_arrive_payment_txt.setTextColor(getActivity().getColor(R.color.white_color));
         }else{
-            credit_card_payment_txt.setTextColor(getResources().getColor(R.color.colorshipmenttype));
-            bank_payment_txt.setTextColor(getResources().getColor(R.color.colorshipmenttype));
-            pay_on_arrive_payment_txt.setTextColor(getResources().getColor(R.color.white_color));
+            credit_card_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            bank_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            pay_on_arrive_payment_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
         }
     }
 
@@ -455,7 +470,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                 GetCountries getCountries = response.body();
                 int code = Integer.parseInt(getCountries.getCode());
                 if (code == 200) {
-                    Locale locale = ChangeLang.getLocale(getResources());
+                    Locale locale = ChangeLang.getLocale(getContext().getResources());
                     String loo = locale.getLanguage();
                     if (loo.equalsIgnoreCase("en")) {
                         for (int i = 0; i < getCountries.getData().getCountries().size(); i++) { //category loop
@@ -510,7 +525,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                 GetRegions getRegions = response.body();
                 int code = Integer.parseInt(getRegions.getCode());
                 if (code == 200) {
-                    Locale locale = ChangeLang.getLocale(getResources());
+                    Locale locale = ChangeLang.getLocale(getContext().getResources());
                     String loo = locale.getLanguage();
                     if (loo.equalsIgnoreCase("en")) {
                         for (int i = 0; i < getRegions.getData().getSubsidiaries().size(); i++) { //category loop
@@ -564,7 +579,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onResponse(Call<GetBranches> call, Response<GetBranches> response) {
                 GetBranches getBranches = response.body();
-                Locale locale = ChangeLang.getLocale(getResources());
+                Locale locale = ChangeLang.getLocale(getContext().getResources());
                 String loo = locale.getLanguage();
                 if (loo.equalsIgnoreCase("en")) {
                     for (int i = 0; i < getBranches.getData().getShowrooms().size(); i++) { //category loop

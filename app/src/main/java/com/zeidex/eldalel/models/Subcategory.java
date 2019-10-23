@@ -13,12 +13,15 @@ public class Subcategory implements Parcelable {
     String imagePath;
     ArrayList<Subsubcategory> listSubSubCategory;
 
-    public Subcategory(Integer id, String nameAr, String name, String imagePath) {
+
+    public Subcategory(Integer id, String nameAr, String name, String imagePath, ArrayList<Subsubcategory> listSubSubCategory) {
         this.id = id;
         this.nameAr = nameAr;
         this.name = name;
         this.imagePath = imagePath;
+        this.listSubSubCategory = listSubSubCategory;
     }
+
 
     protected Subcategory(Parcel in) {
         if (in.readByte() == 0) {
@@ -29,6 +32,7 @@ public class Subcategory implements Parcelable {
         nameAr = in.readString();
         name = in.readString();
         imagePath = in.readString();
+        listSubSubCategory = in.createTypedArrayList(Subsubcategory.CREATOR);
     }
 
     public static final Creator<Subcategory> CREATOR = new Creator<Subcategory>() {
@@ -99,5 +103,6 @@ public class Subcategory implements Parcelable {
         dest.writeString(nameAr);
         dest.writeString(name);
         dest.writeString(imagePath);
+        dest.writeTypedList(listSubSubCategory);
     }
 }

@@ -85,7 +85,13 @@ public class LikesElementsActivity extends BaseActivity implements LikesElements
     private void onLoadPage() {
         reloadDialog.show();
         FavoritesAPI favoritesAPI = APIClient.getClient(SERVER_API_TEST).create(FavoritesAPI.class);
-        favoritesAPI.getAllFavorites(token).enqueue(new Callback<GetFavorites>() {
+        Call<GetFavorites> getFavoritesCall;
+        if (PreferenceUtils.getCompanyLogin(this)){
+            getFavoritesCall = favoritesAPI.getAllFavoritescompany(token);
+        }else {
+            getFavoritesCall = favoritesAPI.getAllFavorites(token);
+        }
+        getFavoritesCall.enqueue(new Callback<GetFavorites>() {
             @Override
             public void onResponse(Call<GetFavorites> call, Response<GetFavorites> response) {
                 if (response.body() != null) {
@@ -209,7 +215,13 @@ public class LikesElementsActivity extends BaseActivity implements LikesElements
     public void onAddToCart(int id, int position) {
         prepareCartMap(id);
         AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
-        Call<GetAddToCardResponse> getAddToCardResponseCall = addToCardApi.getAddToFavourite(cartPost);
+        Call<GetAddToCardResponse> getAddToCardResponseCall;
+        if (PreferenceUtils.getCompanyLogin(LikesElementsActivity.this)) {
+            cartPost.put("language" , "arabic");
+            getAddToCardResponseCall = addToCardApi.getAddToCartcompany(cartPost);
+        }else {
+            getAddToCardResponseCall = addToCardApi.getAddToCart(cartPost);
+        }
         getAddToCardResponseCall.enqueue(new Callback<GetAddToCardResponse>() {
             @Override
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
@@ -235,7 +247,13 @@ public class LikesElementsActivity extends BaseActivity implements LikesElements
     public void onRemoveFavorite(int id, int position) {
         reloadDialog.show();
         FavoritesAPI favoritesAPI = APIClient.getClient(SERVER_API_TEST).create(FavoritesAPI.class);
-        favoritesAPI.deleteFavorite(id, token).enqueue(new Callback<DeleteFavoriteResponse>() {
+        Call<DeleteFavoriteResponse> getFavoritesCall;
+        if (PreferenceUtils.getCompanyLogin(this)){
+            getFavoritesCall = favoritesAPI.deleteFavoritecompany(id,token);
+        }else {
+            getFavoritesCall = favoritesAPI.deleteFavorite(id,token);
+        }
+        getFavoritesCall.enqueue(new Callback<DeleteFavoriteResponse>() {
             @Override
             public void onResponse(Call<DeleteFavoriteResponse> call, Response<DeleteFavoriteResponse> response) {
                 DeleteFavoriteResponse deleteFavoriteResponse = response.body();

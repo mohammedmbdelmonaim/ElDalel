@@ -83,7 +83,12 @@ public class ElementsOrderActivity extends BaseActivity implements ElementsOrder
         }
         int id = getIntent().getIntExtra("shipment_id", 0);
         ShipmentOrdersApi shipmentOrdersApi = APIClient.getClient(SERVER_API_TEST).create(ShipmentOrdersApi.class);
-        Call<GetShipmentOrders> getShipmentOrdersCall = shipmentOrdersApi.getShipmentOrders(id, token);
+        Call<GetShipmentOrders> getShipmentOrdersCall;
+        if (PreferenceUtils.getCompanyLogin(ElementsOrderActivity.this)){
+            getShipmentOrdersCall = shipmentOrdersApi.getShipmentOrderscompany(id, token);
+        }else{
+            getShipmentOrdersCall = shipmentOrdersApi.getShipmentOrders(id, token);
+        }
         getShipmentOrdersCall.enqueue(new Callback<GetShipmentOrders>() {
             @Override
             public void onResponse(Call<GetShipmentOrders> call, Response<GetShipmentOrders> response) {
@@ -94,15 +99,21 @@ public class ElementsOrderActivity extends BaseActivity implements ElementsOrder
 //                    return;
 //                }
                 for (int i = 0; i < orders.size(); i++) {
-                    price += orders.get(i).getProductPrice();
+//                    price += orders.get(i).getProductPrice();
                     price_with_tax += orders.get(i).getTotalPriceWithTax();
                 }
 
-                activity_elemetnts_orders_total_price_products_text.setText(getShipmentOrders.getOrders().size() + "");
 
-                activity_elemetnts_orders_tax_text.setText(PriceFormatter.toDecimalRsString(price_with_tax - price, getApplicationContext()));
+                double total_without_tax = price_with_tax - ((price_with_tax * 5)/100);
+                double tax = (price_with_tax * 5)/100;
+                String totalString = PriceFormatter.toDecimalRsString(price_with_tax, ElementsOrderActivity.this.getApplicationContext());
+                String totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, ElementsOrderActivity.this.getApplicationContext());
+                String taxString = PriceFormatter.toDecimalRsString(tax, ElementsOrderActivity.this.getApplicationContext());
+                activity_elemetnts_orders_total_price_products_text.setText(totalwithoutString);
 
-                activity_elemetnts_orders_total_price_text.setText(PriceFormatter.toDecimalRsString(price_with_tax , getApplicationContext()));
+                activity_elemetnts_orders_tax_text.setText(taxString);
+
+                activity_elemetnts_orders_total_price_text.setText(totalString);
 
                 elementsOrderAdapter = new ElementsOrdersAdapter(ElementsOrderActivity.this, orders);
                 elementsOrderAdapter.setOrderOperation(ElementsOrderActivity.this);

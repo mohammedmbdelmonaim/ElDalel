@@ -177,7 +177,18 @@ public class GetOffersCategories {
         private String updatedAt;
         @SerializedName("subsubcategories")
         @Expose
-        private List<Object> subsubcategories = null;
+        private List<Subsubcategory> subsubcategories = null;
+        @SerializedName("photo")
+        @Expose
+        private String photo;
+
+        public String getPhoto() {
+            return photo;
+        }
+
+        public void setPhoto(String photo) {
+            this.photo = photo;
+        }
 
         public Integer getId() {
             return id;
@@ -235,12 +246,105 @@ public class GetOffersCategories {
             this.updatedAt = updatedAt;
         }
 
-        public List<Object> getSubsubcategories() {
+        public List<Subsubcategory> getSubsubcategories() {
             return subsubcategories;
         }
 
-        public void setSubsubcategories(List<Object> subsubcategories) {
+        public void setSubsubcategories(List<Subsubcategory> subsubcategories) {
             this.subsubcategories = subsubcategories;
+        }
+
+    }
+
+    public class Subsubcategory {
+
+        @SerializedName("id")
+        @Expose
+        private Integer id;
+        @SerializedName("category_id")
+        @Expose
+        private Integer categoryId;
+        @SerializedName("subcategory_id")
+        @Expose
+        private Integer subcategoryId;
+        @SerializedName("name")
+        @Expose
+        private String name;
+        @SerializedName("name_ar")
+        @Expose
+        private String nameAr;
+        @SerializedName("active")
+        @Expose
+        private Integer active;
+        @SerializedName("created_at")
+        @Expose
+        private String createdAt;
+        @SerializedName("updated_at")
+        @Expose
+        private String updatedAt;
+
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+
+        public Integer getCategoryId() {
+            return categoryId;
+        }
+
+        public void setCategoryId(Integer categoryId) {
+            this.categoryId = categoryId;
+        }
+
+        public Integer getSubcategoryId() {
+            return subcategoryId;
+        }
+
+        public void setSubcategoryId(Integer subcategoryId) {
+            this.subcategoryId = subcategoryId;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getNameAr() {
+            return nameAr;
+        }
+
+        public void setNameAr(String nameAr) {
+            this.nameAr = nameAr;
+        }
+
+        public Integer getActive() {
+            return active;
+        }
+
+        public void setActive(Integer active) {
+            this.active = active;
+        }
+
+        public String getCreatedAt() {
+            return createdAt;
+        }
+
+        public void setCreatedAt(String createdAt) {
+            this.createdAt = createdAt;
+        }
+
+        public String getUpdatedAt() {
+            return updatedAt;
+        }
+
+        public void setUpdatedAt(String updatedAt) {
+            this.updatedAt = updatedAt;
         }
 
     }

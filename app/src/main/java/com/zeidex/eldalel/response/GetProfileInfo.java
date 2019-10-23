@@ -55,6 +55,17 @@ public class GetProfileInfo {
     @SerializedName("block_mobile")
     @Expose
     private Integer blockMobile;
+
+    @SerializedName("responsible")
+    @Expose
+    private String responsible;
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("address")
+    @Expose
+    private String address;
+
     @SerializedName("fax")
     @Expose
     private Object fax;
@@ -221,6 +232,30 @@ public class GetProfileInfo {
 
     public String getAddressHome() {
         return addressHome;
+    }
+
+    public String getResponsible() {
+        return responsible;
+    }
+
+    public void setResponsible(String responsible) {
+        this.responsible = responsible;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public void setAddressHome(String addressHome) {

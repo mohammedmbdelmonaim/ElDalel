@@ -78,7 +78,7 @@ public class PaymentPhoneNumberFragment extends Fragment {
             token = PreferenceUtils.getUserToken(getActivity());
         }
 
-        Locale locale = ChangeLang.getLocale(getResources());
+        Locale locale = ChangeLang.getLocale(getContext().getResources());
         String loo = locale.getLanguage();
         if (loo.equalsIgnoreCase("en")) {
             lang = "english";
@@ -123,7 +123,12 @@ public class PaymentPhoneNumberFragment extends Fragment {
             reloadDialog.show();
             convertDaraVerifyToJson();
             VerifyCodeMobileApi sendCodeToMobileApi = APIClient.getClient(SERVER_API_TEST).create(VerifyCodeMobileApi.class);
-            Call<GetSendCodeResponse> getSendCodeResponseCall = sendCodeToMobileApi.verifyCode(update_post);
+            Call<GetSendCodeResponse> getSendCodeResponseCall;
+            if (PreferenceUtils.getCompanyLogin(getActivity())){
+                getSendCodeResponseCall = sendCodeToMobileApi.verifyCodecompany(update_post);
+            }else {
+                getSendCodeResponseCall = sendCodeToMobileApi.verifyCode(update_post);
+            }
             getSendCodeResponseCall.enqueue(new Callback<GetSendCodeResponse>() {
                 @Override
                 public void onResponse(Call<GetSendCodeResponse> call, Response<GetSendCodeResponse> response) {
@@ -173,7 +178,12 @@ public class PaymentPhoneNumberFragment extends Fragment {
         reloadDialog.show();
         convertDaraToJson();
         SendCodeToMobileApi sendCodeToMobileApi = APIClient.getClient(SERVER_API_TEST).create(SendCodeToMobileApi.class);
-        Call<GetSendCodeResponse> getSendCodeResponseCall = sendCodeToMobileApi.sendCode(update_post);
+        Call<GetSendCodeResponse> getSendCodeResponseCall;
+        if (PreferenceUtils.getCompanyLogin(getActivity())){
+            getSendCodeResponseCall = sendCodeToMobileApi.sendCodecompany(update_post);
+        }else {
+            getSendCodeResponseCall = sendCodeToMobileApi.sendCode(update_post);
+        }
         getSendCodeResponseCall.enqueue(new Callback<GetSendCodeResponse>() {
             @Override
             public void onResponse(Call<GetSendCodeResponse> call, Response<GetSendCodeResponse> response) {

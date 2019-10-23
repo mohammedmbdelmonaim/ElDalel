@@ -25,5 +25,4 @@ public class CongrateFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
     }
-
 }

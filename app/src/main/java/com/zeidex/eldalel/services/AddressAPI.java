@@ -10,4 +10,7 @@ public interface AddressAPI {
 
     @GET("user/addresses")
     Call<GetAddresses> getAllAddresses(@Query("token") String token);
+
+    @GET("company/addresses")
+    Call<GetAddresses> getAllAddressescompany(@Query("token") String token);
 }

@@ -157,9 +157,9 @@
                     android:id="@+id/activity_elemetnts_orders_total_price_products_text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:fontFamily="@font/cairo_regular"
                     android:text="0"
-                    android:layout_marginEnd="@dimen/dimen_40dp"
+                    android:layout_marginEnd="@dimen/dimen_5dp"
+                    android:fontFamily="@font/cairo_bold"
                     android:textColor="#606060"
                     android:textSize="@dimen/dimen_12sp" />
 
@@ -210,9 +210,9 @@
                     android:id="@+id/activity_elemetnts_orders_total_shipments_text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:fontFamily="@font/cairo_regular"
+                    android:layout_marginEnd="@dimen/dimen_5dp"
+                    android:fontFamily="@font/cairo_bold"
                     android:text="0"
-                    android:layout_marginEnd="@dimen/dimen_40dp"
                     android:textColor="#606060"
                     android:textSize="@dimen/dimen_12sp" />
 
@@ -256,9 +256,9 @@
                     android:id="@+id/activity_elemetnts_orders_tax_text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:fontFamily="@font/cairo_regular"
+                    android:layout_marginEnd="@dimen/dimen_5dp"
+                    android:fontFamily="@font/cairo_bold"
                     android:text="0"
-                    android:layout_marginEnd="@dimen/dimen_40dp"
                     android:textColor="#606060"
                     android:textSize="@dimen/dimen_12sp" />
 
@@ -302,8 +302,8 @@
                     android:id="@+id/activity_elemetnts_orders_total_price_text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/dimen_5dp"
                     android:fontFamily="@font/cairo_bold"
-                    android:layout_marginEnd="@dimen/dimen_30dp"
                     android:textColor="#606060"
                     android:textSize="@dimen/dimen_12sp" />
 

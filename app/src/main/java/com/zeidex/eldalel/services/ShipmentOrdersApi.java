@@ -11,4 +11,7 @@ public interface ShipmentOrdersApi {
 
     @GET("user/shipment/orders/{id}")
     Call<GetShipmentOrders> getShipmentOrders(@Path("id") int id, @Query("token") String token);
+
+    @GET("company/shipment/orders/{id}")
+    Call<GetShipmentOrders> getShipmentOrderscompany(@Path("id") int id, @Query("token") String token);
 }

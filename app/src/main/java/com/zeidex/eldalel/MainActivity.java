@@ -1,10 +1,5 @@
 package com.zeidex.eldalel;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,6 +7,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
@@ -154,7 +153,7 @@ public class MainActivity extends BaseActivity {
 
             case R.id.account_fragment:
                 login = PreferenceUtils.getUserLogin(this);
-                if (!login){
+                if (!login && !PreferenceUtils.getCompanyLogin(this)){
                     frag = new AccountFragment();
                     tag = "account_fragment";
                 }else {

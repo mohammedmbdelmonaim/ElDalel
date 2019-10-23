@@ -1,7 +1,6 @@
 package com.zeidex.eldalel.services;
 
 import com.zeidex.eldalel.response.GetAddToFavouriteResponse;
-import com.zeidex.eldalel.response.GetLoginResponse;
 
 import java.util.Map;
 
@@ -13,4 +12,7 @@ public interface AddToFavouriteApi {
 
     @POST("user/add/to/favorite")
     Call<GetAddToFavouriteResponse> getAddToFavourite(@Body Map<String, String> partMap);
+
+    @POST("company/add/to/favorite")
+    Call<GetAddToFavouriteResponse> getAddToFavouritecompany(@Body Map<String, String> partMap);
 }

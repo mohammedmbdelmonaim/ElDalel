@@ -10,4 +10,7 @@ public interface ProfileInfoApi {
 
     @GET("user/personal/info")
     Call<GetProfileInfo> getProfileInfo(@Query("token") String token);
+
+    @GET("company/personal/info")
+    Call<GetProfileInfo> getProfileInfocompany(@Query("token") String token);
 }

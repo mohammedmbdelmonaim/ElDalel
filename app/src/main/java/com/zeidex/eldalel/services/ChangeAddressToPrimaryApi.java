@@ -12,4 +12,7 @@ public interface ChangeAddressToPrimaryApi {
 
     @PUT("user/update/secondary/address/to/primary")
     Call<GetChangeAddressResponse> updateAddressApi(@Body Map<String, String> partMap);
+
+    @PUT("company/update/secondary/address/to/primary")
+    Call<GetChangeAddressResponse> updateAddressApicompany(@Body Map<String, String> partMap);
 }

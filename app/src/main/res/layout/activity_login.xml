@@ -108,7 +108,7 @@
             android:fontFamily="@font/cairo_bold"
             android:textSize="@dimen/dimen_12sp"
             android:buttonTint="#FFFFFF"
-            android:text="تذكرنى"
+            android:text="@string/remmber_me_chechbox"
             android:textColor="#FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/login_pass_linear"/>
@@ -120,6 +120,7 @@
             android:layout_marginTop="@dimen/dimen_20dp"
             android:text="@string/login_text_forget_pass"
             android:textColor="#FFFFFF"
+             android:visibility="gone"
             android:layout_marginEnd="@dimen/dimen_16dp"
             android:textSize="@dimen/dimen_12sp"
             android:fontFamily="@font/cairo_bold"
@@ -144,7 +145,7 @@
             android:elevation="@dimen/dimen_4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/login_text_forget_pass"/>
+            app:layout_constraintTop_toBottomOf="@+id/login_remember_checkbox"/>
 
          <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
             android:id="@+id/login_no_have_account_text"

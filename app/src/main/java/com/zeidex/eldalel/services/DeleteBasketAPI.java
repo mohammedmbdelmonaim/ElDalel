@@ -12,4 +12,7 @@ public interface DeleteBasketAPI {
 
     @DELETE("user/delete/my/cart/{cart_id}")
     Call<DeleteBasketResponse> deleteBasketProduct(@Path("cart_id") String cartId, @Query("token") String token);
+
+    @DELETE("company/delete/my/cart/{cart_id}")
+    Call<DeleteBasketResponse> deleteBasketProductcompany(@Path("cart_id") String cartId, @Query("token") String token);
 }

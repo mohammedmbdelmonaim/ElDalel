@@ -12,4 +12,8 @@ public interface AddAddressApi {
 
     @POST("user/create/new/address")
     Call<GetAddAddressResponse> getAddressApi(@Body Map<String, String> partMap);
+
+    @POST("company/create/new/address")
+    Call<GetAddAddressResponse> getAddressApicompany(@Body Map<String, String> partMap);
 }
+//////////////

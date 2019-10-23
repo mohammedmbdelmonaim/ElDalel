@@ -14,6 +14,12 @@ public interface FavoritesAPI {
     @GET("user/my/favorites")
     Call<GetFavorites> getAllFavorites(@Query("token") String token);
 
+    @GET("company/my/favorites")
+    Call<GetFavorites> getAllFavoritescompany(@Query("token") String token);
+
     @DELETE("user/remove/from/favorite/{product_id}") /*{product_id}?token={token})*/
     Call<DeleteFavoriteResponse> deleteFavorite(@Path("product_id") int productId, @Query("token") String token);
+
+    @DELETE("company/remove/from/favorite/{product_id}") /*{product_id}?token={token})*/
+    Call<DeleteFavoriteResponse> deleteFavoritecompany(@Path("product_id") int productId, @Query("token") String token);
 }

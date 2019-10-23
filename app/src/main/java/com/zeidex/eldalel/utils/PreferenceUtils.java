@@ -6,6 +6,19 @@ import android.preference.PreferenceManager;
 
 public class PreferenceUtils {
 
+    public static boolean saveCoupon(Context context, String copoun) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(Constants.COPOUNDATA, copoun);
+        editor.apply();
+        return true;
+    }
+
+    public static String getCoupoun(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(Constants.COPOUNDATA, "");
+    }
+
     public static boolean saveLocaleKey(Context context, String lang) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();

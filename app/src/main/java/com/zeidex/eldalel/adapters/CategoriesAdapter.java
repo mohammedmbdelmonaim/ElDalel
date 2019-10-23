@@ -32,7 +32,7 @@ public class CategoriesAdapter extends SmartFragmentStatePagerAdapter {
         this.names = names;
         this.categories = categories;
     }
-
+    ArrayList<Subsubcategory> subsubcategories;
     @Override
     public Fragment getItem(int position) {
         SubCategoriesFragment subCategoriesFragment = new SubCategoriesFragment();
@@ -44,18 +44,15 @@ public class CategoriesAdapter extends SmartFragmentStatePagerAdapter {
 
             //we subtract 1 from position to get the actual position for categories as new arrival is taking the first position
             for (GetAllCategories.Subcategory subcategory : currentCategory.getSubcategories()) {
-                Subcategory subcategoryModel = new Subcategory(subcategory.getId(), subcategory.getNameAr(),
-                        subcategory.getName(), subcategory.getPhoto());
-
+                subsubcategories = new ArrayList<>();
                 //Check if subcategory has subsubcategory, loop through them to add them to the subcategory model
                 if (subcategory.getSubsubcategories().size() > 0) {
-                    ArrayList<Subsubcategory> subsubcategories = new ArrayList<>();
-
                     for (GetAllCategories.Subsubcategory subsubcategory : subcategory.getSubsubcategories()) {
                         subsubcategories.add(new Subsubcategory(subsubcategory.getId(), subsubcategory.getName(), subsubcategory.getNameAr()));
                     }
-                    subcategoryModel.setListSubSubCategory(subsubcategories);
                 }
+                Subcategory subcategoryModel = new Subcategory(subcategory.getId(), subcategory.getNameAr(),
+                        subcategory.getName(), subcategory.getPhoto() , subsubcategories);
                 subCategoriesModel.add(subcategoryModel);
             }
             bundle.putParcelableArrayList(SUBCATEGORIES_INTENT_EXTRA_KEY, subCategoriesModel);

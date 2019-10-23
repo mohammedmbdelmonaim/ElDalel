@@ -203,4 +203,10 @@
     <string name="dialog_change_pass_update_btn">تعديل</string>
     <string name="password_update_success">تم تعديل كلمة المررور بنجاح</string>
     <string name="update_profile_success_msg">تم تعديل المعلومات بنجاح</string>
+    <string name="no_wallet">لا يوجد رصيد او عمليات في الوقت الحالي</string>
+    <string name="wallet_date_text">تاريخ العملية</string>
+    <string name="order_amount_text">المبلغ</string>
+    <string name="wallet_type_text">نوع العملية</string>
+    <string name="activity_operations_wallet_total_label">الرصيد الكلي:</string>
+    <string name="remmber_me_chechbox">تذكرنى</string>
 </resources>

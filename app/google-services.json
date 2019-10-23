@@ -1,42 +1,42 @@
 {
   "project_info": {
-    "project_number": "111490685260",
-    "firebase_url": "https://eldalel.firebaseio.com",
-    "project_id": "eldalel",
-    "storage_bucket": "eldalel.appspot.com"
+    "project_number": "644606700655",
+    "firebase_url": "https://dleel-sh.firebaseio.com",
+    "project_id": "dleel-sh",
+    "storage_bucket": "dleel-sh.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:111490685260:android:10927111076d4efa",
+        "mobilesdk_app_id": "1:644606700655:android:94e8d1138315323674f19a",
         "android_client_info": {
           "package_name": "com.zeidex.eldalel"
         }
       },
       "oauth_client": [
         {
-          "client_id": "111490685260-id8r06ddrjc1cs15gum69k46av29m8mm.apps.googleusercontent.com",
+          "client_id": "644606700655-k1v8ggu4bhki32k971i3m6gkisk6in4g.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.zeidex.eldalel",
-            "certificate_hash": "af11e5aa9cd8b2ba12b6bcf0e0589cf501b2b8dd"
+            "certificate_hash": "07369095522cad7d444049eeeb98574585cb4ea9"
           }
         },
         {
-          "client_id": "111490685260-rssuvrb008oh7j6651g0vmkgsink8ho2.apps.googleusercontent.com",
+          "client_id": "644606700655-lub9f3hv07ei6sk8ivij9halpurpq3ao.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBsr8kNLqn82kxUFbl4ypcpYPi6OhqXCr0"
+          "current_key": "AIzaSyBvgvnw1JSynbtuTSn8N8-yCPl1KzXFUnE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "111490685260-rssuvrb008oh7j6651g0vmkgsink8ho2.apps.googleusercontent.com",
+              "client_id": "644606700655-lub9f3hv07ei6sk8ivij9halpurpq3ao.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

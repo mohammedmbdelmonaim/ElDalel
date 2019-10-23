@@ -57,7 +57,6 @@ import static com.zeidex.eldalel.FilterActivity.FILTER_CATEGORY_ID;
 import static com.zeidex.eldalel.FilterActivity.FILTER_PRICE_FROM;
 import static com.zeidex.eldalel.FilterActivity.FILTER_PRICE_TO;
 import static com.zeidex.eldalel.FilterActivity.FILTER_SUBCATEGORY_ID;
-import static com.zeidex.eldalel.OfferItemActivity.OFFERS;
 import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
 import static com.zeidex.eldalel.SearchActivity.FILTER_STATUS;
 import static com.zeidex.eldalel.SearchActivity.SEARCH_NAME_ARGUMENT;
@@ -297,7 +296,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     private void showEmptyView() {
         noItemsLayout.setVisibility(View.VISIBLE);
         category_item_recycler_list.setVisibility(View.GONE);
-        itemDetailsHeader.setVisibility(View.INVISIBLE);
+        itemDetailsHeader.setVisibility(View.GONE);
     }
 
     private void getProductsFromSubCategory(int subCategoryId) {
@@ -332,7 +331,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     private ArrayList<ProductsCategory> getProductsFromResponse(List<GetProducts.Data> productsResponse) {
         ArrayList<ProductsCategory> products = new ArrayList<>();
 
-        Locale locale = ChangeLang.getLocale(getResources());
+        Locale locale = ChangeLang.getLocale(getContext().getResources());
         String loo = locale.getLanguage();
 
         if (loo.equalsIgnoreCase("ar")) {
@@ -430,7 +429,12 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
         reloadDialog.show();
         prepareLikeMap(id);
         AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
-        Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(likePost);
+        Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
+        if (PreferenceUtils.getCompanyLogin(getActivity())) {
+            getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(likePost);
+        }else {
+            getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(likePost);
+        }
         getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
             @Override
             public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
@@ -453,7 +457,13 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     public void onAddToProductCategory3Cart(int id, int position) {
         prepareCartMap(id);
         AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
-        Call<GetAddToCardResponse> getAddToCardResponseCall = addToCardApi.getAddToFavourite(cartPost);
+        Call<GetAddToCardResponse> getAddToCardResponseCall;
+        if (PreferenceUtils.getCompanyLogin(getActivity())) {
+            cartPost.put("language" , "arabic");
+            getAddToCardResponseCall = addToCardApi.getAddToCartcompany(cartPost);
+        }else {
+            getAddToCardResponseCall = addToCardApi.getAddToCart(cartPost);
+        }
         getAddToCardResponseCall.enqueue(new Callback<GetAddToCardResponse>() {
             @Override
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {

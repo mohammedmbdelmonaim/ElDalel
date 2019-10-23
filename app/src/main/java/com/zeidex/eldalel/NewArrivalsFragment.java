@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.zeidex.eldalel.adapters.NewArrivalsCategoriesAdapter;
 import com.zeidex.eldalel.models.Subcategory;
+import com.zeidex.eldalel.models.Subsubcategory;
 import com.zeidex.eldalel.response.GetOffersCategories;
 import com.zeidex.eldalel.services.NewArrivalsAPI;
 import com.zeidex.eldalel.utils.APIClient;
@@ -108,15 +109,16 @@ public class NewArrivalsFragment extends androidx.fragment.app.Fragment implemen
         reloadDialog.setCancelable(false);
         reloadDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
-
+    ArrayList<Subsubcategory> subsubcategories;
     @Override
     public void onClickCategory(int position) {
+        subsubcategories = new ArrayList<>();
         Intent intent = new Intent(getActivity(), NewArrivalSubcategoriesActivity.class);
 
         GetOffersCategories.Category category = categories.get(position);
         List<GetOffersCategories.Subcategory> subCategories = category.getSubcategories();
 
-        Locale locale = ChangeLang.getLocale(getResources());
+        Locale locale = ChangeLang.getLocale(getContext().getResources());
         String loo = locale.getLanguage();
         if (loo.equalsIgnoreCase("ar")) {
             intent.putExtra(CATEGORY_NAME_INTENT_EXTRA, category.getNameAr());
@@ -127,8 +129,11 @@ public class NewArrivalsFragment extends androidx.fragment.app.Fragment implemen
         if (subCategories != null && subCategories.size() > 0) {
             ArrayList<Subcategory> subCategoriesModel = new ArrayList<>();
             for (int i = 0; i < subCategories.size(); i++) {
+                for (GetOffersCategories.Subsubcategory subsubcategory : subCategories.get(i).getSubsubcategories()){
+                    subsubcategories.add(new Subsubcategory(subsubcategory.getId() , subsubcategory.getName() , subsubcategory.getNameAr()));
+                }
                 subCategoriesModel.add(new Subcategory(subCategories.get(i).getId(), subCategories.get(i).getNameAr(),
-                        subCategories.get(i).getName(), ""));
+                        subCategories.get(i).getName(), subCategories.get(i).getPhoto(),subsubcategories));
             }
             intent.putParcelableArrayListExtra(SUBCATEGORIES_INTENT_EXTRA_KEY, subCategoriesModel);
         }

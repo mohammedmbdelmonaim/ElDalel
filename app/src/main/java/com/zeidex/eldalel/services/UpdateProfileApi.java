@@ -7,7 +7,9 @@ import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public interface UpdateProfileApi {
-
     @PUT("user/update/personal/info")
     Call<GetUpdateProfileResponse> updateProfile(@Query("token") String token, @Query("language") String language, @Query("firstName") String firstName, @Query("lastName") String lastName, @Query("country_id") int country_id,@Query("city_id") int city_id,@Query("subsidiary_id") int subsidiary_id,@Query("addressHome") String addressHome,@Query("mobile") String mobile, @Query("email") String email);
+
+    @PUT("company/update/personal/info")
+    Call<GetUpdateProfileResponse> updateProfilecompany(@Query("token") String token, @Query("language") String language, @Query("name") String name, @Query("responsible") String responsible, @Query("country_id") int country_id,@Query("city_id") int city_id,@Query("subsidiary_id") int subsidiary_id,@Query("address") String addressHome,@Query("mobile") String mobile, @Query("email") String email);
 }

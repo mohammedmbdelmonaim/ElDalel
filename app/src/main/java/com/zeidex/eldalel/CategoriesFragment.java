@@ -117,7 +117,7 @@ public class  CategoriesFragment extends androidx.fragment.app.Fragment {
         showDialog();
         onLoadPage();
     }
-
+    List<GetAllCategories.Category> categoriesWithSub;
     private void onLoadPage() {
         reloadDialog.show();
         AllCategoriesAPI allCategoriesAPI = APIClient.getClient(SERVER_API_TEST).create(AllCategoriesAPI.class);
@@ -127,9 +127,19 @@ public class  CategoriesFragment extends androidx.fragment.app.Fragment {
                 if (response.body() != null) {
                     int code = response.body().getCode();
                     if (code == 200) {
+                        categoriesWithSub = new ArrayList<>();
                         List<GetAllCategories.Category> categories = response.body().getData().getCategories();
                         if (categories.size() > 0) {
-                            initializeViewPager(categories);
+                            for (GetAllCategories.Category category : categories){
+                                if (category.getSubcategories().size() == 0){
+                                    continue;
+                                }else{
+                                    categoriesWithSub.add(category);
+                                }
+
+                            }
+                            initializeViewPager(categoriesWithSub);
+
                         }
                     }
                 }
@@ -148,7 +158,7 @@ public class  CategoriesFragment extends androidx.fragment.app.Fragment {
         cat_ids.clear();
         cat_names.clear();
 
-        Locale locale = ChangeLang.getLocale(getResources());
+        Locale locale = ChangeLang.getLocale(getContext().getResources());
         String loo = locale.getLanguage();
 
         cat_ids.add(NEW_ARRIVALS_ID);

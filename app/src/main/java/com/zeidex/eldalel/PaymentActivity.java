@@ -1,6 +1,8 @@
 package com.zeidex.eldalel;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -8,6 +10,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.shuhart.stepview.StepView;
+import com.zeidex.eldalel.utils.Animatoo;
+import com.zeidex.eldalel.utils.PreferenceUtils;
 
 import java.util.ArrayList;
 
@@ -31,29 +35,50 @@ public class PaymentActivity extends BaseActivity {
         setContentView(R.layout.activity_payment);
 
         ButterKnife.bind(this);
+        if (PreferenceUtils.getCompanyLogin(this)) {
+            Fragment fragment = new PayidFragment();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
+            ft.replace(R.id.payment_constrant, fragment, fragment.getTag());
+            ft.commit();
+            step_view.getState()
+                    // You should specify only stepsNumber or steps array of strings.
+                    // In case you specify both steps array is chosen.
+                    .steps(new ArrayList<String>() {{
+                        add("الدفع");
+                        add("الطلب");
+                    }})
+                    // You should specify only steps number or steps array of strings.
+                    // In case you specify both steps array is chosen.
+                    .animationDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
+                    .typeface(ResourcesCompat.getFont(this, R.font.cairo_bold))
+                    // other state methods are equal to the corresponding xml attributes
+                    .commit();
+        }else {
+            Fragment fragment = new ShoopingListAddressesFragment();
+            Bundle args = new Bundle();
+            args.putString("from", "payment");
+            fragment.setArguments(args);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
+            ft.replace(R.id.payment_constrant, fragment, fragment.getTag());
+            ft.commit();
+            step_view.getState()
+                    // You should specify only stepsNumber or steps array of strings.
+                    // In case you specify both steps array is chosen.
+                    .steps(new ArrayList<String>() {{
+                        add("العناوين");
+                        add("الدفع");
+                        add("الطلب");
+                    }})
+                    // You should specify only steps number or steps array of strings.
+                    // In case you specify both steps array is chosen.
+                    .animationDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
+                    .typeface(ResourcesCompat.getFont(this, R.font.cairo_bold))
+                    // other state methods are equal to the corresponding xml attributes
+                    .commit();
+        }
 
-        Fragment fragment = new ShoopingListAddressesFragment();
-        Bundle args = new Bundle();
-        args.putString("from", "payment");
-        fragment.setArguments(args);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
-        ft.replace(R.id.payment_constrant, fragment, fragment.getTag());
-        ft.commit();
-        step_view.getState()
-                // You should specify only stepsNumber or steps array of strings.
-                // In case you specify both steps array is chosen.
-                .steps(new ArrayList<String>() {{
-                    add("العناوين");
-                    add("الدفع");
-                    add("الطلب");
-                }})
-                // You should specify only steps number or steps array of strings.
-                // In case you specify both steps array is chosen.
-                .animationDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
-                .typeface(ResourcesCompat.getFont(this, R.font.cairo_bold))
-                // other state methods are equal to the corresponding xml attributes
-                .commit();
 //        step_view.done(true);
 
     }
@@ -81,5 +106,12 @@ public class PaymentActivity extends BaseActivity {
         ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
         ft.replace(R.id.payment_constrant, fragment, fragment.getTag());
         ft.commit();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(PaymentActivity.this, MainActivity.class));
+                Animatoo.animateSwipeLeft(PaymentActivity.this);
+            }
+        },2000);
     }
 }

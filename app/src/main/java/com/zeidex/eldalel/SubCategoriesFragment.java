@@ -84,7 +84,7 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
         } else {
             //If there are no subcategories, pass the category id to get the products based on it
             String categoryName;
-            Locale locale = ChangeLang.getLocale(getResources());
+            Locale locale = ChangeLang.getLocale(getContext().getResources());
             String loo = locale.getLanguage();
             if (loo.equalsIgnoreCase("ar")) {
                 categoryName = getArguments().getString(CATEGORY_NAME_AR_INTENT_EXTRA);
@@ -156,24 +156,26 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
     }
 
     @Override
-    public void onClickSubCategory(int subCategoryId, String subCategoryName) {
+    public void onClickSubCategory(int subCategoryId, String subCategoryName , int pos) {
         Intent intent = new Intent(getActivity(), ProductsActivity.class);
         intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
         intent.putExtra(SUBCATEGORY_ID_EXTRA_KEY, subCategoryId);
         intent.putExtra(SUBCATEGORY_NAME_EXTRA_KEY, subCategoryName);
+        intent.putExtra("position", pos);
         intent.putParcelableArrayListExtra(SUBCATEGORY_ARRAY_EXTRA_KEY , subCategories);
         getActivity().startActivity(intent);
         Animatoo.animateSwipeLeft(getActivity());
     }
 
     @Override
-    public void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subCategoryName, int subcategoryId) {
+    public void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subCategoryName, int subcategoryId , int pos) {
         Intent intent = new Intent(getActivity(), ProductsActivity.class);
         intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
         intent.putExtra(SUBCATEGORY_ID_EXTRA_KEY, subcategoryId);
         intent.putExtra(SUBCATEGORY_NAME_EXTRA_KEY, subCategoryName);
         intent.putParcelableArrayListExtra(SUBSUBCATEGORIES_INTENT_EXTRA_KEY, subsubcategories);
         intent.putParcelableArrayListExtra(SUBCATEGORY_ARRAY_EXTRA_KEY , subCategories);
+        intent.putExtra("position", pos);
         getActivity().startActivity(intent);
         Animatoo.animateSwipeLeft(getActivity());
     }

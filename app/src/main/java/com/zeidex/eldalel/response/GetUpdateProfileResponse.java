@@ -9,6 +9,9 @@ public class GetUpdateProfileResponse {
     @SerializedName("status")
     @Expose
     private Boolean status;
+    @SerializedName("success")
+    @Expose
+    private Boolean success;
     @SerializedName("code")
     @Expose
     private Integer code;
@@ -25,6 +28,14 @@ public class GetUpdateProfileResponse {
 
     public void setStatus(Boolean status) {
         this.status = status;
+    }
+
+    public Boolean getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(Boolean success) {
+        this.success = success;
     }
 
     public Integer getCode() {
