@@ -5,11 +5,15 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -70,7 +74,7 @@ import static com.zeidex.eldalel.OffersFragment.SUBCATEGORIES_INTENT_EXTRA_KEY;
 import static com.zeidex.eldalel.SearchActivity.SEARCH_NAME_ARGUMENT;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
-public class DetailItemActivity extends BaseActivity implements ProductsCategory3Adapter.ProductsCategory3Operation, DetailColorsItemAdapter.DetailColorsOperation, DetailSizeItemAdapter.DetailCapacityOperation {
+public class DetailItemActivity extends Fragment implements ProductsCategory3Adapter.ProductsCategory3Operation, DetailColorsItemAdapter.DetailColorsOperation, DetailSizeItemAdapter.DetailCapacityOperation {
     public static final int CART_NOT_EMPTY = 1;
     @BindView(R.id.imageSlider)
     SliderView imageSlider;
@@ -159,22 +163,23 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
     private boolean isAdded;
     private boolean isChanged;
     Fragment frag = null;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_item);
-        ButterKnife.bind(this);
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_detail_item, container, false);
+        ButterKnife.bind(this, view);
         findViews();
         initializeRecycler();
         showDialog();
         onLoadPage();
+        return view;
     }
 
-    @OnClick(R.id.item_detail_back)
-    public void onBack() {
-        onBackPressed();
-    }
+//    @OnClick(R.id.item_detail_back)
+//    public void onBack() {
+//        onBackPressed();
+//    }
 
     @OnClick(R.id.detail_share_img)
     public void share() {
@@ -192,12 +197,12 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
 
     private void convertDaraToJson(int id) {
         favourite_post = new HashMap<>();
-        if (PreferenceUtils.getUserLogin(this)) {
-            String token = PreferenceUtils.getUserToken(this);
+        if (PreferenceUtils.getUserLogin(getActivity())) {
+            String token = PreferenceUtils.getUserToken(getActivity());
             favourite_post.put("product_id", String.valueOf(id));
             favourite_post.put("token", token);
-        } else if (PreferenceUtils.getCompanyLogin(this)) {
-            String token = PreferenceUtils.getCompanyToken(this);
+        } else if (PreferenceUtils.getCompanyLogin(getActivity())) {
+            String token = PreferenceUtils.getCompanyToken(getActivity());
             favourite_post.put("product_id", String.valueOf(id));
             favourite_post.put("token", token);
         }
@@ -214,11 +219,11 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
         detail_search_header_categories_img.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Intent intent = new Intent(DetailItemActivity.this, SearchActivity.class);
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
                 intent.putExtra(SEARCH_NAME_ARGUMENT, query);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                Animatoo.animateSwipeLeft(DetailItemActivity.this);
+                Animatoo.animateSwipeLeft(getActivity());
                 detail_search_header_categories_img.onActionViewCollapsed(); //to close the searchview
                 return true;
             }
@@ -235,22 +240,22 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
         detail_like_img.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!PreferenceUtils.getUserLogin(DetailItemActivity.this) && isChecked && !PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
-                    Toasty.error(DetailItemActivity.this, getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
+                if (!PreferenceUtils.getUserLogin(getActivity()) && isChecked && !PreferenceUtils.getCompanyLogin(getActivity())) {
+                    Toasty.error(getActivity(), getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
                     detail_like_img.setChecked(false);
                     return;
                 }
-                if ((PreferenceUtils.getUserLogin(DetailItemActivity.this) || PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) && !isChecked) {
-                    Toasty.error(DetailItemActivity.this, getString(R.string.unlike_fiv), Toast.LENGTH_LONG).show();
+                if ((PreferenceUtils.getUserLogin(getActivity()) || PreferenceUtils.getCompanyLogin(getActivity())) && !isChecked) {
+                    Toasty.error(getActivity(), getString(R.string.unlike_fiv), Toast.LENGTH_LONG).show();
                     detail_like_img.setChecked(true);
                     return;
                 }
-                if ((PreferenceUtils.getUserLogin(DetailItemActivity.this) || PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) && isChecked) {
+                if ((PreferenceUtils.getUserLogin(getActivity()) || PreferenceUtils.getCompanyLogin(getActivity())) && isChecked) {
                     reloadDialog.show();
                     convertDaraToJson(id);
                     AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
                     Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
-                    if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
+                    if (PreferenceUtils.getCompanyLogin(getActivity())) {
                         getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(favourite_post);
                     } else {
                         getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(favourite_post);
@@ -260,10 +265,10 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                         public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
                             GetAddToFavouriteResponse getAddToFavouriteResponse = response.body();
                             if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
-                                Toasty.success(DetailItemActivity.this, getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
+                                Toasty.success(getActivity(), getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
                                 isLike = true;
-                                int pos = getIntent().getIntExtra("pos", -1);
-                                ArrayList<ProductsCategory> productsCategories = getIntent().getParcelableArrayListExtra("similar_products");
+                                int pos = getArguments().getInt("pos", -1);
+                                ArrayList<ProductsCategory> productsCategories = getArguments().getParcelableArrayList("similar_products");
                                 if (productsCategories != null && productsCategories.size() > 0) {
                                     ProductsCategory productsCategory = productsCategories.get(pos);
                                     productsCategory.setLike("1");
@@ -276,7 +281,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
 
                         @Override
                         public void onFailure(Call<GetAddToFavouriteResponse> call, Throwable t) {
-                            Toasty.error(DetailItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                            Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                             reloadDialog.dismiss();
                         }
                     });
@@ -289,26 +294,26 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
     boolean isLike = false;
 
 
-    @Override
-    public void onBackPressed() {
-        if (getIntent().getBooleanExtra("samethis", false)) {
-            super.onBackPressed();
-        } else {
-            Intent intent = new Intent();
-            intent.putExtra("databack", isLike);
-            intent.putExtra("added_to_cart", isAdded);
-            intent.putExtra("similar_product_change", isChanged);
-            setResult(RESULT_OK, intent);
-            finish();
-            Animatoo.animateSwipeRight(this);
-        }
-
-    }
+//    @Override
+//    public void onBackPressed() {
+//        if (getArguments().getBooleanExtra("samethis", false)) {
+//            super.onBackPressed();
+//        } else {
+//            Intent intent = new Intent();
+//            intent.putExtra("databack", isLike);
+//            intent.putExtra("added_to_cart", isAdded);
+//            intent.putExtra("similar_product_change", isChanged);
+//            setResult(RESULT_OK, intent);
+//            finish();
+//            Animatoo.animateSwipeRight(this);
+//        }
+//
+//    }
 
     public void initializeRecycler() {
-        RecyclerView.LayoutManager LayoutManager = new GridLayoutManager(this, 3);
-        RecyclerView.LayoutManager LayoutManager2 = new GridLayoutManager(this, 3);
-        LinearLayoutManager layoutManager3 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView.LayoutManager LayoutManager = new GridLayoutManager(getActivity(), 3);
+        RecyclerView.LayoutManager LayoutManager2 = new GridLayoutManager(getActivity(), 3);
+        LinearLayoutManager layoutManager3 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
         detail_recycler_colors_item.setLayoutManager(LayoutManager);
         detail_recycler_colors_item.setItemAnimator(new DefaultItemAnimator());
@@ -331,15 +336,15 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
     ArrayList<CapacityProduct> capicities;
 
     public void onLoadPage() {
-        productId = getIntent().getIntExtra("id", 0);
+        productId = getArguments().getInt("id", 0);
         images = new ArrayList<>();
         colors = new ArrayList<>();
         capicities = new ArrayList<>();
 
-        if (PreferenceUtils.getUserLogin(this)) {
-            token = PreferenceUtils.getUserToken(this);
-        } else if (PreferenceUtils.getCompanyLogin(this)) {
-            token = PreferenceUtils.getCompanyToken(this);
+        if (PreferenceUtils.getUserLogin(getActivity())) {
+            token = PreferenceUtils.getUserToken(getActivity());
+        } else if (PreferenceUtils.getCompanyLogin(getActivity())) {
+            token = PreferenceUtils.getCompanyToken(getActivity());
         }
 
         reloadDialog.show();
@@ -406,7 +411,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                             }
 
                         }
-                        startActivity(new Intent(DetailItemActivity.this , OfferItemActivity.class).putExtra(CATEGORY_ID_INTENT_EXTRA_KEY,category_id).putExtra(CATEGORY_NAME_INTENT_EXTRA , category_name)
+                        startActivity(new Intent(getActivity() , OfferItemActivity.class).putExtra(CATEGORY_ID_INTENT_EXTRA_KEY,category_id).putExtra(CATEGORY_NAME_INTENT_EXTRA , category_name)
                                 .putExtra(SUBCATEGORIES_INTENT_EXTRA_KEY , subCategoriesModel));
                     }
                 }
@@ -415,7 +420,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
 
             @Override
             public void onFailure(Call<GetAllCategories> call, Throwable t) {
-                Toasty.error(DetailItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -437,7 +442,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                             images.add("https://www.dleel-sh.com/homepages/get/" + getDetailProduct.getData().getProduct().getPhotos().get(i).getFilename());
                         }
                         if (flag) {
-                            slider_adapter = new SliderAdapter(DetailItemActivity.this, images);
+                            slider_adapter = new SliderAdapter(getActivity(), images);
                             imageSlider.setSliderAdapter(slider_adapter);
                             imageSlider.startAutoCycle();
                         }
@@ -454,7 +459,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
 
                         } else {
                             detail_item_text_price_before_linear.setVisibility(View.VISIBLE);
-                            detail_item_text_price_before.setText(PriceFormatter.toDecimalString(getDetailProduct.getData().getProduct().getOld_price(), getApplicationContext()));
+                            detail_item_text_price_before.setText(PriceFormatter.toDecimalString(getDetailProduct.getData().getProduct().getOld_price(), getActivity().getApplicationContext()));
                         }
                         if (!token.equalsIgnoreCase("")) {
 
@@ -477,7 +482,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                                         if (Integer.parseInt(details_quantaty_edit.getText().toString()) > 0) {
                                             addToCart();
                                         } else {
-                                            Toasty.error(DetailItemActivity.this, getString(R.string.cart_no_quantity_chosen_toast), Toast.LENGTH_LONG).show();
+                                            Toasty.error(getActivity(), getString(R.string.cart_no_quantity_chosen_toast), Toast.LENGTH_LONG).show();
                                         }
                                     }
                                 });
@@ -489,7 +494,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
 
                         categoryId = Integer.parseInt(getDetailProduct.getData().getProduct().getSubcategory().getCategory_id());
 
-                        detail_item_text_price.setText(PriceFormatter.toDecimalString(getDetailProduct.getData().getProduct().getPrice(), getApplicationContext()));
+                        detail_item_text_price.setText(PriceFormatter.toDecimalString(getDetailProduct.getData().getProduct().getPrice(), getActivity().getApplicationContext()));
 
                         Locale locale = ChangeLang.getLocale(getResources());
                         String loo = locale.getLanguage();
@@ -532,22 +537,22 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
 
                             if (capicities.size() > 0) {
                                 detail_linear_size_item.setVisibility(View.VISIBLE);
-                                detailSizeItemAdapter = new DetailSizeItemAdapter(DetailItemActivity.this, capicities);
+                                detailSizeItemAdapter = new DetailSizeItemAdapter(getActivity(), capicities);
                                 detailSizeItemAdapter.setDetailCapacityOperation(DetailItemActivity.this);
                                 detail_recycler_size_item.setAdapter(detailSizeItemAdapter);
                             }
-                            detailColorsItemAdapter = new DetailColorsItemAdapter(DetailItemActivity.this, colors);
+                            detailColorsItemAdapter = new DetailColorsItemAdapter(getActivity(), colors);
                             detailColorsItemAdapter.setDetailColorsOperation(DetailItemActivity.this);
 
 
                             detail_recycler_colors_item.setAdapter(detailColorsItemAdapter);
 
-                            slider_adapter = new SliderAdapter(DetailItemActivity.this, images);
+                            slider_adapter = new SliderAdapter(getActivity(), images);
                             imageSlider.setSliderAdapter(slider_adapter);
                             imageSlider.startAutoCycle();
                         }
 
-                        String alredy_like = getIntent().getStringExtra("getLike");
+                        String alredy_like = getArguments().getString("getLike");
 
                         if (alredy_like == null) {
                         } else if (Integer.parseInt(alredy_like) == 1) {
@@ -556,15 +561,15 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                             detail_like_img.setChecked(false);
                         }
 
-                        ArrayList<ProductsCategory> similarProducts = getIntent().getParcelableArrayListExtra("similar_products");
+                        ArrayList<ProductsCategory> similarProducts = getArguments().getParcelableArrayList("similar_products");
                         if (similarProducts != null && similarProducts.size() > 0) {
-                            phonesAdapter = new ProductsCategory3Adapter(DetailItemActivity.this, getIntent().getParcelableArrayListExtra("similar_products"));
+                            phonesAdapter = new ProductsCategory3Adapter(getActivity(), getArguments().getParcelableArrayList("similar_products"));
                             phonesAdapter.setProductsCategory3Operation(DetailItemActivity.this);
                             details_recycler_like_too.setAdapter(phonesAdapter);
                         } else {
                             details_like_too.setVisibility(View.GONE);
                         }
-                        detailDescriptionsAdapter = new DetailDescriptionsAdapter(desc_names, getSupportFragmentManager(), desc_options, full_desc);
+                        detailDescriptionsAdapter = new DetailDescriptionsAdapter(desc_names, getActivity().getSupportFragmentManager(), desc_options, full_desc);
                         detail_vpPager.setAdapter(detailDescriptionsAdapter);
                         onClickLike(Integer.parseInt(getDetailProduct.getData().getProduct().getId()));
                     }
@@ -575,7 +580,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
 
             @Override
             public void onFailure(Call<GetDetailProduct> call, Throwable t) {
-                Toasty.error(DetailItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -585,7 +590,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
     Dialog reloadDialog;
 
     private void showDialog() {
-        reloadDialog = new Dialog(this);
+        reloadDialog = new Dialog(getActivity());
         reloadDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         reloadDialog.setContentView(R.layout.reload_layout);
         reloadDialog.setCancelable(false);
@@ -600,10 +605,10 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
 
     @Override
     public void onClickProduct3(int id, int pos) {
-        ProductsCategory productsCategory = (ProductsCategory) getIntent().getParcelableArrayListExtra("similar_products").get(pos);
+        ProductsCategory productsCategory = (ProductsCategory) getArguments().getParcelableArrayList("similar_products").get(pos);
         String like = productsCategory.getLike();
-        startActivity(new Intent(this, DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", getIntent().getParcelableArrayListExtra("similar_products")).putExtra("getLike", like).putExtra("pos", pos).putExtra("samethis", true));
-        Animatoo.animateSwipeLeft(this);
+       startActivity(new Intent(getActivity(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", getArguments().getParcelableArrayList("similar_products")).putExtra("getLike", like).putExtra("pos", pos).putExtra("samethis", true));
+        Animatoo.animateSwipeLeft(getActivity());
     }
 
     @Override
@@ -612,7 +617,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
         convertDaraToJson(id);
         AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
         Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
-        if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
+        if (PreferenceUtils.getCompanyLogin(getContext())) {
             getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(favourite_post);
         } else {
             getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(favourite_post);
@@ -622,7 +627,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
             public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
                 GetAddToFavouriteResponse getAddToFavouriteResponse = response.body();
                 if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
-                    Toasty.success(DetailItemActivity.this, getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
+                    Toasty.success(getActivity(), getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
                     isChanged = true;
                 }
                 reloadDialog.dismiss();
@@ -630,7 +635,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
 
             @Override
             public void onFailure(Call<GetAddToFavouriteResponse> call, Throwable t) {
-                Toasty.error(DetailItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -641,7 +646,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
         prepareCartMap(id, "1");
         AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
         Call<GetAddToCardResponse> getAddToCardResponseCall;
-        if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
+        if (PreferenceUtils.getCompanyLogin(getActivity())) {
             post.put("language", "arabic");
             getAddToCardResponseCall = addToCardApi.getAddToCartcompany(post);
         } else {
@@ -652,18 +657,18 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
                 GetAddToCardResponse getAddToCardResponse = response.body();
                 if (getAddToCardResponse.getCode() == 200) {
-                    Toasty.success(DetailItemActivity.this, getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
+                    Toasty.success(getActivity(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
                     phonesAdapter.getProductsCategoryList().get(position).setCart("0");
                     phonesAdapter.notifyItemChanged(position);
                     isChanged = true;
-                    PreferenceUtils.saveCountOfItemsBasket(getApplicationContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                    PreferenceUtils.saveCountOfItemsBasket(getActivity().getApplicationContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
                 }
                 reloadDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<GetAddToCardResponse> call, Throwable t) {
-                Toasty.error(DetailItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -674,7 +679,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
     public void addToCart() {
         int quantity = Integer.parseInt(details_quantaty_edit.getText().toString());
         if (quantity > currentProduct.getAvailableQuantity()) {
-            Toasty.error(DetailItemActivity.this, getString(R.string.quantity_not_available_toast) + " " + currentProduct.getAvailableQuantity(), Toast.LENGTH_LONG).show();
+            Toasty.error(getActivity(), getString(R.string.quantity_not_available_toast) + " " + currentProduct.getAvailableQuantity(), Toast.LENGTH_LONG).show();
             reloadDialog.dismiss();
             return;
         }
@@ -682,7 +687,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
         prepareCartMap(productId, details_quantaty_edit.getText().toString());
         AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
         Call<GetAddToCardResponse> getAddToCardResponseCall;
-        if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
+        if (PreferenceUtils.getCompanyLogin(getActivity())) {
             post.put("language", "arabic");
             getAddToCardResponseCall = addToCardApi.getAddToCartcompany(post);
         } else {
@@ -700,7 +705,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                         details_add_to_card.setEnabled(false);
                         cartCountLinearLayout.setVisibility(View.GONE);
                         isAdded = true;
-                        PreferenceUtils.saveCountOfItemsBasket(getApplicationContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                        PreferenceUtils.saveCountOfItemsBasket(getActivity().getApplicationContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
                     }
                 }
                 reloadDialog.dismiss();
@@ -708,7 +713,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
 
             @Override
             public void onFailure(Call<GetAddToCardResponse> call, Throwable t) {
-                Toasty.error(DetailItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -716,13 +721,13 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
 
     public void prepareCartMap(int id, String quantity) {
         post = new HashMap<>();
-        if (PreferenceUtils.getUserLogin(this)) {
-            String token = PreferenceUtils.getUserToken(this);
+        if (PreferenceUtils.getUserLogin(getActivity())) {
+            String token = PreferenceUtils.getUserToken(getActivity());
             post.put("product_id", String.valueOf(id));
             post.put("token", token);
             post.put("quantity", String.valueOf(quantity));
-        } else if (PreferenceUtils.getCompanyLogin(this)) {
-            String token = PreferenceUtils.getCompanyToken(this);
+        } else if (PreferenceUtils.getCompanyLogin(getActivity())) {
+            String token = PreferenceUtils.getCompanyToken(getActivity());
             post.put("product_id", String.valueOf(id));
             post.put("token", token);
             post.put("quantity", String.valueOf(quantity));

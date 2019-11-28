@@ -17,6 +17,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.Constants;
+import com.zeidex.eldalel.utils.CustomViewPager;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 
 import java.lang.reflect.Field;
@@ -30,6 +31,8 @@ import static com.zeidex.eldalel.utils.Constants.SELECTED_ITEM;
 public class MainActivity extends BaseActivity {
     @BindView(R.id.bottom_nav)
     BottomNavigationView mBottomNav;
+    @BindView(R.id.main_viewpager)
+    CustomViewPager mainViewPager;
     private int mSelectedItem;
     public boolean login;
     Fragment frag = null;
@@ -153,50 +156,67 @@ public class MainActivity extends BaseActivity {
         // init corresponding fragment
         switch (item.getItemId()) {
             case R.id.main_fragment:
-                frag = new MainFragment();
-                tag = "main_fragment";
+//                frag = mMainFragment;
+//                tag = MAIN_FRAGMENT_TAG;
+                mainViewPager.setCurrentItem(0);
                 break;
 
             case R.id.categories_fragment:
-                frag = new CategoriesFragment();
-                tag = "categorie_fragment";
+//                frag = mCategoriesFragment;
+//                tag = CATEGORIE_FRAGMENT_TAG;
+                mainViewPager.setCurrentItem(1);
                 break;
 
             case R.id.account_fragment:
                 login = PreferenceUtils.getUserLogin(this);
-                if (!login && !PreferenceUtils.getCompanyLogin(this)){
-                    frag = new AccountFragment();
-                    tag = "account_fragment";
-                }else {
-                    frag = new AccountAfterLoginFragment();
-                    tag = "accountafterlogin_fragment";
+                if (!login && !PreferenceUtils.getCompanyLogin(this)) {
+//                    frag = mAccountFragment;
+//                    tag = ACCOUNT_FRAGMENT_TAG;
+                    mainViewPager.setCurrentItem(4);
+                } else {
+//                    frag = new AccountAfterLoginFragment();
+//                    tag = ACCOUNTAFTERLOGIN_FRAGMENT_TAG;
+                    mainViewPager.setCurrentItem(5);
                 }
                 break;
 
             case R.id.basket_fragment:
-                frag = new BasketFragment();
-                tag = "basket_fragment";
+//                frag = mBasketFragment;
+//                tag = BASKET_FRAGMENT_TAG;
+                mainViewPager.setCurrentItem(3);
                 break;
 
             case R.id.offers_fragment:
-                frag = new OffersFragment();
-                tag = "offers_fragment";
+//                frag = mOffersFragment;
+//                tag = OFFERS_FRAGMENT_TAG;
+                mainViewPager.setCurrentItem(2);
                 break;
         }
 
 //         update selected item
-        mSelectedItem = item.getItemId();
-//
+//        mSelectedItem = item.getItemId();
+//        mFragmentMenuItem.push(mSelectedItem);
 
+//        if (mFragmentsStack.contains(tag)) {
+//            mFragmentsStack.remove(tag);
+//            mFragmentMenuItem.remove(mSelectedItem);
+//        }
+//        mFragmentsStack.push(tag);
+//        mFragmentMenuItem.push(mSelectedItem);
+
+//
+//        pushFragments(tag, frag);
 
 //        updateToolbarText(item.getTitle());
 
-        if (frag != null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
-            ft.replace(R.id.container_activity, frag, tag);
-            ft.commit();
-        }
+//        if (frag != null) {
+//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//            ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
+//            ft.add(R.id.nav_host_fragment, frag, tag);
+//            ft.addToBackStack(null);
+//            ft.commit();
+//        }
+
     }
 
 

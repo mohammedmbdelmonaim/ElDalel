@@ -30,6 +30,7 @@ import com.zeidex.eldalel.adapters.AccessoriesAdapter;
 import com.zeidex.eldalel.adapters.HomeSliderAdapter;
 import com.zeidex.eldalel.adapters.PhonesAdapter;
 import com.zeidex.eldalel.adapters.ProductsCategory3Adapter;
+import com.zeidex.eldalel.listeners.FirstPageFragmentListener;
 import com.zeidex.eldalel.models.ProductsCategory;
 import com.zeidex.eldalel.models.Subcategory;
 import com.zeidex.eldalel.models.Subsubcategory;
@@ -144,6 +145,12 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
     ProductsCategory3Adapter category3Adapter;
 
     HomeSliderAdapter homeSliderAdapter;
+
+    static FirstPageFragmentListener firstPageListener;
+
+    public MainFragment(FirstPageFragmentListener listener){
+        firstPageListener = listener;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
