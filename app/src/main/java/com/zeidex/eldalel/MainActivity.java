@@ -32,6 +32,7 @@ public class MainActivity extends BaseActivity {
     BottomNavigationView mBottomNav;
     private int mSelectedItem;
     public boolean login;
+    Fragment frag = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,16 @@ public class MainActivity extends BaseActivity {
             notificationManager.createNotificationChannel(new NotificationChannel(channelId,
                     channelName, NotificationManager.IMPORTANCE_LOW));
         }
+
+//        frag = new FragmentFooterView();
+//        if (frag != null) {
+//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//            ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
+//            ft.replace(R.id.fooFragment, frag, "footer");
+//            ft.commit();
+//        }
+
+
 //        disableShiftMode(mBottomNav);
         mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

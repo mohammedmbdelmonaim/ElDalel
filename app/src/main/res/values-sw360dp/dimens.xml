@@ -34,6 +34,7 @@
 
     <dimen name="dimen_20dp">20dp</dimen>
 
+    <dimen name="slider_hight">175dp</dimen>
     <dimen name="dimen_22dp">22dp</dimen>
     <dimen name="dimen_23dp">23dp</dimen>
     <dimen name="dimen_24dp">24dp</dimen>
@@ -79,5 +80,8 @@
     <dimen name="dimen_18sp">18sp</dimen>
     <dimen name="dimen_20sp">20sp</dimen>
     <dimen name="dimen_24sp">24sp</dimen>
+    <dimen name="dimen160_dp">160dp</dimen>
+    <dimen name="dimen_126dp">126dp</dimen>
+    <dimen name="dimens_140dp">140dp</dimen>
 
 </resources>

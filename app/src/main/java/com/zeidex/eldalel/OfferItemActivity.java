@@ -61,7 +61,6 @@ import static com.zeidex.eldalel.ProductsFragment.SORT_DATE_DESC_INDEX;
 import static com.zeidex.eldalel.ProductsFragment.SORT_DESC;
 import static com.zeidex.eldalel.SearchActivity.SEARCH_NAME_ARGUMENT;
 import static com.zeidex.eldalel.adapters.CategoriesItemAdapter.SUBCATEGORY_ID_INTENT_EXTRA;
-import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
 public class OfferItemActivity extends BaseActivity implements CategoryItemAdapter.CategoryItemOperation, SubCategoriesAdapter.SubCategoryOperation {
@@ -338,13 +337,13 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
                     products.add(new ProductsCategory(currentProductResponse.getId(), "",
                             currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName_ar(),
                             currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
-                            currentProductResponse.getFavorite(), String.valueOf(currentProductResponse.getCart()),
+                            currentProductResponse.getFavorite(), currentProductResponse.getCart(),
                             currentProductResponse.getAvailable_quantity()));
                 } else {
                     products.add(new ProductsCategory(currentProductResponse.getId(), currentProductResponse.getPhotos().get(0).getFilename(),
                             currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName_ar(),
                             currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
-                            currentProductResponse.getFavorite(), String.valueOf(currentProductResponse.getCart()), currentProductResponse.getAvailable_quantity()));
+                            currentProductResponse.getFavorite(), currentProductResponse.getCart(), currentProductResponse.getAvailable_quantity()));
                 }
             }
         } else {
@@ -358,14 +357,14 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
                     products.add(new ProductsCategory(currentProductResponse.getId(), "",
                             currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName(),
                             currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
-                            currentProductResponse.getFavorite(), String.valueOf(currentProductResponse.getCart()),
+                            currentProductResponse.getFavorite(), currentProductResponse.getCart(),
                             currentProductResponse.getAvailable_quantity()));
 
                 } else {
                     products.add(new ProductsCategory(currentProductResponse.getId(), currentProductResponse.getPhotos().get(0).getFilename(),
                             currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName(),
                             currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
-                            currentProductResponse.getFavorite(), String.valueOf(currentProductResponse.getCart()), currentProductResponse.getAvailable_quantity()));
+                            currentProductResponse.getFavorite(), currentProductResponse.getCart(), currentProductResponse.getAvailable_quantity()));
                 }
             }
         }
@@ -481,7 +480,7 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
                 GetAddToCardResponse getAddToCardResponse = response.body();
                 if (getAddToCardResponse.getCode() == 200) {
                     Toasty.success(OfferItemActivity.this, getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
-                    productsAdapter.getProductsList().get(position).setCart(String.valueOf(CART_NOT_EMPTY));
+                    productsAdapter.getProductsList().get(position).setCart("0");
                     productsAdapter.notifyItemChanged(position);
                     PreferenceUtils.saveCountOfItemsBasket(OfferItemActivity.this, Integer.parseInt(getAddToCardResponse.getItemsCount()));
                 }
@@ -534,7 +533,7 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
                 productsAdapter.notifyItemChanged(position_detail);
             }
             if (data.getBooleanExtra("added_to_cart", false)) {
-                productsCategory.get(position_detail).setCart(String.valueOf(CART_NOT_EMPTY));
+                productsCategory.get(position_detail).setCart("0");
                 productsAdapter.notifyItemChanged(position_detail);
             }
         }

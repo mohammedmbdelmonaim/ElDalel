@@ -8,14 +8,14 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:644606700655:android:94e8d1138315323674f19a",
+        "mobilesdk_app_id": "1:644606700655:android:14f9e11d302d7ced74f19a",
         "android_client_info": {
           "package_name": "com.zeidex.eldalel"
         }
       },
       "oauth_client": [
         {
-          "client_id": "644606700655-k1v8ggu4bhki32k971i3m6gkisk6in4g.apps.googleusercontent.com",
+          "client_id": "644606700655-drnu6v64dpkqv7el5vk33v23ceinc0jr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.zeidex.eldalel",

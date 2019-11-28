@@ -48,6 +48,9 @@ public class PaymentPhoneNumberFragment extends Fragment {
     @BindView(R.id.fragment_payment_phone_number_btn_sure)
     AppCompatTextView fragment_payment_phone_number_btn_sure;
 
+    @BindView(R.id.fragment_payment_phone_number_text_change)
+    AppCompatTextView fragment_payment_phone_number_text_change;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,6 +75,8 @@ public class PaymentPhoneNumberFragment extends Fragment {
 
         state_addresses = args.getString("from");
 
+
+
         if (PreferenceUtils.getCompanyLogin(getActivity())) {
             token = PreferenceUtils.getCompanyToken(getActivity());
         } else if (PreferenceUtils.getUserLogin(getActivity())) {
@@ -84,6 +89,11 @@ public class PaymentPhoneNumberFragment extends Fragment {
             lang = "english";
         } else {
             lang = "arabic";
+        }
+
+        if (state_addresses.equalsIgnoreCase("pay")){
+            fragment_payment_phone_number_text_change.setVisibility(View.GONE);
+            sendCodeToMobile();
         }
     }
 
@@ -135,6 +145,15 @@ public class PaymentPhoneNumberFragment extends Fragment {
                     GetSendCodeResponse getSendCodeResponse = response.body();
                     if (getSendCodeResponse.isSuccess()) {
                         Toasty.success(getActivity(), getSendCodeResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        if (state_addresses.equalsIgnoreCase("pay")){
+                            Fragment fragment = new PayidFragment();
+                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
+                            ft.replace(R.id.payment_constrant, fragment, fragment.getTag());
+                            ft.commit();
+                            reloadDialog.dismiss();
+                            return;
+                        }
                         Fragment fragment = new ShoopingListAddressesFragment();
                         Bundle args = new Bundle();
                         args.putString("from", state_addresses);

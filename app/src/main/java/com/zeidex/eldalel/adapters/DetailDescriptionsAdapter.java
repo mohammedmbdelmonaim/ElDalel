@@ -6,8 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.zeidex.eldalel.CategoryFragment;
-import com.zeidex.eldalel.utils.DetailDescFragment;
+import com.zeidex.eldalel.DetailDescFragment;
 import com.zeidex.eldalel.utils.SmartFragmentStatePagerAdapter;
 
 import java.util.List;

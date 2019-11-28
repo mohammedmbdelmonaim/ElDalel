@@ -1,10 +1,7 @@
 package com.zeidex.eldalel;
 
-import androidx.core.app.ActivityCompat;
-
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,8 +27,9 @@ public class ContactUsActivity extends BaseActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_us);
         ButterKnife.bind(this);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
+        mapView.setVisibility(View.GONE);
+//        mapView.onCreate(savedInstanceState);
+//        mapView.getMapAsync(this);
 
     }
 
@@ -62,7 +60,7 @@ public class ContactUsActivity extends BaseActivity implements OnMapReadyCallbac
     @Override
     protected void onResume() {
         super.onResume();
-        mapView.onResume();
+//        mapView.onResume();
 
 
     }
@@ -70,27 +68,27 @@ public class ContactUsActivity extends BaseActivity implements OnMapReadyCallbac
     @Override
     protected void onPause() {
         super.onPause();
-        mapView.onPause();
+//        mapView.onPause();
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mapView.onDestroy();
+//        mapView.onDestroy();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mapView.onStop();
+//        mapView.onStop();
 
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mapView.onLowMemory();
+//        mapView.onLowMemory();
 
     }
 }

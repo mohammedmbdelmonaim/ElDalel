@@ -3,16 +3,20 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:fillViewport="true">
- <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
-    android:id="@+id/detail_description_desc"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-     android:padding="@dimen/dimen_5dp"
-    android:letterSpacing="0.3"
-    android:lineSpacingExtra="@dimen/dimen_3dp"
-    android:textSize="@dimen/dimen_12sp"
-    android:textColor="@color/colorPrimaryDark"
-    android:fontFamily="@font/cairo_bold">
+ <!--<androidx.appcompat.widget.AppCompatTextView-->
+    <!--android:id="@+id/detail_description_desc"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+     <!--android:padding="@dimen/dimen_5dp"-->
+    <!--android:letterSpacing="0.3"-->
+    <!--android:lineSpacingExtra="@dimen/dimen_3dp"-->
+    <!--android:textSize="@dimen/dimen_12sp"-->
+    <!--android:fontFamily="@font/cairo_bold">-->
+<!--</androidx.appcompat.widget.AppCompatTextView>-->
 
-</androidx.appcompat.widget.AppCompatTextView>
+ <com.zeidex.eldalel.utils.CustomWebView
+     android:id="@+id/webview"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     />
 </androidx.core.widget.NestedScrollView>

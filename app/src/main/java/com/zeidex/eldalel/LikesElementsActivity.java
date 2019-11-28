@@ -16,10 +16,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zeidex.eldalel.adapters.LikesElementsAdapter;
-import com.zeidex.eldalel.response.GetFavorites;
 import com.zeidex.eldalel.models.ProductsCategory;
 import com.zeidex.eldalel.response.DeleteFavoriteResponse;
 import com.zeidex.eldalel.response.GetAddToCardResponse;
+import com.zeidex.eldalel.response.GetFavorites;
 import com.zeidex.eldalel.services.AddToCardApi;
 import com.zeidex.eldalel.services.FavoritesAPI;
 import com.zeidex.eldalel.utils.APIClient;
@@ -36,12 +36,12 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
 public class LikesElementsActivity extends BaseActivity implements LikesElementsAdapter.LikesOperation {
@@ -80,6 +80,11 @@ public class LikesElementsActivity extends BaseActivity implements LikesElements
 
         showDialog();
         onLoadPage();
+    }
+
+    @OnClick(R.id.item_favourite_back)
+    public void onback(){
+        onBackPressed();
     }
 
     private void onLoadPage() {
@@ -160,14 +165,14 @@ public class LikesElementsActivity extends BaseActivity implements LikesElements
                     products.add(new ProductsCategory(String.valueOf(currentProductResponse.getProduct().getId()), "",
                             discountString, firstWord, currentProductResponse.getProduct().getNameAr(),
                             priceString, priceBeforeString,
-                            "", currentProductResponse.getProduct().getCart() + "",
+                            "", currentProductResponse.getProduct().getCart(),
                             currentProductResponse.getProduct().getAvailableQuantity() + ""));
                 } else {
                     products.add(new ProductsCategory(String.valueOf(currentProductResponse.getProduct().getId()),
                             currentProductResponse.getProduct().getPhotos().get(0).getFilename(),
                             discountString, firstWord, currentProductResponse.getProduct().getNameAr(),
                             priceString, priceBeforeString,
-                            "", currentProductResponse.getProduct().getCart() + "",
+                            "", currentProductResponse.getProduct().getCart(),
                             currentProductResponse.getProduct().getAvailableQuantity() + ""));
                 }
             }
@@ -187,7 +192,7 @@ public class LikesElementsActivity extends BaseActivity implements LikesElements
                     products.add(new ProductsCategory(String.valueOf(currentProductResponse.getProduct().getId()), "",
                             discountString, firstWord, currentProductResponse.getProduct().getName(),
                             String.valueOf(currentProductResponse.getProduct().getPrice()), priceBeforeString,
-                            "", currentProductResponse.getProduct().getCart() + "",
+                            "", currentProductResponse.getProduct().getCart(),
                             currentProductResponse.getProduct().getAvailableQuantity() + ""));
 
                 } else {
@@ -195,7 +200,7 @@ public class LikesElementsActivity extends BaseActivity implements LikesElements
                             currentProductResponse.getProduct().getPhotos().get(0).getFilename(),
                             discountString, firstWord, currentProductResponse.getProduct().getName(),
                             String.valueOf(currentProductResponse.getProduct().getPrice()), priceBeforeString,
-                            "", currentProductResponse.getProduct().getCart() + "",
+                            "", currentProductResponse.getProduct().getCart(),
                             currentProductResponse.getProduct().getAvailableQuantity() + ""));
                 }
             }
@@ -228,7 +233,7 @@ public class LikesElementsActivity extends BaseActivity implements LikesElements
                 GetAddToCardResponse getAddToCardResponse = response.body();
                 if (getAddToCardResponse.getCode() == 200) {
                     Toasty.success(LikesElementsActivity.this, getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
-                    likesElementsAdapter.getProductsList().get(position).setCart(String.valueOf(CART_NOT_EMPTY));
+                    likesElementsAdapter.getProductsList().get(position).setCart("0");
                     likesElementsAdapter.notifyItemChanged(position);
                     PreferenceUtils.saveCountOfItemsBasket(LikesElementsActivity.this, Integer.parseInt(getAddToCardResponse.getItemsCount()));
                 }

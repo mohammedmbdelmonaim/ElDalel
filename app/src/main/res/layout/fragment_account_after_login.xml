@@ -226,7 +226,6 @@
                 android:elevation="@dimen/dimen_4dp"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:visibility="gone"
                 android:paddingStart="@dimen/dimen_18dp"
                 android:paddingTop="@dimen/dimen_14dp"
                 android:paddingEnd="@dimen/dimen_10dp"

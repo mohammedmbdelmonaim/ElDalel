@@ -173,8 +173,11 @@ public class ProfileActivity extends BaseActivity {
             @Override
             public void onResponse(Call<GetProfileInfo> call, Response<GetProfileInfo> response) {
                 GetProfileInfo getProfileInfo = response.body();
+                if (getProfileInfo.getCityId() != null)
                 id_city = getProfileInfo.getCityId();
+                if (getProfileInfo.getSubsidiaryId() != null)
                 id_region = getProfileInfo.getSubsidiaryId();
+                if (getProfileInfo.getCountryId() != null)
                 id_country = getProfileInfo.getCountryId();
 
                 if (getProfileInfo.getFirstName() !=  null)

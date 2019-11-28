@@ -115,11 +115,14 @@ public class GetDetailProduct {
         @SerializedName("old_price")
         Double old_price;
 
-        @SerializedName("shortDesc")
+        @SerializedName("long_description_en")
         String shortDesc;
 
-        @SerializedName("shortDescAr")
+        @SerializedName("long_description_ar")
         String shortDescAr;
+
+        @SerializedName("description")
+        String description;
 
         @SerializedName("status")
         String status;
@@ -154,14 +157,22 @@ public class GetDetailProduct {
         @SerializedName("colors")
         List<Color> colors;
 
-        @SerializedName("cart")
-        Integer cart;
+        @SerializedName("cart_status")
+        String cart;
 
         @SerializedName("available_quantity")
         Integer availableQuantity;
 
         @SerializedName("capacities")
-        List<String> capacities;
+        List<Capacity> capacities;
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
 
         public List<Color> getColors() {
             return colors;
@@ -171,11 +182,11 @@ public class GetDetailProduct {
             this.colors = colors;
         }
 
-        public List<String> getCapacities() {
+        public List<Capacity> getCapacities() {
             return capacities;
         }
 
-        public void setCapacities(List<String> capacities) {
+        public void setCapacities(List<Capacity> capacities) {
             this.capacities = capacities;
         }
 
@@ -315,11 +326,11 @@ public class GetDetailProduct {
             this.discount = discount;
         }
 
-        public Integer getCart() {
+        public String  getCart() {
             return cart;
         }
 
-        public void setCart(Integer cart) {
+        public void setCart(String cart) {
             this.cart = cart;
         }
 
@@ -337,6 +348,31 @@ public class GetDetailProduct {
 
         public void setPhotos(List<Photo> photos) {
             this.photos = photos;
+        }
+    }
+
+
+    public class Capacity{
+        @SerializedName("name")
+        String name;
+
+        @SerializedName("product_id")
+        String product_id;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getProduct_id() {
+            return product_id;
+        }
+
+        public void setProduct_id(String product_id) {
+            this.product_id = product_id;
         }
     }
 
@@ -397,6 +433,17 @@ public class GetDetailProduct {
 
         @SerializedName("id")
         String id;
+
+        @SerializedName("category_id")
+        String category_id;
+
+        public String getCategory_id() {
+            return category_id;
+        }
+
+        public void setCategory_id(String category_id) {
+            this.category_id = category_id;
+        }
 
         public String getName() {
             return name;

@@ -15,7 +15,9 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -29,13 +31,18 @@ import com.zeidex.eldalel.adapters.DetailDescriptionsAdapter;
 import com.zeidex.eldalel.adapters.DetailSizeItemAdapter;
 import com.zeidex.eldalel.adapters.ProductsCategory3Adapter;
 import com.zeidex.eldalel.adapters.SliderAdapter;
+import com.zeidex.eldalel.models.CapacityProduct;
 import com.zeidex.eldalel.models.ColorProduct;
 import com.zeidex.eldalel.models.ProductsCategory;
+import com.zeidex.eldalel.models.Subcategory;
+import com.zeidex.eldalel.models.Subsubcategory;
 import com.zeidex.eldalel.response.GetAddToCardResponse;
 import com.zeidex.eldalel.response.GetAddToFavouriteResponse;
+import com.zeidex.eldalel.response.GetAllCategories;
 import com.zeidex.eldalel.response.GetDetailProduct;
 import com.zeidex.eldalel.services.AddToCardApi;
 import com.zeidex.eldalel.services.AddToFavouriteApi;
+import com.zeidex.eldalel.services.AllCategoriesAPI;
 import com.zeidex.eldalel.services.DetailProduct;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.Animatoo;
@@ -57,12 +64,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
+import static com.zeidex.eldalel.OffersFragment.CATEGORY_NAME_INTENT_EXTRA;
+import static com.zeidex.eldalel.OffersFragment.SUBCATEGORIES_INTENT_EXTRA_KEY;
 import static com.zeidex.eldalel.SearchActivity.SEARCH_NAME_ARGUMENT;
-import static com.zeidex.eldalel.utils.Constants.CART_EMPTY;
-import static com.zeidex.eldalel.utils.Constants.NOT_AVAILABLE;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
-public class DetailItemActivity extends BaseActivity implements ProductsCategory3Adapter.ProductsCategory3Operation, DetailColorsItemAdapter.DetailColorsOperation {
+public class DetailItemActivity extends BaseActivity implements ProductsCategory3Adapter.ProductsCategory3Operation, DetailColorsItemAdapter.DetailColorsOperation, DetailSizeItemAdapter.DetailCapacityOperation {
     public static final int CART_NOT_EMPTY = 1;
     @BindView(R.id.imageSlider)
     SliderView imageSlider;
@@ -150,12 +158,13 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
     private GetDetailProduct.Product currentProduct;
     private boolean isAdded;
     private boolean isChanged;
-
+    Fragment frag = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_item);
         ButterKnife.bind(this);
+
         findViews();
         initializeRecycler();
         showDialog();
@@ -243,7 +252,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                     Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
                     if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
                         getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(favourite_post);
-                    }else {
+                    } else {
                         getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(favourite_post);
                     }
                     getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
@@ -297,14 +306,14 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
     }
 
     public void initializeRecycler() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView.LayoutManager LayoutManager = new GridLayoutManager(this, 3);
+        RecyclerView.LayoutManager LayoutManager2 = new GridLayoutManager(this, 3);
         LinearLayoutManager layoutManager3 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
-        detail_recycler_colors_item.setLayoutManager(layoutManager);
+        detail_recycler_colors_item.setLayoutManager(LayoutManager);
         detail_recycler_colors_item.setItemAnimator(new DefaultItemAnimator());
 
-        detail_recycler_size_item.setLayoutManager(layoutManager2);
+        detail_recycler_size_item.setLayoutManager(LayoutManager2);
         detail_recycler_size_item.setItemAnimator(new DefaultItemAnimator());
 
         details_recycler_like_too.setLayoutManager(layoutManager3);
@@ -319,7 +328,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
     ArrayList<String> images;
     SliderAdapter slider_adapter;
     ArrayList<ColorProduct> colors;
-    ArrayList<String> capicities;
+    ArrayList<CapacityProduct> capicities;
 
     public void onLoadPage() {
         productId = getIntent().getIntExtra("id", 0);
@@ -335,6 +344,81 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
 
         reloadDialog.show();
         getDetarServer(productId, false);
+    }
+
+    int categoryId;
+    String category_name;
+    ArrayList<Subcategory> subCategoriesModel;
+    @OnClick(R.id.detail_name_text)
+    public void goToCategory() {
+        subCategoriesModel = new ArrayList<>();
+        getAllCategories(categoryId);
+//        CategoriesFragment categoriesFragment = new CategoriesFragment();
+//        Bundle bundle = new Bundle();
+//        bundle.putInt("category_id", categoryId);
+//        categoriesFragment.setArguments(bundle);
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        ft.addToBackStack(null);
+//        ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
+//        ft.replace(R.id.linear_detail_replace, categoriesFragment, "categorie_fragment");
+//        ft.commit();
+    }
+
+
+    private List<GetAllCategories.Category> categories;
+    ArrayList<Subsubcategory> subsubcategories;
+    int clickSubCategoryId;
+    Subcategory clickSubCategory;
+    private void getAllCategories(int category_id) {
+        subsubcategories = new ArrayList<>();
+        reloadDialog.show();
+        AllCategoriesAPI allCategoriesAPI = APIClient.getClient(SERVER_API_TEST).create(AllCategoriesAPI.class);
+        allCategoriesAPI.getAllCategories(1).enqueue(new Callback<GetAllCategories>() {
+            @Override
+            public void onResponse(Call<GetAllCategories> call, Response<GetAllCategories> response) {
+                if (response.body() != null) {
+                    int code = response.body().getCode();
+                    if (code == 200) {
+                        categories = response.body().getData().getCategories();
+                        if (categories.size() > 0) {
+                            for (GetAllCategories.Category category : categories) {
+                                if (category.getId() == category_id) {
+                                    Locale locale = ChangeLang.getLocale(getResources());
+                                    String loo = locale.getLanguage();
+                                    if (loo.equalsIgnoreCase("en")) {
+                                        category_name = category.getName();
+                                    }else if (loo.equalsIgnoreCase("ar")) {
+                                        category_name = category.getNameAr();
+                                    }
+                                    for (int j = 0; j < category.getSubcategories().size(); j++) {
+
+                                        if (category.getSubcategories().get(j).getId() == clickSubCategoryId){
+                                            clickSubCategory = new Subcategory(category.getSubcategories().get(j).getId(), category.getSubcategories().get(j).getNameAr(),
+                                                    category.getSubcategories().get(j).getName(), category.getSubcategories().get(j).getPhoto() , subsubcategories);
+                                            subCategoriesModel.add(0 , clickSubCategory);
+                                            continue;
+                                        }
+                                        subCategoriesModel.add(new Subcategory(category.getSubcategories().get(j).getId(), category.getSubcategories().get(j).getNameAr(),
+                                                category.getSubcategories().get(j).getName(), category.getSubcategories().get(j).getPhoto() , subsubcategories));
+                                    }
+                                    break;
+                                }
+                            }
+
+                        }
+                        startActivity(new Intent(DetailItemActivity.this , OfferItemActivity.class).putExtra(CATEGORY_ID_INTENT_EXTRA_KEY,category_id).putExtra(CATEGORY_NAME_INTENT_EXTRA , category_name)
+                                .putExtra(SUBCATEGORIES_INTENT_EXTRA_KEY , subCategoriesModel));
+                    }
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetAllCategories> call, Throwable t) {
+                Toasty.error(DetailItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
     }
 
     public void getDetarServer(int id, boolean flag) {
@@ -372,17 +456,18 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                             detail_item_text_price_before_linear.setVisibility(View.VISIBLE);
                             detail_item_text_price_before.setText(PriceFormatter.toDecimalString(getDetailProduct.getData().getProduct().getOld_price(), getApplicationContext()));
                         }
-                        if(!token.equalsIgnoreCase("")) {
+                        if (!token.equalsIgnoreCase("")) {
 
-                        int cartStatus = currentProduct.getCart();
-                        int availableQuantity = currentProduct.getAvailableQuantity();
-
-
-                        if (cartStatus == CART_EMPTY) {
-                            if (availableQuantity == NOT_AVAILABLE) {
+                            int cartStatus = Integer.parseInt(currentProduct.getCart());
+                            if (cartStatus == 2) {
                                 details_add_to_card.setBackgroundColor(Color.parseColor("#B2B4B4"));
                                 details_add_to_card.setText(R.string.cart_out_of_stock_label);
                                 cartCountLinearLayout.setVisibility(View.GONE);
+                            } else if (cartStatus == 0) {
+                                details_add_to_card.setBackgroundColor(Color.parseColor("#46C004"));
+                                details_add_to_card.setText(R.string.add_to_card);
+                                cartCountLinearLayout.setVisibility(View.GONE);
+
                             } else {
                                 details_add_to_card.setBackgroundColor(Color.parseColor("#047AC0"));
                                 details_add_to_card.setText(R.string.phone_row_add_to_card_txt);
@@ -398,42 +483,42 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                                 });
                                 cartCountLinearLayout.setVisibility(View.VISIBLE);
                             }
-                        } else if (cartStatus == CART_NOT_EMPTY) {
-                            details_add_to_card.setBackgroundColor(Color.parseColor("#46C004"));
-                            details_add_to_card.setText(R.string.add_to_card);
-                            cartCountLinearLayout.setVisibility(View.GONE);
+
+                            details_add_to_cart_whole_layout.setVisibility(View.VISIBLE);
                         }
 
-                        details_add_to_cart_whole_layout.setVisibility(View.VISIBLE);
-                        }
-
+                        categoryId = Integer.parseInt(getDetailProduct.getData().getProduct().getSubcategory().getCategory_id());
 
                         detail_item_text_price.setText(PriceFormatter.toDecimalString(getDetailProduct.getData().getProduct().getPrice(), getApplicationContext()));
 
                         Locale locale = ChangeLang.getLocale(getResources());
                         String loo = locale.getLanguage();
                         if (loo.equalsIgnoreCase("en")) {
+                            category_name = getDetailProduct.getData().getProduct().getName();
                             detail_title_header_text.setText(getDetailProduct.getData().getProduct().getName());
                             detail_name_text.setText(getDetailProduct.getData().getProduct().getSubcategory().getName());
                             detail_sescription_text.setText(getDetailProduct.getData().getProduct().getName());
                             full_desc = getDetailProduct.getData().getProduct().getShortDesc();
 
                         } else if (loo.equalsIgnoreCase("ar")) {
+                            category_name = getDetailProduct.getData().getProduct().getName_ar();
                             detail_title_header_text.setText(getDetailProduct.getData().getProduct().getName_ar());
                             detail_name_text.setText(getDetailProduct.getData().getProduct().getSubcategory().getName_ar());
                             detail_sescription_text.setText(getDetailProduct.getData().getProduct().getName_ar());
                             full_desc = getDetailProduct.getData().getProduct().getShortDescAr();
                         }
 
-                        desc_options = "";
+                        clickSubCategoryId = Integer.parseInt(getDetailProduct.getData().getProduct().getSubcategory_id());
+
+                        desc_options = getDetailProduct.getData().getProduct().getDescription();
 
 
-                        for (int i = 0; i < getDetailProduct.getData().getProduct().getOptiongroups().size(); i++) {
-                            if (getDetailProduct.getData().getProduct().getOptiongroups().get(i).getFeatures() == null || getDetailProduct.getData().getProduct().getOptiongroups().get(i).getName() == null || getDetailProduct.getData().getProduct().getOptiongroups().get(i).getName().equalsIgnoreCase("")) {
-                                continue;
-                            }
-                            desc_options = desc_options + (getDetailProduct.getData().getProduct().getOptiongroups().get(i).getName() + " : " + getDetailProduct.getData().getProduct().getOptiongroups().get(i).getFeatures().get(0) + "\n");
-                        }
+//                        for (int i = 0; i < getDetailProduct.getData().getProduct().getOptiongroups().size(); i++) {
+//                            if (getDetailProduct.getData().getProduct().getOptiongroups().get(i).getFeatures() == null || getDetailProduct.getData().getProduct().getOptiongroups().get(i).getName() == null || getDetailProduct.getData().getProduct().getOptiongroups().get(i).getName().equalsIgnoreCase("")) {
+//                                continue;
+//                            }
+//                            desc_options = desc_options + (getDetailProduct.getData().getProduct().getOptiongroups().get(i).getName() + " : " + getDetailProduct.getData().getProduct().getOptiongroups().get(i).getFeatures().get(0) + "\n");
+//                        }
 
 
                         if (!flag) {
@@ -441,13 +526,14 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                                 colors.add(new ColorProduct(currentProduct.getColors().get(i).getProduct_id(), currentProduct.getColors().get(i).getName(), currentProduct.getColors().get(i).getPhoto()));
                             }
 
-                            for (int i = 0; i < getDetailProduct.getData().getProduct().getCapacities().size(); i++) {
-                                capicities.add(getDetailProduct.getData().getProduct().getCapacities().get(i));
+                            for (int i = 0; i < currentProduct.getCapacities().size(); i++) {
+                                capicities.add(new CapacityProduct(currentProduct.getCapacities().get(i).getProduct_id(),currentProduct.getCapacities().get(i).getName()));
                             }
 
                             if (capicities.size() > 0) {
                                 detail_linear_size_item.setVisibility(View.VISIBLE);
                                 detailSizeItemAdapter = new DetailSizeItemAdapter(DetailItemActivity.this, capicities);
+                                detailSizeItemAdapter.setDetailCapacityOperation(DetailItemActivity.this);
                                 detail_recycler_size_item.setAdapter(detailSizeItemAdapter);
                             }
                             detailColorsItemAdapter = new DetailColorsItemAdapter(DetailItemActivity.this, colors);
@@ -528,7 +614,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
         Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
         if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
             getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(favourite_post);
-        }else {
+        } else {
             getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(favourite_post);
         }
         getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
@@ -556,9 +642,9 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
         AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
         Call<GetAddToCardResponse> getAddToCardResponseCall;
         if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
-            post.put("language" , "arabic");
+            post.put("language", "arabic");
             getAddToCardResponseCall = addToCardApi.getAddToCartcompany(post);
-        }else {
+        } else {
             getAddToCardResponseCall = addToCardApi.getAddToCart(post);
         }
         getAddToCardResponseCall.enqueue(new Callback<GetAddToCardResponse>() {
@@ -567,7 +653,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                 GetAddToCardResponse getAddToCardResponse = response.body();
                 if (getAddToCardResponse.getCode() == 200) {
                     Toasty.success(DetailItemActivity.this, getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
-                    phonesAdapter.getProductsCategoryList().get(position).setCart(String.valueOf(CART_NOT_EMPTY));
+                    phonesAdapter.getProductsCategoryList().get(position).setCart("0");
                     phonesAdapter.notifyItemChanged(position);
                     isChanged = true;
                     PreferenceUtils.saveCountOfItemsBasket(getApplicationContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
@@ -597,9 +683,9 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
         AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
         Call<GetAddToCardResponse> getAddToCardResponseCall;
         if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
-            post.put("language" , "arabic");
+            post.put("language", "arabic");
             getAddToCardResponseCall = addToCardApi.getAddToCartcompany(post);
-        }else {
+        } else {
             getAddToCardResponseCall = addToCardApi.getAddToCart(post);
         }
         getAddToCardResponseCall.enqueue(new Callback<GetAddToCardResponse>() {
@@ -642,5 +728,11 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
             post.put("quantity", String.valueOf(quantity));
         }
         reloadDialog.show();
+    }
+
+    @Override
+    public void onClickCapacity(int position) {
+        reloadDialog.show();
+        getDetarServer(Integer.parseInt(capicities.get(position).getProduct_id()), true);
     }
 }

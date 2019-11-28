@@ -71,4 +71,6 @@
 	<dimen name="dimen_10sp">14sp</dimen>
 	<dimen name="dimen_8sp">11.2sp</dimen>
 	<dimen name="dimen_20sp">28sp</dimen>
+	<dimen name="dimen160_dp">224dp</dimen>
+	<dimen name="dimen_126dp">176.4dp</dimen>
 </resources>

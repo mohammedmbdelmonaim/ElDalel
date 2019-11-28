@@ -23,10 +23,6 @@ import java.util.List;
 
 import es.dmoral.toasty.Toasty;
 
-import static com.zeidex.eldalel.utils.Constants.CART_EMPTY;
-import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
-import static com.zeidex.eldalel.utils.Constants.NOT_AVAILABLE;
-
 public class PhonesAdapter extends RecyclerView.Adapter<PhonesAdapter.PhoneHolder> {
     private Context context;
 
@@ -105,19 +101,18 @@ public class PhonesAdapter extends RecyclerView.Adapter<PhonesAdapter.PhoneHolde
                 .placeholder(R.drawable.condition_logo)
                 .centerCrop()
                 .into(holder.phone_img_url);
-
-        String cartStatus = phoneModel.getCart();
-        if (cartStatus.equals(String.valueOf(CART_EMPTY))) {
-            if (phoneModel.getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE))) {
+        if (PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) {
+            int cartStatus = Integer.parseInt(phoneModel.getCart());
+            if (cartStatus == 2) {
                 holder.phone_row_add_to_card.setBackgroundResource(R.drawable.row_out_of_stock_cart);
                 holder.phone_row_add_to_card.setText(R.string.cart_out_of_stock_label);
+            } else if (cartStatus == 0) {
+                holder.phone_row_add_to_card.setBackgroundResource(R.drawable.row_already_added_cart);
+                holder.phone_row_add_to_card.setText(R.string.add_to_card);
             } else {
                 holder.phone_row_add_to_card.setBackgroundResource(R.drawable.row_add_to_car_bg);
                 holder.phone_row_add_to_card.setText(R.string.phone_row_add_to_card_txt);
             }
-        } else if (cartStatus.equals(String.valueOf(CART_NOT_EMPTY))) {
-            holder.phone_row_add_to_card.setBackgroundResource(R.drawable.row_already_added_cart);
-            holder.phone_row_add_to_card.setText(R.string.add_to_card);
         }
     }
 
@@ -156,8 +151,7 @@ public class PhonesAdapter extends RecyclerView.Adapter<PhonesAdapter.PhoneHolde
                         return;
                     }
                     if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context))) {
-                        if (!phoneList.get(getAdapterPosition()).getCart().equals(String.valueOf(CART_NOT_EMPTY)) &&
-                                !phoneList.get(getAdapterPosition()).getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE)))
+                        if (Integer.parseInt(phoneList.get(getAdapterPosition()).getCart()) == 1)
                             phonesOperation.onAddToPhoneCart(Integer.parseInt(phoneList.get(getAdapterPosition()).getId()), getAdapterPosition());
                     }
                 }

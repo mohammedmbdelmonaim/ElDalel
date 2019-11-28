@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,7 +32,7 @@ import retrofit2.Response;
 
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
-public class WalletActivity extends AppCompatActivity {
+public class WalletActivity extends BaseActivity {
     @BindView(R.id.activity_operations_wallet_recycler)
     RecyclerView activity_operations_wallet_recycler;
 

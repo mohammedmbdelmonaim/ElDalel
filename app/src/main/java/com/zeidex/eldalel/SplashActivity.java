@@ -1,15 +1,14 @@
 package com.zeidex.eldalel;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.annotation.NonNull;
 
 import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.AppPermissions;
-import com.zeidex.eldalel.utils.PreferenceUtils;
 
 
 public class SplashActivity extends BaseActivity {
@@ -23,17 +22,17 @@ public class SplashActivity extends BaseActivity {
         Animatoo.animateSwipeLeft(this);
 //        new ChangeLang(this, "").setLocale();
         setContentView(R.layout.activity_splash);
-        permissions = new AppPermissions(this , appPermissions);
-        if (permissions.checkAndRequestPermission()){
+//        permissions = new AppPermissions(this , appPermissions);
+//        if (permissions.checkAndRequestPermission()){
             new Handler().postDelayed(new Runnable() {
-                @Override
+//                @Override
                 public void run() {
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     Animatoo.animateSwipeLeft(SplashActivity.this);
                     finish();
                 }
             }, 4000);
-        }
+//        }
     }
 
     @Override

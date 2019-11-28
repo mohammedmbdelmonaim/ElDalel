@@ -2,13 +2,12 @@ package com.zeidex.eldalel.response;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 public class GetRegisterCompanyResponse {
     @SerializedName("success")
     String success;
 
-
+    @SerializedName("sms_code")
+    String sms_code;
 
     @SerializedName("error")
     String error;
@@ -27,5 +26,13 @@ public class GetRegisterCompanyResponse {
 
     public void setError(String error) {
         this.error = error;
+    }
+
+    public String getSms_code() {
+        return sms_code;
+    }
+
+    public void setSms_code(String sms_code) {
+        this.sms_code = sms_code;
     }
 }

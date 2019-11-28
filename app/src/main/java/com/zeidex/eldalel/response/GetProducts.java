@@ -171,8 +171,8 @@ public class GetProducts {
         @SerializedName("available_quantity")
         String available_quantity;
 
-        @SerializedName("cart")
-        Integer cart;
+        @SerializedName("cart_status")
+        String cart;
 
         @SerializedName("favorite")
         String favorite;
@@ -467,11 +467,11 @@ public class GetProducts {
             this.available_quantity = available_quantity;
         }
 
-        public Integer getCart() {
+        public String  getCart() {
             return cart;
         }
 
-        public void setCart(Integer cart) {
+        public void setCart(String cart) {
             this.cart = cart;
         }
     }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="160dp"
+    android:layout_width="@dimen/dimens_140dp"
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/dimen_12dp"
     app:cardCornerRadius="@dimen/dimen_5dp"
@@ -11,6 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/phone_img_url"
+            android:layout_width="@dimen/dimen_120dp"
+            android:layout_height="@dimen/dimen_120dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/harddisk"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/phone_image_like"
             android:layout_width="wrap_content"
@@ -19,16 +31,6 @@
             android:layout_marginTop="@dimen/dimen_10dp"
             android:button="@drawable/state_of_like_checkbox"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/phone_img_url"
-            android:layout_width="126dp"
-            android:layout_height="126dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/harddisk"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/phone_image_like"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -46,7 +48,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/cairo_bold"
             android:text="@string/discount_phone_txt"
-            android:textSize="@dimen/dimen_10sp"/>
+            android:textSize="@dimen/dimen_8sp"/>
 
              <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
                 android:id="@+id/discount_result"
@@ -54,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/cairo_bold"
                 android:text="10"
-                android:textSize="@dimen/dimen_10sp"/>
+                android:textSize="@dimen/dimen_8sp"/>
 
              <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
                 android:layout_width="wrap_content"

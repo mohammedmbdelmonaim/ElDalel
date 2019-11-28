@@ -1,7 +1,6 @@
 package com.zeidex.eldalel.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +22,6 @@ import com.zeidex.eldalel.utils.PriceFormatter;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
-
-import static com.zeidex.eldalel.utils.Constants.CART_EMPTY;
-import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
-import static com.zeidex.eldalel.utils.Constants.NOT_AVAILABLE;
 
 public class AccessoriesAdapter extends RecyclerView.Adapter<AccessoriesAdapter.AccessoriesHolder> {
     private Context context;
@@ -103,19 +98,18 @@ public class AccessoriesAdapter extends RecyclerView.Adapter<AccessoriesAdapter.
                 .centerCrop()
                 .into(holder.phone_img_url);
 
-        String cartStatus = accessory.getCart();
-        Log.d("cart_status", "onBindViewHolder: " + cartStatus);
-        if (cartStatus.equals(String.valueOf(CART_EMPTY))) {
-            if (accessory.getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE))) {
+        if (PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) {
+            int cartStatus = Integer.parseInt(accessory.getCart());
+            if (cartStatus == 2) {
                 holder.phone_row_add_to_card.setBackgroundResource(R.drawable.row_out_of_stock_cart);
                 holder.phone_row_add_to_card.setText(R.string.cart_out_of_stock_label);
+            } else if (cartStatus == 0) {
+                holder.phone_row_add_to_card.setBackgroundResource(R.drawable.row_already_added_cart);
+                holder.phone_row_add_to_card.setText(R.string.add_to_card);
             } else {
                 holder.phone_row_add_to_card.setBackgroundResource(R.drawable.row_add_to_car_bg);
                 holder.phone_row_add_to_card.setText(R.string.phone_row_add_to_card_txt);
             }
-        } else if (cartStatus.equals(String.valueOf(CART_NOT_EMPTY))) {
-            holder.phone_row_add_to_card.setBackgroundResource(R.drawable.row_already_added_cart);
-            holder.phone_row_add_to_card.setText(R.string.add_to_card);
         }
     }
 
@@ -154,8 +148,7 @@ public class AccessoriesAdapter extends RecyclerView.Adapter<AccessoriesAdapter.
                         return;
                     }
                     if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context))) {
-                        if (!accessoryList.get(getAdapterPosition()).getCart().equals(String.valueOf(CART_NOT_EMPTY)) &&
-                                !accessoryList.get(getAdapterPosition()).getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE)))
+                        if (Integer.parseInt(accessoryList.get(getAdapterPosition()).getCart()) == 1)
                             accessoriesOperation.onAddToAccessoryCart(Integer.parseInt(accessoryList.get(getAdapterPosition()).getId()), getAdapterPosition());
                     }
                 }

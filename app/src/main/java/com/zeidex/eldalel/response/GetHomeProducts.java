@@ -155,8 +155,8 @@ public class GetHomeProducts {
         @SerializedName("available_quantity")
         String available_quantity;
 
-        @SerializedName("cart")
-        Integer cart;
+        @SerializedName("cart_status")
+        String cart;
 
         @SerializedName("photos")
         List<Photo> photos;
@@ -289,11 +289,11 @@ public class GetHomeProducts {
             this.available_quantity = available_quantity;
         }
 
-        public Integer getCart() {
+        public String getCart() {
             return cart;
         }
 
-        public void setCart(Integer cart) {
+        public void setCart(String cart) {
             this.cart = cart;
         }
 

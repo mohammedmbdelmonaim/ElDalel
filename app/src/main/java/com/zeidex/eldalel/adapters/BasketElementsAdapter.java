@@ -104,7 +104,7 @@ public class BasketElementsAdapter extends RecyclerView.Adapter<BasketElementsAd
             basket_element_currency_linear.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    basketOperation.onChangeQuantity(Integer.parseInt(basketProducts.get(getAdapterPosition()).getProduct_id()), getAdapterPosition());
+                    basketOperation.onChangeQuantity(Integer.parseInt(basketProducts.get(getAdapterPosition()).getProduct_id()), getAdapterPosition() , Integer.parseInt(basketProducts.get(getAdapterPosition()).getCart_id()));
                 }
             });
 
@@ -127,7 +127,7 @@ public class BasketElementsAdapter extends RecyclerView.Adapter<BasketElementsAd
     public interface BasketOperation {
         void onClickBasketProduct(int id, int pos);
 
-        void onChangeQuantity(int id, int pos);
+        void onChangeQuantity(int id, int pos , int cart_id);
 
         void onDeleteItem(int id, int pos);
     }

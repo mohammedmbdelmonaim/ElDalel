@@ -5,6 +5,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/favorites_header_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#219FE9"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/item_favourite_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/dimen_20dp"
+            app:srcCompat="@drawable/ic_arrow_back" />
+
+        <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_60dp"
+            android:layout_marginStart="@dimen/dimen_22dp"
+            android:fontFamily="@font/cairo_bold"
+            android:gravity="center_vertical|start"
+            android:text="@string/favorites"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/dimen_18sp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/likes_text_label_count"
         android:layout_width="wrap_content"
@@ -16,7 +46,7 @@
         android:textColor="#606060"
         android:textSize="@dimen/dimen_12sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/favorites_header_item"
         tools:text="205" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -32,7 +62,7 @@
         android:textSize="@dimen/dimen_12sp"
         android:visibility="gone"
         app:layout_constraintStart_toEndOf="@+id/likes_text_label_count"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/favorites_header_item" />
 
 
     <androidx.recyclerview.widget.RecyclerView

@@ -23,10 +23,6 @@ import java.util.List;
 
 import es.dmoral.toasty.Toasty;
 
-import static com.zeidex.eldalel.utils.Constants.CART_EMPTY;
-import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
-import static com.zeidex.eldalel.utils.Constants.NOT_AVAILABLE;
-
 public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCategory3Adapter.ProductsCategory3Holder> {
     private Context context;
     List<ProductsCategory> productsCategoryList;
@@ -106,19 +102,18 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
                 .centerCrop()
                 .into(holder.phone_img_url);
 
-
-        String cartStatus = productsCategory.getCart();
-        if (cartStatus.equals(String.valueOf(CART_EMPTY))) {
-            if (productsCategory.getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE))) {
+        if (PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) {
+            int cartStatus = Integer.parseInt(productsCategory.getCart());
+            if (cartStatus == 2) {
                 holder.phone_row_add_to_card.setBackgroundResource(R.drawable.row_out_of_stock_cart);
                 holder.phone_row_add_to_card.setText(R.string.cart_out_of_stock_label);
+            } else if (cartStatus == 0) {
+                holder.phone_row_add_to_card.setBackgroundResource(R.drawable.row_already_added_cart);
+                holder.phone_row_add_to_card.setText(R.string.add_to_card);
             } else {
                 holder.phone_row_add_to_card.setBackgroundResource(R.drawable.row_add_to_car_bg);
                 holder.phone_row_add_to_card.setText(R.string.phone_row_add_to_card_txt);
             }
-        } else if (cartStatus.equals(String.valueOf(CART_NOT_EMPTY))) {
-            holder.phone_row_add_to_card.setBackgroundResource(R.drawable.row_already_added_cart);
-            holder.phone_row_add_to_card.setText(R.string.add_to_card);
         }
     }
 
@@ -157,8 +152,7 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
                         return;
                     }
                     if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context))) {
-                        if (!productsCategoryList.get(getAdapterPosition()).getCart().equals(String.valueOf(CART_NOT_EMPTY)) &&
-                                !productsCategoryList.get(getAdapterPosition()).getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE)))
+                        if (Integer.parseInt(productsCategoryList.get(getAdapterPosition()).getCart()) == 1)
                             productsCategory3Operation.onAddToProductCategory3Cart(Integer.parseInt(productsCategoryList.get(getAdapterPosition()).getId()), getAdapterPosition());
                     }
                 }

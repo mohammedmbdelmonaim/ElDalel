@@ -507,6 +507,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/row_account"
                 android:elevation="@dimen/dimen_4dp"
+                android:visibility="gone"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingStart="@dimen/dimen_18dp"

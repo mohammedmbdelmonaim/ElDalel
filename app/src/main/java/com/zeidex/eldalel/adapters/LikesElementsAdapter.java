@@ -24,10 +24,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 
-import static com.zeidex.eldalel.utils.Constants.CART_EMPTY;
-import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
-import static com.zeidex.eldalel.utils.Constants.NOT_AVAILABLE;
-
 public class LikesElementsAdapter extends RecyclerView.Adapter<LikesElementsAdapter.CategoryHolder> {
     private Context context;
     List<ProductsCategory> productList;
@@ -104,18 +100,17 @@ public class LikesElementsAdapter extends RecyclerView.Adapter<LikesElementsAdap
                     .into(holder.likeItemImageView);
         }
 
-        String cartStatus = productsCategory.getCart();
-        if (cartStatus.equals(String.valueOf(CART_EMPTY))) {
-            if (productsCategory.getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE))) {
-                holder.likeItemAddToCart.setBackgroundResource(R.drawable.row_out_of_stock_cart);
-                holder.likeItemAddToCart.setText(R.string.cart_out_of_stock_label);
-            } else {
-                holder.likeItemAddToCart.setBackgroundResource(R.drawable.row_add_to_car_bg);
-                holder.likeItemAddToCart.setText(R.string.phone_row_add_to_card_txt);
-            }
-        } else if (cartStatus.equals(String.valueOf(CART_NOT_EMPTY))) {
+        int cartStatus = Integer.parseInt(productsCategory.getCart());
+        if (cartStatus == 2) {
+            holder.likeItemAddToCart.setBackgroundResource(R.drawable.row_out_of_stock_cart);
+            holder.likeItemAddToCart.setText(R.string.cart_out_of_stock_label);
+        } else if (cartStatus == 0) {
             holder.likeItemAddToCart.setBackgroundResource(R.drawable.row_already_added_cart);
             holder.likeItemAddToCart.setText(R.string.add_to_card);
+        } else {
+            holder.likeItemAddToCart.setBackgroundResource(R.drawable.row_add_to_car_bg);
+            holder.likeItemAddToCart.setText(R.string.phone_row_add_to_card_txt);
+
         }
     }
 
@@ -165,8 +160,7 @@ public class LikesElementsAdapter extends RecyclerView.Adapter<LikesElementsAdap
                         return;
                     }
                     if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context))) {
-                        if (!productList.get(getAdapterPosition()).getCart().equals(String.valueOf(CART_NOT_EMPTY)) &&
-                                !productList.get(getAdapterPosition()).getAvailable_quantity().equals(String.valueOf(NOT_AVAILABLE)))
+                        if (Integer.parseInt(productList.get(getAdapterPosition()).getCart()) == 1)
                             likesOperation.onAddToCart(Integer.parseInt(productList.get(getAdapterPosition()).getId()), getAdapterPosition());
                     }
                 }

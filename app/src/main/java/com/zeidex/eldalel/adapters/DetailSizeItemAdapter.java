@@ -11,6 +11,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zeidex.eldalel.R;
+import com.zeidex.eldalel.models.CapacityProduct;
 
 import java.util.ArrayList;
 
@@ -18,11 +19,17 @@ public class DetailSizeItemAdapter extends RecyclerView.Adapter<DetailSizeItemAd
     View view;
     private Context context;
     int selectedPos = 0;
-    ArrayList<String> capicities;
+    ArrayList<CapacityProduct> capicities;
 
-    public DetailSizeItemAdapter(Context context, ArrayList<String> capicities) {
+    public DetailSizeItemAdapter(Context context, ArrayList<CapacityProduct> capicities) {
         this.context = context;
         this.capicities = capicities;
+    }
+
+    private DetailCapacityOperation detailCapacityOperation;
+
+    public void setDetailCapacityOperation(DetailCapacityOperation detailCapacityOperation) {
+        this.detailCapacityOperation = detailCapacityOperation;
     }
 
     @NonNull
@@ -41,7 +48,7 @@ public class DetailSizeItemAdapter extends RecyclerView.Adapter<DetailSizeItemAd
         } else {
             holder.detail_size_linear.setSelected(false);
         }
-        holder.detail_size_label.setText(capicities.get(position));
+        holder.detail_size_label.setText(capicities.get(position).getName());
     }
 
     @Override
@@ -65,12 +72,13 @@ public class DetailSizeItemAdapter extends RecyclerView.Adapter<DetailSizeItemAd
                     notifyItemChanged(selectedPos);
                     selectedPos = getAdapterPosition();
                     notifyItemChanged(selectedPos);
+                    detailCapacityOperation.onClickCapacity(getAdapterPosition());
                 }
             });
         }
     }
 
-    public interface AccessoriesOperation {
-        void onClickPhone(int position);
+    public interface DetailCapacityOperation {
+        void onClickCapacity(int position);
     }
 }

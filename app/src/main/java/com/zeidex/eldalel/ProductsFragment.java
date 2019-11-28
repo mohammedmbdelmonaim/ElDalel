@@ -23,7 +23,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.zeidex.eldalel.adapters.ProductsCategory3Adapter;
+import com.zeidex.eldalel.adapters.CategoryItemAdapter;
 import com.zeidex.eldalel.models.ProductsCategory;
 import com.zeidex.eldalel.response.GetAddToCardResponse;
 import com.zeidex.eldalel.response.GetAddToFavouriteResponse;
@@ -62,10 +62,9 @@ import static com.zeidex.eldalel.SearchActivity.FILTER_STATUS;
 import static com.zeidex.eldalel.SearchActivity.SEARCH_NAME_ARGUMENT;
 import static com.zeidex.eldalel.adapters.CategoriesItemAdapter.SUBCATEGORY_ID_INTENT_EXTRA;
 import static com.zeidex.eldalel.adapters.CategoriesItemAdapter.SUB_SUBCATEGORY_ID_INTENT_EXTRA;
-import static com.zeidex.eldalel.utils.Constants.CART_NOT_EMPTY;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
-public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.CategoryOperation,*/ ProductsCategory3Adapter.ProductsCategory3Operation {
+public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.CategoryOperation,*/  CategoryItemAdapter.CategoryItemOperation {
     public static final int FILTER_REQUEST_CODE = 500;
     public static final String SORT_ASC = "asc";
     public static final String SORT_DESC = "desc";
@@ -89,7 +88,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
 
 //    CategoryItemAdapter categoryAdapter;
 
-    ProductsCategory3Adapter productsAdapter;
+    CategoryItemAdapter productsAdapter;
     private int subcategoryId;
     private int subsubcategoryId;
     Map<String, String> cartPost;
@@ -345,13 +344,13 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
                     products.add(new ProductsCategory(currentProductResponse.getId(), "",
                             currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName_ar(),
                             currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
-                            currentProductResponse.getFavorite(), String.valueOf(currentProductResponse.getCart()),
+                            currentProductResponse.getFavorite(), currentProductResponse.getCart(),
                             currentProductResponse.getAvailable_quantity()));
                 } else {
                     products.add(new ProductsCategory(currentProductResponse.getId(), currentProductResponse.getPhotos().get(0).getFilename(),
                             currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName_ar(),
                             currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
-                            currentProductResponse.getFavorite(), String.valueOf(currentProductResponse.getCart()), currentProductResponse.getAvailable_quantity()));
+                            currentProductResponse.getFavorite(), currentProductResponse.getCart(), currentProductResponse.getAvailable_quantity()));
                 }
             }
         } else {
@@ -366,13 +365,13 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
                     products.add(new ProductsCategory(currentProductResponse.getId(), "",
                             currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName(),
                             currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
-                            currentProductResponse.getFavorite(), String.valueOf(currentProductResponse.getCart()),
+                            currentProductResponse.getFavorite(), currentProductResponse.getCart(),
                             currentProductResponse.getAvailable_quantity()));
                 } else {
                     products.add(new ProductsCategory(currentProductResponse.getId(), currentProductResponse.getPhotos().get(0).getFilename(),
                             currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName(),
                             currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
-                            currentProductResponse.getFavorite(), String.valueOf(currentProductResponse.getCart()), currentProductResponse.getAvailable_quantity()));
+                            currentProductResponse.getFavorite(), currentProductResponse.getCart(), currentProductResponse.getAvailable_quantity()));
                 }
             }
         }
@@ -390,8 +389,8 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
         boolean includeEdge = true;
         category_item_recycler_list.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
 
-        productsAdapter = new ProductsCategory3Adapter(getActivity(), products);
-        productsAdapter.setProductsCategory3Operation(ProductsFragment.this);
+        productsAdapter = new CategoryItemAdapter(getActivity(), products);
+        productsAdapter.setCategoryOperation(ProductsFragment.this);
         category_item_recycler_list.setAdapter(productsAdapter);
 
         labelCountText.setText(String.valueOf(products.size()));
@@ -417,73 +416,73 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
 //        Animatoo.animateSwipeLeft(getActivity());
 //    }
 
-    @Override
-    public void onClickProduct3(int id, int pos) {
-        position_detail = pos;
-        startActivityForResult(new Intent(getActivity(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
-        Animatoo.animateSwipeLeft(getActivity());
-    }
+//    @Override
+//    public void onClickProduct3(int id, int pos) {
+//        position_detail = pos;
+//        startActivityForResult(new Intent(getActivity(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
+//        Animatoo.animateSwipeLeft(getActivity());
+//    }
 
-    @Override
-    public void onCliickProductsCategory3Like(int id, int pos) {
-        reloadDialog.show();
-        prepareLikeMap(id);
-        AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
-        Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
-        if (PreferenceUtils.getCompanyLogin(getActivity())) {
-            getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(likePost);
-        }else {
-            getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(likePost);
-        }
-        getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
-            @Override
-            public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
-                GetAddToFavouriteResponse getAddToFavouriteResponse = response.body();
-                if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
-                    Toasty.success(getActivity(), getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
-                }
-                reloadDialog.dismiss();
-            }
+//    @Override
+//    public void onCliickProductsCategory3Like(int id, int pos) {
+//        reloadDialog.show();
+//        prepareLikeMap(id);
+//        AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
+//        Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
+//        if (PreferenceUtils.getCompanyLogin(getActivity())) {
+//            getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(likePost);
+//        }else {
+//            getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(likePost);
+//        }
+//        getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
+//            @Override
+//            public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
+//                GetAddToFavouriteResponse getAddToFavouriteResponse = response.body();
+//                if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
+//                    Toasty.success(getActivity(), getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
+//                }
+//                reloadDialog.dismiss();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<GetAddToFavouriteResponse> call, Throwable t) {
+//                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+//                reloadDialog.dismiss();
+//            }
+//        });
+//    }
 
-            @Override
-            public void onFailure(Call<GetAddToFavouriteResponse> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
-                reloadDialog.dismiss();
-            }
-        });
-    }
-
-    @Override
-    public void onAddToProductCategory3Cart(int id, int position) {
-        prepareCartMap(id);
-        AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
-        Call<GetAddToCardResponse> getAddToCardResponseCall;
-        if (PreferenceUtils.getCompanyLogin(getActivity())) {
-            cartPost.put("language" , "arabic");
-            getAddToCardResponseCall = addToCardApi.getAddToCartcompany(cartPost);
-        }else {
-            getAddToCardResponseCall = addToCardApi.getAddToCart(cartPost);
-        }
-        getAddToCardResponseCall.enqueue(new Callback<GetAddToCardResponse>() {
-            @Override
-            public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
-                GetAddToCardResponse getAddToCardResponse = response.body();
-                if (getAddToCardResponse.getCode() == 200) {
-                    Toasty.success(getActivity(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
-                    productsAdapter.getProductsCategoryList().get(position).setCart(String.valueOf(CART_NOT_EMPTY));
-                    productsAdapter.notifyItemChanged(position);
-                    PreferenceUtils.saveCountOfItemsBasket(getActivity(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
-                }
-                reloadDialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(Call<GetAddToCardResponse> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
-                reloadDialog.dismiss();
-            }
-        });
-    }
+//    @Override
+//    public void onAddToProductCategory3Cart(int id, int position) {
+//        prepareCartMap(id);
+//        AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
+//        Call<GetAddToCardResponse> getAddToCardResponseCall;
+//        if (PreferenceUtils.getCompanyLogin(getActivity())) {
+//            cartPost.put("language" , "arabic");
+//            getAddToCardResponseCall = addToCardApi.getAddToCartcompany(cartPost);
+//        }else {
+//            getAddToCardResponseCall = addToCardApi.getAddToCart(cartPost);
+//        }
+//        getAddToCardResponseCall.enqueue(new Callback<GetAddToCardResponse>() {
+//            @Override
+//            public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
+//                GetAddToCardResponse getAddToCardResponse = response.body();
+//                if (getAddToCardResponse.getCode() == 200) {
+//                    Toasty.success(getActivity(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
+//                    productsAdapter.getProductsCategoryList().get(position).setCart("0");
+//                    productsAdapter.notifyItemChanged(position);
+//                    PreferenceUtils.saveCountOfItemsBasket(getActivity(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+//                }
+//                reloadDialog.dismiss();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<GetAddToCardResponse> call, Throwable t) {
+//                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+//                reloadDialog.dismiss();
+//            }
+//        });
+//    }
 
     public void prepareCartMap(int id) {
         cartPost = new HashMap<>();
@@ -538,7 +537,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
                 productsAdapter.notifyItemChanged(position_detail);
             }
             if (data.getBooleanExtra("added_to_cart", false)) {
-                productsCategory.get(position_detail).setCart(String.valueOf(CART_NOT_EMPTY));
+                productsCategory.get(position_detail).setCart("0");
                 productsAdapter.notifyItemChanged(position_detail);
             }
         }
@@ -592,4 +591,71 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
         });
     }
 
+    @Override
+    public void onClickProduct(int id, int pos) {
+        position_detail = pos;
+        startActivityForResult(new Intent(getActivity(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
+        Animatoo.animateSwipeLeft(getActivity());
+    }
+
+    @Override
+    public void onClickProductLike(int id) {
+        reloadDialog.show();
+        prepareLikeMap(id);
+        AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
+        Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
+        if (PreferenceUtils.getCompanyLogin(getActivity())) {
+            getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(likePost);
+        }else {
+            getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(likePost);
+        }
+        getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
+            @Override
+            public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
+                GetAddToFavouriteResponse getAddToFavouriteResponse = response.body();
+                if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
+                    Toasty.success(getActivity(), getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetAddToFavouriteResponse> call, Throwable t) {
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void onAddToProductCart(int id, int position) {
+        prepareCartMap(id);
+        AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
+        Call<GetAddToCardResponse> getAddToCardResponseCall;
+        if (PreferenceUtils.getCompanyLogin(getActivity())) {
+            cartPost.put("language" , "arabic");
+            getAddToCardResponseCall = addToCardApi.getAddToCartcompany(cartPost);
+        }else {
+            getAddToCardResponseCall = addToCardApi.getAddToCart(cartPost);
+        }
+        getAddToCardResponseCall.enqueue(new Callback<GetAddToCardResponse>() {
+            @Override
+            public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
+                GetAddToCardResponse getAddToCardResponse = response.body();
+                if (getAddToCardResponse.getCode() == 200) {
+                    Toasty.success(getActivity(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
+                    productsAdapter.getProductsList().get(position).setCart("0");
+                    productsAdapter.notifyItemChanged(position);
+                    PreferenceUtils.saveCountOfItemsBasket(getActivity(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetAddToCardResponse> call, Throwable t) {
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
+    }
 }

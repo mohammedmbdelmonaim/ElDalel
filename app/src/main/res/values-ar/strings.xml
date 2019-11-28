@@ -29,7 +29,6 @@
     <string name="sort_menu_price_descend">السعر: من الأكثر الى الأقل</string>
 
 
-
     <string name="remove_fav">تم الحذف من المفضلة</string>
 
     <string name="fragment_account_contact_us_label">إتصل بنا</string>
@@ -209,4 +208,6 @@
     <string name="wallet_type_text">نوع العملية</string>
     <string name="activity_operations_wallet_total_label">الرصيد الكلي:</string>
     <string name="remmber_me_chechbox">تذكرنى</string>
+    <string name="item_payment_methods_label">طرق الدفع</string>
+    <string name="favorites">المفضله</string>
 </resources>

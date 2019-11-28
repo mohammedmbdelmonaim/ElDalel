@@ -179,7 +179,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     }else if (status.equalsIgnoreCase("false")){
                         Toasty.error(LoginActivity.this, getLoginResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
-
+                    reloadDialog.dismiss();
                 }
 
                 @Override

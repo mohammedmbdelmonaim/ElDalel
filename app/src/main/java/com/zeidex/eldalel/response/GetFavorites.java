@@ -295,9 +295,9 @@ public class GetFavorites {
         @SerializedName("photos")
         @Expose
         List<Photo> photos;
-        @SerializedName("cart")
+        @SerializedName("cart_status")
         @Expose
-        private Integer cart;
+        private String cart;
 
         public Integer getId() {
             return id;
@@ -595,11 +595,11 @@ public class GetFavorites {
             this.photos = photos;
         }
 
-        public Integer getCart() {
+        public String getCart() {
             return cart;
         }
 
-        public void setCart(Integer cart) {
+        public void setCart(String cart) {
             this.cart = cart;
         }
     }

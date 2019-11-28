@@ -341,7 +341,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 return;
             }
 
-            final boolean fieldscomOK = validate(new EditText[]{register_responsible_edittext, register_mobile_edittext, register_address_edittext, register_name_company_edittext});
+            final boolean fieldscomOK = validate(new EditText[]{register_responsible_edittext, register_mobile_edittext, register_address_edittext, register_name_company_edittext , register_pass_edittext, register_pass_confirm_edittext, register_mail_edittext});
 
             if (fieldscomOK && id_country != -1 && id_region != -1 && id_city != -1) {
                 reloadDialog.show();
@@ -363,7 +363,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                                     ChangeLang.setNewLocale(RegisterActivity.this, "en");
                                 }
 //                                PreferenceUtils.saveUserLogin(RegisterActivity.this, true);
-                                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                                Toasty.success(RegisterActivity.this, getRegisterResponse.getSms_code(), Toast.LENGTH_LONG).show();
+                                startActivity(new Intent(RegisterActivity.this, PaymentPhoneNumberActivity.class).putExtra("email" , register_mail_edittext.getText().toString()).putExtra("mobile" , register_mobile_edittext.getText().toString()));
                                 Animatoo.animateSwipeLeft(RegisterActivity.this);
                             }
                         } else {

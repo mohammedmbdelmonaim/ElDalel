@@ -512,6 +512,7 @@
                 android:background="@drawable/row_account"
                 android:elevation="@dimen/dimen_4dp"
                 android:gravity="center"
+                android:visibility="gone"
                 android:orientation="horizontal"
                 android:paddingStart="@dimen/dimen_18dp"
                 android:paddingTop="@dimen/dimen_14dp"

@@ -13,6 +13,6 @@ public interface VerifyCodeMobileApi {
     @POST("user/verify/message/code")
     Call<GetSendCodeResponse> verifyCode(@Body Map<String, String> partMap);
 
-    @POST("company/verify/message/code")
+    @POST("register/verify")
     Call<GetSendCodeResponse> verifyCodecompany(@Body Map<String, String> partMap);
 }

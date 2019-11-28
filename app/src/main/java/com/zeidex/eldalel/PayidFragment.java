@@ -20,15 +20,18 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.zeidex.eldalel.response.GetBranches;
 import com.zeidex.eldalel.response.GetCountries;
 import com.zeidex.eldalel.response.GetMakeOrderResponse;
+import com.zeidex.eldalel.response.GetProfileInfo;
 import com.zeidex.eldalel.response.GetRegions;
 import com.zeidex.eldalel.services.BranchesApi;
 import com.zeidex.eldalel.services.CountriesApi;
 import com.zeidex.eldalel.services.MakeOrderApi;
+import com.zeidex.eldalel.services.ProfileInfoApi;
 import com.zeidex.eldalel.services.RegionsApi;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.ChangeLang;
@@ -115,6 +118,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.pay_on_arrive_payment)
     LinearLayoutCompat pay_on_arrive_payment;
 
+    @BindView(R.id.fragment_payid_linear_methods)
+    LinearLayoutCompat fragment_payid_linear_methods;
+
     @BindView(R.id.pay_on_arrive_payment_txt)
     AppCompatTextView pay_on_arrive_payment_txt;
 
@@ -151,44 +157,53 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         showDialog();
-        countries = new ArrayList<>();
-        ids_countries = new ArrayList<>();
-        countries.add(getString(R.string.country_spinner_label));
-        ids_countries.add(-1);
-        spinner_address_add_country_shipment.setItems(countries);
+        if (PreferenceUtils.getCompanyLogin(getActivity())) {
+            fragment_payid_linear_methods.setVisibility(View.GONE);
+            fragment_payid_total_products_text.setText(total_products);
+            fragment_payid_total_price_text.setText(total_price);
+            fragment_payid_tax_text.setText(tax);
+            fragment_payid_paying.setOnClickListener(this);
+        } else {
+            countries = new ArrayList<>();
+            ids_countries = new ArrayList<>();
+            countries.add(getString(R.string.country_spinner_label));
+            ids_countries.add(-1);
+            spinner_address_add_country_shipment.setItems(countries);
 
-        regions = new ArrayList<>();
-        ids_regions = new ArrayList<>();
-        regions.add(getString(R.string.regions_spinner_label));
-        ids_regions.add(-1);
-        spinner_address_add_regions_shipment.setItems(regions);
+            regions = new ArrayList<>();
+            ids_regions = new ArrayList<>();
+            regions.add(getString(R.string.regions_spinner_label));
+            ids_regions.add(-1);
+            spinner_address_add_regions_shipment.setItems(regions);
 
-        branches = new ArrayList<>();
-        ids_branches = new ArrayList<>();
-        branches.add(getString(R.string.branch_spinner));
-        ids_branches.add(-1);
-        spinner_address_add_branches_shipment.setItems(branches);
-        fragment_payid_total_products_text.setText(total_products);
-        fragment_payid_total_price_text.setText(total_price);
-        fragment_payid_tax_text.setText(tax);
-        getCountries();
+            branches = new ArrayList<>();
+            ids_branches = new ArrayList<>();
+            branches.add(getString(R.string.branch_spinner));
+            ids_branches.add(-1);
+            spinner_address_add_branches_shipment.setItems(branches);
 
-        fragment_payid_paying.setOnClickListener(this);
-        shipment_to_address.setSelected(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            shipment_from_branch_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_company_unchecked));
-            shipment_to_address_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shipped_car_checked));
+            fragment_payid_total_products_text.setText(total_products);
+            fragment_payid_total_price_text.setText(total_price);
+            fragment_payid_tax_text.setText(tax);
+            getCountries();
 
-        }else {
-            shipment_to_address_img.setImageResource(R.drawable.ic_shipped_car_checked);
-            shipment_from_branch_img.setImageResource(R.drawable.ic_company_unchecked);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            shipment_to_address_txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
-            shipment_from_branch_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
-        }else{
-            shipment_to_address_txt.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
-            shipment_from_branch_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            fragment_payid_paying.setOnClickListener(this);
+            shipment_to_address.setSelected(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                shipment_from_branch_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_company_unchecked));
+                shipment_to_address_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shipped_car_checked));
+
+            } else {
+                shipment_to_address_img.setImageResource(R.drawable.ic_shipped_car_checked);
+                shipment_from_branch_img.setImageResource(R.drawable.ic_company_unchecked);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                shipment_to_address_txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
+                shipment_from_branch_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
+            } else {
+                shipment_to_address_txt.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
+                shipment_from_branch_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            }
         }
     }
 
@@ -204,59 +219,70 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             payment_post.put("subsidiary_id", String.valueOf(id_region));
             payment_post.put("showroom_id", String.valueOf(id_branch));
         }
-        if (!PreferenceUtils.getCoupoun(getActivity()).equalsIgnoreCase("")){
+        if (!PreferenceUtils.getCoupoun(getActivity()).equalsIgnoreCase("")) {
+            payment_post.put("coupon", PreferenceUtils.getCoupoun(getActivity()));
+        }
+    }
+
+    private void convertDaraToJsonCompany() {
+        payment_post = new HashMap<>();
+        payment_post.put("payment_type", String.valueOf(shipment_method));
+        payment_post.put("language", lang);
+        payment_post.put("token", token);
+        if (!PreferenceUtils.getCoupoun(getActivity()).equalsIgnoreCase("")) {
             payment_post.put("coupon", PreferenceUtils.getCoupoun(getActivity()));
         }
     }
 
     String lang;
     String token;
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch (id){
-            case R.id.fragment_payid_paying:{
-                if (shipment_type == 2) {
-                    if (id_country == -1) {
-                        Toasty.error(getActivity(), getString(R.string.choose_country), Toast.LENGTH_LONG).show();
-                        return;
-                    }
-
-                    if (id_region == -1) {
-                        Toasty.error(getActivity(), getString(R.string.choose_region), Toast.LENGTH_LONG).show();
-                        return;
-                    }
-
-                    if (id_branch == -1) {
-                        Toasty.error(getActivity(), getString(R.string.choose_branch), Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                }
-                if (shipment_method == 0){
+        switch (id) {
+            case R.id.fragment_payid_paying: {
+                if (shipment_method == 0) {
                     Toasty.error(getActivity(), getString(R.string.choose_payment_method), Toast.LENGTH_LONG).show();
                     return;
                 }
-                if (PreferenceUtils.getCompanyLogin(getActivity())) {
-                    token = PreferenceUtils.getCompanyToken(getActivity());
-                } else if (PreferenceUtils.getUserLogin(getActivity())) {
-                    token = PreferenceUtils.getUserToken(getActivity());
-                }
                 Locale locale = ChangeLang.getLocale(getContext().getResources());
                 String loo = locale.getLanguage();
-                if (loo.equalsIgnoreCase("ar")){
+                if (loo.equalsIgnoreCase("ar")) {
                     lang = "arabic";
-                }else if (loo.equalsIgnoreCase("en")) {
+                } else if (loo.equalsIgnoreCase("en")) {
                     lang = "english";
                 }
+                if (PreferenceUtils.getCompanyLogin(getActivity())) {
+                    token = PreferenceUtils.getCompanyToken(getActivity());
+                    convertDaraToJsonCompany();
+                } else if (PreferenceUtils.getUserLogin(getActivity())) {
+                    token = PreferenceUtils.getUserToken(getActivity());
+                    if (shipment_type == 2) {
+                        if (id_country == -1) {
+                            Toasty.error(getActivity(), getString(R.string.choose_country), Toast.LENGTH_LONG).show();
+                            return;
+                        }
 
-                convertDaraToJson();
+                        if (id_region == -1) {
+                            Toasty.error(getActivity(), getString(R.string.choose_region), Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
+                        if (id_branch == -1) {
+                            Toasty.error(getActivity(), getString(R.string.choose_branch), Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                    }
+                    convertDaraToJson();
+                }
 
                 reloadDialog.show();
                 MakeOrderApi makeOrderApi = APIClient.getClient(SERVER_API_TEST).create(MakeOrderApi.class);
                 Call<GetMakeOrderResponse> getMakeOrderResponseCall;
-                if (PreferenceUtils.getCompanyLogin(getActivity())){
+                if (PreferenceUtils.getCompanyLogin(getActivity())) {
                     getMakeOrderResponseCall = makeOrderApi.makeOrderResponsecompany(payment_post);
-                }else{
+                } else {
                     getMakeOrderResponseCall = makeOrderApi.makeOrderResponse(payment_post);
                 }
 
@@ -264,13 +290,18 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onResponse(Call<GetMakeOrderResponse> call, Response<GetMakeOrderResponse> response) {
                         GetMakeOrderResponse getMakeOrderResponse = response.body();
-                        if (getMakeOrderResponse.getSuccess().equalsIgnoreCase("true")){
-                            ((PaymentActivity)getActivity()).goToOrderFragment();
-                            PreferenceUtils.saveCoupon(getActivity() , "");
-                            PreferenceUtils.saveCountOfItemsBasket(getActivity() , 0);
-                        }else{
-                            Toasty.error(getActivity(), getMakeOrderResponse.getErroe(), Toast.LENGTH_LONG).show();
+                        if (getMakeOrderResponse.getSuccess() != null) {
+                            if (getMakeOrderResponse.getSuccess().equalsIgnoreCase("true")) {
+                                ((PaymentActivity) getActivity()).goToOrderFragment();
+                                PreferenceUtils.saveCoupon(getActivity(), "");
+                                PreferenceUtils.saveCountOfItemsBasket(getActivity(), 0);
+                            } else {
+                                Toasty.error(getActivity(), getMakeOrderResponse.getErroe(), Toast.LENGTH_LONG).show();
 
+                            }
+                        } else {
+                            Toasty.error(getActivity(), getMakeOrderResponse.getErroe(), Toast.LENGTH_LONG).show();
+                            onLoadProfile();
                         }
                         reloadDialog.dismiss();
                     }
@@ -287,9 +318,38 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             }
         }
     }
+    String mobile;
+    private void onLoadProfile() {
+        reloadDialog.show();
+        ProfileInfoApi profileInfoApi = APIClient.getClient(SERVER_API_TEST).create(ProfileInfoApi.class);
+        Call<GetProfileInfo> getProfileInfoCall;
+        getProfileInfoCall = profileInfoApi.getProfileInfocompany(token);
+        getProfileInfoCall.enqueue(new Callback<GetProfileInfo>() {
+            @Override
+            public void onResponse(Call<GetProfileInfo> call, Response<GetProfileInfo> response) {
+                GetProfileInfo getProfileInfo = response.body();
+                mobile = getProfileInfo.getMobile();
+                Fragment fragment = new PaymentPhoneNumberFragment();
+                Bundle args = new Bundle();
+                args.putString("mobile",mobile);
+                args.putString("from", "pay");
+                fragment.setArguments(args);
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
+                ft.replace(R.id.payment_constrant, fragment, fragment.getTag());
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+
+            @Override
+            public void onFailure(Call<GetProfileInfo> call, Throwable t) {
+
+            }
+        });
+    }
 
     @OnClick(R.id.shipment_from_branch)
-    public void fromBranch(){
+    public void fromBranch() {
         shipment_type = 2;
         shipment_from_branch.setSelected(true);
         shipment_to_address.setSelected(false);
@@ -298,22 +358,22 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             shipment_from_branch_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_company));
             shipment_to_address_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shipped_car));
 
-        }else {
+        } else {
             shipment_to_address_img.setImageResource(R.drawable.ic_shipped_car);
             shipment_from_branch_img.setImageResource(R.drawable.ic_company);
         }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                shipment_to_address_txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorshipmenttype));
-                shipment_from_branch_txt.setTextColor(getActivity().getColor(R.color.colorPrimaryDark));
-            }else{
-                shipment_to_address_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
-                shipment_from_branch_txt.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            shipment_to_address_txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorshipmenttype));
+            shipment_from_branch_txt.setTextColor(getActivity().getColor(R.color.colorPrimaryDark));
+        } else {
+            shipment_to_address_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            shipment_from_branch_txt.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
+        }
 
     }
 
     @OnClick(R.id.shipment_to_address)
-    public void toAddress(){
+    public void toAddress() {
         shipment_type = 1;
         shipment_from_branch.setSelected(false);
         shipment_to_address.setSelected(true);
@@ -323,21 +383,21 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             shipment_from_branch_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_company_unchecked));
             shipment_to_address_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shipped_car_checked));
 
-        }else {
+        } else {
             shipment_to_address_img.setImageResource(R.drawable.ic_shipped_car_checked);
             shipment_from_branch_img.setImageResource(R.drawable.ic_company_unchecked);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             shipment_to_address_txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
             shipment_from_branch_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
-        }else{
+        } else {
             shipment_to_address_txt.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
             shipment_from_branch_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
         }
     }
 
     @OnClick(R.id.credit_card_payment)
-    public void checkCreditCard(){
+    public void checkCreditCard() {
         shipment_method = 1;
         credit_card_payment.setSelected(true);
         bank_payment.setSelected(false);
@@ -348,7 +408,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             bank_payment_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_bank_pay));
             pay_on_arrive_payment_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_pay_on_arrive));
 
-        }else {
+        } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_credit_card_check);
             bank_payment_img.setImageResource(R.drawable.ic_bank_pay);
             pay_on_arrive_payment_img.setImageResource(R.drawable.ic_pay_on_arrive);
@@ -359,7 +419,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             bank_payment_imgcheck.setImageDrawable(getActivity().getDrawable(R.drawable.ic_unchecked_pay_method));
             pay_on_arrive_payment_imgcheck.setImageDrawable(getActivity().getDrawable(R.drawable.ic_unchecked_pay_method));
 
-        }else {
+        } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_checked_payment);
             bank_payment_imgcheck.setImageResource(R.drawable.ic_unchecked_pay_method);
             pay_on_arrive_payment_imgcheck.setImageResource(R.drawable.ic_unchecked_pay_method);
@@ -368,7 +428,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             credit_card_payment_txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.white_color));
             bank_payment_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
             pay_on_arrive_payment_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
-        }else{
+        } else {
             credit_card_payment_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
             bank_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             pay_on_arrive_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
@@ -376,7 +436,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
     }
 
     @OnClick(R.id.bank_payment)
-    public void checkBank(){
+    public void checkBank() {
         shipment_method = 3;
         credit_card_payment.setSelected(false);
         bank_payment.setSelected(true);
@@ -387,7 +447,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             bank_payment_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_bank_pay_checked));
             pay_on_arrive_payment_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_pay_on_arrive));
 
-        }else {
+        } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_credit_card);
             bank_payment_img.setImageResource(R.drawable.ic_bank_pay_checked);
             pay_on_arrive_payment_img.setImageResource(R.drawable.ic_pay_on_arrive);
@@ -398,7 +458,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             bank_payment_imgcheck.setImageDrawable(getActivity().getDrawable(R.drawable.ic_checked_payment));
             pay_on_arrive_payment_imgcheck.setImageDrawable(getActivity().getDrawable(R.drawable.ic_unchecked_pay_method));
 
-        }else {
+        } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_unchecked_pay_method);
             bank_payment_imgcheck.setImageResource(R.drawable.ic_checked_payment);
             pay_on_arrive_payment_imgcheck.setImageResource(R.drawable.ic_unchecked_pay_method);
@@ -407,7 +467,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             credit_card_payment_txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorshipmenttype));
             bank_payment_txt.setTextColor(getActivity().getColor(R.color.white_color));
             pay_on_arrive_payment_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
-        }else{
+        } else {
             credit_card_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             bank_payment_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
             pay_on_arrive_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
@@ -415,7 +475,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
     }
 
     @OnClick(R.id.pay_on_arrive_payment)
-    public void checkPay(){
+    public void checkPay() {
         shipment_method = 2;
         credit_card_payment.setSelected(false);
         bank_payment.setSelected(false);
@@ -426,7 +486,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             bank_payment_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_bank_pay));
             pay_on_arrive_payment_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_pay_on_arrive_checked));
 
-        }else {
+        } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_credit_card);
             bank_payment_img.setImageResource(R.drawable.ic_bank_pay);
             pay_on_arrive_payment_img.setImageResource(R.drawable.ic_pay_on_arrive_checked);
@@ -437,7 +497,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             bank_payment_imgcheck.setImageDrawable(getActivity().getDrawable(R.drawable.ic_unchecked_payment));
             pay_on_arrive_payment_imgcheck.setImageDrawable(getActivity().getDrawable(R.drawable.ic_checked_payment));
 
-        }else {
+        } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_unchecked_pay_method);
             bank_payment_imgcheck.setImageResource(R.drawable.ic_unchecked_payment);
             pay_on_arrive_payment_imgcheck.setImageResource(R.drawable.ic_checked_payment);
@@ -446,14 +506,12 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             credit_card_payment_txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorshipmenttype));
             bank_payment_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
             pay_on_arrive_payment_txt.setTextColor(getActivity().getColor(R.color.white_color));
-        }else{
+        } else {
             credit_card_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             bank_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             pay_on_arrive_payment_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
         }
     }
-
-
 
 
     ArrayList<String> countries;
@@ -485,10 +543,10 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                         }
                     }
 
-                    if (ids_countries.contains(id_country)){
+                    if (ids_countries.contains(id_country)) {
                         int index = ids_countries.indexOf(id_country);
-                        Collections.swap(ids_countries , 0 , index);
-                        Collections.swap(countries , 0 , index);
+                        Collections.swap(ids_countries, 0, index);
+                        Collections.swap(countries, 0, index);
                         getRegions(id_country);
                     }
                     spinner_address_add_country_shipment.setItems(countries);
@@ -539,10 +597,10 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                             ids_regions.add(Integer.parseInt(getRegions.getData().getSubsidiaries().get(i).getId()));
                         }
                     }
-                    if (ids_regions.contains(id_region)){
+                    if (ids_regions.contains(id_region)) {
                         int index = ids_regions.indexOf(id_region);
-                        Collections.swap(ids_regions , 0 , index);
-                        Collections.swap(regions , 0 , index);
+                        Collections.swap(ids_regions, 0, index);
+                        Collections.swap(regions, 0, index);
                         getCities(id_region);
                     }
 
@@ -593,10 +651,10 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                         ids_branches.add(Integer.parseInt(getBranches.getData().getShowrooms().get(i).getId()));
                     }
                 }
-                if (ids_branches.contains(id_branch)){
+                if (ids_branches.contains(id_branch)) {
                     int index = ids_branches.indexOf(id_branch);
-                    Collections.swap(ids_branches , 0 , index);
-                    Collections.swap(branches , 0 , index);
+                    Collections.swap(ids_branches, 0, index);
+                    Collections.swap(branches, 0, index);
                 }
 
                 spinner_address_add_branches_shipment.setItems(branches);

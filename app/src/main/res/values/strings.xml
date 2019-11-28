@@ -1,208 +1,414 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Dalel AlShabaka</string>
-    <string name="splash_text_label1">جميع الحقوق محفوظة لمتجر دليل الشبكة</string>
-    <string name="splash_text_label2">مرحبا بك في دليل الشبكة</string>
-    <string name="bottomnavigation_label_main">الرئيسية</string>
-    <string name="bottomnavigation_label_cate">الفئات</string>
-    <string name="bottomnavigation_label_offers">العروض</string>
-    <string name="bottomnavigation_label_basket">السلة</string>
-    <string name="bottomnavigation_label_account">حسابى</string>
+        
+    <string name="app_name"> Network directory </string>
+        
+    <string name="splash_text_label1"> All rights reserved to the network directory store </string>
+        
+    <string name="splash_text_label2"> Welcome to the network directory </string>
+        
+    <string name="bottomnavigation_label_main"> Home </string>
+        
+    <string name="bottomnavigation_label_cate"> Categories </string>
+        
+    <string name="bottomnavigation_label_offers"> Shows </string>
+        
+    <string name="bottomnavigation_label_basket"> Cart </string>
+        
+    <string name="bottomnavigation_label_account"> My Account </string>
 
-    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
-    <!--
-        This is the name that users will see when interacting with this channel.
-        It should describe the category of notifications that will be sent through this channel
-     -->
-    <string name="default_notification_channel_name" translatable="true">Weather</string>
-    <string name="no_internet">لا يوجد اتصال بالانترنت</string>
-    <string name="detail_color">اللون</string>
-    <string name="detail_size_label">السعة</string>
-    <string name="details_like_too">قد يعجبك أيضا</string>
-    <string name="fragment_account_label">حسابى</string>
-    <string name="fragment_account_text_login">تسجيل الدخول</string>
-    <string name="fragment_account_text_register">إشترك الآن</string>
-    <string name="fragment_account_region_name">الدولة</string>
-    <string name="fragment_account_language_label">اللغة</string>
-    <string name="fragment_account_contact_us_label">إتصل بنا</string>
-    <string name="fragment_account_contact_us_help_linear_label">المساعدة</string>
-    <string name="fragment_account_contact_us_help_linear_label_la">إتصل بنا</string>
-    <string name="fragment_account_links_label_label">روابط مساعدة</string>
-    <string name="fragment_account_links_conditions_linear_label">الشروط والأحكام</string>
-    <string name="fragment_account_links_privacy_linear_label">سياسة الخصوصية</string>
-    <string name="fragment_account_links_cancel_linear_label">سياسة إلغاء الطلب</string>
-    <string name="fragment_account_links_exchange_linear_label">سياسة الإرجاع والتبديل</string>
-    <string name="fragment_account_links_connect_linear_label">الشحن والتوصيل</string>
-    <string name="fragment_account_links_guarantee_linear_label">الضمان</string>
-    <string name="fragment_account_links_support_linear_label">الدعم الفني</string>
-    <string name="fragment_basket_elements_label">عناصر سلة التسوق</string>
-    <string name="fragment_basket_elements_label_header">سلة التسوق</string>
-    <string name="fragment_basket_elements_enter_code_label">تطبيق</string>
-    <string name="fragment_basket_elements_edittext_hint">أدخل الكود أو الكوبون</string>
-    <string name="fragment_basket_total_price_products_label">مجموع المنتجات</string>
-    <string name="currancy_label">SAR</string>
-    <string name="fragment_basket_total_shipments_label">الشحن</string>
-    <string name="fragment_basket_tax_label">ضريبة القيمة المضافة</string>
-    <string name="fragment_basket_total_price_label">المجموع الكلى</string>
-    <string name="fragment_basket_paying_label">الدفع</string>
-    <string name="ragment_account_after_login_profile_text">الملف الشخصى</string>
-    <string name="fragment_account_after_login_orders_text">الطلبات</string>
-    <string name="fragment_account_after_login_likes_text">المفضلات</string>
-    <string name="fragment_account_after_login_wallet_text">المحفظة</string>
-    <string name="login_text_welcome">أهلا بك في دليل الشبكة</string>
-    <string name="login_mail_edittext">البريد الإلكترونى</string>
-    <string name="login_pass_edittext">كلمة المرور</string>
-    <string name="login_no_have_account_text">ليس لديك حساب .. ؟ سجل الأن</string>
-    <string name="login_text_forget_pass">هل نسيت كلمة السر ... ؟</string>
-    <string name="login_not_now_text">ليس الان ..؟ تخطى</string>
-    <string name="activity_contactus_header_text">الشروط والاحكام</string>
-    <string name="title_activity_maps">Map</string>
-    <string name="we_here">نحن هنا</string>
-    <string name="fragment_account_setting_label">الإعدادت</string>
-    <string name="fragment_account_after_login_account_label">حسابى</string>
-    <string name="fragment_account_after_login_addresses_linear">العناوين</string>
-    <string name="ragment_account_after_login_pay_label">الدفع</string>
-    <string name="ragment_account_after_login_return_label">الإرجاع</string>
-    <string name="ragment_account_after_login_logout_label">تسجيل الخروج</string>
-    <string name="login_go_enter_text">تسجيل الدخول</string>
-    <string name="activity_conditions_header_text">الشروط والاحكام</string>
-    <string name="activity_profile_name_text">الإسم الأول</string>
-    <string name="activity_profile_last_name_text">الإسم الأخير</string>
-    <string name="activity_profile_email_text">البريد الإلكترونى</string>
-    <string name="activity_profile_pass_text">كلمة المرور</string>
-    <string name="activity_profile_update_text">تعديل</string>
-    <string name="activity_profile_info_text_label">معلومات الحساب</string>
-    <string name="activity_orders_header_text">الطلبات</string>
-    <string name="activity_orders_all_label">كل الطلبات</string>
-    <string name="activity_elements_orders_header_text">الطلب</string>
-    <string name="elements_order_date_text">تاريخ الطلب</string>
-    <string name="elements_order_number_order_text">رقم الطلب</string>
-    <string name="elements_order_state_text">حالة الطلب</string>
-    <string name="likes_text_label_text">منتج</string>
-    <string name="like_item_text_add_to_card">إضافة لعربة التسوق</string>
-    <string name="activity_filter_header_text">تصفية المنتجات</string>
-    <string name="filter_btn_label">فلتر</string>
-    <string name="filter_categories_label">القسم</string>
-    <string name="filter_flags_label">العلامة التجارية</string>
-    <string name="filter_colors_label">اللون</string>
-    <string name="filter_prices_label">السعر</string>
-    <string name="offers_header_text">العروض</string>
-    <string name="offers_text">عروض اليوم</string>
-    <string name="category_text_label_text">منتج</string>
-    <string name="fragment_shooping_add_address_text">إضافة عنوان جديد</string>
-    <string name="fragment_shooping_add_address_text0">أضف عنواناً الأن لنتمكن من توصيل طلبك</string>
-    <string name="fragment_shooping_add_address_text1">أين هي عناوين محفظتك ؟</string>
-    <string name="fragment_payment_phone_number_text1">من فضلك قم بتأكيد رقم الموبايل الخاص بك</string>
-    <string name="fragment_payment_phone_number_text2">للمتابعة لعملية الدفع , استخدم الرمز وتحقق من رقم الجوال</string>
-    <string name="fragment_payment_phone_number_text3">تم إرسال الرمز الى رقم الجوال</string>
-    <string name="search_here">Search here</string>
-    <string name="confirm_internet">من فضلك تأكد من الأتصال بالانترنت</string>
-    <string name="safety_shipping_main_fragment">تسوق بأمان</string>
-    <string name="pay_on_arrive_main_fragment">الدفع عند الإستلام</string>
-    <string name="free_shipping_main_fragment">الشحن مجانى</string>
-    <string name="acc_more_text">المزيد</string>
-    <string name="discount_phone_txt">خصم</string>
-    <string name="phone_row_add_to_card_txt">إضافة لعربة التسوق</string>
-    <string name="details_add_to_card_label">إضافة لعربة التسوق</string>
-    <string name="details_quantaty_txt_label">الكمية</string>
-    <string name="desc_product_label">المواصفات</string>
-    <string name="full_desc_product_label">وصف كامل</string>
-    <string name="radio_company_register_label">شركة</string>
-    <string name="radio_indivdual_register_label">فردي</string>
-    <string name="type_radio">النوع</string>
-    <string name="type_radio_lang">اللغة</string>
-    <string name="radio_ar_register">العربية</string>
-    <string name="radio_en_register">English</string>
-    <string name="register_first_name_edittext_hint">الإسم الأول</string>
-    <string name="register_last_name_edittext_hint">الإسم الأخير</string>
-    <string name="field_required">هذا الحقل مطلوب !</string>
-    <string name="choose_type">من فضلك تأكد من أختيار النوع</string>
-    <string name="choose_lang">من فضلك أختر اللغة</string>
-    <string name="error_confirm_message">من فضلك تأكد من كلمة المرور</string>
-    <string name="register_responsible_edittext_hint">المسؤول</string>
-    <string name="register_pass_confirm_edittext_hint">تأكيد كلمة المرور</string>
-    <string name="country_spinner_label">الدولة</string>
-    <string name="regions_spinner_label">المنطقه</string>
-    <string name="spinner_city_label">المدينة</string>
-    <string name="register_mobile_edittext_label">الهاتف الجوال</string>
-    <string name="choose_country">من فضلك أختر الدولة</string>
-    <string name="choose_region">من فضلك أختر المنطقة</string>
-    <string name="choose_city">من فضلك أختر المدينة</string>
-    <string name="register_address_edittext_label">العنوان</string>
-    <string name="register_name_company_edittext_label">إسم الشركة</string>
-    <string name="fragment_payment_phone_number_text5_label">إعادة إسال الرمز</string>
-    <string name="fragment_payment_phone_number_btn_sure">تأكيد</string>
-    <string name="fragment_payment_phone_number_text_change">تغير الرقم</string>
-    <string name="fragment_shooping_list_addresses_text_add">أضافة عنوان جديد</string>
-    <string name="please_login_first">يرجي تسجيل الدخول اولأ</string>
-    <string name="add_to_favourites">تم الإضافه الي المفضلة</string>
-    <string name="unlike_fiv">Please Unlike from your favourites</string>
-    <string name="add_to_card">تم الإضافه الي السلة</string>
-    <string name="dialog_change_quantity_dialog_label">ادخل الكمية المراد طلبها</string>
-    <string name="dialog_text_ok_label">موافق</string>
-    <string name="dialog_text_cancel_label">إلغاء</string>
-    <string name="cart_out_of_stock_label">نفذت الكمية</string>
-    <string name="no_items_text">No Products To Show</string>
-    <string name="discount_label">Discount</string>
-    <string name="new_arrival_header_text">New Arrival</string>
+        
+    <string name="default_notification_channel_id" translatable="false"> fcm_default_channel </string>
+        <!--
+            This is the name that users will see when interacting with this channel.
+            It should describe the category of notifications that will be sent through this channel
+         -->
+        
+    <string name="default_notification_channel_name" translatable="true"> Weather </string>
+        
+    <string name="no_internet"> No Internet connection </string>
+        
+    <string name="detail_color"> Color </string>
+        
+    <string name="detail_size_label"> Capacity </string>
+        
+    <string name="details_like_too"> You may also like </string>
+        
+    <string name="title_activity_maps"> Map </string>
+        
+    <string name="fragment_account_label"> My Account </string>
+        
+    <string name="fragment_account_text_login"> Login </string>
+        
+    <string name="fragment_account_text_register"> Subscribe now </string>
+        
+    <string name="fragment_account_region_name"> Country </string>
+        
+    <string name="fragment_account_language_label"> Language </string>
+        
+    <string name="fragment_shooping_add_address_text0"> Add an address now so we can deliver your order </string>
+        
+    <string name="sort_menu_price_descend"> Price: high to low </string>
 
 
-    <string name="remove_fav">تم الحذف من المفضلة</string>
-    <string name="add_address">أضف العنوان</string>
-    <string name="postal_code">الرقم البريدي</string>
-    <string name="add_address_sucess">تم إضافة العنوان بنجاح</string>
-    <string name="mobile_payment_addresses_text">رقم الجوال :</string>
-    <string name="address_payment_addresses_text">العنوان :</string>
-    <string name="name_payment_addresses_text">الإسم :</string>
-    <string name="ask_to_change_adress">هل تريد تغيير العنوان الأساسي بهذا العنوان؟</string>
-    <string name="activity_payment_header_text">الدفع</string>
-    <string name="address_add_go_update_text">عدل العنوان</string>
-    <string name="change_primary_address_success">تم تغيير العنوان الأساسي بهذا العنوان بنجاح</string>
-    <string name="edit_address_success">تم تعديل العنوان بنجاح</string>
-    <string name="fragment_shooping_list_addresses_text_next">التالى</string>
-    <string name="no_addresse_text">لا يوجد عنواين في الوقت الحالي</string>
-    <string name="shipment_to_address_text">الشحن الى العنوان</string>
-    <string name="shipment_from_branch_text">الإستلام من الفرع</string>
-    <string name="credit_card_payment_txt_label">البطاقة الإتمانية</string>
-    <string name="bank_payment_txt_label">التحويل البنكى</string>
-    <string name="pay_on_arrive_payment_txt_label">الدفع عند الإستلام</string>
-    <string name="fragment_payid_paying_label">أدفع الآن</string>
-    <string name="delete_cart_toast">تم حذف المنتج من السلة بنجاح</string>
-    <string name="quantity_not_available_toast"> الكمية المطلوبة أكبر من الكمية المتوفرة لدينا، الكمية المتاحة هي</string>
-    <string name="cart_no_quantity_chosen_toast">من فضلك قم بادخال الكمية المطلوبة</string>
-    <string name="sort_menu_price_ascend">السعر: من الأقل الى الأكثر</string>
-    <string name="sort_menu_price_descend">السعر: من الأكثر الى الأقل</string>
-    <string name="sort_menu_date_ascend">التاريخ: من الأقدم الى الأحدث</string>
-    <string name="sort_menu_date_descend">التاريخ: من الأحدث الى الأقدم</string>
-    <string name="activity_search_header_text">نتائج البحث</string>
-    <string name="offer_radio_button_text">عرض</string>
-    <string name="no_offer_radio_button_text">بدون عرض</string>
-    <string name="branch_spinner">الفرع</string>
-    <string name="choose_branch">من فضلك أختر الفرع</string>
-    <string name="choose_payment_method">من فضلك أختر طريقة الدفع</string>
-    <string name="fragment_basket_elements_recycler_noitems">لا يوجد منتجات في السلة</string>
-    <string name="shipments_label">الشحنات</string>
-    <string name="all_shipments_label">كل الشحنات</string>
-    <string name="shipments_number_label">شحنات</string>
-    <string name="shipments_recycler_noitems_label">لا توجد شحنات</string>
-    <string name="payment_type_label">نوع الدفع</string>
-    <string name="number_orders_inshipments">عدد الطلبات</string>
-    <string name="activity_elements_orders_header_textlabel">الطلبات</string>
-    <string name="order_element_currency_arrow">العدد</string>
-    <string name="dialog_change_language_label">من فضلك أختر اللغة</string>
-    <string name="country_spinner_label_profile">أختر الدولة</string>
-    <string name="region_spinner_label_profile">أختر المنطقة</string>
-    <string name="cities_spinner_label_profile">أختر المدينة</string>
-    <string name="change_lang_text_profile">تعديل كلمه المرور</string>
-    <string name="dialog_change_pass_old_edittext">كلمة المرور القديمة</string>
-    <string name="dialog_change_pass_new_edittext">كلمة المرور الجديدة</string>
-    <string name="dialog_change_pass_new_confirm_edittext">تأكيد كلمة المرور الجديدة</string>
-    <string name="dialog_change_pass_update_btn">تعديل</string>
-    <string name="password_update_success">تم تعديل كلمة المررور بنجاح</string>
-    <string name="update_profile_success_msg">تم تعديل المعلومات بنجاح</string>
-    <string name="no_wallet">لا يوجد رصيد او عمليات في الوقت الحالي</string>
-    <string name="wallet_date_text">تاريخ العملية</string>
-    <string name="order_amount_text">المبلغ</string>
-    <string name="wallet_type_text">نوع العملية</string>
-    <string name="activity_operations_wallet_total_label">الرصيد الكلي:</string>
-    <string name="remmber_me_chechbox">تذكرنى</string>
+        
+    <string name="remove_fav"> Deleted from favorites </string>
+
+        
+    <string name="fragment_account_contact_us_label"> Contact Us </string>
+        
+    <string name="fragment_account_contact_us_help_linear_label"> Help </string>
+        
+    <string name="fragment_account_contact_us_help_linear_label_la"> Contact Us </string>
+        
+    <string name="fragment_account_links_label_label"> Help Links </string>
+        
+    <string name="fragment_account_links_conditions_linear_label"> Terms and Conditions </string>
+        
+    <string name="fragment_account_links_privacy_linear_label"> Privacy Policy </string>
+        
+    <string name="fragment_account_links_cancel_linear_label"> Order Cancellation Policy </string>
+        
+    <string name="fragment_account_links_exchange_linear_label"> Return and Exchange Policy </string>
+        
+    <string name="fragment_account_links_connect_linear_label"> Shipping &amp; Delivery </string>
+        
+    <string name="fragment_account_links_guarantee_linear_label"> Warranty </string>
+        
+    <string name="fragment_account_links_support_linear_label"> Technical Support </string>
+        
+    <string name="fragment_basket_elements_label"> Shopping cart items </string>
+        
+    <string name="fragment_basket_elements_label_header"> Shopping Cart </string>
+        
+    <string name="fragment_basket_elements_enter_code_label"> Apply </string>
+        
+    <string name="fragment_basket_elements_edittext_hint"> Enter code or coupon </string>
+        
+    <string name="fragment_basket_total_price_products_label"> Total Products </string>
+        
+    <string name="currancy_label"> SR </string>
+        
+    <string name="fragment_basket_total_shipments_label"> Shipping </string>
+        
+    <string name="fragment_basket_tax_label"> VAT </string>
+        
+    <string name="fragment_basket_total_price_label"> Grand Total </string>
+        
+    <string name="fragment_basket_paying_label"> Payment </string>
+        
+    <string name="ragment_account_after_login_profile_text"> Profile </string>
+        
+    <string name="fragment_account_after_login_orders_text"> Requests </string>
+        
+    <string name="fragment_account_after_login_likes_text"> Favorites </string>
+        
+    <string name="fragment_account_after_login_wallet_text"> Wallet </string>
+        
+    <string name="login_text_welcome"> Welcome to the network directory </string>
+        
+    <string name="login_mail_edittext"> E-mail </string>
+        
+    <string name="login_pass_edittext"> Password </string>
+        
+    <string name="login_no_have_account_text"> Don\'t have an account ..? Register now </string>
+        
+    <string name="login_text_forget_pass"> Forgot your password ...? </string>
+        
+    <string name="login_not_now_text"> Not now ..? Skip </string>
+        
+    <string name="activity_contactus_header_text"> Terms &amp; Conditions </string>
+        
+    <string name="we_here"> We are here </string>
+        
+    <string name="fragment_account_setting_label"> Settings </string>
+        
+    <string name="fragment_account_after_login_account_label"> My Account </string>
+        
+    <string name="fragment_account_after_login_addresses_linear"> Addresses </string>
+        
+    <string name="ragment_account_after_login_pay_label"> Payment </string>
+        
+    <string name="ragment_account_after_login_return_label"> Return </string>
+        
+    <string name="ragment_account_after_login_logout_label"> Sign out </string>
+        
+    <string name="login_go_enter_text"> Login </string>
+        
+    <string name="activity_conditions_header_text"> Terms &amp; Conditions </string>
+    <string name="activity_profile_name_text"> First Name </string>
+        
+    <string name="activity_profile_last_name_text"> Last Name </string>
+        
+    <string name="activity_profile_email_text"> E-mail </string>
+        
+    <string name="activity_profile_pass_text"> Password </string>
+        
+    <string name="activity_profile_update_text"> Edit </string>
+        
+    <string name="activity_profile_info_text_label"> Account Information </string>
+        
+    <string name="activity_orders_header_text"> Requests </string>
+        
+    <string name="activity_orders_all_label"> All requests </string>
+        
+    <string name="activity_elements_orders_header_text"> Request </string>
+        
+    <string name="elements_order_date_text"> Order Date </string>
+        
+    <string name="elements_order_number_order_text"> Order Number </string>
+        
+    <string name="elements_order_state_text"> Request Status </string>
+        
+    <string name="likes_text_label_text"> Product </string>
+        
+    <string name="like_item_text_add_to_card"> Add to Cart </string>
+        
+    <string name="activity_filter_header_text"> Filter Products </string>
+        
+    <string name="filter_btn_label"> Filter </string>
+        
+    <string name="filter_categories_label"> section </string>
+        
+    <string name="filter_flags_label"> Brand </string>
+        
+    <string name="filter_colors_label"> Color </string>
+        
+    <string name="filter_prices_label"> Price </string>
+        
+    <string name="offers_header_text"> Offers </string>
+        
+    <string name="offers_text"> Today\'s Deals </string>
+        
+    <string name="category_text_label_text"> Product </string>
+        
+    <string name="fragment_shooping_add_address_text"> Add new address </string>
+        
+    <string name="fragment_shooping_add_address_text1"> Where are your wallet addresses? </string>
+        
+    <string name="fragment_payment_phone_number_text1"> Please confirm your mobile number </string>
+        
+    <string name="fragment_payment_phone_number_text2"> To continue with the payment, use the code and verify the mobile number </string>
+        
+    <string name="fragment_payment_phone_number_text3"> Code sent to mobile number </string>
+        
+    <string name="search_here"> Looking here </string>
+        
+    <string name="confirm_internet"> Please make sure you are connected to the Internet </string>
+        
+    <string name="safety_shipping_main_fragment"> Shop safely </string>
+        
+    <string name="pay_on_arrive_main_fragment"> Pay on Delivery </string>
+        
+    <string name="free_shipping_main_fragment"> Free shipping </string>
+        
+    <string name="acc_more_text"> More </string>
+        
+    <string name="discount_phone_txt"> Discount </string>
+
+    <string name="phone_row_add_to_card_txt"> Add to Cart </string>
+        
+    <string name="details_add_to_card_label"> Add to cart </string>
+        
+    <string name="details_quantaty_txt_label"> Quantity </string>
+        
+    <string name="desc_product_label"> Specifications </string>
+        
+    <string name="full_desc_product_label"> Full description </string>
+        
+    <string name="radio_company_register_label"> Company </string>
+        
+    <string name="radio_indivdual_register_label"> Single </string>
+        
+    <string name="type_radio"> Type </string>
+        
+    <string name="type_radio_lang"> Language </string>
+        
+    <string name="radio_ar_register"> English </string>
+        
+    <string name="radio_en_register"> English </string>
+        
+    <string name="register_first_name_edittext_hint"> First Name </string>
+        
+    <string name="register_last_name_edittext_hint"> Last Name </string>
+        
+    <string name="field_required"> This field is required! </string>
+        
+    <string name="choose_type"> Please make sure you select the type </string>
+        
+    <string name="choose_lang"> Please select a language </string>
+        
+    <string name="error_confirm_message"> Please check your password </string>
+        
+    <string name="register_responsible_edittext_hint"> Admin </string>
+        
+    <string name="register_pass_confirm_edittext_hint"> Confirm Password </string>
+        
+    <string name="country_spinner_label"> Country </string>
+        
+    <string name="regions_spinner_label"> Region </string>
+        
+    <string name="spinner_city_label"> City </string>
+        
+    <string name="register_mobile_edittext_label"> Mobile Phone </string>
+        
+    <string name="choose_country"> Please select a country </string>
+        
+    <string name="choose_region"> Please select the region </string>
+        
+    <string name="choose_city"> Please select a city </string>
+        
+    <string name="register_address_edittext_label"> Address </string>
+        
+    <string name="register_name_company_edittext_label"> Company Name </string>
+        
+    <string name="fragment_payment_phone_number_text5_label"> Resend the code </string>
+        
+    <string name="fragment_payment_phone_number_btn_sure"> Confirm </string>
+        
+    <string name="fragment_payment_phone_number_text_change"> Number changed </string>
+        
+    <string name="fragment_shooping_list_addresses_text_add"> Add new address </string>
+        
+    <string name="please_login_first"> Please log in first </string>
+
+    <string name="add_to_favourites"> Added to favorites </string>
+        
+    <string name="unlike_fiv"> Please Unlike from your favorites </string>
+        
+    <string name="add_to_card"> Added to cart </string>
+        
+    <string name="dialog_change_quantity_dialog_label"> Enter the quantity to order </string>
+        
+    <string name="dialog_text_ok_label"> OK </string>
+        
+    <string name="dialog_text_cancel_label"> Cancel </string>
+        
+    <string name="cart_out_of_stock_label"> Out of Quantity </string>
+        
+    <string name="no_items_text"> There are no products to display at this time </string>
+        
+    <string name="discount_label"> Discount </string>
+        
+    <string name="new_arrival_header_text"> New Arrivals </string>
+        
+    <string name="add_address"> Add the address </string>
+        
+    <string name="postal_code"> Postal number </string>
+        
+    <string name="add_address_sucess"> Address successfully added </string>
+        
+    <string name="mobile_payment_addresses_text"> Mobile Number: </string>
+        
+    <string name="address_payment_addresses_text"> Address: </string>
+        
+    <string name="name_payment_addresses_text"> Name: </string>
+        
+    <string name="ask_to_change_adress"> Change the primary address with that address? </string>
+        
+    <string name="activity_payment_header_text"> Payment </string>
+        
+    <string name="address_add_go_update_text"> Edit the address </string>
+        
+    <string name="change_primary_address_success"> Successfully changed base address with this address </string>
+        
+    <string name="edit_address_success"> Address successfully modified </string>
+        
+    <string name="fragment_shooping_list_addresses_text_next"> Next </string>
+        
+    <string name="no_addresse_text"> There are no addresses at this time </string>
+        
+    <string name="shipment_to_address_text"> Ship to address </string>
+        
+    <string name="shipment_from_branch_text"> Pick up from branch </string>
+        
+    <string name="credit_card_payment_txt_label"> Credit Card </string>
+        
+    <string name="bank_payment_txt_label"> Bank Transfer </string>
+        
+    <string name="pay_on_arrive_payment_txt_label"> Pay on Delivery </string>
+        
+    <string name="fragment_payid_paying_label"> Pay Now </string>
+
+        
+    <string name="delete_cart_toast"> The product was successfully deleted from the basket </string>
+        
+    <string name="quantity_not_available_toast"> Required quantity is greater than our quantity, quantity available is </string>
+        
+    <string name="cart_no_quantity_chosen_toast"> Please enter the required quantity </string>
+        
+    <string name="sort_menu_price_ascend"> Price: Low to High </string>
+        
+    <string name="sort_menu_date_ascend"> Date: Oldest to Newest </string>
+        
+    <string name="sort_menu_date_descend"> Date: newest to oldest </string>
+        
+    <string name="activity_search_header_text"> Search Results </string>
+        
+    <string name="offer_radio_button_text"> View </string>
+        
+    <string name="no_offer_radio_button_text"> No Show </string>
+        
+    <string name="branch_spinner"> Branch </string>
+        
+    <string name="choose_branch"> Please select the branch </string>
+        
+    <string name="choose_payment_method"> Please select a payment method </string>
+        
+    <string name="fragment_basket_elements_recycler_noitems"> No products in the cart </string>
+        
+    <string name="shipments_label"> Shipments </string>
+        
+    <string name="all_shipments_label"> All Shipments </string>
+        
+    <string name="shipments_number_label"> Shipments </string>
+        
+    <string name="shipments_recycler_noitems_label"> No shipments </string>
+        
+    <string name="payment_type_label"> Payment Type </string>
+        
+    <string name="number_orders_inshipments"> Number of requests </string>
+        
+    <string name="activity_elements_orders_header_textlabel"> Requests </string>
+        
+    <string name="order_element_currency_arrow"> Count </string>
+        
+    <string name="dialog_change_language_label"> Please select the language </string>
+        
+    <string name="country_spinner_label_profile"> Select Country </string>
+        
+    <string name="region_spinner_label_profile"> Choose Region </string>
+        
+    <string name="cities_spinner_label_profile"> Choose the city </string>
+        
+    <string name="change_lang_text_profile"> Modify password </string>
+        
+    <string name="dialog_change_pass_old_edittext"> Old password </string>
+        
+    <string name="dialog_change_pass_new_edittext"> New Password </string>
+        
+    <string name="dialog_change_pass_new_confirm_edittext"> Confirm new password </string>
+        
+    <string name="dialog_change_pass_update_btn"> Edit </string>
+        
+    <string name="password_update_success"> Password successfully modified </string>
+        
+    <string name="update_profile_success_msg"> Information successfully modified </string>
+        
+    <string name="no_wallet"> No balance or transactions at this time </string>
+        
+    <string name="wallet_date_text"> Process Date </string>
+        
+    <string name="order_amount_text"> Amount </string>
+        
+    <string name="wallet_type_text"> Operation type </string>
+        
+    <string name="activity_operations_wallet_total_label"> Total Balance: </string>
+        
+    <string name="remmber_me_chechbox"> Remember me </string>
+        
+    <string name="item_payment_methods_label"> Payment methods </string>
+        
+    <string name="favorites"> Favorites </string>
+
 </resources>

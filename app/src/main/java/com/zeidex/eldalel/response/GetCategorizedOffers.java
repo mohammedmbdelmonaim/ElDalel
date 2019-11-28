@@ -189,9 +189,9 @@ public class GetCategorizedOffers {
             @SerializedName("favorite")
             @Expose
             private Integer favorite;
-            @SerializedName("cart")
+            @SerializedName("cart_status")
             @Expose
-            private Integer cart;
+            private String cart;
             @SerializedName("photos")
             @Expose
             private List<Photo> photos = null;
@@ -507,11 +507,11 @@ public class GetCategorizedOffers {
                 this.favorite = favorite;
             }
 
-            public Integer getCart() {
+            public String getCart() {
                 return cart;
             }
 
-            public void setCart(Integer cart) {
+            public void setCart(String cart) {
                 this.cart = cart;
             }
 
