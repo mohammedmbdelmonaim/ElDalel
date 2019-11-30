@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.PreferenceUtils;
@@ -56,6 +58,18 @@ public class AccountAfterLoginFragment extends androidx.fragment.app.Fragment im
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         findViews();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                ((MainActivity)getActivity()).navigateToHomeFragment();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     @OnClick({R.id.fragment_account_after_login_addresses_linear})
@@ -107,8 +121,9 @@ public class AccountAfterLoginFragment extends androidx.fragment.app.Fragment im
                 break;
             }
             case R.id.fragment_account_after_login_likes_linear:{
-                startActivity(new Intent(getActivity(), LikesElementsActivity.class));
-                Animatoo.animateSwipeLeft(getActivity());
+//                startActivity(new Intent(getActivity(), LikesElementsFragment.class));
+//                Animatoo.animateSwipeLeft(getActivity());
+                NavHostFragment.findNavController(this).navigate(AccountAfterLoginFragmentDirections.actionAccountAfterLoginFragmentToLikesElementsFragment());
                 break;
             }
             case R.id.ragment_account_after_login_pay_linear:{

@@ -12,9 +12,11 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,7 +33,6 @@ import com.zeidex.eldalel.services.ChangeQuantityApi;
 import com.zeidex.eldalel.services.CheckCouponAPI;
 import com.zeidex.eldalel.services.DeleteBasketAPI;
 import com.zeidex.eldalel.utils.APIClient;
-import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 import com.zeidex.eldalel.utils.PriceFormatter;
@@ -315,6 +316,17 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
 
     }
 
+    @Override
+    public void onCreate(@androidx.annotation.Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                ((MainActivity)getActivity()).navigateToHomeFragment();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+    }
 
     @Override
     public void onClick(View v) {
@@ -349,8 +361,10 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
 
     @Override
     public void onClickBasketProduct(int id, int pos) {
-        startActivity(new Intent(getActivity(), DetailItemActivity.class).putExtra("id", id));
-        Animatoo.animateSwipeLeft(getActivity());
+//        startActivity(new Intent(getActivity(), DetailItemFragment.class).putExtra("id", id));
+//        Animatoo.animateSwipeLeft(getActivity());
+
+        NavHostFragment.findNavController(this).navigate(BasketFragmentDirections.actionBasketFragmentToDetailItemActivity(id, pos, null, ""));
     }
 
 

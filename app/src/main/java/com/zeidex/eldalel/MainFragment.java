@@ -19,6 +19,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -148,9 +149,9 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
 
     static FirstPageFragmentListener firstPageListener;
 
-    public MainFragment(FirstPageFragmentListener listener){
-        firstPageListener = listener;
-    }
+//    public MainFragment(FirstPageFragmentListener listener){
+//        firstPageListener = listener;
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -666,8 +667,13 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
     @Override
     public void onClickProduct3(int id, int pos) {
         position_detail = pos;
-        startActivityForResult(new Intent(getActivity(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", home_category3).putExtra("getLike", home_category3.get(pos).getLike()).putExtra("pos", pos), 1111);
-        Animatoo.animateSwipeLeft(getActivity());
+        Bundle bundle = new Bundle();
+        bundle.putInt("pos", pos);
+        bundle.putInt("id", id);
+        bundle.putParcelableArrayList("similar_products", home_category3);
+        bundle.putString("getLike", home_category3.get(pos).getLike());
+//        firstPageListener.onSwitchToNextFragment(bundle);
+        NavHostFragment.findNavController(this).navigate(MainFragmentDirections.actionMainFragmentToDetailItemActivity(id, pos, home_category3.toArray(new ProductsCategory[home_category3.size()]),home_category3.get(pos).getLike()));
     }
 
     @Override
@@ -737,8 +743,13 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
     @Override
     public void onClickPhone(int id, int pos) {
         position_detail = pos;
-        startActivityForResult(new Intent(getActivity(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", home_category2).putExtra("getLike", home_category2.get(pos).getLike()).putExtra("pos", pos), 111);
-        Animatoo.animateSwipeLeft(getActivity());
+        Bundle bundle = new Bundle();
+        bundle.putInt("pos", pos);
+        bundle.putInt("id", id);
+        bundle.putParcelableArrayList("similar_products", home_category2);
+        bundle.putString("getLike", home_category2.get(pos).getLike());
+//        firstPageListener.onSwitchToNextFragment(bundle);
+        NavHostFragment.findNavController(this).navigate(MainFragmentDirections.actionMainFragmentToDetailItemActivity(id, pos, home_category2.toArray(new ProductsCategory[home_category2.size()]),home_category2.get(pos).getLike()));
     }
 
     @Override
@@ -808,8 +819,15 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
     @Override
     public void onClickAcssesory(int id, int pos) {
         position_detail = pos;
-        startActivityForResult(new Intent(getActivity(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", home_category1).putExtra("getLike", home_category1.get(pos).getLike()).putExtra("pos", pos), 11111);
-        Animatoo.animateSwipeLeft(getActivity());
+        Bundle bundle = new Bundle();
+        bundle.putInt("pos", pos);
+        bundle.putInt("id", id);
+        bundle.putParcelableArrayList("similar_products", home_category1);
+        bundle.putString("getLike", home_category1.get(pos).getLike());
+        NavHostFragment.findNavController(this).navigate(MainFragmentDirections.actionMainFragmentToDetailItemActivity(id, pos, home_category1.toArray(new ProductsCategory[home_category1.size()]),home_category1.get(pos).getLike()));
+//        firstPageListener.onSwitchToNextFragment(bundle);
+//        startActivityForResult(new Intent(getActivity(), DetailItemFragment.class).putExtra("id", id).putExtra("similar_products", home_category1).putExtra("getLike", home_category1.get(pos).getLike()).putExtra("pos", pos), 11111);
+//        Animatoo.animateSwipeLeft(getActivity());
     }
 
     @Override

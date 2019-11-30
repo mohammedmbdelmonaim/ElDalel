@@ -412,14 +412,14 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
 
 //    @Override
 //    public void onClickCategory(int position) {
-//        startActivity(new Intent(getActivity(), DetailItemActivity.class));
+//        startActivity(new Intent(getActivity(), DetailItemFragment.class));
 //        Animatoo.animateSwipeLeft(getActivity());
 //    }
 
 //    @Override
 //    public void onClickProduct3(int id, int pos) {
 //        position_detail = pos;
-//        startActivityForResult(new Intent(getActivity(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
+//        startActivityForResult(new Intent(getActivity(), DetailItemFragment.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
 //        Animatoo.animateSwipeLeft(getActivity());
 //    }
 
@@ -594,7 +594,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     @Override
     public void onClickProduct(int id, int pos) {
         position_detail = pos;
-        startActivityForResult(new Intent(getActivity(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
+        startActivityForResult(new Intent(getActivity(), DetailItemFragment.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
         Animatoo.animateSwipeLeft(getActivity());
     }
 

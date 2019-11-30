@@ -10,12 +10,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.zeidex.eldalel.utils.Animatoo;
+import com.zeidex.eldalel.adapters.MainViewPagerAdapter;
 import com.zeidex.eldalel.utils.Constants;
 import com.zeidex.eldalel.utils.CustomViewPager;
 import com.zeidex.eldalel.utils.PreferenceUtils;
@@ -36,12 +37,15 @@ public class MainActivity extends BaseActivity {
     private int mSelectedItem;
     public boolean login;
     Fragment frag = null;
+    private MainViewPagerAdapter mViewPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        mainViewPager.setPagingEnabled(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create channel to show notifications.
@@ -52,6 +56,8 @@ public class MainActivity extends BaseActivity {
             notificationManager.createNotificationChannel(new NotificationChannel(channelId,
                     channelName, NotificationManager.IMPORTANCE_LOW));
         }
+
+        setupViewPager();
 
 //        frag = new FragmentFooterView();
 //        if (frag != null) {
@@ -66,15 +72,15 @@ public class MainActivity extends BaseActivity {
         mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.basket_fragment){
-                    if (!PreferenceUtils.getUserLogin(MainActivity.this) &&  !PreferenceUtils.getCompanyLogin(MainActivity.this)) {
-                        Toasty.error(MainActivity.this,getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
+                if (item.getItemId() == R.id.basket_fragment) {
+                    if (!PreferenceUtils.getUserLogin(MainActivity.this) && !PreferenceUtils.getCompanyLogin(MainActivity.this)) {
+                        Toasty.error(MainActivity.this, getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
                         return false;
-                    }else{
+                    } else {
                         selectFragment(item);
                         return true;
                     }
-                }else {
+                } else {
                     selectFragment(item);
                     return true;
                 }
@@ -115,6 +121,12 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private void setupViewPager() {
+        mViewPagerAdapter = new MainViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        mainViewPager.setAdapter(mViewPagerAdapter);
+        mainViewPager.setOffscreenPageLimit(5);
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(SELECTED_ITEM, mSelectedItem);
@@ -124,19 +136,26 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        MenuItem homeItem = mBottomNav.getMenu().getItem(0);
-        if (mSelectedItem != homeItem.getItemId()) {
-            // select home item
-            selectFragment(homeItem);
-            homeItem.setChecked(true);
-
-        } else {
-            super.onBackPressed();
-            Animatoo.animateSwipeRight(this);
-        }
+        super.onBackPressed();
+//        MenuItem homeItem = mBottomNav.getMenu().getItem(0);
+//        if (mSelectedItem != homeItem.getItemId()) {
+//            // select home item
+//            selectFragment(homeItem);
+//            homeItem.setChecked(true);
+//
+////        } else if (mSelectedItem == homeItem.getItemId()) {
+////            boolean isDetail = mViewPagerAdapter.onBackPressed();
+////            if (!isDetail) {
+////                super.onBackPressed();
+////                Animatoo.animateSwipeRight(this);
+////            }
+//        } else {
+//            super.onBackPressed();
+//            Animatoo.animateSwipeRight(this);
+//        }
     }
 
-    public void navigateToCategories(int categoryId){
+    public void navigateToCategories(int categoryId) {
         CategoriesFragment categoriesFragment = new CategoriesFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("category_id", categoryId);
@@ -151,6 +170,7 @@ public class MainActivity extends BaseActivity {
     }
 
     String tag;
+
     public void selectFragment(MenuItem item) {
         Fragment frag = null;
         // init corresponding fragment
@@ -194,7 +214,7 @@ public class MainActivity extends BaseActivity {
         }
 
 //         update selected item
-//        mSelectedItem = item.getItemId();
+        mSelectedItem = item.getItemId();
 //        mFragmentMenuItem.push(mSelectedItem);
 
 //        if (mFragmentsStack.contains(tag)) {
@@ -217,6 +237,15 @@ public class MainActivity extends BaseActivity {
 //            ft.commit();
 //        }
 
+    }
+
+    public void navigateToHomeFragment() {
+        MenuItem homeItem = mBottomNav.getMenu().getItem(0);
+        if (mSelectedItem != homeItem.getItemId()) {
+            // select home item
+            selectFragment(homeItem);
+            homeItem.setChecked(true);
+        }
     }
 
 

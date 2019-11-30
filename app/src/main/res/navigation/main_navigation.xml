@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/mainFragment">
+
+        <fragment
+            android:id="@+id/mainFragment"
+            android:name="com.zeidex.eldalel.MainFragment"
+            android:label="fragment_main"
+            tools:layout="@layout/fragment_main" >
+            <action
+                android:id="@+id/action_mainFragment_to_detailItemActivity"
+                app:destination="@+id/detailItemActivity"
+                app:popUpTo="@+id/mainFragment"
+                app:popUpToInclusive="false" />
+        </fragment>
+        <fragment
+            android:id="@+id/detailItemActivity"
+            android:name="com.zeidex.eldalel.DetailItemFragment"
+            android:label="activity_detail_item"
+            tools:layout="@layout/reload_layout">
+            <argument
+                android:name="id"
+                app:argType="integer" />
+            <argument
+                android:name="pos"
+                app:argType="integer" />
+            <argument
+                android:name="similar_products"
+                app:argType="com.zeidex.eldalel.models.ProductsCategory[]"
+                app:nullable="true" />
+            <argument
+                android:name="getLike"
+                app:argType="string"
+                app:nullable="true" />
+            <action
+                android:id="@+id/action_detailItemActivity_self"
+                app:destination="@id/detailItemActivity"
+                app:popUpTo="@+id/detailItemActivity" />
+        </fragment>
+</navigation>

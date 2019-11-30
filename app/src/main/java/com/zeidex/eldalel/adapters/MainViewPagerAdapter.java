@@ -1,20 +1,16 @@
 package com.zeidex.eldalel.adapters;
 
-import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.zeidex.eldalel.AccountAfterLoginFragment;
 import com.zeidex.eldalel.AccountFragment;
-import com.zeidex.eldalel.BasketFragment;
 import com.zeidex.eldalel.CategoriesFragment;
-import com.zeidex.eldalel.DetailItemActivity;
-import com.zeidex.eldalel.MainFragment;
 import com.zeidex.eldalel.OffersFragment;
-import com.zeidex.eldalel.listeners.FirstPageFragmentListener;
+import com.zeidex.eldalel.hostfragments.AccountHostFragment;
+import com.zeidex.eldalel.hostfragments.BasketHostFragment;
+import com.zeidex.eldalel.hostfragments.MainHostFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,43 +18,37 @@ import java.util.List;
 public class MainViewPagerAdapter extends FragmentPagerAdapter {
     List<Fragment> mFragmentList;
     FragmentManager mFragmentManager;
-    FirstPageListener listener = new FirstPageListener();
+//    FirstPageListener listener = new FirstPageListener();
     private Fragment mFragmentAtPos0;
-    MainFragment mMainFragment;
+    MainHostFragment mMainFragment;
     AccountFragment mAccountFragment;
-    BasketFragment mBasketFragment;
+    BasketHostFragment mBasketFragment;
     CategoriesFragment mCategoriesFragment;
     OffersFragment mOffersFragment;
-    AccountAfterLoginFragment mAccountAfterLoginFragment;
+    AccountHostFragment mAccountAfterLoginHostFragment;
 
     public MainViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
         mFragmentList = new ArrayList<>();
         mFragmentManager = fm;
-        mMainFragment = new MainFragment(listener);
+        mMainFragment = new MainHostFragment();
 
         mAccountFragment = new AccountFragment();
-        mBasketFragment = new BasketFragment();
+        mBasketFragment = new BasketHostFragment();
         mCategoriesFragment = new CategoriesFragment();
         mOffersFragment = new OffersFragment();
-        mAccountAfterLoginFragment = new AccountAfterLoginFragment();
+        mAccountAfterLoginHostFragment = new AccountHostFragment();
         addFragment(mMainFragment);
         addFragment(mCategoriesFragment);
         addFragment(mOffersFragment);
         addFragment(mBasketFragment);
         addFragment(mAccountFragment);
-        addFragment(mAccountAfterLoginFragment);
+        addFragment(mAccountAfterLoginHostFragment);
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        if (position == 0) {
-            if (mFragmentAtPos0 == null) {
-                mFragmentAtPos0 = new MainFragment(listener);
-            }
-            return mFragmentAtPos0;
-        } else
             return mFragmentList.get(position);
     }
 
@@ -71,30 +61,40 @@ public class MainViewPagerAdapter extends FragmentPagerAdapter {
         return mFragmentList.size();
     }
 
-    private final class FirstPageListener implements FirstPageFragmentListener {
-        public void onSwitchToNextFragment(Bundle bundle) {
-            mFragmentManager.beginTransaction().remove(mFragmentAtPos0)
-                    .commitNow();
-            if (mFragmentAtPos0 instanceof MainFragment) {
-                mFragmentAtPos0 = new DetailItemActivity();
-            } else { // Instance of NextFragment
-                mFragmentAtPos0 = new MainFragment(listener);
-            }
-            notifyDataSetChanged();
-        }
-    }
+//    private final class FirstPageListener implements FirstPageFragmentListener {
+//        public void onSwitchToNextFragment(Bundle bundle) {
+//            mFragmentManager.beginTransaction().remove(mFragmentAtPos0)
+//                    .commitNow();
+//            if (mFragmentAtPos0 instanceof MainFragment) {
+//                mFragmentAtPos0 = new DetailItemFragment();
+//            } else { // Instance of NextFragment
+//                mFragmentAtPos0 = new MainFragment(listener);
+//            }
+//            notifyDataSetChanged();
+//        }
+//    }
 
-    @Override
-    public int getItemPosition(@NonNull Object object) {
-        if (object instanceof MainFragment &&
-                mFragmentAtPos0 instanceof DetailItemActivity) {
-            return POSITION_NONE;
-        }
-        if (object instanceof DetailItemActivity &&
-                mFragmentAtPos0 instanceof MainFragment) {
-            return POSITION_NONE;
-        }
-        return POSITION_UNCHANGED;
-    }
+//    @Override
+//    public int getItemPosition(@NonNull Object object) {
+//        if (object instanceof MainFragment &&
+//                mFragmentAtPos0 instanceof DetailItemFragment) {
+//            return POSITION_NONE;
+//        }
+//        if (object instanceof DetailItemFragment &&
+//                mFragmentAtPos0 instanceof MainFragment) {
+//            return POSITION_NONE;
+//        }
+//        return POSITION_UNCHANGED;
+//    }
+
+//    public boolean onBackPressed() {
+//        if (mFragmentAtPos0 instanceof DetailItemFragment) {
+//            mFragmentManager.beginTransaction().remove(mFragmentAtPos0).commitNow();
+//            mFragmentAtPos0 = new MainFragment(listener);
+//            notifyDataSetChanged();
+//            return true;
+//        }
+//        return false;
+//    }
 }
 
