@@ -59,7 +59,6 @@ import com.zeidex.eldalel.utils.PreferenceUtils;
 import com.zeidex.eldalel.utils.PriceFormatter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -290,9 +289,9 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                             if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
                                 Toasty.success(getActivity(), getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
                                 isLike = true;
-                                int pos = DetailItemActivityArgs.fromBundle(getArguments()).getPos();
-                                if (DetailItemActivityArgs.fromBundle(getArguments()).getSimilarProducts() != null) {
-                                    List<ProductsCategory> productsCategories = Arrays.asList(DetailItemActivityArgs.fromBundle(getArguments()).getSimilarProducts());
+                                int pos = getArguments().getInt("pos");
+                                if (getArguments().getParcelableArrayList("similar_products") != null) {
+                                    ArrayList<ProductsCategory> productsCategories = getArguments().getParcelableArrayList("similar_products");
                                     if (productsCategories != null && productsCategories.size() > 0) {
                                         ProductsCategory productsCategory = productsCategories.get(pos);
                                         productsCategory.setLike("1");
@@ -361,7 +360,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
     ArrayList<CapacityProduct> capicities;
 
     public void onLoadPage() {
-        productId = DetailItemActivityArgs.fromBundle(getArguments()).getId();
+        productId = getArguments().getInt("id");
         images = new ArrayList<>();
         colors = new ArrayList<>();
         capicities = new ArrayList<>();
@@ -579,28 +578,27 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                             imageSlider.startAutoCycle();
                         }
 
-                        String alredy_like = DetailItemActivityArgs.fromBundle(getArguments()).getGetLike();
+                        String alredy_like = getArguments().getString("getLike");
 
-                        if (alredy_like.equals("")) {
+                        if (alredy_like == null || alredy_like.equals("")) {
                         } else if (Integer.parseInt(alredy_like) == 1) {
                             detail_like_img.setChecked(true);
                         } else {
                             detail_like_img.setChecked(false);
                         }
 
-                        if (DetailItemActivityArgs.fromBundle(getArguments()).getSimilarProducts() != null) {
-                            List<ProductsCategory> similarProducts = Arrays.asList(DetailItemActivityArgs.fromBundle(getArguments()).getSimilarProducts());
-                            if (similarProducts != null && similarProducts.size() > 0) {
-                                phonesAdapter = new ProductsCategory3Adapter(getActivity(), similarProducts);
-                                phonesAdapter.setProductsCategory3Operation(DetailItemFragment.this);
-                                details_recycler_like_too.setAdapter(phonesAdapter);
-                            } else {
-                                details_like_too.setVisibility(View.GONE);
-                            }
-                            detailDescriptionsAdapter = new DetailDescriptionsAdapter(desc_names, getActivity().getSupportFragmentManager(), desc_options, full_desc);
-                            detail_vpPager.setAdapter(detailDescriptionsAdapter);
-                            onClickLike(Integer.parseInt(getDetailProduct.getData().getProduct().getId()));
+                        ArrayList<ProductsCategory> similarProducts = getArguments().getParcelableArrayList("similar_products");
+                        if (similarProducts != null && similarProducts.size() > 0) {
+                            phonesAdapter = new ProductsCategory3Adapter(getActivity(), similarProducts);
+                            phonesAdapter.setProductsCategory3Operation(DetailItemFragment.this);
+                            details_recycler_like_too.setAdapter(phonesAdapter);
+                        } else {
+                            details_like_too.setVisibility(View.GONE);
                         }
+                        detailDescriptionsAdapter = new DetailDescriptionsAdapter(desc_names, getActivity().getSupportFragmentManager(), desc_options, full_desc);
+                        detail_vpPager.setAdapter(detailDescriptionsAdapter);
+                        onClickLike(Integer.parseInt(getDetailProduct.getData().getProduct().getId()));
+
                     }
                 }
 
@@ -634,11 +632,16 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
 
     @Override
     public void onClickProduct3(int id, int pos) {
-        ProductsCategory[] products = DetailItemActivityArgs.fromBundle(getArguments()).getSimilarProducts();
+        ArrayList<ProductsCategory> products = getArguments().getParcelableArrayList("similar_products");
         if (products != null) {
-            ProductsCategory productsCategory = (ProductsCategory) products[pos];
+            ProductsCategory productsCategory = products.get(pos);
             String like = productsCategory.getLike();
-            NavHostFragment.findNavController(this).navigate(DetailItemActivityDirections.actionDetailItemActivitySelf(id, pos, DetailItemActivityArgs.fromBundle(getArguments()).getSimilarProducts(), like));
+            Bundle bundle = new Bundle();
+            bundle.putInt("id", id);
+            bundle.putParcelableArrayList("similar_products", products);
+            bundle.putInt("pos", pos);
+            bundle.putString("getLike",like);
+            NavHostFragment.findNavController(this).navigate(R.id.action_detailItemActivity_self, bundle);
 //        startActivity(new Intent(getActivity(), DetailItemFragment.class).putExtra("id", id).putExtra("similar_products", getArguments().getParcelableArray("similar_products")).putExtra("getLike", like).putExtra("pos", pos).putExtra("samethis", true));
 //        Animatoo.animateSwipeLeft(getActivity());
         }

@@ -409,7 +409,7 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
     @Override
     public void onClickProduct(int id, int pos) {
         position_detail = pos;
-        startActivityForResult(new Intent(getActivity(), DetailItemFragment.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
+        startActivityForResult(new Intent(getActivity(), DetailActivity.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
         Animatoo.animateSwipeLeft(getActivity());
     }
 

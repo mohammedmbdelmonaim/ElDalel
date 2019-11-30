@@ -21,20 +21,6 @@
         android:name="com.zeidex.eldalel.DetailItemFragment"
         android:label="activity_detail_item"
         tools:layout="@layout/activity_detail_item" >
-        <argument
-            android:name="id"
-            app:argType="integer" />
-        <argument
-            android:name="pos"
-            app:argType="integer" />
-        <argument
-            android:name="getLike"
-            app:argType="string"
-            app:nullable="true" />
-        <argument
-            android:name="similar_products"
-            app:argType="com.zeidex.eldalel.models.ProductsCategory[]"
-            app:nullable="true" />
         <action
             android:id="@+id/action_detailItemActivity_self"
             app:destination="@id/detailItemActivity"

@@ -1,7 +1,6 @@
 package com.zeidex.eldalel;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -18,13 +17,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zeidex.eldalel.adapters.CategoryAdapter;
-import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CategoryFragment extends Fragment implements CategoryAdapter.CategoryOperation {
+public class CategoryFragment extends Fragment /*implements CategoryAdapter.CategoryOperation */{
     @BindView(R.id.category_recycler_list)
     RecyclerView category_recycler_list;
 
@@ -72,17 +70,17 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.Catego
         category_recycler_list.setItemAnimator(new DefaultItemAnimator());
 
         categoryAdapter = new CategoryAdapter(getActivity());
-        categoryAdapter.setCategoryOperation(this);
+//        categoryAdapter.setCategoryOperation(this);
         category_recycler_list.setAdapter(categoryAdapter);
 
     }
 
 
-    @Override
-    public void onClickCategory(int position) {
-        getActivity().startActivity(new Intent(getActivity() , ProductsActivity.class));
-        Animatoo.animateSwipeLeft(getActivity());
-    }
+//    @Override
+//    public void onClickCategory(int position) {
+//        getActivity().startActivity(new Intent(getActivity() , ProductsActivity.class));
+//        Animatoo.animateSwipeLeft(getActivity());
+//    }
 
     private void showDialog() {
         reloadDialog = new Dialog(getActivity());

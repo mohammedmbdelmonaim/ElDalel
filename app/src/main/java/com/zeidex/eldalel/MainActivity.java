@@ -124,7 +124,7 @@ public class MainActivity extends BaseActivity {
     private void setupViewPager() {
         mViewPagerAdapter = new MainViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mainViewPager.setAdapter(mViewPagerAdapter);
-        mainViewPager.setOffscreenPageLimit(5);
+//        mainViewPager.setOffscreenPageLimit(5);
     }
 
     @Override

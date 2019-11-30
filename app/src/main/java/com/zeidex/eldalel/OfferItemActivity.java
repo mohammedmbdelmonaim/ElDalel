@@ -5,16 +5,22 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,6 +45,7 @@ import com.zeidex.eldalel.utils.GridSpacingItemDecoration;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -53,8 +60,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
-import static com.zeidex.eldalel.OffersFragment.CATEGORY_NAME_INTENT_EXTRA;
-import static com.zeidex.eldalel.OffersFragment.SUBCATEGORIES_INTENT_EXTRA_KEY;
 import static com.zeidex.eldalel.ProductsFragment.FINISH_ACTIVITY_CODE;
 import static com.zeidex.eldalel.ProductsFragment.SORT_ASC;
 import static com.zeidex.eldalel.ProductsFragment.SORT_DATE_DESC_INDEX;
@@ -63,7 +68,7 @@ import static com.zeidex.eldalel.SearchActivity.SEARCH_NAME_ARGUMENT;
 import static com.zeidex.eldalel.adapters.CategoriesItemAdapter.SUBCATEGORY_ID_INTENT_EXTRA;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
-public class OfferItemActivity extends BaseActivity implements CategoryItemAdapter.CategoryItemOperation, SubCategoriesAdapter.SubCategoryOperation {
+public class OfferItemActivity extends Fragment implements CategoryItemAdapter.CategoryItemOperation, SubCategoriesAdapter.SubCategoryOperation {
 
     public static final String OFFERS = "offer";
     @BindView(R.id.offer_item_recycler_categories)
@@ -110,35 +115,44 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
     private int subcategoryId;
     private int categoryId;
 
-
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_offer_item);
-        ButterKnife.bind(this);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_offer_item, container, false);
+        ButterKnife.bind(this, view);
         initializeRecycler();
         findViews();
+        return view;
     }
+
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_offer_item);
+//        ButterKnife.bind(this);
+//        initializeRecycler();
+//        findViews();
+//    }
 
     @OnClick(R.id.offer_item_back)
     public void onBack() {
-        onBackPressed();
+        NavHostFragment.findNavController(this).navigateUp();
     }
 
     boolean is_offered;
 
     public void findViews() {
-       is_offered =  getIntent().getBooleanExtra("is_offered", false);
-        if (PreferenceUtils.getCompanyLogin(this)) {
-            token = PreferenceUtils.getCompanyToken(this);
-        } else if (PreferenceUtils.getUserLogin(this)) {
-            token = PreferenceUtils.getUserToken(this);
+        is_offered = OfferItemActivityArgs.fromBundle(getArguments()).getIsOffered();
+        if (PreferenceUtils.getCompanyLogin(getActivity())) {
+            token = PreferenceUtils.getCompanyToken(getActivity());
+        } else if (PreferenceUtils.getUserLogin(getActivity())) {
+            token = PreferenceUtils.getUserToken(getActivity());
         }
 
         offer_item_search.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Intent intent = new Intent(OfferItemActivity.this, SearchActivity.class);
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
                 intent.putExtra(SEARCH_NAME_ARGUMENT, query);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
@@ -156,7 +170,7 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
         if (is_offered) {
             filterMap.put("status", OFFERS);
         }
-        dropDownMenu = new PopupMenu(this, offer_descendant_items_category);
+        dropDownMenu = new PopupMenu(getActivity(), offer_descendant_items_category);
         dropDownMenu.getMenuInflater().inflate(R.menu.menu_sort_dropdown, dropDownMenu.getMenu());
         dropDownMenu.getMenu().getItem(SORT_DATE_DESC_INDEX).setChecked(true);
 
@@ -195,31 +209,35 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
     }
 
     private void onLoadPage() {
-        offerItemHeaderText.setText(getIntent().getStringExtra(CATEGORY_NAME_INTENT_EXTRA));
-        subcategories = getIntent().getParcelableArrayListExtra(SUBCATEGORIES_INTENT_EXTRA_KEY);
-        if (subcategories != null && subcategories.size() > 0) {
-            subCategoriesAdapter = new SubCategoriesAdapter(this, subcategories, true);
-            subCategoriesAdapter.setSubCategoryOperation(this);
-            offer_item_recycler_categories.setAdapter(subCategoriesAdapter);
-            subcategoryId = subcategories.get(0).getId();
-            categoryId = getIntent().getIntExtra(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
-            filterMap.put("subcat_id", subcategoryId);
-            getSubcategoryProducts(subcategoryId);
+        offerItemHeaderText.setText(OfferItemActivityArgs.fromBundle(getArguments()).getCategoryName());
+        if (OfferItemActivityArgs.fromBundle(getArguments()).getSubcategories() != null) {
+            subcategories = Arrays.asList(OfferItemActivityArgs.fromBundle(getArguments()).getSubcategories());
+            if (subcategories != null && subcategories.size() > 0) {
+                subCategoriesAdapter = new SubCategoriesAdapter(getActivity(), subcategories, true);
+                subCategoriesAdapter.setSubCategoryOperation(this);
+                offer_item_recycler_categories.setAdapter(subCategoriesAdapter);
+                subcategoryId = subcategories.get(0).getId();
+                categoryId = OfferItemActivityArgs.fromBundle(getArguments()).getCategoryId();
+                filterMap.put("subcat_id", subcategoryId);
+                getSubcategoryProducts(subcategoryId);
+            }
         } else {
-            categoryId = getIntent().getIntExtra(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
+            categoryId = OfferItemActivityArgs.fromBundle(getArguments()).getCategoryId();
             filterMap.put("cat_id", categoryId);
             getCategoryProducts(categoryId);
         }
 
     }
+
     String status = "";
+
     private void getCategoryProducts(int categoryId) {
         reloadDialog.show();
         OffersAPI offersAPI = APIClient.getClient(SERVER_API_TEST).create(OffersAPI.class);
 
-        if (is_offered){
+        if (is_offered) {
             status = OFFERS;
-        }else{
+        } else {
             status = "";
         }
         offersAPI.getOffersProductsFromCategories(status, categoryId, token).enqueue(new Callback<GetProducts>() {
@@ -245,7 +263,7 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
 
             @Override
             public void onFailure(Call<GetProducts> call, Throwable t) {
-                Toasty.error(OfferItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -253,9 +271,9 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
 
     public void getSubcategoryProducts(int subcategoryId) {
         reloadDialog.show();
-        if (is_offered){
+        if (is_offered) {
             status = OFFERS;
-        }else{
+        } else {
             status = "";
         }
         OffersAPI offersAPI = APIClient.getClient(SERVER_API_TEST).create(OffersAPI.class);
@@ -282,7 +300,7 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
 
             @Override
             public void onFailure(Call<GetProducts> call, Throwable t) {
-                Toasty.error(OfferItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -313,7 +331,7 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
 
             @Override
             public void onFailure(Call<GetProducts> call, Throwable t) {
-                Toasty.error(OfferItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -385,7 +403,7 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
     }
 
     public void initializeRecycler() {
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 2);
         offer_category_item_recycler_list.setLayoutManager(mLayoutManager);
         offer_category_item_recycler_list.setItemAnimator(new DefaultItemAnimator());
 
@@ -397,8 +415,8 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
 //        categoryAdapter = new CategoryItemAdapter(this);
 //        categoryAdapter.setCategoryOperation(this);
 //        offer_category_item_recycler_list.setAdapter(categoryAdapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        productsAdapter = new CategoryItemAdapter(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        productsAdapter = new CategoryItemAdapter(getActivity());
         productsAdapter.setCategoryOperation(OfferItemActivity.this);
         offer_category_item_recycler_list.setAdapter(productsAdapter);
         offer_item_recycler_categories.setLayoutManager(layoutManager);
@@ -406,7 +424,7 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
     }
 
     private void showDialog() {
-        reloadDialog = new Dialog(this);
+        reloadDialog = new Dialog(getActivity());
         reloadDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         reloadDialog.setContentView(R.layout.reload_layout);
         reloadDialog.setCancelable(false);
@@ -415,22 +433,29 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
 
 
     @Override
-    public void onClickSubCategory(int subcategoryId, String subcategoryName , int pos) {
+    public void onClickSubCategory(int subcategoryId, String subcategoryName, int pos) {
         this.subcategoryId = subcategoryId;
         filterMap.put("subcat_id", subcategoryId);
         getSubcategoryProducts(subcategoryId);
     }
 
     @Override
-    public void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subcategoryName, int subcategoryId , int pos) {
+    public void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subcategoryName, int subcategoryId, int pos) {
 
     }
 
     @Override
     public void onClickProduct(int id, int pos) {
         position_detail = pos;
-        startActivityForResult(new Intent(this, DetailItemFragment.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
-        Animatoo.animateSwipeLeft(this);
+        Bundle bundle = new Bundle();
+        bundle.putInt("pos", pos);
+        bundle.putString("getLike", productsCategory.get(pos).getLike());
+        bundle.putInt("id", id);
+        bundle.putParcelableArrayList("similar_products", productsCategory);
+        NavHostFragment.findNavController(this).navigate(R.id.action_offerItemActivity_to_detailItemActivity, bundle);
+//        OfferItemActivityDirections.actionOfferItemActivityToDetailItemActivity(id, pos, productsCategory.toArray(new ProductsCategory[productsCategory.size()]), productsCategory.get(pos).getLike());
+//        startActivityForResult(new Intent(this, DetailItemFragment.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
+//        Animatoo.animateSwipeLeft(this);
     }
 
     @Override
@@ -439,9 +464,9 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
         prepareLikeMap(id);
         AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
         Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
-        if (PreferenceUtils.getCompanyLogin(OfferItemActivity.this)) {
+        if (PreferenceUtils.getCompanyLogin(getActivity())) {
             getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(likePost);
-        }else {
+        } else {
             getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(likePost);
         }
         getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
@@ -449,14 +474,14 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
             public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
                 GetAddToFavouriteResponse getAddToFavouriteResponse = response.body();
                 if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
-                    Toasty.success(OfferItemActivity.this, getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
+                    Toasty.success(getActivity(), getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
                 }
                 reloadDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<GetAddToFavouriteResponse> call, Throwable t) {
-                Toasty.error(OfferItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -468,10 +493,10 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
         AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
 
         Call<GetAddToCardResponse> getAddToCardResponseCall;
-        if (PreferenceUtils.getCompanyLogin(OfferItemActivity.this)) {
-            cartPost.put("language" , "arabic");
+        if (PreferenceUtils.getCompanyLogin(getActivity())) {
+            cartPost.put("language", "arabic");
             getAddToCardResponseCall = addToCardApi.getAddToCartcompany(cartPost);
-        }else {
+        } else {
             getAddToCardResponseCall = addToCardApi.getAddToCart(cartPost);
         }
         getAddToCardResponseCall.enqueue(new Callback<GetAddToCardResponse>() {
@@ -479,17 +504,17 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
                 GetAddToCardResponse getAddToCardResponse = response.body();
                 if (getAddToCardResponse.getCode() == 200) {
-                    Toasty.success(OfferItemActivity.this, getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
+                    Toasty.success(getActivity(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
                     productsAdapter.getProductsList().get(position).setCart("0");
                     productsAdapter.notifyItemChanged(position);
-                    PreferenceUtils.saveCountOfItemsBasket(OfferItemActivity.this, Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                    PreferenceUtils.saveCountOfItemsBasket(getActivity(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
                 }
                 reloadDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<GetAddToCardResponse> call, Throwable t) {
-                Toasty.error(OfferItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -497,13 +522,13 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
 
     public void prepareCartMap(int id) {
         cartPost = new HashMap<>();
-        if (PreferenceUtils.getUserLogin(OfferItemActivity.this)) {
-            String token = PreferenceUtils.getUserToken(OfferItemActivity.this);
+        if (PreferenceUtils.getUserLogin(getActivity())) {
+            String token = PreferenceUtils.getUserToken(getActivity());
             cartPost.put("product_id", String.valueOf(id));
             cartPost.put("token", token);
             cartPost.put("quantity", "1");
-        } else if (PreferenceUtils.getCompanyLogin(OfferItemActivity.this)) {
-            String token = PreferenceUtils.getCompanyToken(OfferItemActivity.this);
+        } else if (PreferenceUtils.getCompanyLogin(getActivity())) {
+            String token = PreferenceUtils.getCompanyToken(getActivity());
             cartPost.put("product_id", String.valueOf(id));
             cartPost.put("token", token);
             cartPost.put("quantity", "1");
@@ -513,12 +538,12 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
 
     private void prepareLikeMap(int id) {
         likePost = new HashMap<>();
-        if (PreferenceUtils.getUserLogin(OfferItemActivity.this)) {
-            String token = PreferenceUtils.getUserToken(OfferItemActivity.this);
+        if (PreferenceUtils.getUserLogin(getActivity())) {
+            String token = PreferenceUtils.getUserToken(getActivity());
             likePost.put("product_id", String.valueOf(id));
             likePost.put("token", token);
-        } else if (PreferenceUtils.getCompanyLogin(OfferItemActivity.this)) {
-            String token = PreferenceUtils.getCompanyToken(OfferItemActivity.this);
+        } else if (PreferenceUtils.getCompanyLogin(getActivity())) {
+            String token = PreferenceUtils.getCompanyToken(getActivity());
             likePost.put("product_id", String.valueOf(id));
             likePost.put("token", token);
         }
@@ -538,10 +563,10 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
             }
         }
 
-        if (requestCode == FINISH_ACTIVITY_CODE && data != null) {
-            boolean shouldFinishActivity = data.getBooleanExtra("should_finish_activity", false);
-            if (shouldFinishActivity) finish();
-        }
+//        if (requestCode == FINISH_ACTIVITY_CODE && data != null) {
+//            boolean shouldFinishActivity = data.getBooleanExtra("should_finish_activity", false);
+//            if (shouldFinishActivity) finish();
+//        }
 //        } else if (requestCode == FILTER_REQUEST_CODE && data != null) {
 //            offerItemHeaderText.setText("");
 //            int filterCategoryId = data.getIntExtra("filter_category_id", -1);
@@ -562,12 +587,12 @@ public class OfferItemActivity extends BaseActivity implements CategoryItemAdapt
 
     @OnClick(R.id.offer_search_items_category)
     void navigateToFilterActivity() {
-        Intent intent = new Intent(this, FilterActivity.class);
+        Intent intent = new Intent(getActivity(), FilterActivity.class);
         intent.putExtra("has_offer", true);
         intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
         intent.putExtra(SUBCATEGORY_ID_INTENT_EXTRA, subcategoryId);
         startActivityForResult(intent, FINISH_ACTIVITY_CODE);
-        Animatoo.animateSwipeLeft(this);
+        Animatoo.animateSwipeLeft(getActivity());
     }
 
 }

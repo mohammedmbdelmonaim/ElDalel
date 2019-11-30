@@ -173,7 +173,7 @@ public class  CategoriesFragment extends androidx.fragment.app.Fragment {
             }
         }
 
-        categoriesAdapter = new CategoriesAdapter(getFragmentManager(), cat_ids, cat_names, categories);
+        categoriesAdapter = new CategoriesAdapter(getChildFragmentManager(), cat_ids, cat_names, categories);
         vpPager.setAdapter(categoriesAdapter);
         view_pager_tab.setTabMode(TabLayout.MODE_SCROLLABLE);
 

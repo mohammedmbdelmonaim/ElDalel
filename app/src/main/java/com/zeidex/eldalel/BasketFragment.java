@@ -363,8 +363,10 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
     public void onClickBasketProduct(int id, int pos) {
 //        startActivity(new Intent(getActivity(), DetailItemFragment.class).putExtra("id", id));
 //        Animatoo.animateSwipeLeft(getActivity());
-
-        NavHostFragment.findNavController(this).navigate(BasketFragmentDirections.actionBasketFragmentToDetailItemActivity(id, pos, null, ""));
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", id);
+        bundle.putInt("pos", pos);
+        NavHostFragment.findNavController(this).navigate(R.id.action_basketFragment_to_detailItemActivity, bundle);
     }
 
 

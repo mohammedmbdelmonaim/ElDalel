@@ -4,12 +4,18 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -28,12 +34,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
+import static com.zeidex.eldalel.OffersFragment.CATEGORY_NAME_INTENT_EXTRA;
 import static com.zeidex.eldalel.SearchActivity.SEARCH_NAME_ARGUMENT;
 import static com.zeidex.eldalel.SubCategoriesFragment.SUBCATEGORY_ARRAY_EXTRA_KEY;
 import static com.zeidex.eldalel.SubCategoriesFragment.SUBCATEGORY_ID_EXTRA_KEY;
-import static com.zeidex.eldalel.SubCategoriesFragment.SUBCATEGORY_NAME_EXTRA_KEY;
 
-public class ProductsActivity extends BaseActivity {
+public class ProductsActivity extends Fragment {
     @BindView(R.id.title_header_text)
     AppCompatTextView titleHeaderText;
     @BindView(R.id.vpPager_item)
@@ -51,29 +57,30 @@ public class ProductsActivity extends BaseActivity {
 
     String token = "";
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_categories_item);
-        ButterKnife.bind(this);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_categories_item, container, false);
+        ButterKnife.bind(this, view);
         findViews();
+        return view;
     }
 
     private void findViews() {
-        categoryId = getIntent().getIntExtra(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
-        subCategoryId = getIntent().getIntExtra(SUBCATEGORY_ID_EXTRA_KEY, -1);
-        if (PreferenceUtils.getCompanyLogin(this)) {
-            token = PreferenceUtils.getCompanyToken(this);
-        } else if (PreferenceUtils.getUserLogin(this)) {
-            token = PreferenceUtils.getUserToken(this);
+        categoryId = getArguments().getInt(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
+        subCategoryId = getArguments().getInt(SUBCATEGORY_ID_EXTRA_KEY, -1);
+        if (PreferenceUtils.getCompanyLogin(getActivity())) {
+            token = PreferenceUtils.getCompanyToken(getActivity());
+        } else if (PreferenceUtils.getUserLogin(getActivity())) {
+            token = PreferenceUtils.getUserToken(getActivity());
         }
 
-        titleHeaderText.setText(getIntent().getStringExtra(SUBCATEGORY_NAME_EXTRA_KEY));
-
+//        titleHeaderText.setText(getArguments().getString(SUBCATEGORY_NAME_EXTRA_KEY));
+        titleHeaderText.setText(getArguments().getString(CATEGORY_NAME_INTENT_EXTRA));
         search_header_categories_img.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Intent intent = new Intent(ProductsActivity.this, SearchActivity.class);
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
                 intent.putExtra(SEARCH_NAME_ARGUMENT, query);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
@@ -94,18 +101,18 @@ public class ProductsActivity extends BaseActivity {
     private void onLoadPage() {
 //         subsubcategories = getIntent().getParcelableArrayListExtra(SUBSUBCATEGORIES_INTENT_EXTRA_KEY);
 
-        ArrayList<Subcategory> subcategories = getIntent().getParcelableArrayListExtra(SUBCATEGORY_ARRAY_EXTRA_KEY);
+        ArrayList<Subcategory> subcategories = getArguments().getParcelableArrayList(SUBCATEGORY_ARRAY_EXTRA_KEY);
         if (subcategories == null){
             ProductsFragment productsFragment = new ProductsFragment();
             Bundle bundle = new Bundle();
             bundle.putInt(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
             productsFragment.setArguments(bundle);
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
             ft.replace(R.id.vpPager_item, productsFragment, productsFragment.getTag());
             ft.commit();
         }else {
-            subsubcategories = subcategories.get(getIntent().getIntExtra("position", 0)).getListSubSubCategory();
+            subsubcategories = subcategories.get(getArguments().getInt("position", 0)).getListSubSubCategory();
             for (Subcategory subcategory : subcategories) {
                 Locale locale = ChangeLang.getLocale(getResources());
                 String loo = locale.getLanguage();
@@ -117,7 +124,7 @@ public class ProductsActivity extends BaseActivity {
                 }
             }
 
-            view_pager_tab_item_sub_category.getTabAt(getIntent().getIntExtra("position", 0)).select();
+            view_pager_tab_item_sub_category.getTabAt(getArguments().getInt("position", 0)).select();
 
             view_pager_tab_item_sub_category.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
@@ -153,15 +160,16 @@ public class ProductsActivity extends BaseActivity {
 
     @OnClick(R.id.item_fragment_back)
     public void onBack() {
-        onBackPressed();
+        //handle back
+        NavHostFragment.findNavController(this).navigateUp();
     }
     int categoryId ;
     int subCategoryId;
     public void initializeViewPagerWithoutSubSubCategories() {
         if (subCategoryId == -1) {//meaning it has no subcategory, so we fetch products from category id
-            categoriesItemAdapter = new CategoriesItemAdapter(getSupportFragmentManager(), categoryId);
+            categoriesItemAdapter = new CategoriesItemAdapter(getActivity().getSupportFragmentManager(), categoryId);
         } else {
-            categoriesItemAdapter = new CategoriesItemAdapter(getSupportFragmentManager(), subCategoryId, categoryId);
+            categoriesItemAdapter = new CategoriesItemAdapter(getActivity().getSupportFragmentManager(), subCategoryId, categoryId);
         }
         vpPager.setAdapter(categoriesItemAdapter);
         view_pager_tab.setVisibility(View.GONE);
@@ -184,10 +192,10 @@ public class ProductsActivity extends BaseActivity {
             }
         }
 
-        int subCategoryId = getIntent().getIntExtra(SUBCATEGORY_ID_EXTRA_KEY, -1);
-        int categoryId = getIntent().getIntExtra(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
+        int subCategoryId = getArguments().getInt(SUBCATEGORY_ID_EXTRA_KEY, -1);
+        int categoryId = getArguments().getInt(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
 
-        categoriesItemAdapter = new CategoriesItemAdapter(getSupportFragmentManager(), cat_ids, cat_names, categoryId, subCategoryId);
+        categoriesItemAdapter = new CategoriesItemAdapter(getActivity().getSupportFragmentManager(), cat_ids, cat_names, categoryId, subCategoryId);
         vpPager.setAdapter(categoriesItemAdapter);
         view_pager_tab.setTabMode(TabLayout.MODE_SCROLLABLE);
         view_pager_tab.setVisibility(View.VISIBLE);

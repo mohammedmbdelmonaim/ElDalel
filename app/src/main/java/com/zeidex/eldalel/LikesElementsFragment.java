@@ -232,7 +232,7 @@ public class LikesElementsFragment extends Fragment implements LikesElementsAdap
         bundle.putParcelableArrayList("similar_products", products);
         bundle.putString("getLike", "1");
         bundle.putInt("pos", pos);
-        NavHostFragment.findNavController(this).navigate(LikesElementsFragmentDirections.actionLikesElementsFragmentToDetailItemActivity(id, pos, "1", products.toArray(new ProductsCategory[products.size()])));
+        NavHostFragment.findNavController(this).navigate(R.id.action_likesElementsFragment_to_detailItemActivity, bundle);
 //        mDetailItemFragment = new DetailItemFragment(null, bundle);
 //        getSupportFragmentManager().beginTransaction().replace(R.id.container, mDetailItemFragment).commit();
 //        startActivityForResult(new Intent(this, DetailItemFragment.class).

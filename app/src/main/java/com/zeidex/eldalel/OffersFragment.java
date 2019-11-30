@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -24,7 +25,6 @@ import com.zeidex.eldalel.models.Subsubcategory;
 import com.zeidex.eldalel.response.GetOffersCategories;
 import com.zeidex.eldalel.services.OffersCategoriesAPI;
 import com.zeidex.eldalel.utils.APIClient;
-import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.GridSpacingItemDecoration;
 
@@ -143,7 +143,9 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
         reloadDialog.setCancelable(false);
         reloadDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
+
     ArrayList<Subsubcategory> subsubcategories;
+
     @Override
     public void onClickOffer(int position) {
         subsubcategories = new ArrayList<>();
@@ -152,28 +154,33 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
 
         ArrayList<Subcategory> subCategoriesModel = new ArrayList<>();
         for (int i = 0; i < subCategories.size(); i++) {
-            for (GetOffersCategories.Subsubcategory subsubcategory : subCategories.get(i).getSubsubcategories()){
-                subsubcategories.add(new Subsubcategory(subsubcategory.getId() , subsubcategory.getName() , subsubcategory.getNameAr()));
+            for (GetOffersCategories.Subsubcategory subsubcategory : subCategories.get(i).getSubsubcategories()) {
+                subsubcategories.add(new Subsubcategory(subsubcategory.getId(), subsubcategory.getName(), subsubcategory.getNameAr()));
             }
             subCategoriesModel.add(new Subcategory(subCategories.get(i).getId(), subCategories.get(i).getNameAr(),
-                    subCategories.get(i).getName(), subCategories.get(i).getPhoto() , subsubcategories));
+                    subCategories.get(i).getName(), subCategories.get(i).getPhoto(), subsubcategories));
         }
 
 
-        Intent intent = new Intent(getActivity(), OfferItemActivity.class);
-        intent.putParcelableArrayListExtra(SUBCATEGORIES_INTENT_EXTRA_KEY, subCategoriesModel);
-        intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, category.getId());
+        subCategoriesModel.toArray(new Subcategory[subCategoriesModel.size()]);
+//        Intent intent = new Intent(getActivity(), OfferItemActivity.class);
+//        intent.putParcelableArrayListExtra(SUBCATEGORIES_INTENT_EXTRA_KEY, subCategoriesModel);
+//        intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, category.getId());
 
+        String categoryName;
         Locale locale = ChangeLang.getLocale(getContext().getResources());
         String loo = locale.getLanguage();
         if (loo.equalsIgnoreCase("ar")) {
-            intent.putExtra(CATEGORY_NAME_INTENT_EXTRA, category.getNameAr());
+            categoryName = category.getNameAr();
         } else {
-            intent.putExtra(CATEGORY_NAME_INTENT_EXTRA, category.getName());
+            categoryName = category.getName();
         }
-        intent.putExtra("is_offered" , true);
+//        intent.putExtra("is_offered", true);
 
-        startActivity(intent);
-        Animatoo.animateSwipeLeft(getActivity());
+
+        NavHostFragment.findNavController(this).navigate(OffersFragmentDirections.actionOffersFragmentToOfferItemActivity(categoryName, category.getId(), true, subCategoriesModel.toArray(new Subcategory[subCategoriesModel.size()])));
+
+//        startActivity(intent);
+//        Animatoo.animateSwipeLeft(getActivity());
     }
 }

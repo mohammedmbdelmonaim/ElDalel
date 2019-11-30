@@ -673,7 +673,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
         bundle.putParcelableArrayList("similar_products", home_category3);
         bundle.putString("getLike", home_category3.get(pos).getLike());
 //        firstPageListener.onSwitchToNextFragment(bundle);
-        NavHostFragment.findNavController(this).navigate(MainFragmentDirections.actionMainFragmentToDetailItemActivity(id, pos, home_category3.toArray(new ProductsCategory[home_category3.size()]),home_category3.get(pos).getLike()));
+        NavHostFragment.findNavController(this).navigate(R.id.action_mainFragment_to_detailItemActivity, bundle);
     }
 
     @Override
@@ -749,7 +749,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
         bundle.putParcelableArrayList("similar_products", home_category2);
         bundle.putString("getLike", home_category2.get(pos).getLike());
 //        firstPageListener.onSwitchToNextFragment(bundle);
-        NavHostFragment.findNavController(this).navigate(MainFragmentDirections.actionMainFragmentToDetailItemActivity(id, pos, home_category2.toArray(new ProductsCategory[home_category2.size()]),home_category2.get(pos).getLike()));
+        NavHostFragment.findNavController(this).navigate(R.id.action_mainFragment_to_detailItemActivity, bundle);
     }
 
     @Override
@@ -824,8 +824,10 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
         bundle.putInt("id", id);
         bundle.putParcelableArrayList("similar_products", home_category1);
         bundle.putString("getLike", home_category1.get(pos).getLike());
-        NavHostFragment.findNavController(this).navigate(MainFragmentDirections.actionMainFragmentToDetailItemActivity(id, pos, home_category1.toArray(new ProductsCategory[home_category1.size()]),home_category1.get(pos).getLike()));
-//        firstPageListener.onSwitchToNextFragment(bundle);
+
+        NavHostFragment.findNavController(this).navigate(R.id.action_mainFragment_to_detailItemActivity, bundle);
+//        NavHostFragment.findNavController(this).navigate(MainFragmentDirections.actionMainFragmentToDetailItemActivity(id, pos, home_category1.toArray(new ProductsCategory[home_category1.size()]),home_category1.get(pos).getLike()));
+////        firstPageListener.onSwitchToNextFragment(bundle);
 //        startActivityForResult(new Intent(getActivity(), DetailItemFragment.class).putExtra("id", id).putExtra("similar_products", home_category1).putExtra("getLike", home_category1.get(pos).getLike()).putExtra("pos", pos), 11111);
 //        Animatoo.animateSwipeLeft(getActivity());
     }

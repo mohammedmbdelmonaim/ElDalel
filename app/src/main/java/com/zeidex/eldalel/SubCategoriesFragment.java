@@ -1,7 +1,6 @@
 package com.zeidex.eldalel;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -16,6 +15,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,7 +24,6 @@ import com.bumptech.glide.Glide;
 import com.zeidex.eldalel.adapters.SubCategoriesAdapter;
 import com.zeidex.eldalel.models.Subcategory;
 import com.zeidex.eldalel.models.Subsubcategory;
-import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 
@@ -63,6 +62,7 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
     Dialog reloadDialog;
     String token = "";
     private int categoryId;
+    String categoryName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,20 +77,20 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
         ButterKnife.bind(this, view);
         subCategories = getArguments().getParcelableArrayList(SUBCATEGORIES_INTENT_EXTRA_KEY);
         categoryId = getArguments().getInt(CATEGORY_ID_INTENT_EXTRA_KEY);
+        Locale locale = ChangeLang.getLocale(getContext().getResources());
+        String loo = locale.getLanguage();
+        if (loo.equalsIgnoreCase("ar")) {
+            categoryName = getArguments().getString(CATEGORY_NAME_AR_INTENT_EXTRA);
+        } else {
+            categoryName = getArguments().getString(CATEGORY_NAME_INTENT_EXTRA);
+        }
 
         if (subCategories != null && subCategories.size() > 0) {
             initializeRecycler();
             findViews();
         } else {
             //If there are no subcategories, pass the category id to get the products based on it
-            String categoryName;
-            Locale locale = ChangeLang.getLocale(getContext().getResources());
-            String loo = locale.getLanguage();
-            if (loo.equalsIgnoreCase("ar")) {
-                categoryName = getArguments().getString(CATEGORY_NAME_AR_INTENT_EXTRA);
-            } else {
-                categoryName = getArguments().getString(CATEGORY_NAME_INTENT_EXTRA);
-            }
+
             showCategoryCard(categoryId, categoryName);
 //            Intent intent = new Intent(getActivity(), ProductsActivity.class);
 //            intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
@@ -113,10 +113,13 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
         categoryCardItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ProductsActivity.class);
-                intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
-                getActivity().startActivity(intent);
-                Animatoo.animateSwipeLeft(getActivity());
+                Bundle bundle = new Bundle();
+//                Intent intent = new Intent(getActivity(), ProductsActivity.class);
+                bundle.putInt(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
+                bundle.putString(CATEGORY_NAME_INTENT_EXTRA, categoryName);
+                NavHostFragment.findNavController(SubCategoriesFragment.this).navigate(R.id.action_categoriesFragment_to_productsActivity, bundle);
+//                getActivity().startActivity(intent);
+//                Animatoo.animateSwipeLeft(getActivity());
             }
         });
     }
@@ -157,26 +160,32 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
 
     @Override
     public void onClickSubCategory(int subCategoryId, String subCategoryName , int pos) {
-        Intent intent = new Intent(getActivity(), ProductsActivity.class);
-        intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
-        intent.putExtra(SUBCATEGORY_ID_EXTRA_KEY, subCategoryId);
-        intent.putExtra(SUBCATEGORY_NAME_EXTRA_KEY, subCategoryName);
-        intent.putExtra("position", pos);
-        intent.putParcelableArrayListExtra(SUBCATEGORY_ARRAY_EXTRA_KEY , subCategories);
-        getActivity().startActivity(intent);
-        Animatoo.animateSwipeLeft(getActivity());
+        Bundle bundle = new Bundle();
+//        Intent intent = new Intent(getActivity(), ProductsActivity.class);
+        bundle.putInt(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
+        bundle.putInt(SUBCATEGORY_ID_EXTRA_KEY, subCategoryId);
+        bundle.putString(SUBCATEGORY_NAME_EXTRA_KEY, subCategoryName);
+        bundle.putString(CATEGORY_NAME_INTENT_EXTRA, categoryName);
+        bundle.putInt("position", pos);
+        bundle.putParcelableArrayList(SUBCATEGORY_ARRAY_EXTRA_KEY , subCategories);
+//        getActivity().startActivity(intent);
+//        Animatoo.animateSwipeLeft(getActivity());
+        NavHostFragment.findNavController(this).navigate(R.id.action_categoriesFragment_to_productsActivity, bundle);
     }
 
     @Override
     public void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subCategoryName, int subcategoryId , int pos) {
-        Intent intent = new Intent(getActivity(), ProductsActivity.class);
-        intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
-        intent.putExtra(SUBCATEGORY_ID_EXTRA_KEY, subcategoryId);
-        intent.putExtra(SUBCATEGORY_NAME_EXTRA_KEY, subCategoryName);
-        intent.putParcelableArrayListExtra(SUBSUBCATEGORIES_INTENT_EXTRA_KEY, subsubcategories);
-        intent.putParcelableArrayListExtra(SUBCATEGORY_ARRAY_EXTRA_KEY , subCategories);
-        intent.putExtra("position", pos);
-        getActivity().startActivity(intent);
-        Animatoo.animateSwipeLeft(getActivity());
+        Bundle bundle = new Bundle();
+//        Intent intent = new Intent(getActivity(), ProductsActivity.class);
+        bundle.putInt(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
+        bundle.putInt(SUBCATEGORY_ID_EXTRA_KEY, subcategoryId);
+        bundle.putString(SUBCATEGORY_NAME_EXTRA_KEY, subCategoryName);
+        bundle.putParcelableArrayList(SUBSUBCATEGORIES_INTENT_EXTRA_KEY, subsubcategories);
+        bundle.putParcelableArrayList(SUBCATEGORY_ARRAY_EXTRA_KEY , subCategories);
+        bundle.putString(CATEGORY_NAME_INTENT_EXTRA, categoryName);
+        bundle.putInt("position", pos);
+        NavHostFragment.findNavController(this).navigate(R.id.action_categoriesFragment_to_productsActivity, bundle);
+//        getActivity().startActivity(intent);
+//        Animatoo.animateSwipeLeft(getActivity());
     }
 }
