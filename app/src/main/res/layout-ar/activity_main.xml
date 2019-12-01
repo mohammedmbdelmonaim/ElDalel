@@ -10,16 +10,15 @@
         android:id="@+id/container_activity"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:visibility="gone">
+        android:layout_weight="1">
 
     </FrameLayout>
 
-    <com.zeidex.eldalel.utils.CustomViewPager
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/main_viewpager"/>
+<!--    <com.zeidex.eldalel.utils.CustomViewPager-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="1"-->
+<!--        android:id="@+id/main_viewpager"/>-->
     <!--<LinearLayout-->
         <!--android:id="@+id/fooFragment"-->
         <!--android:layout_width="match_parent"-->

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/categories_navigation"
+    app:startDestination="@id/categoriesFragment">
+
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="com.zeidex.eldalel.CategoriesFragment"
+        android:label="fragment_categories"
+        tools:layout="@layout/fragment_categories" >
+        <action
+            android:id="@+id/action_categoriesFragment_to_subCategoriesFragment"
+            app:destination="@id/subCategoriesFragment" />
+        <action
+            android:id="@+id/action_categoriesFragment_to_productsActivity"
+            app:destination="@id/productsActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/productsActivity"
+        android:name="com.zeidex.eldalel.ProductsActivity"
+        android:label="activity_categories_item"
+        tools:layout="@layout/activity_categories_item" >
+        <action
+            android:id="@+id/action_productsActivity_to_detailItemFragment"
+            app:destination="@id/detailItemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/subCategoriesFragment"
+        android:name="com.zeidex.eldalel.SubCategoriesFragment"
+        android:label="fragment_category"
+        tools:layout="@layout/fragment_category" >
+        <action
+            android:id="@+id/action_subCategoriesFragment_to_productsActivity"
+            app:destination="@id/productsActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailItemFragment"
+        android:name="com.zeidex.eldalel.DetailItemFragment"
+        android:label="activity_detail_item"
+        tools:layout="@layout/fragment_detail_item" />
+</navigation>

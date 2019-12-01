@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/offers_navigation"
+    app:startDestination="@id/offersFragment">
+
+    <fragment
+        android:id="@+id/offersFragment"
+        android:name="com.zeidex.eldalel.OffersFragment"
+        android:label="fragment_offers"
+        tools:layout="@layout/fragment_offers" >
+        <action
+            android:id="@+id/action_offersFragment_to_offerItemActivity"
+            app:destination="@id/offerItemActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/offerItemActivity"
+        android:name="com.zeidex.eldalel.OfferItemActivity"
+        android:label="activity_offer_item"
+        tools:layout="@layout/activity_offer_item" >
+        <action
+            android:id="@+id/action_offerItemActivity_to_detailItemActivity"
+            app:destination="@id/detailItemActivity" />
+        <argument
+            android:name="category_name"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="category_id"
+            app:argType="integer" />
+        <argument
+            android:name="is_offered"
+            app:argType="boolean" />
+        <argument
+            android:name="subcategories"
+            app:argType="com.zeidex.eldalel.models.Subcategory[]"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailItemActivity"
+        android:name="com.zeidex.eldalel.DetailItemFragment"
+        android:label="activity_detail_item"
+        tools:layout="@layout/reload_layout">
+        <action
+            android:id="@+id/action_detailItemActivity_self"
+            app:destination="@id/detailItemActivity"
+            app:popUpTo="@+id/detailItemActivity" />
+    </fragment>
+</navigation>

@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.zeidex.eldalel.AccountFragment;
-import com.zeidex.eldalel.hostfragments.AccountHostFragment;
+import com.zeidex.eldalel.hostfragments.AccountAfterLoginHostFragment;
 import com.zeidex.eldalel.hostfragments.BasketHostFragment;
 import com.zeidex.eldalel.hostfragments.CategoriesHostFragment;
 import com.zeidex.eldalel.hostfragments.MainHostFragment;
@@ -25,7 +25,7 @@ public class MainViewPagerAdapter extends FragmentPagerAdapter {
     BasketHostFragment mBasketFragment;
     CategoriesHostFragment mCategoriesFragment;
     OffersHostFragment mOffersFragment;
-    AccountHostFragment mAccountAfterLoginHostFragment;
+    AccountAfterLoginHostFragment mAccountAfterLoginHostFragment;
 
     public MainViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
@@ -37,7 +37,7 @@ public class MainViewPagerAdapter extends FragmentPagerAdapter {
         mBasketFragment = new BasketHostFragment();
         mCategoriesFragment = new CategoriesHostFragment();
         mOffersFragment = new OffersHostFragment();
-        mAccountAfterLoginHostFragment = new AccountHostFragment();
+        mAccountAfterLoginHostFragment = new AccountAfterLoginHostFragment();
         addFragment(mMainFragment);
         addFragment(mCategoriesFragment);
         addFragment(mOffersFragment);

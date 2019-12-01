@@ -1,28 +1,21 @@
 package com.zeidex.eldalel;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,7 +31,6 @@ import com.zeidex.eldalel.adapters.DetailDescriptionsAdapter;
 import com.zeidex.eldalel.adapters.DetailSizeItemAdapter;
 import com.zeidex.eldalel.adapters.ProductsCategory3Adapter;
 import com.zeidex.eldalel.adapters.SliderAdapter;
-import com.zeidex.eldalel.listeners.FirstPageFragmentListener;
 import com.zeidex.eldalel.models.CapacityProduct;
 import com.zeidex.eldalel.models.ColorProduct;
 import com.zeidex.eldalel.models.ProductsCategory;
@@ -78,7 +70,8 @@ import static com.zeidex.eldalel.OffersFragment.SUBCATEGORIES_INTENT_EXTRA_KEY;
 import static com.zeidex.eldalel.SearchActivity.SEARCH_NAME_ARGUMENT;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
-public class DetailItemFragment extends Fragment implements ProductsCategory3Adapter.ProductsCategory3Operation, DetailColorsItemAdapter.DetailColorsOperation, DetailSizeItemAdapter.DetailCapacityOperation {
+
+public class DetailItemActivity extends BaseActivity implements ProductsCategory3Adapter.ProductsCategory3Operation, DetailColorsItemAdapter.DetailColorsOperation, DetailSizeItemAdapter.DetailCapacityOperation {
     public static final int CART_NOT_EMPTY = 1;
     @BindView(R.id.imageSlider)
     SliderView imageSlider;
@@ -167,40 +160,21 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
     private boolean isAdded;
     private boolean isChanged;
     Fragment frag = null;
-
-    FirstPageFragmentListener mFirstPageFragmentListener;
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_detail_item, container, false);
-        ButterKnife.bind(this, view);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_detail_item);
+        ButterKnife.bind(this);
+
         findViews();
         initializeRecycler();
         showDialog();
         onLoadPage();
-        return view;
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                NavHostFragment.findNavController(DetailItemFragment.this).navigateUp();
-            }
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     @OnClick(R.id.item_detail_back)
     public void onBack() {
-//        if (mFirstPageFragmentListener != null) {
-//            mFirstPageFragmentListener.onSwitchToNextFragment(null);
-//        onBackPressed();
-//        }
-        NavHostFragment.findNavController(DetailItemFragment.this).navigateUp();
+        onBackPressed();
     }
 
     @OnClick(R.id.detail_share_img)
@@ -219,12 +193,12 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
 
     private void convertDaraToJson(int id) {
         favourite_post = new HashMap<>();
-        if (PreferenceUtils.getUserLogin(getActivity())) {
-            String token = PreferenceUtils.getUserToken(getActivity());
+        if (PreferenceUtils.getUserLogin(this)) {
+            String token = PreferenceUtils.getUserToken(this);
             favourite_post.put("product_id", String.valueOf(id));
             favourite_post.put("token", token);
-        } else if (PreferenceUtils.getCompanyLogin(getActivity())) {
-            String token = PreferenceUtils.getCompanyToken(getActivity());
+        } else if (PreferenceUtils.getCompanyLogin(this)) {
+            String token = PreferenceUtils.getCompanyToken(this);
             favourite_post.put("product_id", String.valueOf(id));
             favourite_post.put("token", token);
         }
@@ -241,11 +215,11 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
         detail_search_header_categories_img.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                Intent intent = new Intent(DetailItemActivity.this, SearchActivity.class);
                 intent.putExtra(SEARCH_NAME_ARGUMENT, query);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                Animatoo.animateSwipeLeft(getActivity());
+                Animatoo.animateSwipeLeft(DetailItemActivity.this);
                 detail_search_header_categories_img.onActionViewCollapsed(); //to close the searchview
                 return true;
             }
@@ -262,22 +236,22 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
         detail_like_img.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!PreferenceUtils.getUserLogin(getActivity()) && isChecked && !PreferenceUtils.getCompanyLogin(getActivity())) {
-                    Toasty.error(getActivity(), getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
+                if (!PreferenceUtils.getUserLogin(DetailItemActivity.this) && isChecked && !PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
+                    Toasty.error(DetailItemActivity.this, getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
                     detail_like_img.setChecked(false);
                     return;
                 }
-                if ((PreferenceUtils.getUserLogin(getActivity()) || PreferenceUtils.getCompanyLogin(getActivity())) && !isChecked) {
-                    Toasty.error(getActivity(), getString(R.string.unlike_fiv), Toast.LENGTH_LONG).show();
+                if ((PreferenceUtils.getUserLogin(DetailItemActivity.this) || PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) && !isChecked) {
+                    Toasty.error(DetailItemActivity.this, getString(R.string.unlike_fiv), Toast.LENGTH_LONG).show();
                     detail_like_img.setChecked(true);
                     return;
                 }
-                if ((PreferenceUtils.getUserLogin(getActivity()) || PreferenceUtils.getCompanyLogin(getActivity())) && isChecked) {
+                if ((PreferenceUtils.getUserLogin(DetailItemActivity.this) || PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) && isChecked) {
                     reloadDialog.show();
                     convertDaraToJson(id);
                     AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
                     Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
-                    if (PreferenceUtils.getCompanyLogin(getActivity())) {
+                    if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
                         getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(favourite_post);
                     } else {
                         getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(favourite_post);
@@ -287,17 +261,15 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                         public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
                             GetAddToFavouriteResponse getAddToFavouriteResponse = response.body();
                             if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
-                                Toasty.success(getActivity(), getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
+                                Toasty.success(DetailItemActivity.this, getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
                                 isLike = true;
-                                int pos = getArguments().getInt("pos");
-                                if (getArguments().getParcelableArrayList("similar_products") != null) {
-                                    ArrayList<ProductsCategory> productsCategories = getArguments().getParcelableArrayList("similar_products");
-                                    if (productsCategories != null && productsCategories.size() > 0) {
-                                        ProductsCategory productsCategory = productsCategories.get(pos);
-                                        productsCategory.setLike("1");
-                                        productsCategories.set(pos, productsCategory);
-                                        phonesAdapter.notifyItemChanged(pos);
-                                    }
+                                int pos = getIntent().getIntExtra("pos", -1);
+                                ArrayList<ProductsCategory> productsCategories = getIntent().getParcelableArrayListExtra("similar_products");
+                                if (productsCategories != null && productsCategories.size() > 0) {
+                                    ProductsCategory productsCategory = productsCategories.get(pos);
+                                    productsCategory.setLike("1");
+                                    productsCategories.set(pos, productsCategory);
+                                    phonesAdapter.notifyItemChanged(pos);
                                 }
                             }
                             reloadDialog.dismiss();
@@ -305,7 +277,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
 
                         @Override
                         public void onFailure(Call<GetAddToFavouriteResponse> call, Throwable t) {
-                            Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                            Toasty.error(DetailItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                             reloadDialog.dismiss();
                         }
                     });
@@ -318,26 +290,26 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
     boolean isLike = false;
 
 
-//    @Override
-//    public void onBackPressed() {
-//        if (getArguments().getBooleanExtra("samethis", false)) {
-//            super.onBackPressed();
-//        } else {
-//            Intent intent = new Intent();
-//            intent.putExtra("databack", isLike);
-//            intent.putExtra("added_to_cart", isAdded);
-//            intent.putExtra("similar_product_change", isChanged);
-//            setResult(RESULT_OK, intent);
-//            finish();
-//            Animatoo.animateSwipeRight(this);
-//        }
-//
-//    }
+    @Override
+    public void onBackPressed() {
+        if (getIntent().getBooleanExtra("samethis", false)) {
+            super.onBackPressed();
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra("databack", isLike);
+            intent.putExtra("added_to_cart", isAdded);
+            intent.putExtra("similar_product_change", isChanged);
+            setResult(RESULT_OK, intent);
+            finish();
+            Animatoo.animateSwipeRight(this);
+        }
+
+    }
 
     public void initializeRecycler() {
-        RecyclerView.LayoutManager LayoutManager = new GridLayoutManager(getActivity(), 3);
-        RecyclerView.LayoutManager LayoutManager2 = new GridLayoutManager(getActivity(), 3);
-        LinearLayoutManager layoutManager3 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView.LayoutManager LayoutManager = new GridLayoutManager(this, 3);
+        RecyclerView.LayoutManager LayoutManager2 = new GridLayoutManager(this, 3);
+        LinearLayoutManager layoutManager3 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
         detail_recycler_colors_item.setLayoutManager(LayoutManager);
         detail_recycler_colors_item.setItemAnimator(new DefaultItemAnimator());
@@ -360,15 +332,15 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
     ArrayList<CapacityProduct> capicities;
 
     public void onLoadPage() {
-        productId = getArguments().getInt("id");
+        productId = getIntent().getIntExtra("id", 0);
         images = new ArrayList<>();
         colors = new ArrayList<>();
         capicities = new ArrayList<>();
 
-        if (PreferenceUtils.getUserLogin(getActivity())) {
-            token = PreferenceUtils.getUserToken(getActivity());
-        } else if (PreferenceUtils.getCompanyLogin(getActivity())) {
-            token = PreferenceUtils.getCompanyToken(getActivity());
+        if (PreferenceUtils.getUserLogin(this)) {
+            token = PreferenceUtils.getUserToken(this);
+        } else if (PreferenceUtils.getCompanyLogin(this)) {
+            token = PreferenceUtils.getCompanyToken(this);
         }
 
         reloadDialog.show();
@@ -378,7 +350,6 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
     int categoryId;
     String category_name;
     ArrayList<Subcategory> subCategoriesModel;
-
     @OnClick(R.id.detail_name_text)
     public void goToCategory() {
         subCategoriesModel = new ArrayList<>();
@@ -399,7 +370,6 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
     ArrayList<Subsubcategory> subsubcategories;
     int clickSubCategoryId;
     Subcategory clickSubCategory;
-
     private void getAllCategories(int category_id) {
         subsubcategories = new ArrayList<>();
         reloadDialog.show();
@@ -418,27 +388,27 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                                     String loo = locale.getLanguage();
                                     if (loo.equalsIgnoreCase("en")) {
                                         category_name = category.getName();
-                                    } else if (loo.equalsIgnoreCase("ar")) {
+                                    }else if (loo.equalsIgnoreCase("ar")) {
                                         category_name = category.getNameAr();
                                     }
                                     for (int j = 0; j < category.getSubcategories().size(); j++) {
 
-                                        if (category.getSubcategories().get(j).getId() == clickSubCategoryId) {
+                                        if (category.getSubcategories().get(j).getId() == clickSubCategoryId){
                                             clickSubCategory = new Subcategory(category.getSubcategories().get(j).getId(), category.getSubcategories().get(j).getNameAr(),
-                                                    category.getSubcategories().get(j).getName(), category.getSubcategories().get(j).getPhoto(), subsubcategories);
-                                            subCategoriesModel.add(0, clickSubCategory);
+                                                    category.getSubcategories().get(j).getName(), category.getSubcategories().get(j).getPhoto() , subsubcategories);
+                                            subCategoriesModel.add(0 , clickSubCategory);
                                             continue;
                                         }
                                         subCategoriesModel.add(new Subcategory(category.getSubcategories().get(j).getId(), category.getSubcategories().get(j).getNameAr(),
-                                                category.getSubcategories().get(j).getName(), category.getSubcategories().get(j).getPhoto(), subsubcategories));
+                                                category.getSubcategories().get(j).getName(), category.getSubcategories().get(j).getPhoto() , subsubcategories));
                                     }
                                     break;
                                 }
                             }
 
                         }
-                        startActivity(new Intent(getActivity(), OfferItemActivity.class).putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, category_id).putExtra(CATEGORY_NAME_INTENT_EXTRA, category_name)
-                                .putExtra(SUBCATEGORIES_INTENT_EXTRA_KEY, subCategoriesModel));
+                        startActivity(new Intent(DetailItemActivity.this , OfferItemActivity.class).putExtra(CATEGORY_ID_INTENT_EXTRA_KEY,category_id).putExtra(CATEGORY_NAME_INTENT_EXTRA , category_name)
+                                .putExtra(SUBCATEGORIES_INTENT_EXTRA_KEY , subCategoriesModel));
                     }
                 }
                 reloadDialog.dismiss();
@@ -446,7 +416,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
 
             @Override
             public void onFailure(Call<GetAllCategories> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(DetailItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -468,7 +438,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                             images.add("https://www.dleel-sh.com/homepages/get/" + getDetailProduct.getData().getProduct().getPhotos().get(i).getFilename());
                         }
                         if (flag) {
-                            slider_adapter = new SliderAdapter(getActivity(), images);
+                            slider_adapter = new SliderAdapter(DetailItemActivity.this, images);
                             imageSlider.setSliderAdapter(slider_adapter);
                             imageSlider.startAutoCycle();
                         }
@@ -485,7 +455,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
 
                         } else {
                             detail_item_text_price_before_linear.setVisibility(View.VISIBLE);
-                            detail_item_text_price_before.setText(PriceFormatter.toDecimalString(getDetailProduct.getData().getProduct().getOld_price(), getActivity().getApplicationContext()));
+                            detail_item_text_price_before.setText(PriceFormatter.toDecimalString(getDetailProduct.getData().getProduct().getOld_price(), getApplicationContext()));
                         }
                         if (!token.equalsIgnoreCase("")) {
 
@@ -508,7 +478,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                                         if (Integer.parseInt(details_quantaty_edit.getText().toString()) > 0) {
                                             addToCart();
                                         } else {
-                                            Toasty.error(getActivity(), getString(R.string.cart_no_quantity_chosen_toast), Toast.LENGTH_LONG).show();
+                                            Toasty.error(DetailItemActivity.this, getString(R.string.cart_no_quantity_chosen_toast), Toast.LENGTH_LONG).show();
                                         }
                                     }
                                 });
@@ -520,7 +490,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
 
                         categoryId = Integer.parseInt(getDetailProduct.getData().getProduct().getSubcategory().getCategory_id());
 
-                        detail_item_text_price.setText(PriceFormatter.toDecimalString(getDetailProduct.getData().getProduct().getPrice(), getActivity().getApplicationContext()));
+                        detail_item_text_price.setText(PriceFormatter.toDecimalString(getDetailProduct.getData().getProduct().getPrice(), getApplicationContext()));
 
                         Locale locale = ChangeLang.getLocale(getResources());
                         String loo = locale.getLanguage();
@@ -558,27 +528,27 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                             }
 
                             for (int i = 0; i < currentProduct.getCapacities().size(); i++) {
-                                capicities.add(new CapacityProduct(currentProduct.getCapacities().get(i).getProduct_id(), currentProduct.getCapacities().get(i).getName()));
+                                capicities.add(new CapacityProduct(currentProduct.getCapacities().get(i).getProduct_id(),currentProduct.getCapacities().get(i).getName()));
                             }
 
                             if (capicities.size() > 0) {
                                 detail_linear_size_item.setVisibility(View.VISIBLE);
-                                detailSizeItemAdapter = new DetailSizeItemAdapter(getActivity(), capicities);
-                                detailSizeItemAdapter.setDetailCapacityOperation(DetailItemFragment.this);
+                                detailSizeItemAdapter = new DetailSizeItemAdapter(DetailItemActivity.this, capicities);
+                                detailSizeItemAdapter.setDetailCapacityOperation(DetailItemActivity.this);
                                 detail_recycler_size_item.setAdapter(detailSizeItemAdapter);
                             }
-                            detailColorsItemAdapter = new DetailColorsItemAdapter(getActivity(), colors);
-                            detailColorsItemAdapter.setDetailColorsOperation(DetailItemFragment.this);
+                            detailColorsItemAdapter = new DetailColorsItemAdapter(DetailItemActivity.this, colors);
+                            detailColorsItemAdapter.setDetailColorsOperation(DetailItemActivity.this);
 
 
                             detail_recycler_colors_item.setAdapter(detailColorsItemAdapter);
 
-                            slider_adapter = new SliderAdapter(getActivity(), images);
+                            slider_adapter = new SliderAdapter(DetailItemActivity.this, images);
                             imageSlider.setSliderAdapter(slider_adapter);
                             imageSlider.startAutoCycle();
                         }
 
-                        String alredy_like = getArguments().getString("getLike");
+                        String alredy_like = getIntent().getStringExtra("getLike");
 
                         if (alredy_like == null || alredy_like.equals("")) {
                         } else if (Integer.parseInt(alredy_like) == 1) {
@@ -587,18 +557,17 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                             detail_like_img.setChecked(false);
                         }
 
-                        ArrayList<ProductsCategory> similarProducts = getArguments().getParcelableArrayList("similar_products");
+                        ArrayList<ProductsCategory> similarProducts = getIntent().getParcelableArrayListExtra("similar_products");
                         if (similarProducts != null && similarProducts.size() > 0) {
-                            phonesAdapter = new ProductsCategory3Adapter(getActivity(), similarProducts);
-                            phonesAdapter.setProductsCategory3Operation(DetailItemFragment.this);
+                            phonesAdapter = new ProductsCategory3Adapter(DetailItemActivity.this, getIntent().getParcelableArrayListExtra("similar_products"));
+                            phonesAdapter.setProductsCategory3Operation(DetailItemActivity.this);
                             details_recycler_like_too.setAdapter(phonesAdapter);
                         } else {
                             details_like_too.setVisibility(View.GONE);
                         }
-                        detailDescriptionsAdapter = new DetailDescriptionsAdapter(desc_names, getActivity().getSupportFragmentManager(), desc_options, full_desc);
+                        detailDescriptionsAdapter = new DetailDescriptionsAdapter(desc_names, getSupportFragmentManager(), desc_options, full_desc);
                         detail_vpPager.setAdapter(detailDescriptionsAdapter);
                         onClickLike(Integer.parseInt(getDetailProduct.getData().getProduct().getId()));
-
                     }
                 }
 
@@ -607,7 +576,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
 
             @Override
             public void onFailure(Call<GetDetailProduct> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(DetailItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -617,7 +586,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
     Dialog reloadDialog;
 
     private void showDialog() {
-        reloadDialog = new Dialog(getActivity());
+        reloadDialog = new Dialog(this);
         reloadDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         reloadDialog.setContentView(R.layout.reload_layout);
         reloadDialog.setCancelable(false);
@@ -632,19 +601,10 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
 
     @Override
     public void onClickProduct3(int id, int pos) {
-        ArrayList<ProductsCategory> products = getArguments().getParcelableArrayList("similar_products");
-        if (products != null) {
-            ProductsCategory productsCategory = products.get(pos);
-            String like = productsCategory.getLike();
-//            Bundle bundle = new Bundle();
-//            bundle.putInt("id", id);
-//            bundle.putParcelableArrayList("similar_products", products);
-//            bundle.putInt("pos", pos);
-//            bundle.putString("getLike",like);
-//            NavHostFragment.findNavController(this).navigate(R.id.action_detailItemActivity_self, bundle);
-        startActivity(new Intent(getActivity(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", getArguments().getParcelableArray("similar_products")).putExtra("getLike", like).putExtra("pos", pos).putExtra("samethis", true));
-        Animatoo.animateSwipeLeft(getActivity());
-        }
+        ProductsCategory productsCategory = (ProductsCategory) getIntent().getParcelableArrayListExtra("similar_products").get(pos);
+        String like = productsCategory.getLike();
+        startActivity(new Intent(this, DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", getIntent().getParcelableArrayListExtra("similar_products")).putExtra("getLike", like).putExtra("pos", pos).putExtra("samethis", true));
+        Animatoo.animateSwipeLeft(this);
     }
 
     @Override
@@ -653,7 +613,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
         convertDaraToJson(id);
         AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
         Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
-        if (PreferenceUtils.getCompanyLogin(getContext())) {
+        if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
             getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(favourite_post);
         } else {
             getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(favourite_post);
@@ -663,7 +623,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
             public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
                 GetAddToFavouriteResponse getAddToFavouriteResponse = response.body();
                 if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
-                    Toasty.success(getActivity(), getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
+                    Toasty.success(DetailItemActivity.this, getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
                     isChanged = true;
                 }
                 reloadDialog.dismiss();
@@ -671,7 +631,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
 
             @Override
             public void onFailure(Call<GetAddToFavouriteResponse> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(DetailItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -682,7 +642,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
         prepareCartMap(id, "1");
         AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
         Call<GetAddToCardResponse> getAddToCardResponseCall;
-        if (PreferenceUtils.getCompanyLogin(getActivity())) {
+        if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
             post.put("language", "arabic");
             getAddToCardResponseCall = addToCardApi.getAddToCartcompany(post);
         } else {
@@ -693,18 +653,18 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
                 GetAddToCardResponse getAddToCardResponse = response.body();
                 if (getAddToCardResponse.getCode() == 200) {
-                    Toasty.success(getActivity(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
+                    Toasty.success(DetailItemActivity.this, getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
                     phonesAdapter.getProductsCategoryList().get(position).setCart("0");
                     phonesAdapter.notifyItemChanged(position);
                     isChanged = true;
-                    PreferenceUtils.saveCountOfItemsBasket(getActivity().getApplicationContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                    PreferenceUtils.saveCountOfItemsBasket(getApplicationContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
                 }
                 reloadDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<GetAddToCardResponse> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(DetailItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -715,7 +675,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
     public void addToCart() {
         int quantity = Integer.parseInt(details_quantaty_edit.getText().toString());
         if (quantity > currentProduct.getAvailableQuantity()) {
-            Toasty.error(getActivity(), getString(R.string.quantity_not_available_toast) + " " + currentProduct.getAvailableQuantity(), Toast.LENGTH_LONG).show();
+            Toasty.error(DetailItemActivity.this, getString(R.string.quantity_not_available_toast) + " " + currentProduct.getAvailableQuantity(), Toast.LENGTH_LONG).show();
             reloadDialog.dismiss();
             return;
         }
@@ -723,7 +683,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
         prepareCartMap(productId, details_quantaty_edit.getText().toString());
         AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
         Call<GetAddToCardResponse> getAddToCardResponseCall;
-        if (PreferenceUtils.getCompanyLogin(getActivity())) {
+        if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
             post.put("language", "arabic");
             getAddToCardResponseCall = addToCardApi.getAddToCartcompany(post);
         } else {
@@ -735,13 +695,13 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                 if (response.body() != null) {
                     GetAddToCardResponse getAddToCardResponse = response.body();
                     if (getAddToCardResponse.getCode() == 200 && getAddToCardResponse.getItemsCount() != null) {
-//                        Toasty.success(DetailItemFragment.this, getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
+//                        Toasty.success(DetailItemActivity.this, getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
                         details_add_to_card.setBackgroundColor(Color.parseColor("#46C004"));
                         details_add_to_card.setText(R.string.add_to_card);
                         details_add_to_card.setEnabled(false);
                         cartCountLinearLayout.setVisibility(View.GONE);
                         isAdded = true;
-                        PreferenceUtils.saveCountOfItemsBasket(getActivity().getApplicationContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                        PreferenceUtils.saveCountOfItemsBasket(getApplicationContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
                     }
                 }
                 reloadDialog.dismiss();
@@ -749,7 +709,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
 
             @Override
             public void onFailure(Call<GetAddToCardResponse> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(DetailItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -757,13 +717,13 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
 
     public void prepareCartMap(int id, String quantity) {
         post = new HashMap<>();
-        if (PreferenceUtils.getUserLogin(getActivity())) {
-            String token = PreferenceUtils.getUserToken(getActivity());
+        if (PreferenceUtils.getUserLogin(this)) {
+            String token = PreferenceUtils.getUserToken(this);
             post.put("product_id", String.valueOf(id));
             post.put("token", token);
             post.put("quantity", String.valueOf(quantity));
-        } else if (PreferenceUtils.getCompanyLogin(getActivity())) {
-            String token = PreferenceUtils.getCompanyToken(getActivity());
+        } else if (PreferenceUtils.getCompanyLogin(this)) {
+            String token = PreferenceUtils.getCompanyToken(this);
             post.put("product_id", String.valueOf(id));
             post.put("token", token);
             post.put("quantity", String.valueOf(quantity));

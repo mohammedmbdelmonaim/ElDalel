@@ -10,15 +10,19 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.zeidex.eldalel.adapters.MainViewPagerAdapter;
+import com.zeidex.eldalel.hostfragments.AccountAfterLoginHostFragment;
+import com.zeidex.eldalel.hostfragments.BasketHostFragment;
+import com.zeidex.eldalel.hostfragments.CategoriesHostFragment;
+import com.zeidex.eldalel.hostfragments.MainHostFragment;
+import com.zeidex.eldalel.hostfragments.OffersHostFragment;
+import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.Constants;
-import com.zeidex.eldalel.utils.CustomViewPager;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 
 import java.lang.reflect.Field;
@@ -32,8 +36,8 @@ import static com.zeidex.eldalel.utils.Constants.SELECTED_ITEM;
 public class MainActivity extends BaseActivity {
     @BindView(R.id.bottom_nav)
     BottomNavigationView mBottomNav;
-    @BindView(R.id.main_viewpager)
-    CustomViewPager mainViewPager;
+//    @BindView(R.id.main_viewpager)
+//    CustomViewPager mainViewPager;
     private int mSelectedItem;
     public boolean login;
     Fragment frag = null;
@@ -45,8 +49,6 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        mainViewPager.setPagingEnabled(false);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create channel to show notifications.
             String channelId = getString(R.string.default_notification_channel_id);
@@ -56,8 +58,6 @@ public class MainActivity extends BaseActivity {
             notificationManager.createNotificationChannel(new NotificationChannel(channelId,
                     channelName, NotificationManager.IMPORTANCE_LOW));
         }
-
-        setupViewPager();
 
 //        frag = new FragmentFooterView();
 //        if (frag != null) {
@@ -72,15 +72,15 @@ public class MainActivity extends BaseActivity {
         mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.basket_fragment) {
-                    if (!PreferenceUtils.getUserLogin(MainActivity.this) && !PreferenceUtils.getCompanyLogin(MainActivity.this)) {
-                        Toasty.error(MainActivity.this, getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
+                if (item.getItemId() == R.id.basket_fragment){
+                    if (!PreferenceUtils.getUserLogin(MainActivity.this) &&  !PreferenceUtils.getCompanyLogin(MainActivity.this)) {
+                        Toasty.error(MainActivity.this,getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
                         return false;
-                    } else {
+                    }else{
                         selectFragment(item);
                         return true;
                     }
-                } else {
+                }else {
                     selectFragment(item);
                     return true;
                 }
@@ -121,12 +121,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void setupViewPager() {
-        mViewPagerAdapter = new MainViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        mainViewPager.setAdapter(mViewPagerAdapter);
-//        mainViewPager.setOffscreenPageLimit(5);
-    }
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(SELECTED_ITEM, mSelectedItem);
@@ -136,26 +130,19 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-//        MenuItem homeItem = mBottomNav.getMenu().getItem(0);
-//        if (mSelectedItem != homeItem.getItemId()) {
-//            // select home item
-//            selectFragment(homeItem);
-//            homeItem.setChecked(true);
-//
-////        } else if (mSelectedItem == homeItem.getItemId()) {
-////            boolean isDetail = mViewPagerAdapter.onBackPressed();
-////            if (!isDetail) {
-////                super.onBackPressed();
-////                Animatoo.animateSwipeRight(this);
-////            }
-//        } else {
-//            super.onBackPressed();
-//            Animatoo.animateSwipeRight(this);
-//        }
+        MenuItem homeItem = mBottomNav.getMenu().getItem(0);
+        if (mSelectedItem != homeItem.getItemId()) {
+            // select home item
+            selectFragment(homeItem);
+            homeItem.setChecked(true);
+
+        } else {
+            super.onBackPressed();
+            Animatoo.animateSwipeRight(this);
+        }
     }
 
-    public void navigateToCategories(int categoryId) {
+    public void navigateToCategories(int categoryId){
         CategoriesFragment categoriesFragment = new CategoriesFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("category_id", categoryId);
@@ -170,81 +157,54 @@ public class MainActivity extends BaseActivity {
     }
 
     String tag;
-
     public void selectFragment(MenuItem item) {
         Fragment frag = null;
         // init corresponding fragment
         switch (item.getItemId()) {
             case R.id.main_fragment:
-//                frag = mMainFragment;
-//                tag = MAIN_FRAGMENT_TAG;
-                mainViewPager.setCurrentItem(0);
+                frag = new MainHostFragment();
+                tag = "main_fragment";
                 break;
 
             case R.id.categories_fragment:
-//                frag = mCategoriesFragment;
-//                tag = CATEGORIE_FRAGMENT_TAG;
-                mainViewPager.setCurrentItem(1);
+                frag = new CategoriesHostFragment();
+                tag = "categorie_fragment";
                 break;
 
             case R.id.account_fragment:
                 login = PreferenceUtils.getUserLogin(this);
-                if (!login && !PreferenceUtils.getCompanyLogin(this)) {
-//                    frag = mAccountFragment;
-//                    tag = ACCOUNT_FRAGMENT_TAG;
-                    mainViewPager.setCurrentItem(4);
-                } else {
-//                    frag = new AccountAfterLoginFragment();
-//                    tag = ACCOUNTAFTERLOGIN_FRAGMENT_TAG;
-                    mainViewPager.setCurrentItem(5);
+                if (!login && !PreferenceUtils.getCompanyLogin(this)){
+                    frag = new AccountFragment();
+                    tag = "account_fragment";
+                }else {
+                    frag = new AccountAfterLoginHostFragment();
+                    tag = "accountafterlogin_fragment";
                 }
                 break;
 
             case R.id.basket_fragment:
-//                frag = mBasketFragment;
-//                tag = BASKET_FRAGMENT_TAG;
-                mainViewPager.setCurrentItem(3);
+                frag = new BasketHostFragment();
+                tag = "basket_fragment";
                 break;
 
             case R.id.offers_fragment:
-//                frag = mOffersFragment;
-//                tag = OFFERS_FRAGMENT_TAG;
-                mainViewPager.setCurrentItem(2);
+                frag = new OffersHostFragment();
+                tag = "offers_fragment";
                 break;
         }
 
 //         update selected item
         mSelectedItem = item.getItemId();
-//        mFragmentMenuItem.push(mSelectedItem);
-
-//        if (mFragmentsStack.contains(tag)) {
-//            mFragmentsStack.remove(tag);
-//            mFragmentMenuItem.remove(mSelectedItem);
-//        }
-//        mFragmentsStack.push(tag);
-//        mFragmentMenuItem.push(mSelectedItem);
-
 //
-//        pushFragments(tag, frag);
+
 
 //        updateToolbarText(item.getTitle());
 
-//        if (frag != null) {
-//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//            ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
-//            ft.add(R.id.nav_host_fragment, frag, tag);
-//            ft.addToBackStack(null);
-//            ft.commit();
-//        }
-
-    }
-
-    public void navigateToHomeFragment() {
-        MenuItem homeItem = mBottomNav.getMenu().getItem(0);
-        if (mSelectedItem != homeItem.getItemId()) {
-            // select home item
-            selectFragment(homeItem);
-            homeItem.setChecked(true);
+        if (frag != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
+            ft.replace(R.id.container_activity, frag, tag);
+            ft.commit();
         }
     }
 
@@ -276,4 +236,12 @@ public class MainActivity extends BaseActivity {
     }
 
 
+    public void navigateToHomeFragment() {
+        MenuItem homeItem = mBottomNav.getMenu().getItem(0);
+        if (mSelectedItem != homeItem.getItemId()) {
+            // select home item
+            selectFragment(homeItem);
+            homeItem.setChecked(true);
+        }
+    }
 }

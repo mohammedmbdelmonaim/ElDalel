@@ -107,7 +107,7 @@ public class ProductsActivity extends Fragment {
             Bundle bundle = new Bundle();
             bundle.putInt(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
             productsFragment.setArguments(bundle);
-            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            FragmentTransaction ft = getChildFragmentManager().beginTransaction();
             ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
             ft.replace(R.id.vpPager_item, productsFragment, productsFragment.getTag());
             ft.commit();
@@ -167,9 +167,9 @@ public class ProductsActivity extends Fragment {
     int subCategoryId;
     public void initializeViewPagerWithoutSubSubCategories() {
         if (subCategoryId == -1) {//meaning it has no subcategory, so we fetch products from category id
-            categoriesItemAdapter = new CategoriesItemAdapter(getActivity().getSupportFragmentManager(), categoryId);
+            categoriesItemAdapter = new CategoriesItemAdapter(getChildFragmentManager(), categoryId);
         } else {
-            categoriesItemAdapter = new CategoriesItemAdapter(getActivity().getSupportFragmentManager(), subCategoryId, categoryId);
+            categoriesItemAdapter = new CategoriesItemAdapter(getChildFragmentManager(), subCategoryId, categoryId);
         }
         vpPager.setAdapter(categoriesItemAdapter);
         view_pager_tab.setVisibility(View.GONE);
@@ -195,7 +195,7 @@ public class ProductsActivity extends Fragment {
         int subCategoryId = getArguments().getInt(SUBCATEGORY_ID_EXTRA_KEY, -1);
         int categoryId = getArguments().getInt(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
 
-        categoriesItemAdapter = new CategoriesItemAdapter(getActivity().getSupportFragmentManager(), cat_ids, cat_names, categoryId, subCategoryId);
+        categoriesItemAdapter = new CategoriesItemAdapter(getChildFragmentManager(), cat_ids, cat_names, categoryId, subCategoryId);
         vpPager.setAdapter(categoriesItemAdapter);
         view_pager_tab.setTabMode(TabLayout.MODE_SCROLLABLE);
         view_pager_tab.setVisibility(View.VISIBLE);
