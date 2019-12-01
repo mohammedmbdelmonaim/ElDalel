@@ -12,19 +12,19 @@
         tools:layout="@layout/activity_elements_likes" >
         <action
             android:id="@+id/action_likesElementsFragment_to_detailItemActivity"
-            app:destination="@id/detailItemActivity"
+            app:destination="@id/detailItemFragment"
             app:popUpTo="@+id/likesElementsFragment"
             app:popUpToInclusive="false" />
     </fragment>
     <fragment
-        android:id="@+id/detailItemActivity"
+        android:id="@+id/detailItemFragment"
         android:name="com.zeidex.eldalel.DetailItemFragment"
-        android:label="activity_detail_item"
+        android:label="fragment_detail_item"
         tools:layout="@layout/fragment_detail_item" >
         <action
-            android:id="@+id/action_detailItemActivity_self"
-            app:destination="@id/detailItemActivity"
-            app:popUpTo="@+id/detailItemActivity" />
+            android:id="@+id/action_detailItemFragment_self"
+            app:destination="@id/detailItemFragment"
+            app:popUpTo="@+id/detailItemFragment" />
     </fragment>
     <fragment
         android:id="@+id/accountAfterLoginFragment"

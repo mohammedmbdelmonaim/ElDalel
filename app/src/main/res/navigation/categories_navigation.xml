@@ -38,6 +38,6 @@
     <fragment
         android:id="@+id/detailItemFragment"
         android:name="com.zeidex.eldalel.DetailItemFragment"
-        android:label="activity_detail_item"
+        android:label="fragment_detail_item"
         tools:layout="@layout/fragment_detail_item" />
 </navigation>

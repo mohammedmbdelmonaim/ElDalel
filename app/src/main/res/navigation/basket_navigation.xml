@@ -11,13 +11,13 @@
         android:label="fragment_basket"
         tools:layout="@layout/fragment_basket" >
         <action
-            android:id="@+id/action_basketFragment_to_detailItemActivity"
-            app:destination="@+id/detailItemActivity" />
+            android:id="@+id/action_basketFragment_to_detailItemFragment"
+            app:destination="@+id/detailItemFragment" />
     </fragment>
     <fragment
-        android:id="@+id/detailItemActivity"
+        android:id="@+id/detailItemFragment"
         android:name="com.zeidex.eldalel.DetailItemFragment"
-        android:label="activity_detail_item"
+        android:label="fragment_detail_item"
         tools:layout="@layout/reload_layout">
     </fragment>
 </navigation>

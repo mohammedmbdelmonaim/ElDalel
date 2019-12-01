@@ -6,12 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.tabs.TabLayout;
 import com.zeidex.eldalel.utils.Animatoo;
 
 import butterknife.BindView;
@@ -29,6 +29,18 @@ public class AccountFragment extends androidx.fragment.app.Fragment implements V
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_account, container, false);
 
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                ((MainActivity)getActivity()).navigateToHomeFragment();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     @Override

@@ -366,7 +366,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
         Bundle bundle = new Bundle();
         bundle.putInt("id", id);
         bundle.putInt("pos", pos);
-        NavHostFragment.findNavController(this).navigate(R.id.action_basketFragment_to_detailItemActivity, bundle);
+        NavHostFragment.findNavController(this).navigate(R.id.action_basketFragment_to_detailItemFragment, bundle);
     }
 
 

@@ -21,7 +21,6 @@ import com.zeidex.eldalel.hostfragments.BasketHostFragment;
 import com.zeidex.eldalel.hostfragments.CategoriesHostFragment;
 import com.zeidex.eldalel.hostfragments.MainHostFragment;
 import com.zeidex.eldalel.hostfragments.OffersHostFragment;
-import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.Constants;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 
@@ -131,15 +130,15 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         MenuItem homeItem = mBottomNav.getMenu().getItem(0);
-        if (mSelectedItem != homeItem.getItemId()) {
-            // select home item
-            selectFragment(homeItem);
-            homeItem.setChecked(true);
-
-        } else {
+//        if (mSelectedItem != homeItem.getItemId()) {
+//            // select home item
+//            selectFragment(homeItem);
+//            homeItem.setChecked(true);
+//
+//        } else {
             super.onBackPressed();
-            Animatoo.animateSwipeRight(this);
-        }
+//            Animatoo.animateSwipeRight(this);
+//        }
     }
 
     public void navigateToCategories(int categoryId){

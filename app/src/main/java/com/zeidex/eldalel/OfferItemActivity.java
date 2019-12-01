@@ -13,6 +13,7 @@ import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -60,6 +61,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
+import static com.zeidex.eldalel.ProductsFragment.FILTER_REQUEST_CODE;
 import static com.zeidex.eldalel.ProductsFragment.FINISH_ACTIVITY_CODE;
 import static com.zeidex.eldalel.ProductsFragment.SORT_ASC;
 import static com.zeidex.eldalel.ProductsFragment.SORT_DATE_DESC_INDEX;
@@ -123,6 +125,18 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
         initializeRecycler();
         findViews();
         return view;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                NavHostFragment.findNavController(OfferItemActivity.this).navigateUp();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
 //    @Override
@@ -563,21 +577,21 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
             }
         }
 
-//        if (requestCode == FINISH_ACTIVITY_CODE && data != null) {
-//            boolean shouldFinishActivity = data.getBooleanExtra("should_finish_activity", false);
-//            if (shouldFinishActivity) finish();
-//        }
-//        } else if (requestCode == FILTER_REQUEST_CODE && data != null) {
-//            offerItemHeaderText.setText("");
-//            int filterCategoryId = data.getIntExtra("filter_category_id", -1);
-//            int filterPriceFrom = data.getIntExtra("filter_price_from", -1);
-//            int filterPriceTo = data.getIntExtra("filter_price_to", -1);
-//            filterMap = new HashMap<>();
-//            if (filterCategoryId != -1) filterMap.put("cat_id", filterCategoryId);
-//            if (filterPriceFrom != -1) filterMap.put("from", filterPriceFrom);
-//            if (filterPriceTo != -1) filterMap.put("to", filterPriceTo);
-//            filterResults();
-//        }
+        if (requestCode == FINISH_ACTIVITY_CODE && data != null) {
+            boolean shouldFinishActivity = data.getBooleanExtra("should_finish_activity", false);
+            if (shouldFinishActivity) onBack();
+        }
+         else if (requestCode == FILTER_REQUEST_CODE && data != null) {
+            offerItemHeaderText.setText("");
+            int filterCategoryId = data.getIntExtra("filter_category_id", -1);
+            int filterPriceFrom = data.getIntExtra("filter_price_from", -1);
+            int filterPriceTo = data.getIntExtra("filter_price_to", -1);
+            filterMap = new HashMap<>();
+            if (filterCategoryId != -1) filterMap.put("cat_id", filterCategoryId);
+            if (filterPriceFrom != -1) filterMap.put("from", filterPriceFrom);
+            if (filterPriceTo != -1) filterMap.put("to", filterPriceTo);
+            filterResults();
+        }
     }
 
     @OnClick(R.id.offer_descendant_items_category)
