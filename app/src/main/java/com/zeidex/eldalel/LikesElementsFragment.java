@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.phelat.navigationresult.BundleFragment;
 import com.zeidex.eldalel.adapters.LikesElementsAdapter;
+import com.zeidex.eldalel.listeners.AddToCartCallback;
 import com.zeidex.eldalel.models.ProductsCategory;
 import com.zeidex.eldalel.response.DeleteFavoriteResponse;
 import com.zeidex.eldalel.response.GetAddToCardResponse;
@@ -257,15 +258,30 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
     @Override
     public void onClickProduct(int id, int pos) {
         Bundle bundle = new Bundle();
+        AddToCartCallback callback = new AddToCartCallback() {
+            @Override
+            public void setAddToCartResult(String totalItemCount) {
+                updateCartUI(pos, totalItemCount);
+            }
+        };
         bundle.putInt("id", id);
         bundle.putParcelableArrayList("similar_products", products);
         bundle.putString("getLike", "1");
         bundle.putInt("pos", pos);
+        bundle.putSerializable("added_to_cart", callback);
         NavHostFragment.findNavController(this).navigate(R.id.action_likesElementsFragment_to_detailItemActivity, bundle);
 //        mDetailItemFragment = new DetailItemFragment(null, bundle);
 //        getSupportFragmentManager().beginTransaction().replace(R.id.container, mDetailItemFragment).commit();
 //        startActivityForResult(new Intent(this, DetailItemFragment.class).
 //        Animatoo.animateSwipeLeft(this);
+    }
+
+    private void updateCartUI(int pos, String totalItemCount) {
+        likesElementsAdapter.getProductsList().get(pos).setCart("0");
+        likesElementsAdapter.notifyItemChanged(pos);
+        if (totalItemCount != null)
+            PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(totalItemCount));
+
     }
 
     @Override
@@ -287,7 +303,8 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
                     Toasty.success(getContext(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
                     likesElementsAdapter.getProductsList().get(position).setCart("0");
                     likesElementsAdapter.notifyItemChanged(position);
-                    PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                    if (getAddToCardResponse.getItemsCount() != null)
+                        PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
                 }
                 reloadDialog.dismiss();
             }

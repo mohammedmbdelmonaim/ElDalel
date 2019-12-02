@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.zeidex.eldalel.adapters.CategoryItemAdapter;
 import com.zeidex.eldalel.adapters.SubCategoriesAdapter;
+import com.zeidex.eldalel.listeners.AddToCartCallback;
 import com.zeidex.eldalel.models.ProductsCategory;
 import com.zeidex.eldalel.models.Subcategory;
 import com.zeidex.eldalel.models.Subsubcategory;
@@ -116,6 +117,7 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
     private PopupMenu dropDownMenu;
     private int subcategoryId;
     private int categoryId;
+    private int position;
 
     @Nullable
     @Override
@@ -123,8 +125,64 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
         View view = inflater.inflate(R.layout.activity_offer_item, container, false);
         ButterKnife.bind(this, view);
         initializeRecycler();
+        initializePopupSortMenu();
+
+        offer_item_search.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Intent intent = new Intent(getContext(), SearchActivity.class);
+                intent.putExtra(SEARCH_NAME_ARGUMENT, query);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                offer_item_search.onActionViewCollapsed(); //to close the searchview
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
         findViews();
         return view;
+    }
+
+    private void initializePopupSortMenu() {
+        dropDownMenu = new PopupMenu(getContext(), offer_descendant_items_category);
+        dropDownMenu.getMenuInflater().inflate(R.menu.menu_sort_dropdown, dropDownMenu.getMenu());
+        dropDownMenu.getMenu().getItem(SORT_DATE_DESC_INDEX).setChecked(true);
+
+        dropDownMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                menuItem.setChecked(true);
+                switch (menuItem.getItemId()) {
+                    case (R.id.sort_price_ascend):
+                        filterMap.put("order_price", SORT_ASC);
+                        filterMap.remove("order_date");
+                        break;
+
+                    case (R.id.sort_price_descend):
+                        filterMap.put("order_price", SORT_DESC);
+                        filterMap.remove("order_date");
+                        break;
+
+                    case (R.id.sort_date_ascend):
+                        filterMap.put("order_date", SORT_ASC);
+                        filterMap.remove("order_price");
+                        break;
+
+                    case (R.id.sort_date_descend):
+                        filterMap.put("order_date", SORT_DESC);
+                        filterMap.remove("order_price");
+                        break;
+                }
+                filterResults();
+                return true;
+            }
+        });
     }
 
     @Override
@@ -163,63 +221,19 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
             token = PreferenceUtils.getUserToken(getContext());
         }
 
-        offer_item_search.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                Intent intent = new Intent(getContext(), SearchActivity.class);
-                intent.putExtra(SEARCH_NAME_ARGUMENT, query);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                offer_item_search.onActionViewCollapsed(); //to close the searchview
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
         filterMap = new HashMap<>();
         if (is_offered) {
             filterMap.put("status", OFFERS);
         }
-        dropDownMenu = new PopupMenu(getContext(), offer_descendant_items_category);
-        dropDownMenu.getMenuInflater().inflate(R.menu.menu_sort_dropdown, dropDownMenu.getMenu());
-        dropDownMenu.getMenu().getItem(SORT_DATE_DESC_INDEX).setChecked(true);
 
-        dropDownMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+        initializePopupSortMenu();
 
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                menuItem.setChecked(true);
-                switch (menuItem.getItemId()) {
-                    case (R.id.sort_price_ascend):
-                        filterMap.put("order_price", SORT_ASC);
-                        filterMap.remove("order_date");
-                        break;
-
-                    case (R.id.sort_price_descend):
-                        filterMap.put("order_price", SORT_DESC);
-                        filterMap.remove("order_date");
-                        break;
-
-                    case (R.id.sort_date_ascend):
-                        filterMap.put("order_date", SORT_ASC);
-                        filterMap.remove("order_price");
-                        break;
-
-                    case (R.id.sort_date_descend):
-                        filterMap.put("order_date", SORT_DESC);
-                        filterMap.remove("order_price");
-                        break;
-                }
-                filterResults();
-                return true;
-            }
-        });
-        showDialog();
-        onLoadPage();
+        if (productsCategory != null) {
+            updateUI();
+        } else {
+            showDialog();
+            onLoadPage();
+        }
     }
 
     private void onLoadPage() {
@@ -239,6 +253,25 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
             categoryId = OfferItemActivityArgs.fromBundle(getArguments()).getCategoryId();
             filterMap.put("cat_id", categoryId);
             getCategoryProducts(categoryId);
+        }
+
+    }
+
+    private void updateUI() {
+        if (subcategories != null && subcategories.size() > 0) {
+            subCategoriesAdapter = new SubCategoriesAdapter(getContext(), subcategories, true);
+            subCategoriesAdapter.setSubCategoryOperation(this);
+            offer_item_recycler_categories.setAdapter(subCategoriesAdapter);
+            subCategoriesAdapter.setSelectedPos(position);
+        }
+
+        if (productsCategory.size() > 0) {
+            labelCountText.setText(String.valueOf(productsCategory.size()));
+            productsAdapter.setProductsList(productsCategory);
+            productsAdapter.notifyDataSetChanged();
+            showRecycler();
+        } else {
+            showEmptyView();
         }
 
     }
@@ -448,6 +481,7 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
 
     @Override
     public void onClickSubCategory(int subcategoryId, String subcategoryName, int pos) {
+        position = pos;
         this.subcategoryId = subcategoryId;
         filterMap.put("subcat_id", subcategoryId);
         getSubcategoryProducts(subcategoryId);
@@ -461,15 +495,29 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
     @Override
     public void onClickProduct(int id, int pos) {
         position_detail = pos;
+        AddToCartCallback callback = new AddToCartCallback() {
+            @Override
+            public void setAddToCartResult(String totalItemCount) {
+                updateCartUI(pos, totalItemCount);
+            }
+        };
         Bundle bundle = new Bundle();
         bundle.putInt("pos", pos);
         bundle.putString("getLike", productsCategory.get(pos).getLike());
         bundle.putInt("id", id);
         bundle.putParcelableArrayList("similar_products", productsCategory);
+        bundle.putSerializable("added_to_cart", callback);
         NavHostFragment.findNavController(this).navigate(R.id.action_offerItemActivity_to_detailItemActivity, bundle);
 //        OfferItemActivityDirections.actionOfferItemActivityToDetailItemActivity(id, pos, productsCategory.toArray(new ProductsCategory[productsCategory.size()]), productsCategory.get(pos).getLike());
 //        startActivityForResult(new Intent(this, DetailItemFragment.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
 //        Animatoo.animateSwipeLeft(this);
+    }
+
+    private void updateCartUI(int pos, String totalItemCount) {
+        productsAdapter.getProductsList().get(pos).setCart("0");
+        productsAdapter.notifyItemChanged(pos);
+        if (totalItemCount != null)
+            PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(totalItemCount));
     }
 
     @Override
@@ -580,8 +628,7 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
         if (requestCode == FINISH_ACTIVITY_CODE && data != null) {
             boolean shouldFinishActivity = data.getBooleanExtra("should_finish_activity", false);
             if (shouldFinishActivity) onBack();
-        }
-         else if (requestCode == FILTER_REQUEST_CODE && data != null) {
+        } else if (requestCode == FILTER_REQUEST_CODE && data != null) {
             offerItemHeaderText.setText("");
             int filterCategoryId = data.getIntExtra("filter_category_id", -1);
             int filterPriceFrom = data.getIntExtra("filter_price_from", -1);

@@ -41,7 +41,7 @@ import retrofit2.Response;
 import static com.zeidex.eldalel.SearchActivity.SEARCH_NAME_ARGUMENT;
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
-public class  CategoriesFragment extends androidx.fragment.app.Fragment {
+public class CategoriesFragment extends androidx.fragment.app.Fragment {
     public static final String NEW_ARRIVALS_ID = "-1";
     public static final int NO_PRODUCTS_STATUS = 1;
     @BindView(R.id.vpPager)
@@ -75,7 +75,7 @@ public class  CategoriesFragment extends androidx.fragment.app.Fragment {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                ((MainActivity)getContext()).navigateToHomeFragment();
+                ((MainActivity) getContext()).navigateToHomeFragment();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
@@ -92,23 +92,6 @@ public class  CategoriesFragment extends androidx.fragment.app.Fragment {
         drawable.setSize(1, 1);
         linearLayout.setDividerPadding(30);
         linearLayout.setDividerDrawable(drawable);
-        findViews();
-    }
-
-    private void findViews() {
-        if (PreferenceUtils.getCompanyLogin(getContext())) {
-            token = PreferenceUtils.getCompanyToken(getContext());
-        } else if (PreferenceUtils.getUserLogin(getContext())) {
-            token = PreferenceUtils.getUserToken(getContext());
-        }
-
-        cat_ids = new ArrayList<>();
-        cat_names = new ArrayList<>();
-
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            categoryId = bundle.getInt("category_id", -1);
-        }
 
         fragment_categories_searchview.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
@@ -126,11 +109,34 @@ public class  CategoriesFragment extends androidx.fragment.app.Fragment {
             }
         });
 
+        if (categoriesWithSub != null) {
+            updateUI();
+        } else {
+            findViews();
+        }
+    }
+
+    private void findViews() {
+        if (PreferenceUtils.getCompanyLogin(getContext())) {
+            token = PreferenceUtils.getCompanyToken(getContext());
+        } else if (PreferenceUtils.getUserLogin(getContext())) {
+            token = PreferenceUtils.getUserToken(getContext());
+        }
+
+        cat_ids = new ArrayList<>();
+        cat_names = new ArrayList<>();
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            categoryId = bundle.getInt("category_id", -1);
+        }
 
         showDialog();
         onLoadPage();
     }
+
     List<GetAllCategories.Category> categoriesWithSub;
+
     private void onLoadPage() {
         reloadDialog.show();
         AllCategoriesAPI allCategoriesAPI = APIClient.getClient(SERVER_API_TEST).create(AllCategoriesAPI.class);
@@ -143,10 +149,10 @@ public class  CategoriesFragment extends androidx.fragment.app.Fragment {
                         categoriesWithSub = new ArrayList<>();
                         List<GetAllCategories.Category> categories = response.body().getData().getCategories();
                         if (categories.size() > 0) {
-                            for (GetAllCategories.Category category : categories){
-                                if (category.getSubcategories().size() == 0){
+                            for (GetAllCategories.Category category : categories) {
+                                if (category.getSubcategories().size() == 0) {
                                     continue;
-                                }else{
+                                } else {
                                     categoriesWithSub.add(category);
                                 }
 
@@ -186,7 +192,11 @@ public class  CategoriesFragment extends androidx.fragment.app.Fragment {
             }
         }
 
-        categoriesAdapter = new CategoriesAdapter(getChildFragmentManager(), cat_ids, cat_names, categories);
+        updateUI();
+    }
+
+    private void updateUI() {
+        categoriesAdapter = new CategoriesAdapter(getChildFragmentManager(), cat_ids, cat_names, categoriesWithSub);
         vpPager.setAdapter(categoriesAdapter);
         view_pager_tab.setTabMode(TabLayout.MODE_SCROLLABLE);
 

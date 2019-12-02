@@ -135,6 +135,12 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
         }
     }
 
+    public void setSelectedPos(int pos){
+        notifyItemChanged(selectedPos);
+        selectedPos = pos;
+        notifyItemChanged(selectedPos);
+    }
+
     public interface SubCategoryOperation {
         void onClickSubCategory(int subcategoryId, String subcategoryName , int pos);
 

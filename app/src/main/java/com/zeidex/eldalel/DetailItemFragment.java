@@ -38,6 +38,7 @@ import com.zeidex.eldalel.adapters.DetailSizeItemAdapter;
 import com.zeidex.eldalel.adapters.ProductsCategory3Adapter;
 import com.zeidex.eldalel.adapters.SliderAdapter;
 import com.zeidex.eldalel.listeners.FirstPageFragmentListener;
+import com.zeidex.eldalel.listeners.AddToCartCallback;
 import com.zeidex.eldalel.models.CapacityProduct;
 import com.zeidex.eldalel.models.ColorProduct;
 import com.zeidex.eldalel.models.ProductsCategory;
@@ -755,6 +756,9 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                         cartCountLinearLayout.setVisibility(View.GONE);
                         isAdded = true;
                         PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                        AddToCartCallback callback = (AddToCartCallback) getArguments().getSerializable("added_to_cart");
+                        if(callback != null)
+                        callback.setAddToCartResult(getAddToCardResponse.getItemsCount());
                     }
                 }
                 reloadDialog.dismiss();
