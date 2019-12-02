@@ -45,6 +45,11 @@ public class CategoryItemAdapter extends RecyclerView.Adapter<CategoryItemAdapte
     public CategoryItemAdapter(Context context, List<ProductsCategory> productsList) {
         this.context = context;
         this.productsList = productsList;
+        if (PreferenceUtils.getUserLogin(context)) {
+            token = PreferenceUtils.getUserToken(context);
+        } else if (PreferenceUtils.getCompanyLogin(context)) {
+            token = PreferenceUtils.getCompanyToken(context);
+        }
     }
     String token = "";
     public CategoryItemAdapter(Context context) {

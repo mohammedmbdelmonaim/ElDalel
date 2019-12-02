@@ -451,7 +451,9 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
         });
     }
     String lang;
+    ArrayList<ProductsCategory> related_products;
     public void getDetarServer(int id, boolean flag) {
+        related_products = new ArrayList<>();
         Locale locale = ChangeLang.getLocale(getResources());
         String loo = locale.getLanguage();
         if (loo.equalsIgnoreCase("en")) {
@@ -536,6 +538,23 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                             detail_name_text.setText(getDetailProduct.getData().getProduct().getSubcategory().getName());
                             detail_sescription_text.setText(getDetailProduct.getData().getProduct().getName());
                             full_desc = getDetailProduct.getData().getProduct().getShortDesc();
+                            for (int j = 0; j < getDetailProduct.getData().getRelated().size(); j++) { // product loop
+
+                                String arr[] = getDetailProduct.getData().getRelated().get(j).getName().split(" ", 2); // get first word
+                                String firstWord = arr[0];
+
+                                if (getDetailProduct.getData().getRelated().get(j).getPhotos().size() == 0) {
+                                    related_products.add(new ProductsCategory(getDetailProduct.getData().getRelated().get(j).getId(), "",
+                                            getDetailProduct.getData().getRelated().get(j).getDiscount(), firstWord, getDetailProduct.getData().getRelated().get(j).getName(),
+                                            getDetailProduct.getData().getRelated().get(j).getPrice(), getDetailProduct.getData().getRelated().get(j).getOld_price(),
+                                            getDetailProduct.getData().getRelated().get(j).getFavorite(), getDetailProduct.getData().getRelated().get(j).getCart(), getDetailProduct.getData().getRelated().get(j).getAvailable_quantity()));
+                                } else {
+                                    related_products.add(new ProductsCategory(getDetailProduct.getData().getRelated().get(j).getId(), getDetailProduct.getData().getRelated().get(j).getPhotos().get(0).getFilename(),
+                                            getDetailProduct.getData().getRelated().get(j).getDiscount(), firstWord, getDetailProduct.getData().getRelated().get(j).getName(),
+                                            getDetailProduct.getData().getRelated().get(j).getPrice(), getDetailProduct.getData().getRelated().get(j).getOld_price(),
+                                            getDetailProduct.getData().getRelated().get(j).getFavorite(), getDetailProduct.getData().getRelated().get(j).getCart(), getDetailProduct.getData().getRelated().get(j).getAvailable_quantity()));
+                                }
+                            }
 
                         } else if (loo.equalsIgnoreCase("ar")) {
                             category_name = getDetailProduct.getData().getProduct().getName_ar();
@@ -543,6 +562,23 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                             detail_name_text.setText(getDetailProduct.getData().getProduct().getSubcategory().getName_ar());
                             detail_sescription_text.setText(getDetailProduct.getData().getProduct().getName_ar());
                             full_desc = getDetailProduct.getData().getProduct().getShortDescAr();
+                            for (int j = 0; j < getDetailProduct.getData().getRelated().size(); j++) { // product loop
+
+                                String arr[] = getDetailProduct.getData().getRelated().get(j).getName().split(" ", 2); // get first word
+                                String firstWord = arr[0];
+
+                                if (getDetailProduct.getData().getRelated().get(j).getPhotos().size() == 0) {
+                                    related_products.add(new ProductsCategory(getDetailProduct.getData().getRelated().get(j).getId(), "",
+                                            getDetailProduct.getData().getRelated().get(j).getDiscount(), firstWord, getDetailProduct.getData().getRelated().get(j).getName_ar(),
+                                            getDetailProduct.getData().getRelated().get(j).getPrice(), getDetailProduct.getData().getRelated().get(j).getOld_price(),
+                                            getDetailProduct.getData().getRelated().get(j).getFavorite(), getDetailProduct.getData().getRelated().get(j).getCart(), getDetailProduct.getData().getRelated().get(j).getAvailable_quantity()));
+                                } else {
+                                    related_products.add(new ProductsCategory(getDetailProduct.getData().getRelated().get(j).getId(), getDetailProduct.getData().getRelated().get(j).getPhotos().get(0).getFilename(),
+                                            getDetailProduct.getData().getRelated().get(j).getDiscount(), firstWord, getDetailProduct.getData().getRelated().get(j).getName_ar(),
+                                            getDetailProduct.getData().getRelated().get(j).getPrice(), getDetailProduct.getData().getRelated().get(j).getOld_price(),
+                                            getDetailProduct.getData().getRelated().get(j).getFavorite(), getDetailProduct.getData().getRelated().get(j).getCart(), getDetailProduct.getData().getRelated().get(j).getAvailable_quantity()));
+                                }
+                            }
                         }
 
                         clickSubCategoryId = Integer.parseInt(getDetailProduct.getData().getProduct().getSubcategory_id());
@@ -557,11 +593,24 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
 //                            desc_options = desc_options + (getDetailProduct.getData().getProduct().getOptiongroups().get(i).getName() + " : " + getDetailProduct.getData().getProduct().getOptiongroups().get(i).getFeatures().get(0) + "\n");
 //                        }
 
+                        if (loo.equalsIgnoreCase("en")) {
+                            if (!flag) {
+                                for (int i = 0; i < currentProduct.getColors().size(); i++) {
+                                    colors.add(new ColorProduct(currentProduct.getColors().get(i).getProduct_id(), currentProduct.getColors().get(i).getName(), currentProduct.getColors().get(i).getPhoto()));
+                                }
+                            }
+                        }else if (loo.equalsIgnoreCase("ar")) {
+                            if (!flag) {
+                                for (int i = 0; i < currentProduct.getColors().size(); i++) {
+                                    colors.add(new ColorProduct(currentProduct.getColors().get(i).getProduct_id(), currentProduct.getColors().get(i).getName_ar(), currentProduct.getColors().get(i).getPhoto()));
+                                }
+                            }
+                        }
 
                         if (!flag) {
-                            for (int i = 0; i < currentProduct.getColors().size(); i++) {
-                                colors.add(new ColorProduct(currentProduct.getColors().get(i).getProduct_id(), currentProduct.getColors().get(i).getName(), currentProduct.getColors().get(i).getPhoto()));
-                            }
+//                            for (int i = 0; i < currentProduct.getColors().size(); i++) {
+//                                colors.add(new ColorProduct(currentProduct.getColors().get(i).getProduct_id(), currentProduct.getColors().get(i).getName(), currentProduct.getColors().get(i).getPhoto()));
+//                            }
 
                             for (int i = 0; i < currentProduct.getCapacities().size(); i++) {
                                 capicities.add(new CapacityProduct(currentProduct.getCapacities().get(i).getProduct_id(), currentProduct.getCapacities().get(i).getName()));
@@ -600,9 +649,9 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                             detail_like_img.setChecked(false);
                         }
 
-                        ArrayList<ProductsCategory> similarProducts = getArguments().getParcelableArrayList("similar_products");
-                        if (similarProducts != null && similarProducts.size() > 0) {
-                            phonesAdapter = new ProductsCategory3Adapter(getContext(), similarProducts);
+//                        ArrayList<ProductsCategory> similarProducts = getArguments().getParcelableArrayList("similar_products");
+                        if (related_products != null && related_products.size() > 0) {
+                            phonesAdapter = new ProductsCategory3Adapter(getContext(), related_products);
                             phonesAdapter.setProductsCategory3Operation(DetailItemFragment.this);
                             details_recycler_like_too.setAdapter(phonesAdapter);
                         } else {

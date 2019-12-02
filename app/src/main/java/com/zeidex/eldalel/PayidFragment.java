@@ -327,9 +327,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                                             BookingResponse bookingResponse1 = APIClient.getClient(SERVER_API_TEST).create(BookingResponse.class);
                                             Call<GetBookingResponse> getBookingResponseCall;
                                             if (PreferenceUtils.getCompanyLogin(getContext())) {
-                                                getBookingResponseCall = bookingResponse1.getBooking(payment_post_response);
-                                            } else {
                                                 getBookingResponseCall = bookingResponse1.getBookingCompany(payment_post_response);
+                                            } else {
+                                                getBookingResponseCall = bookingResponse1.getBooking(payment_post_response);
                                             }
 
                                             getBookingResponseCall.enqueue(new Callback<GetBookingResponse>() {
@@ -343,6 +343,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                                                         PreferenceUtils.saveCoupon(getContext(), "");
                                                         PreferenceUtils.saveCountOfItemsBasket(getContext(), 0);
                                                     } else {
+                                                        Toasty.error(getContext() , getBookingResponse.getMessage() , Toast.LENGTH_LONG).show();
                                                         payment_webview.setVisibility(View.GONE);
                                                         payment_contain.setVisibility(View.VISIBLE);
                                                     }
@@ -400,8 +401,6 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                         reloadDialog.dismiss();
                     }
                 });
-
-
                 break;
             }
         }

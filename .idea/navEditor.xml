@@ -105,25 +105,12 @@
                 <map>
                   <entry key="detailItemFragment">
                     <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="520" />
-                            <option name="y" value="1" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
+                      <LayoutPositions />
                     </value>
                   </entry>
                   <entry key="mainFragment">
                     <value>
                       <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="159" />
-                            <option name="y" value="-191" />
-                          </Point>
-                        </option>
                         <option name="myPositions">
                           <map>
                             <entry key="action_mainFragment_to_detailItemFragment">
@@ -144,12 +131,6 @@
                   <entry key="offerItemActivity2">
                     <value>
                       <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="-16" />
-                            <option name="y" value="32" />
-                          </Point>
-                        </option>
                         <option name="myPositions">
                           <map>
                             <entry key="action_offerItemActivity_to_detailItemActivity">

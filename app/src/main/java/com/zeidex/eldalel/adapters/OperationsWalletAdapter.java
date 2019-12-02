@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.zeidex.eldalel.R;
 import com.zeidex.eldalel.response.GetWalletResponse;
+import com.zeidex.eldalel.utils.ChangeLang;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class OperationsWalletAdapter extends RecyclerView.Adapter<OperationsWalletAdapter.BasketElementsHolder> {
     View view;
@@ -39,7 +41,25 @@ public class OperationsWalletAdapter extends RecyclerView.Adapter<OperationsWall
     @Override
     public void onBindViewHolder(@NonNull BasketElementsHolder holder, int position) {
         GetWalletResponse.Datum operation = operations_wallet.get(position);
-        holder.wallet_type_text.setText(operation.getAmountType());
+
+        Locale locale = ChangeLang.getLocale(context.getResources());
+        String loo = locale.getLanguage();
+        String amount_ar;
+        if (loo.equalsIgnoreCase("ar")) {
+            if (operation.getAmountType().equalsIgnoreCase("deposit")){
+                 amount_ar = "ايداع";
+            }else if (operation.getAmountType().equalsIgnoreCase("withdraw")){
+                amount_ar = "سحب";
+            }else if (operation.getAmountType().equalsIgnoreCase("payment")){
+                amount_ar = "دفع";
+            }else {
+                amount_ar = "";
+            }
+
+            holder.wallet_type_text.setText(amount_ar);
+        }else{
+            holder.wallet_type_text.setText(operation.getAmountType());
+        }
         holder.order_amount_text.setText(operation.getAmount()+"");
         holder.wallet_date_text.setText(operation.getCreatedAt());
     }
