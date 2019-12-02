@@ -98,7 +98,11 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         initializeRecycler();
-        findViews();
+        if (basketProducts == null) {
+            findViews();
+        } else {
+            updateUI();
+        }
     }
 
 
@@ -120,18 +124,18 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                 public void onResponse(Call<GetCheckCouponResponse> call, Response<GetCheckCouponResponse> response) {
                     GetCheckCouponResponse getCheckCouponResponse = response.body();
                     if (getCheckCouponResponse.getStatus().equalsIgnoreCase("false")) {
-                        Toasty.error(getActivity(), getCheckCouponResponse.getError(), Toast.LENGTH_LONG).show();
+                        Toasty.error(getContext(), getCheckCouponResponse.getError(), Toast.LENGTH_LONG).show();
                     } else {
-                        PreferenceUtils.saveCoupon(getActivity(), fragment_basket_elements_edittext.getText().toString());
+                        PreferenceUtils.saveCoupon(getContext(), fragment_basket_elements_edittext.getText().toString());
                         fragment_basket_elements_edittext.setText("");
-                        Toasty.success(getActivity(), "مبروك", Toast.LENGTH_LONG).show();
+                        Toasty.success(getContext(), "مبروك", Toast.LENGTH_LONG).show();
                     }
                     reloadDialog.dismiss();
                 }
 
                 @Override
                 public void onFailure(Call<GetCheckCouponResponse> call, Throwable t) {
-                    Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                    Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                     reloadDialog.dismiss();
                 }
             });
@@ -139,7 +143,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
     }
 
     public void initializeRecycler() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         fragment_basket_elements_recycler.setLayoutManager(layoutManager);
         fragment_basket_elements_recycler.setItemAnimator(new DefaultItemAnimator());
 
@@ -155,17 +159,17 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
     public static String taxString;
 
     public void onLoadPage() {
-        if (PreferenceUtils.getUserLogin(getActivity())) {
-            token = PreferenceUtils.getUserToken(getActivity());
-        } else if (PreferenceUtils.getCompanyLogin(getActivity())) {
-            token = PreferenceUtils.getCompanyToken(getActivity());
+        if (PreferenceUtils.getUserLogin(getContext())) {
+            token = PreferenceUtils.getUserToken(getContext());
+        } else if (PreferenceUtils.getCompanyLogin(getContext())) {
+            token = PreferenceUtils.getCompanyToken(getContext());
         }
         reloadDialog.show();
         basketProducts = new ArrayList<>();
         BasketProductsApi basketProductsApi = APIClient.getClient(SERVER_API_TEST).create(BasketProductsApi.class);
         Call<GetBasketProducts> getBasketProductsCall;
         Call<GetBasketCompanyProducts> getBasketProductsCompanyCall;
-        if (PreferenceUtils.getCompanyLogin(getActivity())) {
+        if (PreferenceUtils.getCompanyLogin(getContext())) {
             getBasketProductsCompanyCall = basketProductsApi.getBasketProductscompany(token);
             getBasketProductsCompanyCall.enqueue(new Callback<GetBasketCompanyProducts>() {
                 @Override
@@ -205,6 +209,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                             }
                         }
                     }
+
                     if (basketProducts.size() == 0) {
                         fragment_basket_elements_recycler_noitems.setVisibility(View.VISIBLE);
                         fragment_basket_paying.setVisibility(View.GONE);
@@ -216,24 +221,19 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                     double total_without_tax = Double.parseDouble(getBasketProducts.getOrderTotalPrice());
                     double tax = (Double.parseDouble(getBasketProducts.getOrderTotalPrice()) * 5) / 100;
                     double total_price = Double.parseDouble(getBasketProducts.getOrderTotalPrice()) + tax;
-                    basketElementsAdapter = new BasketElementsAdapter(getActivity(), basketProducts);
-                    basketElementsAdapter.setBasketOperation(BasketFragment.this);
-                    fragment_basket_elements_recycler.setAdapter(basketElementsAdapter);
 
-                    totalString = PriceFormatter.toDecimalRsString(total_price, getActivity().getApplicationContext());
-                    totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getActivity().getApplicationContext());
-                    taxString = PriceFormatter.toDecimalRsString(tax, getActivity().getApplicationContext());
+                    totalString = PriceFormatter.toDecimalRsString(total_price, getContext());
+                    totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getContext());
+                    taxString = PriceFormatter.toDecimalRsString(tax, getContext());
 
-                    fragment_basket_total_price_products_text.setText(totalwithoutString);
-                    fragment_basket_tax_text.setText(taxString);
-                    fragment_basket_total_price_text.setText(totalString);
+                    updateUI();
 
                     reloadDialog.dismiss();
                 }
 
                 @Override
                 public void onFailure(Call<GetBasketCompanyProducts> call, Throwable t) {
-                    Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                    Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                     reloadDialog.dismiss();
                 }
             });
@@ -291,29 +291,39 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                         double tax = (Double.parseDouble(getBasketProducts.getTotal()) * 5) / 100;
                         double total_price = Double.parseDouble(getBasketProducts.getTotal()) + tax;
 
-                        basketElementsAdapter = new BasketElementsAdapter(getActivity(), basketProducts);
-                        basketElementsAdapter.setBasketOperation(BasketFragment.this);
-                        fragment_basket_elements_recycler.setAdapter(basketElementsAdapter);
+                        totalString = PriceFormatter.toDecimalRsString(total_price, getContext());
+                        totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getContext());
+                        taxString = PriceFormatter.toDecimalRsString(tax, getContext());
 
-                        totalString = PriceFormatter.toDecimalRsString(total_price, getActivity().getApplicationContext());
-                        totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getActivity().getApplicationContext());
-                        taxString = PriceFormatter.toDecimalRsString(tax, getActivity().getApplicationContext());
-
-                        fragment_basket_total_price_products_text.setText(totalwithoutString);
-                        fragment_basket_tax_text.setText(taxString);
-                        fragment_basket_total_price_text.setText(totalString);
+                       updateUI();
                     }
                     reloadDialog.dismiss();
                 }
 
                 @Override
                 public void onFailure(Call<GetBasketProducts> call, Throwable t) {
-                    Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                    Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                     reloadDialog.dismiss();
                 }
             });
         }
 
+    }
+
+    private void updateUI() {
+        if (basketProducts.size() == 0) {
+            fragment_basket_elements_recycler_noitems.setVisibility(View.VISIBLE);
+            fragment_basket_paying.setVisibility(View.GONE);
+            fragment_basket_edittext_linear.setVisibility(View.GONE);
+        } else {
+            basketElementsAdapter = new BasketElementsAdapter(getContext(), basketProducts);
+            basketElementsAdapter.setBasketOperation(BasketFragment.this);
+            fragment_basket_elements_recycler.setAdapter(basketElementsAdapter);
+
+            fragment_basket_total_price_products_text.setText(totalwithoutString);
+            fragment_basket_tax_text.setText(taxString);
+            fragment_basket_total_price_text.setText(totalString);
+        }
     }
 
     @Override
@@ -322,7 +332,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                ((MainActivity)getActivity()).navigateToHomeFragment();
+                ((MainActivity) getContext()).navigateToHomeFragment();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
@@ -333,7 +343,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
         int id = v.getId();
         switch (id) {
             case R.id.fragment_basket_paying: {
-                startActivity(new Intent(getActivity(), PaymentActivity.class));
+                startActivity(new Intent(getContext(), PaymentActivity.class));
                 break;
             }
         }
@@ -342,7 +352,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
     Dialog reloadDialog;
 
     private void showDialog() {
-        reloadDialog = new Dialog(getActivity());
+        reloadDialog = new Dialog(getContext());
         reloadDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         reloadDialog.setContentView(R.layout.reload_layout);
         reloadDialog.setCancelable(false);
@@ -361,8 +371,8 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
 
     @Override
     public void onClickBasketProduct(int id, int pos) {
-//        startActivity(new Intent(getActivity(), DetailItemFragment.class).putExtra("id", id));
-//        Animatoo.animateSwipeLeft(getActivity());
+//        startActivity(new Intent(getContext(), DetailItemFragment.class).putExtra("id", id));
+//        Animatoo.animateSwipeLeft(getContext());
         Bundle bundle = new Bundle();
         bundle.putInt("id", id);
         bundle.putInt("pos", pos);
@@ -374,7 +384,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
 
     @Override
     public void onChangeQuantity(int id, int pos, int cart_id) {
-        changeQuantity = new Dialog(getActivity());
+        changeQuantity = new Dialog(getContext());
         changeQuantity.requestWindowFeature(Window.FEATURE_NO_TITLE);
         changeQuantity.setContentView(R.layout.dialog_change_quantity);
         changeQuantity.setCancelable(false);
@@ -396,7 +406,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                     reloadDialog.show();
                     ChangeQuantityApi changeQuantityApi = APIClient.getClient(SERVER_API_TEST).create(ChangeQuantityApi.class);
                     Call<GetChangeQuantityResponse> getChangeQuantityResponseCall;
-                    if (PreferenceUtils.getCompanyLogin(getActivity())) {
+                    if (PreferenceUtils.getCompanyLogin(getContext())) {
                         post.put("cart_id", cart_id + "");
                         getChangeQuantityResponseCall = changeQuantityApi.getChangeQuantitycompany(post);
                     } else {
@@ -413,14 +423,14 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                                     double total_without_tax = Double.parseDouble(changeQuantityResponse.getTotal_price());
                                     double tax = (Double.parseDouble(changeQuantityResponse.getTotal_price()) * 5) / 100;
                                     double total_price = Double.parseDouble(changeQuantityResponse.getTotal_price()) + tax;
-                                    totalString = PriceFormatter.toDecimalRsString(total_price, getActivity().getApplicationContext());
-                                    totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getActivity().getApplicationContext());
-                                    taxString = PriceFormatter.toDecimalRsString(tax, getActivity().getApplicationContext());
+                                    totalString = PriceFormatter.toDecimalRsString(total_price, getContext());
+                                    totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getContext());
+                                    taxString = PriceFormatter.toDecimalRsString(tax, getContext());
                                     fragment_basket_total_price_text.setText(totalString);
                                     fragment_basket_total_price_products_text.setText(totalwithoutString);
                                     fragment_basket_tax_text.setText(taxString);
 
-                                    Toasty.success(getActivity(), changeQuantityResponse.getSuccessMessage(), Toast.LENGTH_LONG).show();
+                                    Toasty.success(getContext(), changeQuantityResponse.getSuccessMessage(), Toast.LENGTH_LONG).show();
                                     BasketProducts basketProductsModel = basketProducts.get(pos);
                                     basketProductsModel.setItem_count(changeQuantityResponse.getProdcutQuantity());
                                     basketProducts.set(pos, basketProductsModel);
@@ -429,7 +439,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                                     reloadDialog.dismiss();
                                     changeQuantity.dismiss();
                                 } else {
-                                    Toasty.error(getActivity(), changeQuantityResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                    Toasty.error(getContext(), changeQuantityResponse.getMessage(), Toast.LENGTH_LONG).show();
                                     reloadDialog.dismiss();
                                 }
                             }
@@ -437,7 +447,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
 
                         @Override
                         public void onFailure(Call<GetChangeQuantityResponse> call, Throwable t) {
-                            Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                            Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                             reloadDialog.dismiss();
                         }
                     });
@@ -465,7 +475,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
         reloadDialog.show();
         DeleteBasketAPI deleteBasketAPI = APIClient.getClient(SERVER_API_TEST).create(DeleteBasketAPI.class);
         Call<DeleteBasketResponse> deleteBasketResponseCall;
-        if (PreferenceUtils.getCompanyLogin(getActivity())) {
+        if (PreferenceUtils.getCompanyLogin(getContext())) {
             deleteBasketResponseCall = deleteBasketAPI.deleteBasketProductcompany(String.valueOf(id), token);
         } else {
             deleteBasketResponseCall = deleteBasketAPI.deleteBasketProduct(String.valueOf(id), token);
@@ -481,15 +491,15 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                     double total_price = responseBody.getData().getOrderTotalPrice();
                     double total_without_tax = responseBody.getData().getOrderTotalPrice() - ((responseBody.getData().getOrderTotalPrice() * 5) / 100);
                     double tax = (responseBody.getData().getOrderTotalPrice() * 5) / 100;
-                    totalString = PriceFormatter.toDecimalRsString(total_price, getActivity().getApplicationContext());
-                    totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getActivity().getApplicationContext());
-                    taxString = PriceFormatter.toDecimalRsString(tax, getActivity().getApplicationContext());
+                    totalString = PriceFormatter.toDecimalRsString(total_price, getContext());
+                    totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getContext());
+                    taxString = PriceFormatter.toDecimalRsString(tax, getContext());
                     fragment_basket_total_price_text.setText(totalString);
                     fragment_basket_total_price_products_text.setText(totalwithoutString);
                     fragment_basket_tax_text.setText(taxString);
 
                     PreferenceUtils.saveCountOfItemsBasket(getContext().getApplicationContext(), responseBody.getData().getAllCartItemsCount());
-                    Toasty.success(getActivity(), getString(R.string.delete_cart_toast), Toast.LENGTH_LONG).show();
+                    Toasty.success(getContext(), getString(R.string.delete_cart_toast), Toast.LENGTH_LONG).show();
                     if (responseBody.getData().getAllCartItemsCount() == 0) {
                         fragment_basket_elements_recycler_noitems.setVisibility(View.VISIBLE);
                         fragment_basket_paying.setVisibility(View.GONE);
@@ -502,7 +512,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
 
             @Override
             public void onFailure(Call<DeleteBasketResponse> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });

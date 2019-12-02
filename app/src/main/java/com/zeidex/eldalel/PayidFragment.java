@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,16 +21,19 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
+import com.zeidex.eldalel.response.GetBookingResponse;
 import com.zeidex.eldalel.response.GetBranches;
 import com.zeidex.eldalel.response.GetCountries;
 import com.zeidex.eldalel.response.GetMakeOrderResponse;
 import com.zeidex.eldalel.response.GetProfileInfo;
 import com.zeidex.eldalel.response.GetRegions;
+import com.zeidex.eldalel.services.BookingResponse;
 import com.zeidex.eldalel.services.BranchesApi;
 import com.zeidex.eldalel.services.CountriesApi;
 import com.zeidex.eldalel.services.MakeOrderApi;
@@ -136,6 +142,12 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.fragment_payid_total_price_text)
     AppCompatTextView fragment_payid_total_price_text;
 
+    @BindView(R.id.payment_webview)
+    WebView payment_webview;
+
+    @BindView(R.id.payment_contain)
+    ConstraintLayout payment_contain;
+
     int shipment_type = 1;
     int shipment_method = 0;
     int address_id = ShoopingListAddressesFragment.address_id;
@@ -157,7 +169,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         showDialog();
-        if (PreferenceUtils.getCompanyLogin(getActivity())) {
+        if (PreferenceUtils.getCompanyLogin(getContext())) {
             fragment_payid_linear_methods.setVisibility(View.GONE);
             fragment_payid_total_products_text.setText(total_products);
             fragment_payid_total_price_text.setText(total_price);
@@ -190,16 +202,16 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             fragment_payid_paying.setOnClickListener(this);
             shipment_to_address.setSelected(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                shipment_from_branch_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_company_unchecked));
-                shipment_to_address_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shipped_car_checked));
+                shipment_from_branch_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_company_unchecked));
+                shipment_to_address_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_shipped_car_checked));
 
             } else {
                 shipment_to_address_img.setImageResource(R.drawable.ic_shipped_car_checked);
                 shipment_from_branch_img.setImageResource(R.drawable.ic_company_unchecked);
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                shipment_to_address_txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
-                shipment_from_branch_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
+                shipment_to_address_txt.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+                shipment_from_branch_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
             } else {
                 shipment_to_address_txt.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
                 shipment_from_branch_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
@@ -219,8 +231,8 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             payment_post.put("subsidiary_id", String.valueOf(id_region));
             payment_post.put("showroom_id", String.valueOf(id_branch));
         }
-        if (!PreferenceUtils.getCoupoun(getActivity()).equalsIgnoreCase("")) {
-            payment_post.put("coupon", PreferenceUtils.getCoupoun(getActivity()));
+        if (!PreferenceUtils.getCoupoun(getContext()).equalsIgnoreCase("")) {
+            payment_post.put("coupon", PreferenceUtils.getCoupoun(getContext()));
         }
     }
 
@@ -229,9 +241,18 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         payment_post.put("payment_type", String.valueOf(shipment_method));
         payment_post.put("language", lang);
         payment_post.put("token", token);
-        if (!PreferenceUtils.getCoupoun(getActivity()).equalsIgnoreCase("")) {
-            payment_post.put("coupon", PreferenceUtils.getCoupoun(getActivity()));
+        if (!PreferenceUtils.getCoupoun(getContext()).equalsIgnoreCase("")) {
+            payment_post.put("coupon", PreferenceUtils.getCoupoun(getContext()));
         }
+    }
+
+    Map<String, String> payment_post_response;
+    String booking_id;
+
+    private void convertDaraToJsonpayment() {
+        payment_post_response = new HashMap<>();
+        payment_post_response.put("token", token);
+        payment_post_response.put("p_id", booking_id);
     }
 
     String lang;
@@ -243,7 +264,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         switch (id) {
             case R.id.fragment_payid_paying: {
                 if (shipment_method == 0) {
-                    Toasty.error(getActivity(), getString(R.string.choose_payment_method), Toast.LENGTH_LONG).show();
+                    Toasty.error(getContext(), getString(R.string.choose_payment_method), Toast.LENGTH_LONG).show();
                     return;
                 }
                 Locale locale = ChangeLang.getLocale(getContext().getResources());
@@ -253,34 +274,33 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                 } else if (loo.equalsIgnoreCase("en")) {
                     lang = "english";
                 }
-                if (PreferenceUtils.getCompanyLogin(getActivity())) {
-                    token = PreferenceUtils.getCompanyToken(getActivity());
+                if (PreferenceUtils.getCompanyLogin(getContext())) {
+                    token = PreferenceUtils.getCompanyToken(getContext());
                     convertDaraToJsonCompany();
-                } else if (PreferenceUtils.getUserLogin(getActivity())) {
-                    token = PreferenceUtils.getUserToken(getActivity());
+                } else if (PreferenceUtils.getUserLogin(getContext())) {
+                    token = PreferenceUtils.getUserToken(getContext());
                     if (shipment_type == 2) {
                         if (id_country == -1) {
-                            Toasty.error(getActivity(), getString(R.string.choose_country), Toast.LENGTH_LONG).show();
+                            Toasty.error(getContext(), getString(R.string.choose_country), Toast.LENGTH_LONG).show();
                             return;
                         }
 
                         if (id_region == -1) {
-                            Toasty.error(getActivity(), getString(R.string.choose_region), Toast.LENGTH_LONG).show();
+                            Toasty.error(getContext(), getString(R.string.choose_region), Toast.LENGTH_LONG).show();
                             return;
                         }
 
                         if (id_branch == -1) {
-                            Toasty.error(getActivity(), getString(R.string.choose_branch), Toast.LENGTH_LONG).show();
+                            Toasty.error(getContext(), getString(R.string.choose_branch), Toast.LENGTH_LONG).show();
                             return;
                         }
                     }
                     convertDaraToJson();
                 }
-
                 reloadDialog.show();
                 MakeOrderApi makeOrderApi = APIClient.getClient(SERVER_API_TEST).create(MakeOrderApi.class);
                 Call<GetMakeOrderResponse> getMakeOrderResponseCall;
-                if (PreferenceUtils.getCompanyLogin(getActivity())) {
+                if (PreferenceUtils.getCompanyLogin(getContext())) {
                     getMakeOrderResponseCall = makeOrderApi.makeOrderResponsecompany(payment_post);
                 } else {
                     getMakeOrderResponseCall = makeOrderApi.makeOrderResponse(payment_post);
@@ -290,25 +310,93 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onResponse(Call<GetMakeOrderResponse> call, Response<GetMakeOrderResponse> response) {
                         GetMakeOrderResponse getMakeOrderResponse = response.body();
-                        if (getMakeOrderResponse.getSuccess() != null) {
-                            if (getMakeOrderResponse.getSuccess().equalsIgnoreCase("true")) {
-                                ((PaymentActivity) getActivity()).goToOrderFragment();
-                                PreferenceUtils.saveCoupon(getActivity(), "");
-                                PreferenceUtils.saveCountOfItemsBasket(getActivity(), 0);
-                            } else {
-                                Toasty.error(getActivity(), getMakeOrderResponse.getErroe(), Toast.LENGTH_LONG).show();
 
+                        if (getMakeOrderResponse.isSuccess()) {
+                            if (shipment_method == 1) {
+                                payment_webview.setVisibility(View.VISIBLE);
+                                payment_contain.setVisibility(View.GONE);
+                                booking_id = getMakeOrderResponse.getP_id();
+                                WebSettings webSetting = payment_webview.getSettings();
+                                webSetting.setBuiltInZoomControls(true);
+                                payment_webview.setWebViewClient(new WebViewClient() {
+                                    @Override
+                                    public void onPageFinished(WebView view, String url) {
+                                        reloadDialog.dismiss();
+                                        if (url.contains("payment-page")) {
+                                            convertDaraToJsonpayment();
+                                            BookingResponse bookingResponse1 = APIClient.getClient(SERVER_API_TEST).create(BookingResponse.class);
+                                            Call<GetBookingResponse> getBookingResponseCall;
+                                            if (PreferenceUtils.getCompanyLogin(getContext())) {
+                                                getBookingResponseCall = bookingResponse1.getBooking(payment_post_response);
+                                            } else {
+                                                getBookingResponseCall = bookingResponse1.getBookingCompany(payment_post_response);
+                                            }
+
+                                            getBookingResponseCall.enqueue(new Callback<GetBookingResponse>() {
+                                                @Override
+                                                public void onResponse(Call<GetBookingResponse> call, Response<GetBookingResponse> response) {
+                                                    GetBookingResponse getBookingResponse = response.body();
+                                                    if (getBookingResponse.isSuccess()) {
+                                                        payment_webview.setVisibility(View.GONE);
+                                                        payment_contain.setVisibility(View.VISIBLE);
+                                                        ((PaymentActivity) getContext()).goToOrderFragment();
+                                                        PreferenceUtils.saveCoupon(getContext(), "");
+                                                        PreferenceUtils.saveCountOfItemsBasket(getContext(), 0);
+                                                    } else {
+                                                        payment_webview.setVisibility(View.GONE);
+                                                        payment_contain.setVisibility(View.VISIBLE);
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<GetBookingResponse> call, Throwable t) {
+                                                    Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                                                    reloadDialog.dismiss();
+                                                }
+                                            });
+                                        }
+                                        super.onPageFinished(view, url);
+                                    }
+
+                                    @Override
+                                    public void onLoadResource(WebView view, String url) {
+                                        // TODO Auto-generated method stub
+                                        super.onLoadResource(view, url);
+                                    }
+
+                                    @Override
+                                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                                        System.out.println("when you click on any interlink on webview that time you got url :-" + url);
+                                        return super.shouldOverrideUrlLoading(view, url);
+                                    }
+                                });
+                                webSetting.setJavaScriptEnabled(true);
+
+                                payment_webview.loadUrl(getMakeOrderResponse.getPayment_url());
+                            } else {
+                                reloadDialog.dismiss();
+                                payment_webview.setVisibility(View.GONE);
+                                ((PaymentActivity) getContext()).goToOrderFragment();
+                                PreferenceUtils.saveCoupon(getContext(), "");
+                                PreferenceUtils.saveCountOfItemsBasket(getContext(), 0);
                             }
+
+
                         } else {
-                            Toasty.error(getActivity(), getMakeOrderResponse.getErroe(), Toast.LENGTH_LONG).show();
+                            Toasty.error(getContext(), getMakeOrderResponse.getErroe(), Toast.LENGTH_LONG).show();
                             onLoadProfile();
+                            reloadDialog.dismiss();
                         }
-                        reloadDialog.dismiss();
+//                        } else {
+//                            Toasty.error(getContext(), getMakeOrderResponse.getErroe(), Toast.LENGTH_LONG).show();
+//                            onLoadProfile();
+//                        }
+
                     }
 
                     @Override
                     public void onFailure(Call<GetMakeOrderResponse> call, Throwable t) {
-                        Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                        Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                         reloadDialog.dismiss();
                     }
                 });
@@ -318,7 +406,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             }
         }
     }
+
     String mobile;
+
     private void onLoadProfile() {
         reloadDialog.show();
         ProfileInfoApi profileInfoApi = APIClient.getClient(SERVER_API_TEST).create(ProfileInfoApi.class);
@@ -331,7 +421,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                 mobile = getProfileInfo.getMobile();
                 Fragment fragment = new PaymentPhoneNumberFragment();
                 Bundle args = new Bundle();
-                args.putString("mobile",mobile);
+                args.putString("mobile", mobile);
                 args.putString("from", "pay");
                 fragment.setArguments(args);
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -355,16 +445,16 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         shipment_to_address.setSelected(false);
         fragment_payid_linear_options_branches.setVisibility(View.VISIBLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            shipment_from_branch_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_company));
-            shipment_to_address_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shipped_car));
+            shipment_from_branch_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_company));
+            shipment_to_address_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_shipped_car));
 
         } else {
             shipment_to_address_img.setImageResource(R.drawable.ic_shipped_car);
             shipment_from_branch_img.setImageResource(R.drawable.ic_company);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            shipment_to_address_txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorshipmenttype));
-            shipment_from_branch_txt.setTextColor(getActivity().getColor(R.color.colorPrimaryDark));
+            shipment_to_address_txt.setTextColor(ContextCompat.getColor(getContext(), R.color.colorshipmenttype));
+            shipment_from_branch_txt.setTextColor(getContext().getColor(R.color.colorPrimaryDark));
         } else {
             shipment_to_address_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             shipment_from_branch_txt.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
@@ -380,16 +470,16 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         fragment_payid_linear_options_branches.setVisibility(View.GONE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            shipment_from_branch_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_company_unchecked));
-            shipment_to_address_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shipped_car_checked));
+            shipment_from_branch_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_company_unchecked));
+            shipment_to_address_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_shipped_car_checked));
 
         } else {
             shipment_to_address_img.setImageResource(R.drawable.ic_shipped_car_checked);
             shipment_from_branch_img.setImageResource(R.drawable.ic_company_unchecked);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            shipment_to_address_txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
-            shipment_from_branch_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
+            shipment_to_address_txt.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+            shipment_from_branch_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
         } else {
             shipment_to_address_txt.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
             shipment_from_branch_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
@@ -404,9 +494,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         pay_on_arrive_payment.setSelected(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            credit_card_payment_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_credit_card_check));
-            bank_payment_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_bank_pay));
-            pay_on_arrive_payment_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_pay_on_arrive));
+            credit_card_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_credit_card_check));
+            bank_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bank_pay));
+            pay_on_arrive_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_pay_on_arrive));
 
         } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_credit_card_check);
@@ -415,9 +505,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            credit_card_payment_imgcheck.setImageDrawable(getActivity().getDrawable(R.drawable.ic_checked_payment));
-            bank_payment_imgcheck.setImageDrawable(getActivity().getDrawable(R.drawable.ic_unchecked_pay_method));
-            pay_on_arrive_payment_imgcheck.setImageDrawable(getActivity().getDrawable(R.drawable.ic_unchecked_pay_method));
+            credit_card_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_checked_payment));
+            bank_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_pay_method));
+            pay_on_arrive_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_pay_method));
 
         } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_checked_payment);
@@ -425,9 +515,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             pay_on_arrive_payment_imgcheck.setImageResource(R.drawable.ic_unchecked_pay_method);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            credit_card_payment_txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.white_color));
-            bank_payment_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
-            pay_on_arrive_payment_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
+            credit_card_payment_txt.setTextColor(ContextCompat.getColor(getContext(), R.color.white_color));
+            bank_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
+            pay_on_arrive_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
         } else {
             credit_card_payment_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
             bank_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
@@ -443,9 +533,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         pay_on_arrive_payment.setSelected(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            credit_card_payment_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_credit_card));
-            bank_payment_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_bank_pay_checked));
-            pay_on_arrive_payment_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_pay_on_arrive));
+            credit_card_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_credit_card));
+            bank_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bank_pay_checked));
+            pay_on_arrive_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_pay_on_arrive));
 
         } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_credit_card);
@@ -454,9 +544,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            credit_card_payment_imgcheck.setImageDrawable(getActivity().getDrawable(R.drawable.ic_unchecked_payment));
-            bank_payment_imgcheck.setImageDrawable(getActivity().getDrawable(R.drawable.ic_checked_payment));
-            pay_on_arrive_payment_imgcheck.setImageDrawable(getActivity().getDrawable(R.drawable.ic_unchecked_pay_method));
+            credit_card_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_payment));
+            bank_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_checked_payment));
+            pay_on_arrive_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_pay_method));
 
         } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_unchecked_pay_method);
@@ -464,9 +554,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             pay_on_arrive_payment_imgcheck.setImageResource(R.drawable.ic_unchecked_pay_method);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            credit_card_payment_txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorshipmenttype));
-            bank_payment_txt.setTextColor(getActivity().getColor(R.color.white_color));
-            pay_on_arrive_payment_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
+            credit_card_payment_txt.setTextColor(ContextCompat.getColor(getContext(), R.color.colorshipmenttype));
+            bank_payment_txt.setTextColor(getContext().getColor(R.color.white_color));
+            pay_on_arrive_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
         } else {
             credit_card_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             bank_payment_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
@@ -482,9 +572,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         pay_on_arrive_payment.setSelected(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            credit_card_payment_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_credit_card));
-            bank_payment_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_bank_pay));
-            pay_on_arrive_payment_img.setImageDrawable(getActivity().getDrawable(R.drawable.ic_pay_on_arrive_checked));
+            credit_card_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_credit_card));
+            bank_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bank_pay));
+            pay_on_arrive_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_pay_on_arrive_checked));
 
         } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_credit_card);
@@ -493,9 +583,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            credit_card_payment_imgcheck.setImageDrawable(getActivity().getDrawable(R.drawable.ic_unchecked_payment));
-            bank_payment_imgcheck.setImageDrawable(getActivity().getDrawable(R.drawable.ic_unchecked_payment));
-            pay_on_arrive_payment_imgcheck.setImageDrawable(getActivity().getDrawable(R.drawable.ic_checked_payment));
+            credit_card_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_payment));
+            bank_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_payment));
+            pay_on_arrive_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_checked_payment));
 
         } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_unchecked_pay_method);
@@ -503,9 +593,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             pay_on_arrive_payment_imgcheck.setImageResource(R.drawable.ic_checked_payment);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            credit_card_payment_txt.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorshipmenttype));
-            bank_payment_txt.setTextColor(getActivity().getColor(R.color.colorshipmenttype));
-            pay_on_arrive_payment_txt.setTextColor(getActivity().getColor(R.color.white_color));
+            credit_card_payment_txt.setTextColor(ContextCompat.getColor(getContext(), R.color.colorshipmenttype));
+            bank_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
+            pay_on_arrive_payment_txt.setTextColor(getContext().getColor(R.color.white_color));
         } else {
             credit_card_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             bank_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
@@ -563,7 +653,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onFailure(Call<GetCountries> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -618,7 +708,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onFailure(Call<GetRegions> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -670,7 +760,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onFailure(Call<GetBranches> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -693,7 +783,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
     Dialog reloadDialog;
 
     private void showDialog() {
-        reloadDialog = new Dialog(getActivity());
+        reloadDialog = new Dialog(getContext());
         reloadDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         reloadDialog.setContentView(R.layout.reload_layout);
         reloadDialog.setCancelable(false);

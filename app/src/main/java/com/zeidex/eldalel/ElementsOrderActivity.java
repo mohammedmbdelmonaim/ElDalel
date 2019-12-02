@@ -72,7 +72,7 @@ public class ElementsOrderActivity extends BaseActivity implements ElementsOrder
 
     double price_with_tax;
     double price;
-    double total_tax;
+    double total_without_tax;
 
     public void onLoadShipments() {
         reloadDialog.show();
@@ -100,15 +100,15 @@ public class ElementsOrderActivity extends BaseActivity implements ElementsOrder
 //                }
                 for (int i = 0; i < orders.size(); i++) {
 //                    price += orders.get(i).getProductPrice();
-                    price_with_tax += orders.get(i).getTotalPriceWithTax();
+                    total_without_tax += orders.get(i).getTotalPriceWithTax();
                 }
 
+                double tax = (total_without_tax * 5)/100;
+                double total_with_tax = total_without_tax + tax ;
 
-                double total_without_tax = price_with_tax - ((price_with_tax * 5)/100);
-                double tax = (price_with_tax * 5)/100;
-                String totalString = PriceFormatter.toDecimalRsString(price_with_tax, ElementsOrderActivity.this.getApplicationContext());
-                String totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, ElementsOrderActivity.this.getApplicationContext());
-                String taxString = PriceFormatter.toDecimalRsString(tax, ElementsOrderActivity.this.getApplicationContext());
+                String totalString = PriceFormatter.toDecimalRsString(total_with_tax, ElementsOrderActivity.this);
+                String totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, ElementsOrderActivity.this);
+                String taxString = PriceFormatter.toDecimalRsString(tax, ElementsOrderActivity.this);
                 activity_elemetnts_orders_total_price_products_text.setText(totalwithoutString);
 
                 activity_elemetnts_orders_tax_text.setText(taxString);

@@ -37,7 +37,7 @@ public class AccountFragment extends androidx.fragment.app.Fragment implements V
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                ((MainActivity)getActivity()).navigateToHomeFragment();
+                ((MainActivity)getContext()).navigateToHomeFragment();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
@@ -63,13 +63,13 @@ public class AccountFragment extends androidx.fragment.app.Fragment implements V
         int id = v.getId();
         switch (id){
             case R.id.fragment_account_login_linear:{
-                startActivity(new Intent(getActivity() , LoginActivity.class));
-                Animatoo.animateSwipeLeft(getActivity());
+                startActivity(new Intent(getContext() , LoginActivity.class));
+                Animatoo.animateSwipeLeft(getContext());
                 break;
             }
             case R.id.fragment_account_Register_linear:{
-                startActivity(new Intent(getActivity() , RegisterActivity.class));
-                Animatoo.animateSwipeLeft(getActivity());
+                startActivity(new Intent(getContext() , RegisterActivity.class));
+                Animatoo.animateSwipeLeft(getContext());
                 break;
             }
         }

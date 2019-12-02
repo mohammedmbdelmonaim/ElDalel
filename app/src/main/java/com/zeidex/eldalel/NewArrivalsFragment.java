@@ -69,7 +69,7 @@ public class NewArrivalsFragment extends androidx.fragment.app.Fragment implemen
     }
 
     private void initializeRecycler() {
-        new_arrival_recycler.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        new_arrival_recycler.setLayoutManager(new GridLayoutManager(getContext(), 3));
         new_arrival_recycler.setItemAnimator(new DefaultItemAnimator());
     }
 
@@ -87,7 +87,7 @@ public class NewArrivalsFragment extends androidx.fragment.app.Fragment implemen
                 int code = response.body().getCode();
                 if (code == 200) {
                     categories = response.body().getData().getCategories();
-                    newArrivalsCategoriesAdapter = new NewArrivalsCategoriesAdapter(getActivity(), categories);
+                    newArrivalsCategoriesAdapter = new NewArrivalsCategoriesAdapter(getContext(), categories);
                     newArrivalsCategoriesAdapter.setCategoryOperation(NewArrivalsFragment.this);
                     new_arrival_recycler.setAdapter(newArrivalsCategoriesAdapter);
                 }
@@ -96,14 +96,14 @@ public class NewArrivalsFragment extends androidx.fragment.app.Fragment implemen
 
             @Override
             public void onFailure(Call<GetOffersCategories> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
     }
 
     private void showDialog() {
-        reloadDialog = new Dialog(getActivity());
+        reloadDialog = new Dialog(getContext());
         reloadDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         reloadDialog.setContentView(R.layout.reload_layout);
         reloadDialog.setCancelable(false);
@@ -113,7 +113,7 @@ public class NewArrivalsFragment extends androidx.fragment.app.Fragment implemen
     @Override
     public void onClickCategory(int position) {
         subsubcategories = new ArrayList<>();
-        Intent intent = new Intent(getActivity(), NewArrivalSubcategoriesActivity.class);
+        Intent intent = new Intent(getContext(), NewArrivalSubcategoriesActivity.class);
 
         GetOffersCategories.Category category = categories.get(position);
         List<GetOffersCategories.Subcategory> subCategories = category.getSubcategories();
@@ -139,6 +139,6 @@ public class NewArrivalsFragment extends androidx.fragment.app.Fragment implemen
         }
         intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, category.getId());
         startActivity(intent);
-        Animatoo.animateSwipeLeft(getActivity());
+        Animatoo.animateSwipeLeft(getContext());
     }
 }

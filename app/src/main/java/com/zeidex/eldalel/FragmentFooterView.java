@@ -69,7 +69,7 @@ package com.zeidex.eldalel;
 ////            homeItem.setChecked(true);
 ////
 ////        } else {
-////            getActivity().onBackPressed();
+////            getContext().onBackPressed();
 ////            Animatoo.animateSwipeRight(getContext());
 ////        }
 ////    }
@@ -120,7 +120,7 @@ package com.zeidex.eldalel;
 ////        updateToolbarText(item.getTitle());
 //
 //        if (frag != null) {
-//                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+//                FragmentTransaction ft = getContext().getSupportFragmentManager().beginTransaction();
 //                ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
 //                ft.replace(R.id.container_activity, frag, tag);
 //                ft.commit();

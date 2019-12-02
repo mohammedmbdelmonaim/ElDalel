@@ -407,7 +407,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                             }
 
                         }
-                        startActivity(new Intent(DetailItemActivity.this , OfferItemActivity.class).putExtra(CATEGORY_ID_INTENT_EXTRA_KEY,category_id).putExtra(CATEGORY_NAME_INTENT_EXTRA , category_name)
+                        startActivity(new Intent(DetailItemActivity.this , OffersItemsActivity.class).putExtra(CATEGORY_ID_INTENT_EXTRA_KEY,category_id).putExtra(CATEGORY_NAME_INTENT_EXTRA , category_name)
                                 .putExtra(SUBCATEGORIES_INTENT_EXTRA_KEY , subCategoriesModel));
                     }
                 }
@@ -421,11 +421,18 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
             }
         });
     }
-
+    String lang;
     public void getDetarServer(int id, boolean flag) {
+        Locale locale = ChangeLang.getLocale(getResources());
+        String loo = locale.getLanguage();
+        if (loo.equalsIgnoreCase("en")) {
+            lang = "en";
+        }else if (loo.equalsIgnoreCase("ar")) {
+            lang = "ar";
+        }
         images = new ArrayList<>();
         DetailProduct detailProduct = APIClient.getClient(SERVER_API_TEST).create(DetailProduct.class);
-        Call<GetDetailProduct> getDetailProductCall = detailProduct.getDetailProduct(id, token);
+        Call<GetDetailProduct> getDetailProductCall = detailProduct.getDetailProduct(id, token , lang);
         getDetailProductCall.enqueue(new Callback<GetDetailProduct>() {
             @Override
             public void onResponse(Call<GetDetailProduct> call, Response<GetDetailProduct> response) {
@@ -548,10 +555,17 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                             imageSlider.startAutoCycle();
                         }
 
-                        String alredy_like = getIntent().getStringExtra("getLike");
+//                        String alredy_like = getIntent().getStringExtra("getLike");
+//
+//                        if (alredy_like == null || alredy_like.equals("")) {
+//                        } else if (Integer.parseInt(alredy_like) == 1) {
+//                            detail_like_img.setChecked(true);
+//                        } else {
+//                            detail_like_img.setChecked(false);
+//                        }
 
-                        if (alredy_like == null || alredy_like.equals("")) {
-                        } else if (Integer.parseInt(alredy_like) == 1) {
+                        if (getDetailProduct.getData().getProduct().getFavorite() == null) {
+                        } else if (Integer.parseInt(getDetailProduct.getData().getProduct().getFavorite()) == 1) {
                             detail_like_img.setChecked(true);
                         } else {
                             detail_like_img.setChecked(false);

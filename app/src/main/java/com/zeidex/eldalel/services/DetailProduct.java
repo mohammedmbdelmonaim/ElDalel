@@ -10,5 +10,5 @@ import retrofit2.http.Query;
 public interface DetailProduct {
 
     @GET("product/{id}")
-    Call<GetDetailProduct> getDetailProduct(@Path("id") int id, @Query("token") String token);
+    Call<GetDetailProduct> getDetailProduct(@Path("id") int id, @Query("token") String token, @Query("lang") String lang);
 }

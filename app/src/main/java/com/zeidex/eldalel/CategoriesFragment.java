@@ -75,7 +75,7 @@ public class  CategoriesFragment extends androidx.fragment.app.Fragment {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                ((MainActivity)getActivity()).navigateToHomeFragment();
+                ((MainActivity)getContext()).navigateToHomeFragment();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
@@ -96,10 +96,10 @@ public class  CategoriesFragment extends androidx.fragment.app.Fragment {
     }
 
     private void findViews() {
-        if (PreferenceUtils.getCompanyLogin(getActivity())) {
-            token = PreferenceUtils.getCompanyToken(getActivity());
-        } else if (PreferenceUtils.getUserLogin(getActivity())) {
-            token = PreferenceUtils.getUserToken(getActivity());
+        if (PreferenceUtils.getCompanyLogin(getContext())) {
+            token = PreferenceUtils.getCompanyToken(getContext());
+        } else if (PreferenceUtils.getUserLogin(getContext())) {
+            token = PreferenceUtils.getUserToken(getContext());
         }
 
         cat_ids = new ArrayList<>();
@@ -113,7 +113,7 @@ public class  CategoriesFragment extends androidx.fragment.app.Fragment {
         fragment_categories_searchview.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                Intent intent = new Intent(getContext(), SearchActivity.class);
                 intent.putExtra(SEARCH_NAME_ARGUMENT, query);
                 startActivity(intent);
                 fragment_categories_searchview.onActionViewCollapsed(); //to close the searchview
@@ -161,7 +161,7 @@ public class  CategoriesFragment extends androidx.fragment.app.Fragment {
 
             @Override
             public void onFailure(Call<GetAllCategories> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -202,7 +202,7 @@ public class  CategoriesFragment extends androidx.fragment.app.Fragment {
     }
 
     private void showDialog() {
-        reloadDialog = new Dialog(getActivity());
+        reloadDialog = new Dialog(getContext());
         reloadDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         reloadDialog.setContentView(R.layout.reload_layout);
         reloadDialog.setCancelable(false);

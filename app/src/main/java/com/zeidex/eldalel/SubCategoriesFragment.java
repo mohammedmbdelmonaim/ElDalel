@@ -92,10 +92,10 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
             //If there are no subcategories, pass the category id to get the products based on it
 
             showCategoryCard(categoryId, categoryName);
-//            Intent intent = new Intent(getActivity(), ProductsActivity.class);
+//            Intent intent = new Intent(getContext(), ProductsActivity.class);
 //            intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
-//            getActivity().startActivity(intent);
-//            Animatoo.animateSwipeLeft(getActivity());
+//            getContext().startActivity(intent);
+//            Animatoo.animateSwipeLeft(getContext());
         }
     }
 
@@ -103,7 +103,7 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
         categoryCardText.setText(categoryName);
         String imageName = getArguments().getString(CATEGORY_IMAGE_NAME);
         if(imageName != null){
-            Glide.with(getActivity())
+            Glide.with(getContext())
                     .load("https://www.dleel-sh.com/homepages/get/" + imageName)
                     .placeholder(R.drawable.condition_logo)
                     .centerCrop()
@@ -114,21 +114,21 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-//                Intent intent = new Intent(getActivity(), ProductsActivity.class);
+//                Intent intent = new Intent(getContext(), ProductsActivity.class);
                 bundle.putInt(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
                 bundle.putString(CATEGORY_NAME_INTENT_EXTRA, categoryName);
                 NavHostFragment.findNavController(SubCategoriesFragment.this).navigate(R.id.action_categoriesFragment_to_productsActivity, bundle);
-//                getActivity().startActivity(intent);
-//                Animatoo.animateSwipeLeft(getActivity());
+//                getContext().startActivity(intent);
+//                Animatoo.animateSwipeLeft(getContext());
             }
         });
     }
 
     private void findViews() {
-        if (PreferenceUtils.getCompanyLogin(getActivity())) {
-            token = PreferenceUtils.getCompanyToken(getActivity());
-        } else if (PreferenceUtils.getUserLogin(getActivity())) {
-            token = PreferenceUtils.getUserToken(getActivity());
+        if (PreferenceUtils.getCompanyLogin(getContext())) {
+            token = PreferenceUtils.getCompanyToken(getContext());
+        } else if (PreferenceUtils.getUserLogin(getContext())) {
+            token = PreferenceUtils.getUserToken(getContext());
         }
 
         showDialog();
@@ -140,18 +140,18 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
     }
 
     public void initializeRecycler() {
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 3);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
         category_recycler_list.setLayoutManager(mLayoutManager);
         category_recycler_list.setItemAnimator(new DefaultItemAnimator());
 
-        subCategoryAdapter = new SubCategoriesAdapter(getActivity(), subCategories, false);
+        subCategoryAdapter = new SubCategoriesAdapter(getContext(), subCategories, false);
         subCategoryAdapter.setSubCategoryOperation(this);
         category_recycler_list.setAdapter(subCategoryAdapter);
 
     }
 
     private void showDialog() {
-        reloadDialog = new Dialog(getActivity());
+        reloadDialog = new Dialog(getContext());
         reloadDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         reloadDialog.setContentView(R.layout.reload_layout);
         reloadDialog.setCancelable(false);
@@ -161,22 +161,22 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
     @Override
     public void onClickSubCategory(int subCategoryId, String subCategoryName , int pos) {
         Bundle bundle = new Bundle();
-//        Intent intent = new Intent(getActivity(), ProductsActivity.class);
+//        Intent intent = new Intent(getContext(), ProductsActivity.class);
         bundle.putInt(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
         bundle.putInt(SUBCATEGORY_ID_EXTRA_KEY, subCategoryId);
         bundle.putString(SUBCATEGORY_NAME_EXTRA_KEY, subCategoryName);
         bundle.putString(CATEGORY_NAME_INTENT_EXTRA, categoryName);
         bundle.putInt("position", pos);
         bundle.putParcelableArrayList(SUBCATEGORY_ARRAY_EXTRA_KEY , subCategories);
-//        getActivity().startActivity(intent);
-//        Animatoo.animateSwipeLeft(getActivity());
+//        getContext().startActivity(intent);
+//        Animatoo.animateSwipeLeft(getContext());
         NavHostFragment.findNavController(this).navigate(R.id.action_categoriesFragment_to_productsActivity, bundle);
     }
 
     @Override
     public void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subCategoryName, int subcategoryId , int pos) {
         Bundle bundle = new Bundle();
-//        Intent intent = new Intent(getActivity(), ProductsActivity.class);
+//        Intent intent = new Intent(getContext(), ProductsActivity.class);
         bundle.putInt(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
         bundle.putInt(SUBCATEGORY_ID_EXTRA_KEY, subcategoryId);
         bundle.putString(SUBCATEGORY_NAME_EXTRA_KEY, subCategoryName);
@@ -185,7 +185,7 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
         bundle.putString(CATEGORY_NAME_INTENT_EXTRA, categoryName);
         bundle.putInt("position", pos);
         NavHostFragment.findNavController(this).navigate(R.id.action_categoriesFragment_to_productsActivity, bundle);
-//        getActivity().startActivity(intent);
-//        Animatoo.animateSwipeLeft(getActivity());
+//        getContext().startActivity(intent);
+//        Animatoo.animateSwipeLeft(getContext());
     }
 }

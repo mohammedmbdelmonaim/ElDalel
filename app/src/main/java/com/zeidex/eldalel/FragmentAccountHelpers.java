@@ -106,7 +106,7 @@ public class FragmentAccountHelpers extends Fragment implements View.OnClickList
 
     @OnClick(R.id.fragment_account_language_linear)
     public void chooseLanguage() {
-        changeLanguage = new Dialog(getActivity());
+        changeLanguage = new Dialog(getContext());
         changeLanguage.requestWindowFeature(Window.FEATURE_NO_TITLE);
         changeLanguage.setContentView(R.layout.dialog_change_language);
         changeLanguage.setCancelable(true);
@@ -126,15 +126,15 @@ public class FragmentAccountHelpers extends Fragment implements View.OnClickList
                 if (dialog_text_active_lang.getText().toString().equalsIgnoreCase(getString(R.string.radio_ar_register))) {
                     lang = "arabic";
                     fragment_account_helper_text.setText(getString(R.string.radio_ar_register));
-                    ChangeLang.setNewLocale(getActivity() , "ar");
-                    startActivity(new Intent(getActivity(), MainActivity.class));
-                    Animatoo.animateSwipeLeft(getActivity());
+                    ChangeLang.setNewLocale(getContext() , "ar");
+                    startActivity(new Intent(getContext(), MainActivity.class));
+                    Animatoo.animateSwipeLeft(getContext());
                 } else {
                     lang = "english";
                     fragment_account_helper_text.setText(getString(R.string.radio_en_register));
-                    ChangeLang.setNewLocale(getActivity() , "en");
-                    startActivity(new Intent(getActivity(), MainActivity.class));
-                    Animatoo.animateSwipeLeft(getActivity());
+                    ChangeLang.setNewLocale(getContext() , "en");
+                    startActivity(new Intent(getContext(), MainActivity.class));
+                    Animatoo.animateSwipeLeft(getContext());
                 }
                 changeLanguage.dismiss();
             }
@@ -146,15 +146,15 @@ public class FragmentAccountHelpers extends Fragment implements View.OnClickList
                 if (dialog_text_deactive_lang.getText().toString().equalsIgnoreCase(getString(R.string.radio_ar_register))) {
                     lang = "arabic";
                     fragment_account_helper_text.setText(getString(R.string.radio_ar_register));
-                    ChangeLang.setNewLocale(getActivity() , "ar");
-                    startActivity(new Intent(getActivity(), MainActivity.class));
-                    Animatoo.animateSwipeLeft(getActivity());
+                    ChangeLang.setNewLocale(getContext() , "ar");
+                    startActivity(new Intent(getContext(), MainActivity.class));
+                    Animatoo.animateSwipeLeft(getContext());
                 } else {
                     lang = "english";
                     fragment_account_helper_text.setText(getString(R.string.radio_en_register));
-                    ChangeLang.setNewLocale(getActivity() , "en");
-                    startActivity(new Intent(getActivity(), MainActivity.class));
-                    Animatoo.animateSwipeLeft(getActivity());
+                    ChangeLang.setNewLocale(getContext() , "en");
+                    startActivity(new Intent(getContext(), MainActivity.class));
+                    Animatoo.animateSwipeLeft(getContext());
                 }
                 changeLanguage.dismiss();
             }
@@ -167,49 +167,49 @@ public class FragmentAccountHelpers extends Fragment implements View.OnClickList
         int id = v.getId();
         switch (id) {
             case R.id.fragment_account_links_conditions_linear: {
-                startActivity(new Intent(getActivity(), ConditionsActivity.class));
-                Animatoo.animateSwipeLeft(getActivity());
+                startActivity(new Intent(getContext(), ConditionsActivity.class));
+                Animatoo.animateSwipeLeft(getContext());
                 break;
             }
 
             case R.id.fragment_account_links_privacy_linear: {
-                startActivity(new Intent(getActivity(), PrivacyActivity.class));
-                Animatoo.animateSwipeLeft(getActivity());
+                startActivity(new Intent(getContext(), PrivacyActivity.class));
+                Animatoo.animateSwipeLeft(getContext());
                 break;
             }
 
             case R.id.fragment_account_links_cancel_linear: {
-                startActivity(new Intent(getActivity(), CancelActivity.class));
-                Animatoo.animateSwipeLeft(getActivity());
+                startActivity(new Intent(getContext(), CancelActivity.class));
+                Animatoo.animateSwipeLeft(getContext());
                 break;
             }
 
             case R.id.fragment_account_links_exchange_linear: {
-                startActivity(new Intent(getActivity(), ExchangeActivity.class));
-                Animatoo.animateSwipeLeft(getActivity());
+                startActivity(new Intent(getContext(), ExchangeActivity.class));
+                Animatoo.animateSwipeLeft(getContext());
                 break;
             }
 
             case R.id.fragment_account_links_connect_linear: {
-                startActivity(new Intent(getActivity(), ConnectActivity.class));
-                Animatoo.animateSwipeLeft(getActivity());
+                startActivity(new Intent(getContext(), ConnectActivity.class));
+                Animatoo.animateSwipeLeft(getContext());
                 break;
             }
 
             case R.id.fragment_account_links_guarantee_linear: {
-                startActivity(new Intent(getActivity(), GuaranteeActivity.class));
-                Animatoo.animateSwipeLeft(getActivity());
+                startActivity(new Intent(getContext(), GuaranteeActivity.class));
+                Animatoo.animateSwipeLeft(getContext());
                 break;
             }
 
             case R.id.fragment_account_links_support_linear: {
-                startActivity(new Intent(getActivity(), SupportActivity.class));
-                Animatoo.animateSwipeLeft(getActivity());
+                startActivity(new Intent(getContext(), SupportActivity.class));
+                Animatoo.animateSwipeLeft(getContext());
                 break;
             }
             case R.id.fragment_account_contact_us_linear: {
-                startActivity(new Intent(getActivity(), ContactUsActivity.class));
-                Animatoo.animateSwipeLeft(getActivity());
+                startActivity(new Intent(getContext(), ContactUsActivity.class));
+                Animatoo.animateSwipeLeft(getContext());
                 break;
             }
         }

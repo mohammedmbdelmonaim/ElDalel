@@ -82,10 +82,10 @@ public class ProductsActivity extends Fragment {
     private void findViews() {
         categoryId = getArguments().getInt(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
         subCategoryId = getArguments().getInt(SUBCATEGORY_ID_EXTRA_KEY, -1);
-        if (PreferenceUtils.getCompanyLogin(getActivity())) {
-            token = PreferenceUtils.getCompanyToken(getActivity());
-        } else if (PreferenceUtils.getUserLogin(getActivity())) {
-            token = PreferenceUtils.getUserToken(getActivity());
+        if (PreferenceUtils.getCompanyLogin(getContext())) {
+            token = PreferenceUtils.getCompanyToken(getContext());
+        } else if (PreferenceUtils.getUserLogin(getContext())) {
+            token = PreferenceUtils.getUserToken(getContext());
         }
 
 //        titleHeaderText.setText(getArguments().getString(SUBCATEGORY_NAME_EXTRA_KEY));
@@ -93,7 +93,7 @@ public class ProductsActivity extends Fragment {
         search_header_categories_img.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                Intent intent = new Intent(getContext(), SearchActivity.class);
                 intent.putExtra(SEARCH_NAME_ARGUMENT, query);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
