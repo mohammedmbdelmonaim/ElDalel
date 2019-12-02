@@ -50,10 +50,10 @@ public class CategoryFragment extends Fragment /*implements CategoryAdapter.Cate
     }
 
     private void findViews() {
-        if (PreferenceUtils.getCompanyLogin(getActivity())) {
-            token = PreferenceUtils.getCompanyToken(getActivity());
-        } else if (PreferenceUtils.getUserLogin(getActivity())) {
-            token = PreferenceUtils.getUserToken(getActivity());
+        if (PreferenceUtils.getCompanyLogin(getContext())) {
+            token = PreferenceUtils.getCompanyToken(getContext());
+        } else if (PreferenceUtils.getUserLogin(getContext())) {
+            token = PreferenceUtils.getUserToken(getContext());
         }
 
         showDialog();
@@ -65,11 +65,11 @@ public class CategoryFragment extends Fragment /*implements CategoryAdapter.Cate
     }
 
     public void initializeRecycler(){
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 3);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
         category_recycler_list.setLayoutManager(mLayoutManager);
         category_recycler_list.setItemAnimator(new DefaultItemAnimator());
 
-        categoryAdapter = new CategoryAdapter(getActivity());
+        categoryAdapter = new CategoryAdapter(getContext());
 //        categoryAdapter.setCategoryOperation(this);
         category_recycler_list.setAdapter(categoryAdapter);
 
@@ -78,12 +78,12 @@ public class CategoryFragment extends Fragment /*implements CategoryAdapter.Cate
 
 //    @Override
 //    public void onClickCategory(int position) {
-//        getActivity().startActivity(new Intent(getActivity() , ProductsActivity.class));
-//        Animatoo.animateSwipeLeft(getActivity());
+//        getContext().startActivity(new Intent(getContext() , ProductsActivity.class));
+//        Animatoo.animateSwipeLeft(getContext());
 //    }
 
     private void showDialog() {
-        reloadDialog = new Dialog(getActivity());
+        reloadDialog = new Dialog(getContext());
         reloadDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         reloadDialog.setContentView(R.layout.reload_layout);
         reloadDialog.setCancelable(false);

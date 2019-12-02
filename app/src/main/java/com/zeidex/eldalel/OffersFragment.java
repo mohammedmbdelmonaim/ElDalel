@@ -73,7 +73,7 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                ((MainActivity)getActivity()).navigateToHomeFragment();
+                ((MainActivity)getContext()).navigateToHomeFragment();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
@@ -97,7 +97,7 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
         ofeers_recycler.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         ofeers_recycler.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
         ofeers_recycler.setItemAnimator(new DefaultItemAnimator());
-//        offersAdapter = new OffersAdapter(getActivity());
+//        offersAdapter = new OffersAdapter(getContext());
 //        offersAdapter.setOffersOperation(this);
 //        ofeers_recycler.setAdapter(offersAdapter);
     }
@@ -106,7 +106,7 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
         item_offers_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                Intent intent = new Intent(getContext(), SearchActivity.class);
                 intent.putExtra(SEARCH_NAME_ARGUMENT, query);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
@@ -133,7 +133,7 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
                 int code = response.body().getCode();
                 if (code == 200) {
                     categories = response.body().getData().getCategories();
-                    offersAdapter = new OffersAdapter(getActivity(), categories);
+                    offersAdapter = new OffersAdapter(getContext(), categories);
                     offersAdapter.setOffersOperation(OffersFragment.this);
                     ofeers_recycler.setAdapter(offersAdapter);
 
@@ -143,14 +143,14 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
 
             @Override
             public void onFailure(Call<GetOffersCategories> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
     }
 
     private void showDialog() {
-        reloadDialog = new Dialog(getActivity());
+        reloadDialog = new Dialog(getContext());
         reloadDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         reloadDialog.setContentView(R.layout.reload_layout);
         reloadDialog.setCancelable(false);
@@ -176,7 +176,7 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
 
 
         subCategoriesModel.toArray(new Subcategory[subCategoriesModel.size()]);
-//        Intent intent = new Intent(getActivity(), OfferItemActivity.class);
+//        Intent intent = new Intent(getContext(), OfferItemActivity.class);
 //        intent.putParcelableArrayListExtra(SUBCATEGORIES_INTENT_EXTRA_KEY, subCategoriesModel);
 //        intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, category.getId());
 
@@ -194,6 +194,6 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
         NavHostFragment.findNavController(this).navigate(OffersFragmentDirections.actionOffersFragmentToOfferItemActivity(categoryName, category.getId(), true, subCategoriesModel.toArray(new Subcategory[subCategoriesModel.size()])));
 
 //        startActivity(intent);
-//        Animatoo.animateSwipeLeft(getActivity());
+//        Animatoo.animateSwipeLeft(getContext());
     }
 }

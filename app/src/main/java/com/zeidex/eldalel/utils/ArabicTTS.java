@@ -109,7 +109,7 @@ public class ArabicTTS {
         return text;
     }
 }
-   /* mTTS = new TextToSpeech(getActivity(), new TextToSpeech.OnInitListener() {
+   /* mTTS = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
         @Override
         public void onInit(int status) {
             if (status == TextToSpeech.SUCCESS) {
@@ -143,7 +143,7 @@ public class ArabicTTS {
         // Creating a new object of the ArabicTTS librrary
         tts = new ArabicTTS();
         // Preparing the language
-        tts.prepare(getActivity());
+        tts.prepare(getContext());
         private void speak() {
         String text = mEditText.getText().toString();
         float pitch = (float) mSeekBarPitch.getProgress() / 50;

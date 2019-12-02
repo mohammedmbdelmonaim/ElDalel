@@ -15,6 +15,12 @@
                 app:destination="@+id/detailItemFragment"
                 app:popUpTo="@+id/mainFragment"
                 app:popUpToInclusive="false" />
+            <action
+                android:id="@+id/action_mainFragment_to_offerItemActivity2"
+                app:destination="@id/offerItemActivity2"
+                app:popUpTo="@+id/mainFragment"
+                app:popUpToInclusive="false" />
+
         </fragment>
         <fragment
             android:id="@+id/detailItemFragment"
@@ -22,4 +28,27 @@
             android:label="fragment_detail_item"
             tools:layout="@layout/reload_layout">
         </fragment>
+    <fragment
+        android:id="@+id/offerItemActivity2"
+        android:name="com.zeidex.eldalel.OfferItemActivity"
+        android:label="activity_offer_item"
+        tools:layout="@layout/activity_offer_item" >
+        <action
+            android:id="@+id/action_offerItemActivity_to_detailItemActivity"
+            app:destination="@id/detailItemFragment" />
+        <argument
+            android:name="category_name"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="category_id"
+            app:argType="integer" />
+        <argument
+            android:name="is_offered"
+            app:argType="boolean" />
+        <argument
+            android:name="subcategories"
+            app:argType="com.zeidex.eldalel.models.Subcategory[]"
+            app:nullable="true" />
+    </fragment>
 </navigation>

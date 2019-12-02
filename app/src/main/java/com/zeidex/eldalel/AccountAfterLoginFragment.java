@@ -66,7 +66,7 @@ public class AccountAfterLoginFragment extends androidx.fragment.app.Fragment im
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                ((MainActivity)getActivity()).navigateToHomeFragment();
+                ((MainActivity)getContext()).navigateToHomeFragment();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
@@ -74,13 +74,13 @@ public class AccountAfterLoginFragment extends androidx.fragment.app.Fragment im
 
     @OnClick({R.id.fragment_account_after_login_addresses_linear})
     public void goToAddressesActivity(){
-        startActivity(new Intent(getActivity(), AddressesActivity.class));
-        Animatoo.animateSwipeLeft(getActivity());
+        startActivity(new Intent(getContext(), AddressesActivity.class));
+        Animatoo.animateSwipeLeft(getContext());
     }
 
     public void findViews(){
 
-        if (PreferenceUtils.getCompanyLogin(getActivity())) {
+        if (PreferenceUtils.getCompanyLogin(getContext())) {
             fragment_account_after_login_addresses_linear.setVisibility(View.GONE);
             fragment_account_after_login_wallet_linear.setVisibility(View.GONE);
         }
@@ -101,39 +101,39 @@ public class AccountAfterLoginFragment extends androidx.fragment.app.Fragment im
         int id = v.getId();
         switch (id){
             case R.id.ragment_account_after_login_logout_linear:{
-                PreferenceUtils.saveUserLogin(getActivity() , false);
-                PreferenceUtils.saveUserToken(getActivity(), "");
-                PreferenceUtils.saveCompanyToken(getActivity(), "");
-                PreferenceUtils.saveCompanyLogin(getActivity(), false);
-                PreferenceUtils.saveCountOfItemsBasket(getActivity(), 0);
-                startActivity(new Intent(getActivity(), MainActivity.class));
-                Animatoo.animateSwipeLeft(getActivity());
+                PreferenceUtils.saveUserLogin(getContext() , false);
+                PreferenceUtils.saveUserToken(getContext(), "");
+                PreferenceUtils.saveCompanyToken(getContext(), "");
+                PreferenceUtils.saveCompanyLogin(getContext(), false);
+                PreferenceUtils.saveCountOfItemsBasket(getContext(), 0);
+                startActivity(new Intent(getContext(), MainActivity.class));
+                Animatoo.animateSwipeLeft(getContext());
                 break;
             }
             case R.id.fragment_account_after_login_profile_linear:{
-                startActivity(new Intent(getActivity(), ProfileActivity.class));
-                Animatoo.animateSwipeLeft(getActivity());
+                startActivity(new Intent(getContext(), ProfileActivity.class));
+                Animatoo.animateSwipeLeft(getContext());
                 break;
             }
             case R.id.fragment_account_after_login_orders_linear:{
-                startActivity(new Intent(getActivity(), OrdersActivity.class));
-                Animatoo.animateSwipeLeft(getActivity());
+                startActivity(new Intent(getContext(), OrdersActivity.class));
+                Animatoo.animateSwipeLeft(getContext());
                 break;
             }
             case R.id.fragment_account_after_login_likes_linear:{
-//                startActivity(new Intent(getActivity(), LikesElementsFragment.class));
-//                Animatoo.animateSwipeLeft(getActivity());
+//                startActivity(new Intent(getContext(), LikesElementsFragment.class));
+//                Animatoo.animateSwipeLeft(getContext());
                 NavHostFragment.findNavController(this).navigate(AccountAfterLoginFragmentDirections.actionAccountAfterLoginFragmentToLikesElementsFragment());
                 break;
             }
             case R.id.ragment_account_after_login_pay_linear:{
-                startActivity(new Intent(getActivity(), PaymentMethodsActivity.class));
-                Animatoo.animateSwipeLeft(getActivity());
+                startActivity(new Intent(getContext(), PaymentMethodsActivity.class));
+                Animatoo.animateSwipeLeft(getContext());
                 break;
             }
             case R.id.fragment_account_after_login_wallet_linear:{
-                startActivity(new Intent(getActivity(), WalletActivity.class));
-                Animatoo.animateSwipeLeft(getActivity());
+                startActivity(new Intent(getContext(), WalletActivity.class));
+                Animatoo.animateSwipeLeft(getContext());
                 break;
             }
         }

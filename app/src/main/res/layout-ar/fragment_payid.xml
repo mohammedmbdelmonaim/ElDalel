@@ -1,491 +1,530 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/fragment_payid_linear_methods"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/payment_contain"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginStart="@dimen/dimen_16dp"
-            android:layout_marginEnd="@dimen/dimen_16dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/shipment_from_branch"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:elevation="@dimen/dimen_4dp"
-                android:background="@drawable/type_payment_bg"
-                android:layout_marginEnd="@dimen/dimen_6dp"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/shipment_from_branch_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_company_unchecked" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/shipment_from_branch_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/dimen_12sp"
-                    android:text="@string/shipment_from_branch_text"
-                    android:textColor="#AAAAAA"
-                    android:fontFamily="@font/cairo_bold"/>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/shipment_to_address"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:elevation="@dimen/dimen_4dp"
-                android:gravity="center"
-                android:background="@drawable/type_payment_bg"
-                android:layout_marginStart="@dimen/dimen_6dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/shipment_to_address_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_shipped_car" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/shipment_to_address_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/dimen_12sp"
-                    android:text="@string/shipment_to_address_text"
-                    android:textColor="#AAAAAA"
-                    android:fontFamily="@font/cairo_bold"/>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/fragment_payid_linear_options_branches"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginStart="@dimen/dimen_16dp"
-            android:layout_marginEnd="@dimen/dimen_16dp"
-            android:visibility="gone"
-            android:background="@drawable/type_payment_bg"
-            android:layout_marginTop="@dimen/dimen_20dp"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_payid_linear_methods"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_15dp"
-                android:orientation="horizontal">
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    app:srcCompat="@drawable/ic_flag_payment"/>
-
-                <com.jaredrummler.materialspinner.MaterialSpinner
-                    android:id="@+id/spinner_address_add_country_shipment"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAlignment="viewStart"
-                    android:fontFamily="@font/cairo_regular"
-                    android:textColor="#AAAAAA"
-                    android:textSize="@dimen/dimen_15sp" />
-            </androidx.appcompat.widget.LinearLayoutCompat>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginEnd="@dimen/dimen_10dp"
-                android:layout_marginStart="@dimen/dimen_10dp"
-                android:background="#AAAAAA"/>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_15dp"
-                android:orientation="horizontal">
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    app:srcCompat="@drawable/ic_regions_payment"/>
-
-                <com.jaredrummler.materialspinner.MaterialSpinner
-                    android:id="@+id/spinner_address_add_regions_shipment"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAlignment="viewStart"
-                    android:fontFamily="@font/cairo_regular"
-                    android:textColor="#AAAAAA"
-                    android:textSize="@dimen/dimen_15sp" />
-            </androidx.appcompat.widget.LinearLayoutCompat>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginEnd="@dimen/dimen_10dp"
-                android:layout_marginStart="@dimen/dimen_10dp"
-                android:background="#AAAAAA"/>
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_15dp"
-                android:orientation="horizontal">
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    app:srcCompat="@drawable/ic_branches_payment"/>
-
-                <com.jaredrummler.materialspinner.MaterialSpinner
-                    android:id="@+id/spinner_address_add_branches_shipment"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAlignment="viewStart"
-                    android:fontFamily="@font/cairo_regular"
-                    android:textColor="#AAAAAA"
-                    android:textSize="@dimen/dimen_15sp" />
-            </androidx.appcompat.widget.LinearLayoutCompat>
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/credit_card_payment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/dimen_16dp"
-            android:paddingEnd="@dimen/dimen_16dp"
-            android:paddingTop="@dimen/dimen_25dp"
-            android:layout_marginTop="@dimen/dimen_20dp"
-            android:background="@drawable/type_payment_method_bg"
-            android:paddingBottom="@dimen/dimen_25dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_payid_linear_options_branches">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/credit_card_payment_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_credit_card"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/credit_card_payment_txt"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textAlignment="viewStart"
-                android:fontFamily="@font/cairo_bold"
-                android:layout_marginStart="@dimen/dimen_25dp"
-                android:textColor="#AAAAAA"
-                android:text="@string/credit_card_payment_txt_label"
-                android:textSize="@dimen/dimen_14sp" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/credit_card_payment_imgcheck"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_unchecked_pay_method"/>
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/bank_payment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/dimen_16dp"
-            android:paddingEnd="@dimen/dimen_16dp"
-            android:background="@drawable/type_payment_method_bg"
-            android:paddingTop="@dimen/dimen_25dp"
-            android:paddingBottom="@dimen/dimen_25dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/credit_card_payment">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/bank_payment_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_bank_pay"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/bank_payment_txt"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textAlignment="viewStart"
-                android:fontFamily="@font/cairo_bold"
-                android:layout_marginStart="@dimen/dimen_25dp"
-                android:textColor="#AAAAAA"
-                android:text="@string/bank_payment_txt_label"
-                android:textSize="@dimen/dimen_14sp" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/bank_payment_imgcheck"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_unchecked_pay_method"/>
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/pay_on_arrive_payment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/dimen_16dp"
-            android:paddingEnd="@dimen/dimen_16dp"
-            android:paddingTop="@dimen/dimen_25dp"
-            android:background="@drawable/type_payment_method_bg"
-            android:paddingBottom="@dimen/dimen_25dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bank_payment">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/pay_on_arrive_payment_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_pay_on_arrive"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/pay_on_arrive_payment_txt"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textAlignment="viewStart"
-                android:fontFamily="@font/cairo_bold"
-                android:layout_marginStart="@dimen/dimen_25dp"
-                android:textColor="#AAAAAA"
-                android:text="@string/pay_on_arrive_payment_txt_label"
-                android:textSize="@dimen/dimen_14sp" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/pay_on_arrive_payment_imgcheck"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_unchecked_pay_method"/>
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/fragment_payid_total_price_products_linear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_16dp"
-            android:layout_marginTop="@dimen/dimen_20dp"
-            android:layout_marginEnd="@dimen/dimen_16dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pay_on_arrive_payment">
-
-            <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/dimen_6dp"
-                android:fontFamily="@font/cairo_regular"
-                android:text="@string/fragment_basket_total_price_products_label"
-                android:textColor="#606060"
-                android:textSize="@dimen/dimen_12sp" />
-
-            <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
-                android:id="@+id/fragment_payid_total_products_text"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/dimen_5dp"
-                android:text="0"
-                android:fontFamily="@font/cairo_bold"
-                android:textColor="#606060"
-                android:textSize="@dimen/dimen_12sp" />
-
-            <!--<androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:fontFamily="@font/cairo_regular"-->
-            <!--android:text="@string/currancy_label"-->
-            <!--android:textColor="#606060"-->
-            <!--android:textSize="@dimen/dimen_12sp" />-->
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <View
-            android:id="@+id/fragment_payid_total_price_products_view"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_1dp"
-            android:background="#E8E8E8"
-            android:layout_marginStart="@dimen/dimen_16dp"
-            android:layout_marginTop="@dimen/dimen_15dp"
-            android:layout_marginEnd="@dimen/dimen_16dp"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_payid_total_price_products_linear"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/fragment_payid_total_shipments_linear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_16dp"
-            android:layout_marginTop="@dimen/dimen_10dp"
-            android:layout_marginEnd="@dimen/dimen_16dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_payid_total_price_products_view">
-
-            <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/dimen_6dp"
-                android:fontFamily="@font/cairo_regular"
-                android:text="@string/fragment_basket_total_shipments_label"
-                android:textColor="#606060"
-                android:textSize="@dimen/dimen_12sp" />
-
-            <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
-                android:id="@+id/fragment_payid_total_shipments_text"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="0"
-                android:layout_marginEnd="@dimen/dimen_5dp"
-                android:fontFamily="@font/cairo_bold"
-                android:textColor="#606060"
-                android:textSize="@dimen/dimen_12sp" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <View
-            android:id="@+id/fragment_payid_total_shipments_view"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_1dp"
-            android:background="#E8E8E8"
-            android:layout_marginStart="@dimen/dimen_16dp"
-            android:layout_marginTop="@dimen/dimen_15dp"
-            android:layout_marginEnd="@dimen/dimen_16dp"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_payid_total_shipments_linear"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/fragment_payid_tax_linear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_16dp"
-            android:layout_marginTop="@dimen/dimen_10dp"
-            android:layout_marginEnd="@dimen/dimen_16dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_payid_total_shipments_view">
-
-            <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/dimen_6dp"
-                android:fontFamily="@font/cairo_regular"
-                android:text="@string/fragment_basket_tax_label"
-                android:textColor="#606060"
-                android:textSize="@dimen/dimen_12sp" />
-
-            <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
-                android:id="@+id/fragment_payid_tax_text"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/dimen_5dp"
-                android:fontFamily="@font/cairo_bold"
-                android:text="0"
-                android:textColor="#606060"
-                android:textSize="@dimen/dimen_12sp" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <View
-            android:id="@+id/fragment_payid_tax_view"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_1dp"
-            android:background="#E8E8E8"
-            android:layout_marginStart="@dimen/dimen_16dp"
-            android:layout_marginTop="@dimen/dimen_15dp"
-            android:layout_marginEnd="@dimen/dimen_16dp"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_payid_tax_linear"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/fragment_payid_total_price_linear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_16dp"
-            android:layout_marginTop="@dimen/dimen_10dp"
-            android:layout_marginEnd="@dimen/dimen_16dp"
-            android:orientation="horizontal"
-            android:layout_marginBottom="@dimen/dimen_30dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/fragment_payid_paying"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_payid_tax_view">
-
-            <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_6dp"
-                android:fontFamily="@font/cairo_bold"
-                android:text="@string/fragment_basket_total_price_label"
-                android:textColor="#606060"
-                android:textSize="@dimen/dimen_12sp" />
-
-            <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
-                android:id="@+id/fragment_payid_total_price_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:layout_marginEnd="@dimen/dimen_5dp"
-                android:fontFamily="@font/cairo_bold"
-                android:textColor="#606060"
-                android:textSize="@dimen/dimen_12sp" />
-
-            <!--<androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:fontFamily="@font/cairo_bold"-->
-            <!--android:text="@string/currancy_label"-->
-            <!--android:textColor="#606060"-->
-            <!--android:textSize="@dimen/dimen_12sp" />-->
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/fragment_payid_paying"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/dimen_14sp"
-            android:textColor="#FFFFFF"
-            android:text="@string/fragment_payid_paying_label"
-            android:paddingTop="@dimen/dimen_10dp"
-            android:paddingBottom="@dimen/dimen_10dp"
-            android:gravity="center"
-            android:background="#047AC0"
-            android:fontFamily="@font/cairo_bold"
+            android:layout_height="match_parent"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/fragment_payid_linear_methods"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/shipment_from_branch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dimen_6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/type_payment_bg"
+                    android:elevation="@dimen/dimen_4dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/shipment_from_branch_img"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_company_unchecked" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/shipment_from_branch_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/cairo_bold"
+                        android:text="@string/shipment_from_branch_text"
+                        android:textColor="#AAAAAA"
+                        android:textSize="@dimen/dimen_12sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/shipment_to_address"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dimen_6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/type_payment_bg"
+                    android:elevation="@dimen/dimen_4dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/shipment_to_address_img"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_shipped_car" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/shipment_to_address_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/cairo_bold"
+                        android:text="@string/shipment_to_address_text"
+                        android:textColor="#AAAAAA"
+                        android:textSize="@dimen/dimen_12sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/fragment_payid_linear_options_branches"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
+                android:background="@drawable/type_payment_bg"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_payid_linear_methods">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_15dp"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/ic_flag_payment" />
+
+                    <com.jaredrummler.materialspinner.MaterialSpinner
+                        android:id="@+id/spinner_address_add_country_shipment"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/cairo_regular"
+                        android:textAlignment="viewStart"
+                        android:textColor="#AAAAAA"
+                        android:textSize="@dimen/dimen_15sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:background="#AAAAAA" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_15dp"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/ic_regions_payment" />
+
+                    <com.jaredrummler.materialspinner.MaterialSpinner
+                        android:id="@+id/spinner_address_add_regions_shipment"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/cairo_regular"
+                        android:textAlignment="viewStart"
+                        android:textColor="#AAAAAA"
+                        android:textSize="@dimen/dimen_15sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:background="#AAAAAA" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_15dp"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/ic_branches_payment" />
+
+                    <com.jaredrummler.materialspinner.MaterialSpinner
+                        android:id="@+id/spinner_address_add_branches_shipment"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/cairo_regular"
+                        android:textAlignment="viewStart"
+                        android:textColor="#AAAAAA"
+                        android:textSize="@dimen/dimen_15sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/credit_card_payment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:background="@drawable/type_payment_method_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/dimen_16dp"
+                android:paddingTop="@dimen/dimen_25dp"
+                android:paddingEnd="@dimen/dimen_16dp"
+                android:paddingBottom="@dimen/dimen_25dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_payid_linear_options_branches">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/credit_card_payment_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_credit_card" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/credit_card_payment_txt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_25dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/credit_card_payment_txt_label"
+                    android:textAlignment="viewStart"
+                    android:textColor="#AAAAAA"
+                    android:textSize="@dimen/dimen_14sp" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/credit_card_payment_imgcheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_unchecked_pay_method" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/bank_payment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/type_payment_method_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/dimen_16dp"
+                android:paddingTop="@dimen/dimen_25dp"
+                android:paddingEnd="@dimen/dimen_16dp"
+                android:paddingBottom="@dimen/dimen_25dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/credit_card_payment">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/bank_payment_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_bank_pay" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/bank_payment_txt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_25dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/bank_payment_txt_label"
+                    android:textAlignment="viewStart"
+                    android:textColor="#AAAAAA"
+                    android:textSize="@dimen/dimen_14sp" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/bank_payment_imgcheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_unchecked_pay_method" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/pay_on_arrive_payment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/type_payment_method_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/dimen_16dp"
+                android:paddingTop="@dimen/dimen_25dp"
+                android:paddingEnd="@dimen/dimen_16dp"
+                android:paddingBottom="@dimen/dimen_25dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bank_payment">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/pay_on_arrive_payment_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_pay_on_arrive" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/pay_on_arrive_payment_txt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_25dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/pay_on_arrive_payment_txt_label"
+                    android:textAlignment="viewStart"
+                    android:textColor="#AAAAAA"
+                    android:textSize="@dimen/dimen_14sp" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/pay_on_arrive_payment_imgcheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_unchecked_pay_method" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/fragment_payid_total_price_products_linear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pay_on_arrive_payment">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dimen_6dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="@string/fragment_basket_total_price_products_label"
+                    android:textAlignment="viewStart"
+                    android:textColor="#606060"
+                    android:textSize="@dimen/dimen_12sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/fragment_payid_total_products_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/dimen_5dp"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="0"
+                    android:textAlignment="viewStart"
+                    android:textColor="#606060"
+                    android:textSize="@dimen/dimen_12sp" />
+
+                <!--<androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:fontFamily="@font/cairo_regular"-->
+                <!--android:text="@string/currancy_label"-->
+                <!--android:textColor="#606060"-->
+                <!--android:textSize="@dimen/dimen_12sp" />-->
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <View
+                android:id="@+id/fragment_payid_total_price_products_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1dp"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
+                android:background="#E8E8E8"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_payid_total_price_products_linear" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/fragment_payid_total_shipments_linear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_payid_total_price_products_view">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dimen_6dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="@string/fragment_basket_total_shipments_label"
+                    android:textAlignment="viewStart"
+                    android:textColor="#606060"
+                    android:textSize="@dimen/dimen_12sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/fragment_payid_total_shipments_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/dimen_5dp"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="0"
+                    android:textAlignment="viewStart"
+                    android:textColor="#606060"
+                    android:textSize="@dimen/dimen_12sp" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <View
+                android:id="@+id/fragment_payid_total_shipments_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1dp"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
+                android:background="#E8E8E8"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_payid_total_shipments_linear" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/fragment_payid_tax_linear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_payid_total_shipments_view">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dimen_6dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="@string/fragment_basket_tax_label"
+                    android:textAlignment="viewStart"
+                    android:textColor="#606060"
+                    android:textSize="@dimen/dimen_12sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/fragment_payid_tax_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/dimen_5dp"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="0"
+                    android:textAlignment="viewStart"
+                    android:textColor="#606060"
+                    android:textSize="@dimen/dimen_12sp" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <View
+                android:id="@+id/fragment_payid_tax_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1dp"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
+                android:background="#E8E8E8"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_payid_tax_linear" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/fragment_payid_total_price_linear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
+                android:layout_marginBottom="@dimen/dimen_30dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/fragment_payid_paying"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_payid_tax_view">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_6dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/fragment_basket_total_price_label"
+                    android:textAlignment="viewStart"
+                    android:textColor="#606060"
+                    android:textSize="@dimen/dimen_12sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/fragment_payid_total_price_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dimen_5dp"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="0"
+                    android:textAlignment="viewStart"
+                    android:textColor="#606060"
+                    android:textSize="@dimen/dimen_12sp" />
+
+                <!--<androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:fontFamily="@font/cairo_bold"-->
+                <!--android:text="@string/currancy_label"-->
+                <!--android:textColor="#606060"-->
+                <!--android:textSize="@dimen/dimen_12sp" />-->
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fragment_payid_paying"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#047AC0"
+                android:fontFamily="@font/cairo_bold"
+                android:gravity="center"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_10dp"
+                android:text="@string/fragment_payid_paying_label"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/dimen_14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.zeidex.eldalel.utils.CustomWebView
+        android:id="@+id/payment_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

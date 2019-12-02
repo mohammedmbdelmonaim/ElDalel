@@ -160,11 +160,22 @@ public class GetDetailProduct {
         @SerializedName("cart_status")
         String cart;
 
+        @SerializedName("favorite")
+        String favorite;
+
         @SerializedName("available_quantity")
         Integer availableQuantity;
 
         @SerializedName("capacities")
         List<Capacity> capacities;
+
+        public String getFavorite() {
+            return favorite;
+        }
+
+        public void setFavorite(String favorite) {
+            this.favorite = favorite;
+        }
 
         public String getDescription() {
             return description;

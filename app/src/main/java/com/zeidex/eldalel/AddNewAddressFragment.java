@@ -164,17 +164,17 @@ public class AddNewAddressFragment extends Fragment {
         }
 
         if (state_addresses.equalsIgnoreCase("address")){
-            ((AddressesActivity)getActivity()).activity_address_header_item.setVisibility(View.GONE);
+            ((AddressesActivity)getContext()).activity_address_header_item.setVisibility(View.GONE);
         }else if(state_addresses.equalsIgnoreCase("payment")){
-            ((PaymentActivity)getActivity()).activity_payment_steps_linear.setVisibility(View.GONE);
-            ((PaymentActivity)getActivity()).activity_payment_header_item.setVisibility(View.GONE);
+            ((PaymentActivity)getContext()).activity_payment_steps_linear.setVisibility(View.GONE);
+            ((PaymentActivity)getContext()).activity_payment_header_item.setVisibility(View.GONE);
         }
 
 
-        if (PreferenceUtils.getCompanyLogin(getActivity())) {
-            token = PreferenceUtils.getCompanyToken(getActivity());
-        } else if (PreferenceUtils.getUserLogin(getActivity())) {
-            token = PreferenceUtils.getUserToken(getActivity());
+        if (PreferenceUtils.getCompanyLogin(getContext())) {
+            token = PreferenceUtils.getCompanyToken(getContext());
+        } else if (PreferenceUtils.getUserLogin(getContext())) {
+            token = PreferenceUtils.getUserToken(getContext());
         }
 
 
@@ -251,21 +251,21 @@ public class AddNewAddressFragment extends Fragment {
 
     public void editAddress(){
         if (lang.equalsIgnoreCase("")) {
-            Toasty.error(getActivity(), getString(R.string.choose_lang), Toast.LENGTH_LONG).show();
+            Toasty.error(getContext(), getString(R.string.choose_lang), Toast.LENGTH_LONG).show();
             return;
         }
         if (id_country == -1) {
-            Toasty.error(getActivity(), getString(R.string.choose_country), Toast.LENGTH_LONG).show();
+            Toasty.error(getContext(), getString(R.string.choose_country), Toast.LENGTH_LONG).show();
             return;
         }
 
         if (id_region == -1) {
-            Toasty.error(getActivity(), getString(R.string.choose_region), Toast.LENGTH_LONG).show();
+            Toasty.error(getContext(), getString(R.string.choose_region), Toast.LENGTH_LONG).show();
             return;
         }
 
         if (id_city == -1) {
-            Toasty.error(getActivity(), getString(R.string.choose_city), Toast.LENGTH_LONG).show();
+            Toasty.error(getContext(), getString(R.string.choose_city), Toast.LENGTH_LONG).show();
             return;
         }
         final boolean fieldscomOK = validate(new EditText[]{address_add_first_name_edittext, address_add_last_name_edittext, address_add_address_edittext, address_add_mobile_edittext, address_add_postal_code_edittext});
@@ -277,7 +277,7 @@ public class AddNewAddressFragment extends Fragment {
             address_post.put("id", String.valueOf(address_id));
             EditAddressApi editAddressApi = APIClient.getClient(SERVER_API_TEST).create(EditAddressApi.class);
             Call<GetAddAddressResponse> getEditAddressResponseCall;
-            if (PreferenceUtils.getCompanyLogin(getActivity())){
+            if (PreferenceUtils.getCompanyLogin(getContext())){
                 getEditAddressResponseCall = editAddressApi.editAddressApicompany(address_post);
             }else {
                 getEditAddressResponseCall = editAddressApi.editAddressApi(address_post);
@@ -287,17 +287,17 @@ public class AddNewAddressFragment extends Fragment {
                 public void onResponse(Call<GetAddAddressResponse> call, Response<GetAddAddressResponse> response) {
                     GetAddAddressResponse getAddAddressResponse = response.body();
                     if (getAddAddressResponse.isSuccess()){
-                        Toasty.success(getActivity(), getString(R.string.edit_address_success), Toast.LENGTH_LONG).show();
+                        Toasty.success(getContext(), getString(R.string.edit_address_success), Toast.LENGTH_LONG).show();
 //                        Fragment fragment = new ShoopingListAddressesFragment();
 //                        FragmentTransaction ft = getFragmentManager().beginTransaction();
 //                        ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
                         if (state_addresses.equalsIgnoreCase("address")){
-                            startActivity(new Intent(getActivity(), AddressesActivity.class));
-                            Animatoo.animateSwipeLeft(getActivity());
+                            startActivity(new Intent(getContext(), AddressesActivity.class));
+                            Animatoo.animateSwipeLeft(getContext());
 //                            ft.replace(R.id.activity_address_constraint, fragment, fragment.getTag());
                         }else if(state_addresses.equalsIgnoreCase("payment")){
-                            startActivity(new Intent(getActivity(), PaymentActivity.class));
-                            Animatoo.animateSwipeLeft(getActivity());
+                            startActivity(new Intent(getContext(), PaymentActivity.class));
+                            Animatoo.animateSwipeLeft(getContext());
 //                            ft.replace(R.id.payment_constrant, fragment, fragment.getTag());
                         }
 ////                        ft.addToBackStack(null);
@@ -310,14 +310,14 @@ public class AddNewAddressFragment extends Fragment {
                         for (String errorText : getAddAddressResponse.getError()){
                             errors += errorText;
                         }
-                        Toasty.error(getActivity(), errors, Toast.LENGTH_LONG).show();
+                        Toasty.error(getContext(), errors, Toast.LENGTH_LONG).show();
                     }
                     reloadDialog.dismiss();
                 }
 
                 @Override
                 public void onFailure(Call<GetAddAddressResponse> call, Throwable t) {
-                    Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                    Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                     reloadDialog.dismiss();
                 }
             });
@@ -351,21 +351,21 @@ public class AddNewAddressFragment extends Fragment {
 
     public void checkAddresses() {
         if (lang.equalsIgnoreCase("")) {
-            Toasty.error(getActivity(), getString(R.string.choose_lang), Toast.LENGTH_LONG).show();
+            Toasty.error(getContext(), getString(R.string.choose_lang), Toast.LENGTH_LONG).show();
             return;
         }
         if (id_country == -1) {
-            Toasty.error(getActivity(), getString(R.string.choose_country), Toast.LENGTH_LONG).show();
+            Toasty.error(getContext(), getString(R.string.choose_country), Toast.LENGTH_LONG).show();
             return;
         }
 
         if (id_region == -1) {
-            Toasty.error(getActivity(), getString(R.string.choose_region), Toast.LENGTH_LONG).show();
+            Toasty.error(getContext(), getString(R.string.choose_region), Toast.LENGTH_LONG).show();
             return;
         }
 
         if (id_city == -1) {
-            Toasty.error(getActivity(), getString(R.string.choose_city), Toast.LENGTH_LONG).show();
+            Toasty.error(getContext(), getString(R.string.choose_city), Toast.LENGTH_LONG).show();
             return;
         }
         final boolean fieldscomOK = validate(new EditText[]{address_add_first_name_edittext, address_add_last_name_edittext, address_add_address_edittext, address_add_mobile_edittext, address_add_postal_code_edittext});
@@ -376,7 +376,7 @@ public class AddNewAddressFragment extends Fragment {
 
             AddAddressApi addAddressApi = APIClient.getClient(SERVER_API_TEST).create(AddAddressApi.class);
             Call<GetAddAddressResponse> getAddAddressResponseCall;
-            if (PreferenceUtils.getCompanyLogin(getActivity())){
+            if (PreferenceUtils.getCompanyLogin(getContext())){
                 getAddAddressResponseCall = addAddressApi.getAddressApicompany(address_post);
             }else {
                 getAddAddressResponseCall = addAddressApi.getAddressApi(address_post);
@@ -386,17 +386,17 @@ public class AddNewAddressFragment extends Fragment {
                 public void onResponse(Call<GetAddAddressResponse> call, Response<GetAddAddressResponse> response) {
                     GetAddAddressResponse getAddAddressResponse = response.body();
                     if (getAddAddressResponse.isSuccess()){
-                        Toasty.success(getActivity(), getString(R.string.add_address_sucess), Toast.LENGTH_LONG).show();
+                        Toasty.success(getContext(), getString(R.string.add_address_sucess), Toast.LENGTH_LONG).show();
 //                        Fragment fragment = new ShoopingListAddressesFragment();
 //                        FragmentTransaction ft = getFragmentManager().beginTransaction();
 //                        ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
                         if (state_addresses.equalsIgnoreCase("address")){
-                            startActivity(new Intent(getActivity(), AddressesActivity.class));
-                            Animatoo.animateSwipeLeft(getActivity());
+                            startActivity(new Intent(getContext(), AddressesActivity.class));
+                            Animatoo.animateSwipeLeft(getContext());
 //                            ft.replace(R.id.activity_address_constraint, fragment, fragment.getTag());
                         }else if(state_addresses.equalsIgnoreCase("payment")){
-                            startActivity(new Intent(getActivity(), PaymentActivity.class));
-                            Animatoo.animateSwipeLeft(getActivity());
+                            startActivity(new Intent(getContext(), PaymentActivity.class));
+                            Animatoo.animateSwipeLeft(getContext());
 //                            ft.replace(R.id.payment_constrant, fragment, fragment.getTag());
                         }
 //                        ft.addToBackStack(null);
@@ -406,14 +406,14 @@ public class AddNewAddressFragment extends Fragment {
                         for (String errorText : getAddAddressResponse.getError()){
                             errors += errorText;
                         }
-                        Toasty.error(getActivity(), errors, Toast.LENGTH_LONG).show();
+                        Toasty.error(getContext(), errors, Toast.LENGTH_LONG).show();
                     }
                     reloadDialog.dismiss();
                 }
 
                 @Override
                 public void onFailure(Call<GetAddAddressResponse> call, Throwable t) {
-                    Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                    Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                     reloadDialog.dismiss();
                 }
             });
@@ -470,7 +470,7 @@ public class AddNewAddressFragment extends Fragment {
 
             @Override
             public void onFailure(Call<GetCountries> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -525,7 +525,7 @@ public class AddNewAddressFragment extends Fragment {
 
             @Override
             public void onFailure(Call<GetRegions> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -577,7 +577,7 @@ public class AddNewAddressFragment extends Fragment {
 
             @Override
             public void onFailure(Call<GetCities> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -600,7 +600,7 @@ public class AddNewAddressFragment extends Fragment {
     Dialog reloadDialog;
 
     private void showDialog() {
-        reloadDialog = new Dialog(getActivity());
+        reloadDialog = new Dialog(getContext());
         reloadDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         reloadDialog.setContentView(R.layout.reload_layout);
         reloadDialog.setCancelable(false);

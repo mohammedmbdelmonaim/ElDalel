@@ -82,7 +82,7 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
     }
 
     public void initializeRecycler() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         fragment_shooping_list_addresses_recycler.setLayoutManager(layoutManager);
         fragment_shooping_list_addresses_recycler.setItemAnimator(new DefaultItemAnimator());
         fragment_shooping_list_addresses_recycler.addItemDecoration(new DividerItemDecoration(fragment_shooping_list_addresses_recycler.getContext(), DividerItemDecoration.VERTICAL));
@@ -122,7 +122,7 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
                 }
                 ChangeAddressToPrimaryApi changeAddressToPrimaryApi = APIClient.getClient(SERVER_API_TEST).create(ChangeAddressToPrimaryApi.class);
                 Call<GetChangeAddressResponse> getChangeAddressResponseCall;
-                if (PreferenceUtils.getCompanyLogin(getActivity())){
+                if (PreferenceUtils.getCompanyLogin(getContext())){
                     getChangeAddressResponseCall = changeAddressToPrimaryApi.updateAddressApicompany(update_post);
                 }else {
                     getChangeAddressResponseCall = changeAddressToPrimaryApi.updateAddressApi(update_post);
@@ -149,7 +149,7 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
 //                        ft.addToBackStack(null);
                                 ft.commit();
                             }else{
-                                ((PaymentActivity) getActivity()).goToPayidFragment();
+                                ((PaymentActivity) getContext()).goToPayidFragment();
                             }
 
                         }else {
@@ -157,14 +157,14 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
                             for (String errorText : getChangeAddressResponse.getError()){
                                 errors += errorText;
                             }
-                            Toasty.error(getActivity(), errors, Toast.LENGTH_LONG).show();
+                            Toasty.error(getContext(), errors, Toast.LENGTH_LONG).show();
                         }
                         reloadDialog.dismiss();
                     }
 
                     @Override
                     public void onFailure(Call<GetChangeAddressResponse> call, Throwable t) {
-                        Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                        Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                         reloadDialog.dismiss();
                     }
                 });
@@ -187,10 +187,10 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
 
         }
 
-        if (PreferenceUtils.getCompanyLogin(getActivity())) {
-            token = PreferenceUtils.getCompanyToken(getActivity());
-        } else if (PreferenceUtils.getUserLogin(getActivity())) {
-            token = PreferenceUtils.getUserToken(getActivity());
+        if (PreferenceUtils.getCompanyLogin(getContext())) {
+            token = PreferenceUtils.getCompanyToken(getContext());
+        } else if (PreferenceUtils.getUserLogin(getContext())) {
+            token = PreferenceUtils.getUserToken(getContext());
         }
         showDialog();
         onLoadPage();
@@ -200,7 +200,7 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
         reloadDialog.show();
         AddressAPI addressAPI = APIClient.getClient(SERVER_API_TEST).create(AddressAPI.class);
         Call<GetAddresses> getAllAddresses;
-        if (PreferenceUtils.getCompanyLogin(getActivity())){
+        if (PreferenceUtils.getCompanyLogin(getContext())){
             getAllAddresses = addressAPI.getAllAddressescompany(token);
         }else {
             getAllAddresses = addressAPI.getAllAddresses(token);
@@ -218,7 +218,7 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
                     addresses.addAll(response.body().getAddresses());
                     address_id = response.body().getPrimaryAddress().getId();
                     mobile = response.body().getPrimaryAddress().getMobile() ;
-                    addressesAdapter = new AddressesAdapter(getActivity() , addresses , state_addresses);
+                    addressesAdapter = new AddressesAdapter(getContext() , addresses , state_addresses);
                     addressesAdapter.setAddressOperation(ShoopingListAddressesFragment.this);
                     fragment_shooping_list_addresses_recycler.setAdapter(addressesAdapter);
 
@@ -227,14 +227,14 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
 
             @Override
             public void onFailure(Call<GetAddresses> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
     }
 
     private void showDialog() {
-        reloadDialog = new Dialog(getActivity());
+        reloadDialog = new Dialog(getContext());
         reloadDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         reloadDialog.setContentView(R.layout.reload_layout);
         reloadDialog.setCancelable(false);
@@ -260,7 +260,7 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
             changeAddress.dismiss();
         }
             this.address_id = address_id;
-            changeAddress = new Dialog(getActivity());
+            changeAddress = new Dialog(getContext());
             changeAddress.requestWindowFeature(Window.FEATURE_NO_TITLE);
             changeAddress.setContentView(R.layout.dialog_change_address);
             changeAddress.setCancelable(false);
@@ -289,7 +289,7 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
                     }
                     ChangeAddressToPrimaryApi changeAddressToPrimaryApi = APIClient.getClient(SERVER_API_TEST).create(ChangeAddressToPrimaryApi.class);
                     Call<GetChangeAddressResponse> getChangeAddressResponseCall;
-                    if (PreferenceUtils.getCompanyLogin(getActivity())){
+                    if (PreferenceUtils.getCompanyLogin(getContext())){
                         getChangeAddressResponseCall = changeAddressToPrimaryApi.updateAddressApicompany(update_post);
                     }else {
                         getChangeAddressResponseCall = changeAddressToPrimaryApi.updateAddressApi(update_post);
@@ -299,7 +299,7 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
                         public void onResponse(Call<GetChangeAddressResponse> call, Response<GetChangeAddressResponse> response) {
                             GetChangeAddressResponse getChangeAddressResponse = response.body();
                             if (getChangeAddressResponse.isSuccess()){
-                                Toasty.success(getActivity(), getString(R.string.change_primary_address_success), Toast.LENGTH_LONG).show();
+                                Toasty.success(getContext(), getString(R.string.change_primary_address_success), Toast.LENGTH_LONG).show();
                                 if (getChangeAddressResponse.getVerify() == 0) {
                                     Fragment fragment = new PaymentPhoneNumberFragment();
                                     Bundle args = new Bundle();
@@ -323,14 +323,14 @@ public class ShoopingListAddressesFragment extends Fragment implements View.OnCl
                                 for (String errorText : getChangeAddressResponse.getError()){
                                     errors += errorText;
                                 }
-                                Toasty.error(getActivity(), errors, Toast.LENGTH_LONG).show();
+                                Toasty.error(getContext(), errors, Toast.LENGTH_LONG).show();
                             }
                             reloadDialog.dismiss();
                         }
 
                         @Override
                         public void onFailure(Call<GetChangeAddressResponse> call, Throwable t) {
-                            Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                            Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                             reloadDialog.dismiss();
                         }
                     });

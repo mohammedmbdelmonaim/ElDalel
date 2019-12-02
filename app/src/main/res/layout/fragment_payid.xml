@@ -9,6 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/fragment_payid_linear_methods"
             android:layout_width="match_parent"
@@ -486,6 +488,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
-
+        <WebView
+            android:id="@+id/payment_webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

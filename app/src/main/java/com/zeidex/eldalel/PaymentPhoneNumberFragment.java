@@ -77,10 +77,10 @@ public class PaymentPhoneNumberFragment extends Fragment {
 
 
 
-        if (PreferenceUtils.getCompanyLogin(getActivity())) {
-            token = PreferenceUtils.getCompanyToken(getActivity());
-        } else if (PreferenceUtils.getUserLogin(getActivity())) {
-            token = PreferenceUtils.getUserToken(getActivity());
+        if (PreferenceUtils.getCompanyLogin(getContext())) {
+            token = PreferenceUtils.getCompanyToken(getContext());
+        } else if (PreferenceUtils.getUserLogin(getContext())) {
+            token = PreferenceUtils.getUserToken(getContext());
         }
 
         Locale locale = ChangeLang.getLocale(getContext().getResources());
@@ -134,7 +134,7 @@ public class PaymentPhoneNumberFragment extends Fragment {
             convertDaraVerifyToJson();
             VerifyCodeMobileApi sendCodeToMobileApi = APIClient.getClient(SERVER_API_TEST).create(VerifyCodeMobileApi.class);
             Call<GetSendCodeResponse> getSendCodeResponseCall;
-            if (PreferenceUtils.getCompanyLogin(getActivity())){
+            if (PreferenceUtils.getCompanyLogin(getContext())){
                 getSendCodeResponseCall = sendCodeToMobileApi.verifyCodecompany(update_post);
             }else {
                 getSendCodeResponseCall = sendCodeToMobileApi.verifyCode(update_post);
@@ -144,7 +144,7 @@ public class PaymentPhoneNumberFragment extends Fragment {
                 public void onResponse(Call<GetSendCodeResponse> call, Response<GetSendCodeResponse> response) {
                     GetSendCodeResponse getSendCodeResponse = response.body();
                     if (getSendCodeResponse.isSuccess()) {
-                        Toasty.success(getActivity(), getSendCodeResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toasty.success(getContext(), getSendCodeResponse.getMessage(), Toast.LENGTH_LONG).show();
                         if (state_addresses.equalsIgnoreCase("pay")){
                             Fragment fragment = new PayidFragment();
                             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -168,14 +168,14 @@ public class PaymentPhoneNumberFragment extends Fragment {
 //                        ft.addToBackStack(null);
                         ft.commit();
                     } else {
-                        Toasty.error(getActivity(), getSendCodeResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toasty.error(getContext(), getSendCodeResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
                     reloadDialog.dismiss();
                 }
 
                 @Override
                 public void onFailure(Call<GetSendCodeResponse> call, Throwable t) {
-                    Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                    Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                     reloadDialog.dismiss();
                 }
             });
@@ -198,7 +198,7 @@ public class PaymentPhoneNumberFragment extends Fragment {
         convertDaraToJson();
         SendCodeToMobileApi sendCodeToMobileApi = APIClient.getClient(SERVER_API_TEST).create(SendCodeToMobileApi.class);
         Call<GetSendCodeResponse> getSendCodeResponseCall;
-        if (PreferenceUtils.getCompanyLogin(getActivity())){
+        if (PreferenceUtils.getCompanyLogin(getContext())){
             getSendCodeResponseCall = sendCodeToMobileApi.sendCodecompany(update_post);
         }else {
             getSendCodeResponseCall = sendCodeToMobileApi.sendCode(update_post);
@@ -208,20 +208,20 @@ public class PaymentPhoneNumberFragment extends Fragment {
             public void onResponse(Call<GetSendCodeResponse> call, Response<GetSendCodeResponse> response) {
                 GetSendCodeResponse getSendCodeResponse = response.body();
                 if (getSendCodeResponse.isSuccess()) {
-                    Toasty.success(getActivity(), getSendCodeResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    Toasty.success(getContext(), getSendCodeResponse.getMessage(), Toast.LENGTH_LONG).show();
                 } else {
                     String errors = "";
                     for (String errorText : getSendCodeResponse.getError()) {
                         errors += errorText;
                     }
-                    Toasty.error(getActivity(), errors, Toast.LENGTH_LONG).show();
+                    Toasty.error(getContext(), errors, Toast.LENGTH_LONG).show();
                 }
                 reloadDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<GetSendCodeResponse> call, Throwable t) {
-                Toasty.error(getActivity(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -230,7 +230,7 @@ public class PaymentPhoneNumberFragment extends Fragment {
     Dialog reloadDialog;
 
     private void showDialog() {
-        reloadDialog = new Dialog(getActivity());
+        reloadDialog = new Dialog(getContext());
         reloadDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         reloadDialog.setContentView(R.layout.reload_layout);
         reloadDialog.setCancelable(false);
