@@ -98,7 +98,11 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         initializeRecycler();
-        findViews();
+        if (basketProducts == null) {
+            findViews();
+        } else {
+            updateUI();
+        }
     }
 
 
@@ -205,6 +209,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                             }
                         }
                     }
+
                     if (basketProducts.size() == 0) {
                         fragment_basket_elements_recycler_noitems.setVisibility(View.VISIBLE);
                         fragment_basket_paying.setVisibility(View.GONE);
@@ -216,17 +221,12 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                     double total_without_tax = Double.parseDouble(getBasketProducts.getOrderTotalPrice());
                     double tax = (Double.parseDouble(getBasketProducts.getOrderTotalPrice()) * 5) / 100;
                     double total_price = Double.parseDouble(getBasketProducts.getOrderTotalPrice()) + tax;
-                    basketElementsAdapter = new BasketElementsAdapter(getContext(), basketProducts);
-                    basketElementsAdapter.setBasketOperation(BasketFragment.this);
-                    fragment_basket_elements_recycler.setAdapter(basketElementsAdapter);
 
                     totalString = PriceFormatter.toDecimalRsString(total_price, getContext());
                     totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getContext());
                     taxString = PriceFormatter.toDecimalRsString(tax, getContext());
 
-                    fragment_basket_total_price_products_text.setText(totalwithoutString);
-                    fragment_basket_tax_text.setText(taxString);
-                    fragment_basket_total_price_text.setText(totalString);
+                    updateUI();
 
                     reloadDialog.dismiss();
                 }
@@ -291,17 +291,11 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                         double tax = (Double.parseDouble(getBasketProducts.getTotal()) * 5) / 100;
                         double total_price = Double.parseDouble(getBasketProducts.getTotal()) + tax;
 
-                        basketElementsAdapter = new BasketElementsAdapter(getContext(), basketProducts);
-                        basketElementsAdapter.setBasketOperation(BasketFragment.this);
-                        fragment_basket_elements_recycler.setAdapter(basketElementsAdapter);
-
                         totalString = PriceFormatter.toDecimalRsString(total_price, getContext());
                         totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getContext());
                         taxString = PriceFormatter.toDecimalRsString(tax, getContext());
 
-                        fragment_basket_total_price_products_text.setText(totalwithoutString);
-                        fragment_basket_tax_text.setText(taxString);
-                        fragment_basket_total_price_text.setText(totalString);
+                       updateUI();
                     }
                     reloadDialog.dismiss();
                 }
@@ -316,13 +310,29 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
 
     }
 
+    private void updateUI() {
+        if (basketProducts.size() == 0) {
+            fragment_basket_elements_recycler_noitems.setVisibility(View.VISIBLE);
+            fragment_basket_paying.setVisibility(View.GONE);
+            fragment_basket_edittext_linear.setVisibility(View.GONE);
+        } else {
+            basketElementsAdapter = new BasketElementsAdapter(getContext(), basketProducts);
+            basketElementsAdapter.setBasketOperation(BasketFragment.this);
+            fragment_basket_elements_recycler.setAdapter(basketElementsAdapter);
+
+            fragment_basket_total_price_products_text.setText(totalwithoutString);
+            fragment_basket_tax_text.setText(taxString);
+            fragment_basket_total_price_text.setText(totalString);
+        }
+    }
+
     @Override
     public void onCreate(@androidx.annotation.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                ((MainActivity)getContext()).navigateToHomeFragment();
+                ((MainActivity) getContext()).navigateToHomeFragment();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);

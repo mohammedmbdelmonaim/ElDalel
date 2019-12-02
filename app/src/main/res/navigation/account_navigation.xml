@@ -13,8 +13,7 @@
         <action
             android:id="@+id/action_likesElementsFragment_to_detailItemActivity"
             app:destination="@id/detailItemFragment"
-            app:popUpTo="@+id/likesElementsFragment"
-            app:popUpToInclusive="false" />
+            />
     </fragment>
     <fragment
         android:id="@+id/detailItemFragment"

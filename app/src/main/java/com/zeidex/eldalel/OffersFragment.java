@@ -73,7 +73,7 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                ((MainActivity)getContext()).navigateToHomeFragment();
+                ((MainActivity) getContext()).navigateToHomeFragment();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
@@ -84,25 +84,13 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        findViews();
         initializeRecycler();
 
-    }
-
-    private void initializeRecycler() {
-        int spanCount = 2; // 3 columns
-        int spacing = 20; // 50px
-        boolean includeEdge = true;
-
-        ofeers_recycler.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        ofeers_recycler.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
-        ofeers_recycler.setItemAnimator(new DefaultItemAnimator());
-//        offersAdapter = new OffersAdapter(getContext());
-//        offersAdapter.setOffersOperation(this);
-//        ofeers_recycler.setAdapter(offersAdapter);
-    }
-
-    private void findViews() {
+        if (categories != null) {
+            updateUI();
+        } else {
+            findViews();
+        }
         item_offers_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -120,6 +108,22 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
             }
         });
 
+    }
+
+    private void initializeRecycler() {
+        int spanCount = 2; // 3 columns
+        int spacing = 20; // 50px
+        boolean includeEdge = true;
+
+        ofeers_recycler.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        ofeers_recycler.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+        ofeers_recycler.setItemAnimator(new DefaultItemAnimator());
+//        offersAdapter = new OffersAdapter(getContext());
+//        offersAdapter.setOffersOperation(this);
+//        ofeers_recycler.setAdapter(offersAdapter);
+    }
+
+    private void findViews() {
         showDialog();
         onLoadPage();
     }
@@ -133,9 +137,7 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
                 int code = response.body().getCode();
                 if (code == 200) {
                     categories = response.body().getData().getCategories();
-                    offersAdapter = new OffersAdapter(getContext(), categories);
-                    offersAdapter.setOffersOperation(OffersFragment.this);
-                    ofeers_recycler.setAdapter(offersAdapter);
+                    updateUI();
 
                 }
                 reloadDialog.dismiss();
@@ -147,6 +149,12 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
                 reloadDialog.dismiss();
             }
         });
+    }
+
+    private void updateUI() {
+        offersAdapter = new OffersAdapter(getContext(), categories);
+        offersAdapter.setOffersOperation(OffersFragment.this);
+        ofeers_recycler.setAdapter(offersAdapter);
     }
 
     private void showDialog() {

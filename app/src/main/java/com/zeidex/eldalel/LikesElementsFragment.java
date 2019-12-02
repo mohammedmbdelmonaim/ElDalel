@@ -15,13 +15,14 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.phelat.navigationresult.BundleFragment;
 import com.zeidex.eldalel.adapters.LikesElementsAdapter;
+import com.zeidex.eldalel.listeners.AddToCartCallback;
 import com.zeidex.eldalel.models.ProductsCategory;
 import com.zeidex.eldalel.response.DeleteFavoriteResponse;
 import com.zeidex.eldalel.response.GetAddToCardResponse;
@@ -49,7 +50,7 @@ import retrofit2.Response;
 
 import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
-public class LikesElementsFragment extends Fragment implements LikesElementsAdapter.LikesOperation {
+public class LikesElementsFragment extends BundleFragment implements LikesElementsAdapter.LikesOperation {
     @BindView(R.id.likes_item_recycler_list)
     RecyclerView likes_item_recycler_list;
     @BindView(R.id.likes_text_label_count)
@@ -73,8 +74,24 @@ public class LikesElementsFragment extends Fragment implements LikesElementsAdap
         View view = inflater.inflate(R.layout.activity_elements_likes, container, false);
         ButterKnife.bind(this, view);
         initializeRecycler();
-        findViews();
+        if (products != null) {
+            updateUI(products);
+        } else {
+            findViews();
+        }
         return view;
+    }
+
+    private void updateUI(ArrayList<ProductsCategory> products) {
+        if (products.size() > 0) {
+            noItemsLayout.setVisibility(View.GONE);
+            likes_text_label_count.setText(String.valueOf(products.size()));
+            likes_text_label_text.setVisibility(View.VISIBLE);
+            likesElementsAdapter.setProductList(products);
+            likesElementsAdapter.notifyDataSetChanged();
+        } else {
+            noItemsLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -83,7 +100,7 @@ public class LikesElementsFragment extends Fragment implements LikesElementsAdap
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                NavHostFragment.findNavController(LikesElementsFragment.this).navigateUp();
+                NavHostFragment.findNavController(LikesElementsFragment.this).popBackStack();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
@@ -241,15 +258,30 @@ public class LikesElementsFragment extends Fragment implements LikesElementsAdap
     @Override
     public void onClickProduct(int id, int pos) {
         Bundle bundle = new Bundle();
+        AddToCartCallback callback = new AddToCartCallback() {
+            @Override
+            public void setAddToCartResult(String totalItemCount) {
+                updateCartUI(pos, totalItemCount);
+            }
+        };
         bundle.putInt("id", id);
         bundle.putParcelableArrayList("similar_products", products);
         bundle.putString("getLike", "1");
         bundle.putInt("pos", pos);
+        bundle.putSerializable("added_to_cart", callback);
         NavHostFragment.findNavController(this).navigate(R.id.action_likesElementsFragment_to_detailItemActivity, bundle);
 //        mDetailItemFragment = new DetailItemFragment(null, bundle);
 //        getSupportFragmentManager().beginTransaction().replace(R.id.container, mDetailItemFragment).commit();
 //        startActivityForResult(new Intent(this, DetailItemFragment.class).
 //        Animatoo.animateSwipeLeft(this);
+    }
+
+    private void updateCartUI(int pos, String totalItemCount) {
+        likesElementsAdapter.getProductsList().get(pos).setCart("0");
+        likesElementsAdapter.notifyItemChanged(pos);
+        if (totalItemCount != null)
+            PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(totalItemCount));
+
     }
 
     @Override
@@ -271,7 +303,8 @@ public class LikesElementsFragment extends Fragment implements LikesElementsAdap
                     Toasty.success(getContext(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
                     likesElementsAdapter.getProductsList().get(position).setCart("0");
                     likesElementsAdapter.notifyItemChanged(position);
-                    PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                    if (getAddToCardResponse.getItemsCount() != null)
+                        PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
                 }
                 reloadDialog.dismiss();
             }
