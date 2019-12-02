@@ -73,8 +73,24 @@ public class LikesElementsFragment extends Fragment implements LikesElementsAdap
         View view = inflater.inflate(R.layout.activity_elements_likes, container, false);
         ButterKnife.bind(this, view);
         initializeRecycler();
-        findViews();
+        if (products != null) {
+            updateUI(products);
+        } else {
+            findViews();
+        }
         return view;
+    }
+
+    private void updateUI(ArrayList<ProductsCategory> products) {
+        if (products.size() > 0) {
+            noItemsLayout.setVisibility(View.GONE);
+            likes_text_label_count.setText(String.valueOf(products.size()));
+            likes_text_label_text.setVisibility(View.VISIBLE);
+            likesElementsAdapter.setProductList(products);
+            likesElementsAdapter.notifyDataSetChanged();
+        } else {
+            noItemsLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -83,7 +99,7 @@ public class LikesElementsFragment extends Fragment implements LikesElementsAdap
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                NavHostFragment.findNavController(LikesElementsFragment.this).navigateUp();
+                NavHostFragment.findNavController(LikesElementsFragment.this).popBackStack();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);

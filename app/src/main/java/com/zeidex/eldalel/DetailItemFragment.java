@@ -187,7 +187,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                NavHostFragment.findNavController(DetailItemFragment.this).navigateUp();
+                NavHostFragment.findNavController(DetailItemFragment.this).popBackStack();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
