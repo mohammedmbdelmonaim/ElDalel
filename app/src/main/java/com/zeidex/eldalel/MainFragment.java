@@ -214,10 +214,11 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
             updateUI();
 
 
-            if(sliders != null){
+            if (sliders != null) {
                 homeSliderAdapter = new HomeSliderAdapter(getContext(), sliders);
                 imageSlider.setSliderAdapter(homeSliderAdapter);
-                imageSlider.startAutoCycle();}
+                imageSlider.startAutoCycle();
+            }
 
         } else {
             onLoadPage();
@@ -709,8 +710,6 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
     private void updateCategory3CartUI(int pos, String totalItemCount) {
         category3Adapter.getProductsCategoryList().get(pos).setCart("0");
         category3Adapter.notifyItemChanged(pos);
-        if (totalItemCount != null)
-            PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(totalItemCount));
     }
 
     @Override
@@ -765,6 +764,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                     fragment_main_basket_top_txt.setText(getAddToCardResponse.getItemsCount());
                     fragment_main_basket_top_txt.setVisibility(View.VISIBLE);
                     PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                    ((MainActivity) getActivity()).updateBasketBadge();
                 }
                 reloadDialog.dismiss();
             }
@@ -791,7 +791,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
         bundle.putInt("id", id);
         bundle.putParcelableArrayList("similar_products", home_category2);
         bundle.putString("getLike", home_category2.get(pos).getLike());
-        bundle.putSerializable("added_to_cart" ,callback);
+        bundle.putSerializable("added_to_cart", callback);
 
 //        firstPageListener.onSwitchToNextFragment(bundle);
         NavHostFragment.findNavController(this).navigate(R.id.action_mainFragment_to_detailItemFragment, bundle);
@@ -800,8 +800,6 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
     private void updatePhoneCartUI(int pos, String totalItemCount) {
         phonesAdapter.getPhoneList().get(pos).setCart("0");
         phonesAdapter.notifyItemChanged(pos);
-        if (totalItemCount != null)
-            PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(totalItemCount));
     }
 
     @Override
@@ -856,6 +854,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                     fragment_main_basket_top_txt.setText(getAddToCardResponse.getItemsCount());
                     fragment_main_basket_top_txt.setVisibility(View.VISIBLE);
                     PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                    ((MainActivity) getActivity()).updateBasketBadge();
                 }
                 reloadDialog.dismiss();
             }
@@ -882,7 +881,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
         bundle.putInt("id", id);
         bundle.putParcelableArrayList("similar_products", home_category1);
         bundle.putString("getLike", home_category1.get(pos).getLike());
-        bundle.putSerializable("added_to_cart" ,callback);
+        bundle.putSerializable("added_to_cart", callback);
 
         NavHostFragment.findNavController(this).navigate(R.id.action_mainFragment_to_detailItemFragment, bundle);
 //        NavHostFragment.findNavController(this).navigate(MainFragmentDirections.actionMainFragmentToDetailItemActivity(id, pos, home_category1.toArray(new ProductsCategory[home_category1.size()]),home_category1.get(pos).getLike()));
@@ -894,8 +893,6 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
     private void updateAccessoryCartUI(int pos, String totalItemCount) {
         accessoriesAdapter.getAccessoryList().get(pos).setCart("0");
         accessoriesAdapter.notifyItemChanged(pos);
-        if (totalItemCount != null)
-            PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(totalItemCount));
     }
 
     @Override
@@ -954,6 +951,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                         fragment_main_basket_top_txt.setVisibility(View.VISIBLE);
                         if (getAddToCardResponse.getItemsCount() != null) {
                             PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                            ((MainActivity) getActivity()).updateBasketBadge();
                         }
                     } else {
                         Toasty.error(getContext(), getAddToCardResponse.getMessage(), Toast.LENGTH_LONG).show();

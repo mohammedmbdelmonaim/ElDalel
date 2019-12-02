@@ -712,6 +712,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                     phonesAdapter.notifyItemChanged(position);
                     isChanged = true;
                     PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                    ((MainActivity) getActivity()).updateBasketBadge();
                 }
                 reloadDialog.dismiss();
             }
@@ -756,6 +757,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                         cartCountLinearLayout.setVisibility(View.GONE);
                         isAdded = true;
                         PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                        ((MainActivity) getActivity()).updateBasketBadge();
                         AddToCartCallback callback = (AddToCartCallback) getArguments().getSerializable("added_to_cart");
                         if(callback != null)
                         callback.setAddToCartResult(getAddToCardResponse.getItemsCount());
