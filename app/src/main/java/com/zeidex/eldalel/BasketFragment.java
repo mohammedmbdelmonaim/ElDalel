@@ -462,6 +462,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                                     basketProducts.set(pos, basketProductsModel);
                                     basketElementsAdapter.notifyItemChanged(pos);
                                     PreferenceUtils.saveCountOfItemsBasket(getContext().getApplicationContext(), Integer.parseInt(changeQuantityResponse.getAllCartItemsCount()));
+                                    ((MainActivity) getActivity()).updateBasketBadge();
                                     reloadDialog.dismiss();
                                     changeQuantity.dismiss();
                                 } else {
@@ -525,6 +526,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                     fragment_basket_tax_text.setText(taxString);
 
                     PreferenceUtils.saveCountOfItemsBasket(getContext().getApplicationContext(), responseBody.getData().getAllCartItemsCount());
+                    ((MainActivity) getActivity()).updateBasketBadge();
                     Toasty.success(getContext(), getString(R.string.delete_cart_toast), Toast.LENGTH_LONG).show();
                     if (responseBody.getData().getAllCartItemsCount() == 0) {
                         fragment_basket_elements_recycler_noitems.setVisibility(View.VISIBLE);

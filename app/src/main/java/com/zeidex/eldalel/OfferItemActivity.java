@@ -516,8 +516,6 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
     private void updateCartUI(int pos, String totalItemCount) {
         productsAdapter.getProductsList().get(pos).setCart("0");
         productsAdapter.notifyItemChanged(pos);
-        if (totalItemCount != null)
-            PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(totalItemCount));
     }
 
     @Override
@@ -570,6 +568,7 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
                     productsAdapter.getProductsList().get(position).setCart("0");
                     productsAdapter.notifyItemChanged(position);
                     PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                    ((MainActivity) getActivity()).updateBasketBadge();
                 }
                 reloadDialog.dismiss();
             }

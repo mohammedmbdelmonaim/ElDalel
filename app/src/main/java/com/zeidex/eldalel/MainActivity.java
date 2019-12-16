@@ -6,10 +6,12 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -57,6 +59,9 @@ public class MainActivity extends BaseActivity {
     public boolean login;
     Fragment frag = null;
     private MainViewPagerAdapter mViewPagerAdapter;
+    private TextView mBadgeCount;
+    private boolean isBadgeInitialized;
+
     Dialog rate_dialog;
     String token;
     @Override
@@ -158,6 +163,51 @@ public class MainActivity extends BaseActivity {
             selectedItem.setChecked(true);
         }
         selectFragment(selectedItem);
+
+        initializeBasketBadge();
+    }
+
+    private void initializeBasketBadge() {
+        int cartCount = PreferenceUtils.getCountOfItemsBasket(this);
+        if (cartCount > 0) {
+            BottomNavigationMenuView bottomNavigationMenuView =
+                    (BottomNavigationMenuView) mBottomNav.getChildAt(0);
+            View v = bottomNavigationMenuView.getChildAt(3);
+            BottomNavigationItemView itemView = (BottomNavigationItemView) v;
+
+            View badge = LayoutInflater.from(this)
+                    .inflate(R.layout.badge_layout, itemView, true);
+
+            mBadgeCount = badge.findViewById(R.id.notificationsBadgeTextView);
+            mBadgeCount.setText(cartCount + "");
+            isBadgeInitialized = true;
+        }
+    }
+
+    public void updateBasketBadge() {
+        int basketCount = PreferenceUtils.getCountOfItemsBasket(this);
+        if (basketCount > 0) {
+            if (isBadgeInitialized)
+                incrementBasketBadgeCount(basketCount);
+            else
+                initializeBasketBadge();
+        } else {
+            removeBasketBadge();
+        }
+    }
+
+    public void incrementBasketBadgeCount(int basketCount) {
+        mBadgeCount.setText(basketCount + "");
+    }
+
+    public void removeBasketBadge() {
+        if (isBadgeInitialized) {
+            BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) mBottomNav.getChildAt(0);
+            View v = bottomNavigationMenuView.getChildAt(3);
+            BottomNavigationItemView itemView = (BottomNavigationItemView) v;
+            itemView.removeViewAt(itemView.getChildCount() - 1);
+            isBadgeInitialized = false;
+        }
     }
     Map<String, String> post;
 
@@ -197,6 +247,12 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        updateBasketBadge();
+    }
+
+    @Override
     public void onBackPressed() {
         MenuItem homeItem = mBottomNav.getMenu().getItem(0);
 //        if (mSelectedItem != homeItem.getItemId()) {
@@ -210,7 +266,7 @@ public class MainActivity extends BaseActivity {
 //        }
     }
 
-    public void navigateToCategories(int categoryId){
+    public void navigateToCategories(int categoryId) {
         CategoriesFragment categoriesFragment = new CategoriesFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("category_id", categoryId);

@@ -279,9 +279,6 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
     private void updateCartUI(int pos, String totalItemCount) {
         likesElementsAdapter.getProductsList().get(pos).setCart("0");
         likesElementsAdapter.notifyItemChanged(pos);
-        if (totalItemCount != null)
-            PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(totalItemCount));
-
     }
 
     @Override
@@ -303,9 +300,10 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
                     Toasty.success(getContext(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
                     likesElementsAdapter.getProductsList().get(position).setCart("0");
                     likesElementsAdapter.notifyItemChanged(position);
-                    if (getAddToCardResponse.getItemsCount() != null)
+                    if (getAddToCardResponse.getItemsCount() != null){
                         PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
-                }
+                        ((MainActivity) getActivity()).updateBasketBadge();
+                    }}
                 reloadDialog.dismiss();
             }
 
