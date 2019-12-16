@@ -410,5 +410,7 @@
     <string name="item_payment_methods_label"> Payment methods </string>
         
     <string name="favorites"> Favorites </string>
+    <string name="rating_name">Your rating is important to us</string>
+    <string name="comment_rating">comment</string>
 
 </resources>

@@ -58,7 +58,7 @@ public class HomeSliderAdapter extends SliderViewAdapter<HomeSliderAdapter.Slide
 //                    .into(viewHolder.sliderProductImageView);
 
         Picasso.with(context)
-                .load("https://daleel.zeidex.info/uploads/" + currentSlider.getImage())
+                .load("https://dleel.com/uploads/" + currentSlider.getImage())
                 .fit()
                 .transform(transformation)
                 .into(viewHolder.sliderProductImageView);

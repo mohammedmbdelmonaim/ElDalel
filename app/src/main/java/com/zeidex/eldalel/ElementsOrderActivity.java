@@ -100,11 +100,11 @@ public class ElementsOrderActivity extends BaseActivity implements ElementsOrder
 //                }
                 for (int i = 0; i < orders.size(); i++) {
 //                    price += orders.get(i).getProductPrice();
-                    total_without_tax += orders.get(i).getTotalPriceWithTax();
+                    total_without_tax += orders.get(i).getProductPrice();
                 }
 
                 double tax = (total_without_tax * 5)/100;
-                double total_with_tax = total_without_tax + tax ;
+                double total_with_tax = total_without_tax + tax;
 
                 String totalString = PriceFormatter.toDecimalRsString(total_with_tax, ElementsOrderActivity.this);
                 String totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, ElementsOrderActivity.this);

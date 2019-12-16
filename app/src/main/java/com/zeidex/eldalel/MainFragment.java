@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.SearchView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.fragment.NavHostFragment;
@@ -94,6 +95,9 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
     @BindView(R.id.fragment_main_basket_top_txt)
     AppCompatTextView fragment_main_basket_top_txt;
 
+    @BindView(R.id.constraint_home_category3)
+    ConstraintLayout constraint_home_category3;
+
     @BindView(R.id.imageSlider)
     SliderView imageSlider;
     private List<GetSliders.Data> sliders;
@@ -133,7 +137,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
 
 
         Fragment fragment = new BasketFragment();
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
 //            ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
         ft.replace(R.id.container_activity, fragment, "basket_fragment");
         ft.addToBackStack(null);
@@ -521,6 +525,8 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
             category3Adapter.setProductsCategory3Operation(MainFragment.this);
             main_recycler_category3.setAdapter(category3Adapter);
             category3_label.setText(categories_names.get(2));
+        }else{
+            constraint_home_category3.setVisibility(View.GONE);
         }
 
 

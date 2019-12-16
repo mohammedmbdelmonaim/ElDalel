@@ -385,7 +385,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
 
                         } else {
                             Toasty.error(getContext(), getMakeOrderResponse.getErroe(), Toast.LENGTH_LONG).show();
-                            onLoadProfile();
+//                            onLoadProfile();
                             reloadDialog.dismiss();
                         }
 //                        } else {

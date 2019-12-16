@@ -210,4 +210,6 @@
     <string name="remmber_me_chechbox">تذكرنى</string>
     <string name="item_payment_methods_label">طرق الدفع</string>
     <string name="favorites">المفضله</string>
+    <string name="rating_name">تقييمك يهمنا</string>
+    <string name="comment_rating">التعليق</string>
 </resources>

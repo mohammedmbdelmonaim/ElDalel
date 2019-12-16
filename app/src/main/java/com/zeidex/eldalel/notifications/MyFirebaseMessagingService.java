@@ -80,20 +80,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
-        String title = remoteMessage.getNotification().getTitle();
-        String body = remoteMessage.getNotification().getBody();
+//        String title = remoteMessage.getNotification().getTitle();
+//        String body = remoteMessage.getNotification().getBody();
 
         // Check if message contains a data payload.
-        sendNotification(title , body);
+//        sendNotification(title , body);
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+            Map<String , String> notifi = remoteMessage.getData();
+            String id = notifi.get("id");
+            String message = notifi.get("message");
+            String name = notifi.get("name");
+            sendNotification(message , name , id);
 
 //            if (/* Check if data needs to be processed by long running job */ true) {
 //                // For long-running tasks (10 seconds or more) use WorkManager.
 ////                scheduleJob();
 //            } else {
             // Handle message within 10 seconds
-            handleNow();
+//            handleNow();
 //            }
 
         }
@@ -185,8 +190,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
          * @param messageBody FCM message body received.
          */
 
-        private void sendNotification (String title , String messageBody){
-            Intent intent = new Intent(this, MainActivity.class);
+        private void sendNotification (String title , String messageBody , String id){
+            Intent intent = new Intent(this, MainActivity.class).putExtra("from_notification" , true).putExtra("product_id" , id);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                     PendingIntent.FLAG_ONE_SHOT);

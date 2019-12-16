@@ -24,4 +24,9 @@
         <!--<item name="queryHint">#AAAAAA</item>-->
     </style>
 
+    <style name="ratingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:minHeight">17dip</item>
+        <item name="android:maxHeight">17dip</item>
+    </style>
+
 </resources>

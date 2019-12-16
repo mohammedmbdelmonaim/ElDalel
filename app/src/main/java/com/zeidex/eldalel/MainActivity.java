@@ -1,14 +1,20 @@
 package com.zeidex.eldalel;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -21,16 +27,26 @@ import com.zeidex.eldalel.hostfragments.BasketHostFragment;
 import com.zeidex.eldalel.hostfragments.CategoriesHostFragment;
 import com.zeidex.eldalel.hostfragments.MainHostFragment;
 import com.zeidex.eldalel.hostfragments.OffersHostFragment;
+import com.zeidex.eldalel.response.GetRatingResponse;
+import com.zeidex.eldalel.services.AddRatingApi;
+import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.Constants;
+import com.zeidex.eldalel.utils.KeyboardUtils;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.zeidex.eldalel.utils.Constants.SELECTED_ITEM;
+import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 
 public class MainActivity extends BaseActivity {
     @BindView(R.id.bottom_nav)
@@ -41,7 +57,8 @@ public class MainActivity extends BaseActivity {
     public boolean login;
     Fragment frag = null;
     private MainViewPagerAdapter mViewPagerAdapter;
-
+    Dialog rate_dialog;
+    String token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +73,51 @@ public class MainActivity extends BaseActivity {
                     getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(new NotificationChannel(channelId,
                     channelName, NotificationManager.IMPORTANCE_LOW));
+        }
+
+        if (getIntent().getBooleanExtra("from_notification" , false)){
+            rate_dialog = new Dialog(this);
+            rate_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            rate_dialog.setContentView(R.layout.dialog_rating);
+            rate_dialog.setCancelable(true);
+            RatingBar rating = rate_dialog.findViewById(R.id.rating);
+            AppCompatEditText comment_rating = rate_dialog.findViewById(R.id.comment_rating);
+            AppCompatButton btn_rating = rate_dialog.findViewById(R.id.btn_rating);
+            if (PreferenceUtils.getUserLogin(this)) {
+                token = PreferenceUtils.getUserToken(this);
+            } else if (PreferenceUtils.getCompanyLogin(this)) {
+                token = PreferenceUtils.getCompanyToken(this);
+            }
+            btn_rating.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    convertJson(rating.getRating()+"" , comment_rating.getText().toString());
+                    AddRatingApi addRatingApi = APIClient.getClient(SERVER_API_TEST).create(AddRatingApi.class);
+                    Call<GetRatingResponse> getRatingResponseCall;
+                    if (PreferenceUtils.getCompanyLogin(MainActivity.this)) {
+                        getRatingResponseCall = addRatingApi.getCompanyRating(Integer.parseInt(getIntent().getStringExtra("product_id")) , post);
+                    } else {
+                        getRatingResponseCall = addRatingApi.getUserRating(Integer.parseInt(getIntent().getStringExtra("product_id")) , post);
+                    }
+                    getRatingResponseCall.enqueue(new Callback<GetRatingResponse>() {
+                        @Override
+                        public void onResponse(Call<GetRatingResponse> call, Response<GetRatingResponse> response) {
+                            String status = response.body().getStatus();
+                            if (status.equalsIgnoreCase("success")){
+                                Toasty.info(MainActivity.this , "Thank you" , Toast.LENGTH_LONG).show();
+                                KeyboardUtils.hideKeyboard(MainActivity.this);
+                                rate_dialog.dismiss();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<GetRatingResponse> call, Throwable t) {
+                            Toasty.error(MainActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            });
+            rate_dialog.show();
         }
 
 //        frag = new FragmentFooterView();
@@ -97,7 +159,14 @@ public class MainActivity extends BaseActivity {
         }
         selectFragment(selectedItem);
     }
+    Map<String, String> post;
 
+    private void convertJson(String rate, String comment) {
+        post = new HashMap<>();
+        post.put("rate", rate);
+        post.put("comment", comment);
+        post.put("token", token);
+    }
 
     @SuppressLint("RestrictedApi")
     public static void disableShiftMode(BottomNavigationView view) {

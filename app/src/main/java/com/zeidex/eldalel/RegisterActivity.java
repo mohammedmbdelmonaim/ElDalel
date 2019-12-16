@@ -450,8 +450,13 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     Locale locale = ChangeLang.getLocale(getResources());
                     String loo = locale.getLanguage();
                     if (loo.equalsIgnoreCase("en")) {
-                        for (int i = 0; i < getRegions.getData().getSubsidiaries().size(); i++) { //category loop
-                            regions.add(getRegions.getData().getSubsidiaries().get(i).getName_en());
+                        for (int i = 0; i < getRegions.getData().getSubsidiaries().size(); i++) {//category loop
+                            if (getRegions.getData().getSubsidiaries().get(i).getName_en() == null){
+                                regions.add(getRegions.getData().getSubsidiaries().get(i).getName_ar());
+                            }else{
+                                regions.add(getRegions.getData().getSubsidiaries().get(i).getName_en());
+                            }
+
                             ids_regions.add(Integer.parseInt(getRegions.getData().getSubsidiaries().get(i).getId()));
                         }
 

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/change_quantity_custom_dialog">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/cairo_bold"
+        android:text="@string/rating_name"
+        android:layout_marginTop="@dimen/dimen_16dp"
+        android:textSize="@dimen/sp16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_16dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_change_quantity_dialog">
+
+        <RatingBar
+            android:id="@+id/rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:isIndicator="false"
+            style="?android:attr/ratingBarStyle"
+            android:numStars="5"
+            android:rating="0" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginTop="9dp"
+            android:layout_marginEnd="@dimen/dimen_16dp"
+            android:background="@drawable/fragment_basket_edittext_bg"
+            android:elevation="@dimen/dimen_4dp"
+            android:orientation="horizontal"
+           >
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/comment_rating"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dimen_55dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:fontFamily="@font/cairo_regular"
+                android:hint="@string/comment_rating"
+                android:inputType="text"
+                android:paddingStart="@dimen/dimen_15dp"
+                android:textAlignment="viewStart"
+                android:textColor="#AAAAAA"
+                android:textColorHint="#AAAAAA"
+                android:textSize="@dimen/dimen_15sp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:fontFamily="@font/cairo_bold"
+            android:text="send"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <TextView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/arabicuitext_b"
+        android:text="wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+        android:textColor="#F0F0F0"
+        android:textSize="@dimen/dimen_6sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_change_quantity_linear" />
+</LinearLayout>

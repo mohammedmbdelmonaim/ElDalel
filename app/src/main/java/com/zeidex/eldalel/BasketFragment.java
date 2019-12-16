@@ -183,13 +183,26 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                             String arr[] = getBasketProducts.getCarts().get(i).getProduct().getName().split(" ", 2); // get first word
                             String firstWord = arr[0];
                             if (getBasketProducts.getCarts().get(i).getProduct().getPhotos().size() == 0) {
-                                basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
-                                        firstWord, "", getBasketProducts.getCarts().get(i).getProduct().getName(),
-                                        getBasketProducts.getCarts().get(i).getProduct().getPrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+                                if (PreferenceUtils.getUserLogin(getContext())) {
+                                    basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
+                                            firstWord, "", getBasketProducts.getCarts().get(i).getProduct().getName(),
+                                            getBasketProducts.getCarts().get(i).getProduct().getPrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+                                } else if (PreferenceUtils.getCompanyLogin(getContext())) {
+                                    basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
+                                            firstWord, "", getBasketProducts.getCarts().get(i).getProduct().getName(),
+                                            getBasketProducts.getCarts().get(i).getProduct().getWholesalePrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+                                }
                             } else {
-                                basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
-                                        firstWord, getBasketProducts.getCarts().get(i).getProduct().getPhotos().get(0).getFilename(), getBasketProducts.getCarts().get(i).getProduct().getName(),
-                                        getBasketProducts.getCarts().get(i).getProduct().getPrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+
+                                if (PreferenceUtils.getUserLogin(getContext())) {
+                                    basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
+                                            firstWord, getBasketProducts.getCarts().get(i).getProduct().getPhotos().get(0).getFilename(), getBasketProducts.getCarts().get(i).getProduct().getName(),
+                                            getBasketProducts.getCarts().get(i).getProduct().getPrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+                                } else if (PreferenceUtils.getCompanyLogin(getContext())) {
+                                    basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
+                                            firstWord, getBasketProducts.getCarts().get(i).getProduct().getPhotos().get(0).getFilename(), getBasketProducts.getCarts().get(i).getProduct().getName(),
+                                            getBasketProducts.getCarts().get(i).getProduct().getWholesalePrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+                                }
                             }
                         }
 
@@ -199,13 +212,26 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                             String arr[] = getBasketProducts.getCarts().get(i).getProduct().getNameAr().split(" ", 2); // get first word
                             String firstWord = arr[0];
                             if (getBasketProducts.getCarts().get(i).getProduct().getPhotos().size() == 0) {
-                                basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
-                                        firstWord, "", getBasketProducts.getCarts().get(i).getProduct().getNameAr(),
-                                        getBasketProducts.getCarts().get(i).getProduct().getPrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+                                if (PreferenceUtils.getUserLogin(getContext())) {
+                                    basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
+                                            firstWord, "", getBasketProducts.getCarts().get(i).getProduct().getNameAr(),
+                                            getBasketProducts.getCarts().get(i).getProduct().getPrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+                                } else if (PreferenceUtils.getCompanyLogin(getContext())) {
+                                    basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
+                                            firstWord, "", getBasketProducts.getCarts().get(i).getProduct().getNameAr(),
+                                            getBasketProducts.getCarts().get(i).getProduct().getWholesalePrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+                                }
                             } else {
-                                basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
-                                        firstWord, getBasketProducts.getCarts().get(i).getProduct().getPhotos().get(0).getFilename(), getBasketProducts.getCarts().get(i).getProduct().getNameAr(),
-                                        getBasketProducts.getCarts().get(i).getProduct().getPrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+
+                                if (PreferenceUtils.getUserLogin(getContext())) {
+                                    basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
+                                            firstWord, getBasketProducts.getCarts().get(i).getProduct().getPhotos().get(0).getFilename(), getBasketProducts.getCarts().get(i).getProduct().getNameAr(),
+                                            getBasketProducts.getCarts().get(i).getProduct().getPrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+                                } else if (PreferenceUtils.getCompanyLogin(getContext())) {
+                                    basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
+                                            firstWord, getBasketProducts.getCarts().get(i).getProduct().getPhotos().get(0).getFilename(), getBasketProducts.getCarts().get(i).getProduct().getNameAr(),
+                                            getBasketProducts.getCarts().get(i).getProduct().getWholesalePrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+                                }
                             }
                         }
                     }
