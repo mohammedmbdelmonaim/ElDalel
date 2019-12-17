@@ -9,5 +9,5 @@ import retrofit2.http.Query;
 public interface SearchProductAPI {
 
     @GET("products")
-    Call<GetProducts> getProductsFromNameSearch(@Query("product_name") String productName, @Query("token") String token);
+    Call<GetProducts> getProductsFromNameSearch(@Query("product_name") String productName, @Query("token") String token, @Query("page") int page);
 }

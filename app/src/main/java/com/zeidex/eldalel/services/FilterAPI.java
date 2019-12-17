@@ -11,5 +11,5 @@ import retrofit2.http.QueryMap;
 
 public interface FilterAPI {
     @GET("products")
-    Call<GetProducts> getProductsFromFilter(@QueryMap Map<String, Object> map, @Query("token") String token);
+    Call<GetProducts> getProductsFromFilter(@QueryMap Map<String, Object> map, @Query("token") String token, @Query("page") int page);
 }

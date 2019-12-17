@@ -104,6 +104,8 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
     CategoryItemAdapter productsAdapter;
     SubCategoriesAdapter subCategoriesAdapter;
 
+    int currentPage = 1;
+
     int position_detail;
 
     Dialog reloadDialog;
@@ -112,20 +114,29 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
 
     Map<String, String> cartPost;
     Map<String, String> likePost;
-    private ArrayList<ProductsCategory> productsCategory;
+    private ArrayList<ProductsCategory> allProductsCategory;
     private Map<String, Object> filterMap;
     private PopupMenu dropDownMenu;
     private int subcategoryId;
     private int categoryId;
     private int position;
 
+    private int productsPerLoad = 19;
+    private boolean isLoadedBefore = false;
+    private boolean shouldLoadMore = true;
+    //This is used to differentiate between any "getproducts" process and sorting
+    //because in case of sorting getproducts should be called before incrementing page number
+    //as when clearing the list the listener on scroll will be triggered immediately
+    private boolean shouldSort = false;
+    private boolean shouldReload = false;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_offer_item, container, false);
         ButterKnife.bind(this, view);
-        initializeRecycler();
-        initializePopupSortMenu();
+//        initializeRecycler();
+//        initializePopupSortMenu();
 
         offer_item_search.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
@@ -144,8 +155,30 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
             }
         });
 
+        setupRecyclerPagination();
         findViews();
         return view;
+    }
+
+    private void setupRecyclerPagination() {
+        offer_category_item_recycler_list.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                //When the recycler hits the end,
+                if (!recyclerView.canScrollVertically(1) && shouldLoadMore) {
+                    if (shouldSort) {
+                        filterResults();
+                        currentPage++;
+                    } else if (shouldReload) {
+
+                    } else {
+                        currentPage++;
+                        onLoadPage();
+                    }
+                }
+            }
+        });
     }
 
     private void initializePopupSortMenu() {
@@ -179,7 +212,16 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
                         filterMap.remove("order_price");
                         break;
                 }
-                filterResults();
+
+                if (productsAdapter != null) {
+                    allProductsCategory.clear();
+                    productsAdapter.clearList();
+                    currentPage = 1;
+                    isLoadedBefore = false;
+                    shouldLoadMore = true;
+                    shouldSort = true;
+                }
+//                filterResults();
                 return true;
             }
         });
@@ -226,18 +268,22 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
             filterMap.put("status", OFFERS);
         }
 
+        initializeRecycler();
         initializePopupSortMenu();
 
-        if (productsCategory != null) {
+        if (allProductsCategory != null) {
             updateUI();
         } else {
             showDialog();
+            offerItemHeaderText.setText(OfferItemActivityArgs.fromBundle(getArguments()).getCategoryName());
+            categoryId = OfferItemActivityArgs.fromBundle(getArguments()).getCategoryId();
+            initializeSubcategoriesRecycler();
+            allProductsCategory = new ArrayList<>();
             onLoadPage();
         }
     }
 
-    private void onLoadPage() {
-        offerItemHeaderText.setText(OfferItemActivityArgs.fromBundle(getArguments()).getCategoryName());
+    private void initializeSubcategoriesRecycler() {
         if (OfferItemActivityArgs.fromBundle(getArguments()).getSubcategories() != null) {
             subcategories = Arrays.asList(OfferItemActivityArgs.fromBundle(getArguments()).getSubcategories());
             if (subcategories != null && subcategories.size() > 0) {
@@ -245,12 +291,25 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
                 subCategoriesAdapter.setSubCategoryOperation(this);
                 offer_item_recycler_categories.setAdapter(subCategoriesAdapter);
                 subcategoryId = subcategories.get(0).getId();
-                categoryId = OfferItemActivityArgs.fromBundle(getArguments()).getCategoryId();
-                filterMap.put("subcat_id", subcategoryId);
-                getSubcategoryProducts(subcategoryId);
             }
+        }
+    }
+
+    private void onLoadPage() {
+//        offerItemHeaderText.setText(OfferItemActivityArgs.fromBundle(getArguments()).getCategoryName());
+        if (OfferItemActivityArgs.fromBundle(getArguments()).getSubcategories() != null) {
+//            subcategories = Arrays.asList(OfferItemActivityArgs.fromBundle(getArguments()).getSubcategories());
+//            if (subcategories != null && subcategories.size() > 0) {
+//                subCategoriesAdapter = new SubCategoriesAdapter(getContext(), subcategories, true);
+//                subCategoriesAdapter.setSubCategoryOperation(this);
+//                offer_item_recycler_categories.setAdapter(subCategoriesAdapter);
+//                subcategoryId = subcategories.get(0).getId();
+//                categoryId = OfferItemActivityArgs.fromBundle(getArguments()).getCategoryId();
+            filterMap.put("subcat_id", subcategoryId);
+            getSubcategoryProducts(subcategoryId);
+//            }
         } else {
-            categoryId = OfferItemActivityArgs.fromBundle(getArguments()).getCategoryId();
+//            categoryId = OfferItemActivityArgs.fromBundle(getArguments()).getCategoryId();
             filterMap.put("cat_id", categoryId);
             getCategoryProducts(categoryId);
         }
@@ -265,9 +324,9 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
             subCategoriesAdapter.setSelectedPos(position);
         }
 
-        if (productsCategory.size() > 0) {
-            labelCountText.setText(String.valueOf(productsCategory.size()));
-            productsAdapter.setProductsList(productsCategory);
+        if (allProductsCategory.size() > 0) {
+            labelCountText.setText(String.valueOf(allProductsCategory.size()));
+            productsAdapter.setProductsList(allProductsCategory);
             productsAdapter.notifyDataSetChanged();
             showRecycler();
         } else {
@@ -287,7 +346,7 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
         } else {
             status = "";
         }
-        offersAPI.getOffersProductsFromCategories(status, categoryId, token).enqueue(new Callback<GetProducts>() {
+        offersAPI.getOffersProductsFromCategories(status, categoryId, token, currentPage).enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {
@@ -295,13 +354,12 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
                     if (code == 200) {
                         List<GetProducts.Data> offers = response.body().getProducts().getDataAll();
                         if (offers.size() > 0) {
-                            labelCountText.setText(String.valueOf(offers.size()));
-                            productsCategory = getProductsFromResponse(offers);
-                            productsAdapter.setProductsList(productsCategory);
-                            productsAdapter.notifyDataSetChanged();
-                            showRecycler();
+                            ArrayList<ProductsCategory> productsCategory = getProductsFromResponse(offers);
+                            allProductsCategory.addAll(productsCategory);
+                            updateRecycler(productsCategory);
                         } else {
-                            showEmptyView();
+                            if (isLoadedBefore) shouldLoadMore = false;
+                            else showEmptyView();
                         }
                     }
                     reloadDialog.dismiss();
@@ -324,7 +382,7 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
             status = "";
         }
         OffersAPI offersAPI = APIClient.getClient(SERVER_API_TEST).create(OffersAPI.class);
-        offersAPI.getOffersProducts(status, subcategoryId, token).enqueue(new Callback<GetProducts>() {
+        offersAPI.getOffersProducts(status, subcategoryId, token, currentPage).enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {
@@ -332,13 +390,12 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
                     if (code == 200) {
                         List<GetProducts.Data> offers = response.body().getProducts().getDataAll();
                         if (offers.size() > 0) {
-                            labelCountText.setText(String.valueOf(offers.size()));
-                            productsCategory = getProductsFromResponse(offers);
-                            productsAdapter.setProductsList(productsCategory);
-                            productsAdapter.notifyDataSetChanged();
-                            showRecycler();
+                            ArrayList<ProductsCategory> productsCategory = getProductsFromResponse(offers);
+                            allProductsCategory.addAll(productsCategory);
+                            updateRecycler(productsCategory);
                         } else {
-                            showEmptyView();
+                            if (isLoadedBefore) shouldLoadMore = false;
+                            else showEmptyView();
                         }
                     }
                     reloadDialog.dismiss();
@@ -353,10 +410,22 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
         });
     }
 
+    private void updateRecycler(ArrayList<ProductsCategory> productsCategory) {
+        shouldReload = false;
+        int currentSize = productsAdapter.updateProductsList(productsCategory);
+        labelCountText.setText(String.valueOf(currentSize));
+        showRecycler();
+        isLoadedBefore = true;
+
+        if (productsCategory.size() < productsPerLoad) {
+            shouldLoadMore = false;
+        }
+    }
+
     private void filterResults() {
         reloadDialog.show();
         FilterAPI filterAPI = APIClient.getClient(SERVER_API_TEST).create(FilterAPI.class);
-        filterAPI.getProductsFromFilter(filterMap, token).enqueue(new Callback<GetProducts>() {
+        filterAPI.getProductsFromFilter(filterMap, token, currentPage).enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {
@@ -364,12 +433,12 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
                     if (code == 200) {
                         List<GetProducts.Data> products = response.body().getProducts().getDataAll();
                         if (products.size() > 0) {
-                            productsCategory = getProductsFromResponse(products);
-                            productsAdapter.setProductsList(productsCategory);
-                            productsAdapter.notifyDataSetChanged();
-                            labelCountText.setText(String.valueOf(products.size()));
+                            ArrayList<ProductsCategory> productsCategory = getProductsFromResponse(products);
+                            allProductsCategory.addAll(productsCategory);
+                            updateRecycler(productsCategory);
                         } else {
-                            showEmptyView();
+                            if (isLoadedBefore) shouldLoadMore = false;
+                            else showEmptyView();
                         }
                     }
                 }
@@ -385,7 +454,8 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
     }
 
 
-    private ArrayList<ProductsCategory> getProductsFromResponse(List<GetProducts.Data> productsResponse) {
+    private ArrayList<ProductsCategory> getProductsFromResponse
+            (List<GetProducts.Data> productsResponse) {
         ArrayList<ProductsCategory> products = new ArrayList<>();
 
         Locale locale = ChangeLang.getLocale(getResources());
@@ -484,11 +554,20 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
         position = pos;
         this.subcategoryId = subcategoryId;
         filterMap.put("subcat_id", subcategoryId);
+
+        shouldReload = true;
+        allProductsCategory.clear();
+        productsAdapter.clearList();
+        currentPage = 1;
+        isLoadedBefore = false;
+        shouldLoadMore = true;
         getSubcategoryProducts(subcategoryId);
     }
 
     @Override
-    public void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subcategoryName, int subcategoryId, int pos) {
+    public void onClickSubCategoryWithSubSub
+            (ArrayList<Subsubcategory> subsubcategories, String subcategoryName, int subcategoryId,
+             int pos) {
 
     }
 
@@ -503,9 +582,9 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
         };
         Bundle bundle = new Bundle();
         bundle.putInt("pos", pos);
-        bundle.putString("getLike", productsCategory.get(pos).getLike());
+        bundle.putString("getLike", allProductsCategory.get(pos).getLike());
         bundle.putInt("id", id);
-        bundle.putParcelableArrayList("similar_products", productsCategory);
+        bundle.putParcelableArrayList("similar_products", allProductsCategory);
         bundle.putSerializable("added_to_cart", callback);
         NavHostFragment.findNavController(this).navigate(R.id.action_offerItemActivity_to_detailItemActivity, bundle);
 //        OfferItemActivityDirections.actionOfferItemActivityToDetailItemActivity(id, pos, productsCategory.toArray(new ProductsCategory[productsCategory.size()]), productsCategory.get(pos).getLike());
@@ -615,11 +694,11 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1111) {
             if (data.getBooleanExtra("databack", false)) {
-                productsCategory.get(position_detail).setLike("1");
+                allProductsCategory.get(position_detail).setLike("1");
                 productsAdapter.notifyItemChanged(position_detail);
             }
             if (data.getBooleanExtra("added_to_cart", false)) {
-                productsCategory.get(position_detail).setCart("0");
+                allProductsCategory.get(position_detail).setCart("0");
                 productsAdapter.notifyItemChanged(position_detail);
             }
         }

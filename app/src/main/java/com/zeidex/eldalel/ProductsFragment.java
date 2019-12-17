@@ -93,7 +93,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     private int subsubcategoryId;
     Map<String, String> cartPost;
     Map<String, String> likePost;
-    private ArrayList<ProductsCategory> productsCategory;
+    private ArrayList<ProductsCategory> allProductsCategory;
     private int categoryId;
     private int position_detail;
     private String searchName;
@@ -104,6 +104,15 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     private int filterPriceTo;
     private int filterSubcategoryId;
     private String filterStatus;
+    private int currentPage = 1;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private int productsPerLoad = 19;
+    private boolean isLoadedBefore = false;
+    private boolean shouldLoadMore = true;
+    //This is used to differentiate between any "getproducts" process and sorting
+    //because in case of sorting getproducts should be called before incrementing page number
+    //as when clearing the list the listener on scroll will be triggered immediately
+    private boolean shouldSort = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -117,7 +126,30 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+
+        allProductsCategory = new ArrayList<>();
+        setupRecyclerPagination();
         findViews();
+    }
+
+    private void setupRecyclerPagination() {
+        category_item_recycler_list.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                //When the recycler hits the end,
+                if (!recyclerView.canScrollVertically(1) && shouldLoadMore) {
+                    if (!shouldSort) {
+                        currentPage++;
+                        onLoadPage();
+                    } else {
+                        filterResults();
+                        currentPage++;
+                    }
+
+                }
+            }
+        });
     }
 
     private void findViews() {
@@ -170,7 +202,15 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
                         filterMap.remove("order_price");
                         break;
                 }
-                filterResults();
+                if (productsAdapter != null) {
+                    allProductsCategory.clear();
+                    productsAdapter.clearList();
+                    currentPage = 1;
+                    isLoadedBefore = false;
+                    shouldLoadMore = true;
+                    shouldSort = true;
+                }
+//                filterResults();
                 return true;
             }
         });
@@ -200,7 +240,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
             if (filterStatus != null) {
                 filterMap.put(FILTER_STATUS, filterStatus);
             }
-            initializeRecycler(new ArrayList<>());
+//            initializeRecycler(new ArrayList<>());
             filterResults();
         }
     }
@@ -208,7 +248,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     private void getProductsFromSearch(String searchName) {
         reloadDialog.show();
         SearchProductAPI searchAPI = APIClient.getClient(SERVER_API_TEST).create(SearchProductAPI.class);
-        searchAPI.getProductsFromNameSearch(searchName, token).enqueue(new Callback<GetProducts>() {
+        searchAPI.getProductsFromNameSearch(searchName, token, currentPage).enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {
@@ -216,10 +256,12 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
                     if (code == 200) {
                         List<GetProducts.Data> products = response.body().getProducts().getDataAll();
                         if (products.size() > 0) {
-                            productsCategory = getProductsFromResponse(products);
+                            ArrayList<ProductsCategory> productsCategory = getProductsFromResponse(products);
+                            allProductsCategory.addAll(productsCategory);
                             initializeRecycler(productsCategory);
                         } else {
-                            showEmptyView();
+                            if (isLoadedBefore) shouldLoadMore = false;
+                            else showEmptyView();
                         }
                     }
                 }
@@ -237,7 +279,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     private void getProductsFromCategory(int categoryId) {
         reloadDialog.show();
         ProductsAPI productsAPI = APIClient.getClient(SERVER_API_TEST).create(ProductsAPI.class);
-        productsAPI.getProductsFromCategory(categoryId, token).enqueue(new Callback<GetProducts>() {
+        productsAPI.getProductsFromCategory(categoryId, token, currentPage).enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {
@@ -245,10 +287,12 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
                     if (code == 200) {
                         List<GetProducts.Data> products = response.body().getProducts().getDataAll();
                         if (products.size() > 0) {
-                            productsCategory = getProductsFromResponse(products);
+                            ArrayList<ProductsCategory> productsCategory = getProductsFromResponse(products);
+                            allProductsCategory.addAll(productsCategory);
                             initializeRecycler(productsCategory);
                         } else {
-                            showEmptyView();
+                            if (isLoadedBefore) shouldLoadMore = false;
+                            else showEmptyView();
                         }
                     }
                 }
@@ -266,7 +310,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     private void getProductsFromSubSubCategory(int subsubCategoryId) {
         reloadDialog.show();
         ProductsAPI productsAPI = APIClient.getClient(SERVER_API_TEST).create(ProductsAPI.class);
-        productsAPI.getProductsFromSubSubCategory(subsubCategoryId, token).enqueue(new Callback<GetProducts>() {
+        productsAPI.getProductsFromSubSubCategory(subsubCategoryId, token, currentPage).enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {
@@ -274,10 +318,12 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
                     if (code == 200) {
                         List<GetProducts.Data> products = response.body().getProducts().getDataAll();
                         if (products.size() > 0) {
-                            productsCategory = getProductsFromResponse(products);
+                            ArrayList<ProductsCategory> productsCategory = getProductsFromResponse(products);
+                            allProductsCategory.addAll(productsCategory);
                             initializeRecycler(productsCategory);
                         } else {
-                            showEmptyView();
+                            if (isLoadedBefore) shouldLoadMore = false;
+                            else showEmptyView();
                         }
                     }
                 }
@@ -301,7 +347,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     private void getProductsFromSubCategory(int subCategoryId) {
         reloadDialog.show();
         ProductsAPI productsAPI = APIClient.getClient(SERVER_API_TEST).create(ProductsAPI.class);
-        productsAPI.getProductsFromSubcategory(subCategoryId, token).enqueue(new Callback<GetProducts>() {
+        productsAPI.getProductsFromSubcategory(subCategoryId, token, currentPage).enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {
@@ -309,10 +355,12 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
                     if (code == 200) {
                         List<GetProducts.Data> products = response.body().getProducts().getDataAll();
                         if (products.size() > 0) {
-                            productsCategory = getProductsFromResponse(products);
+                            ArrayList<ProductsCategory> productsCategory = getProductsFromResponse(products);
+                            allProductsCategory.addAll(productsCategory);
                             initializeRecycler(productsCategory);
                         } else {
-                            showEmptyView();
+                            if (isLoadedBefore) shouldLoadMore = false;
+                            else showEmptyView();
                         }
                     }
                 }
@@ -380,21 +428,31 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     }
 
     public void initializeRecycler(List<ProductsCategory> products) {
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
-        category_item_recycler_list.setLayoutManager(mLayoutManager);
-        category_item_recycler_list.setItemAnimator(new DefaultItemAnimator());
+        if (productsAdapter == null) {
+            productsAdapter = new CategoryItemAdapter(getContext(), products);
 
-        int spanCount = 2; // 3 columns
-        int spacing = 20; // 50px
-        boolean includeEdge = true;
-        category_item_recycler_list.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+            mLayoutManager = new GridLayoutManager(getContext(), 2);
+            category_item_recycler_list.setLayoutManager(mLayoutManager);
+            category_item_recycler_list.setItemAnimator(new DefaultItemAnimator());
 
-        productsAdapter = new CategoryItemAdapter(getContext(), products);
-        productsAdapter.setCategoryOperation(ProductsFragment.this);
-        category_item_recycler_list.setAdapter(productsAdapter);
+            int spanCount = 2; // 3 columns
+            int spacing = 20; // 50px
+            boolean includeEdge = true;
+            category_item_recycler_list.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
 
-        labelCountText.setText(String.valueOf(products.size()));
+            productsAdapter.setCategoryOperation(ProductsFragment.this);
+            category_item_recycler_list.setAdapter(productsAdapter);
+            labelCountText.setText(String.valueOf(products.size()));
+            isLoadedBefore = true;
+        } else {
+            int currentSize = productsAdapter.updateProductsList(products);
+            labelCountText.setText(String.valueOf(currentSize));
+        }
         itemDetailsHeader.setVisibility(View.VISIBLE);
+
+        if (products.size() < productsPerLoad) {
+            shouldLoadMore = false;
+        }
 //        categoryAdapter = new CategoryItemAdapter(getContext());
 //        categoryAdapter.setCategoryOperation(this);
 //        category_item_recycler_list.setAdapter(categoryAdapter);
@@ -533,11 +591,11 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1111) {
             if (data.getBooleanExtra("databack", false)) {
-                productsCategory.get(position_detail).setLike("1");
+                allProductsCategory.get(position_detail).setLike("1");
                 productsAdapter.notifyItemChanged(position_detail);
             }
             if (data.getBooleanExtra("added_to_cart", false)) {
-                productsCategory.get(position_detail).setCart("0");
+                allProductsCategory.get(position_detail).setCart("0");
                 productsAdapter.notifyItemChanged(position_detail);
             }
         }
@@ -563,7 +621,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     private void filterResults() {
         reloadDialog.show();
         FilterAPI filterAPI = APIClient.getClient(SERVER_API_TEST).create(FilterAPI.class);
-        filterAPI.getProductsFromFilter(filterMap, token).enqueue(new Callback<GetProducts>() {
+        filterAPI.getProductsFromFilter(filterMap, token, currentPage).enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {
@@ -571,12 +629,15 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
                     if (code == 200) {
                         List<GetProducts.Data> products = response.body().getProducts().getDataAll();
                         if (products.size() > 0) {
-                            productsCategory = getProductsFromResponse(products);
-                            productsAdapter.setProductsList(productsCategory);
-                            labelCountText.setText(String.valueOf(products.size()));
-                            productsAdapter.notifyDataSetChanged();
+                            ArrayList<ProductsCategory> productsCategory = getProductsFromResponse(products);
+                            allProductsCategory.addAll(productsCategory);
+//                            productsAdapter.setProductsList(productsCategory);
+//                            labelCountText.setText(String.valueOf(products.size()));
+//                            productsAdapter.notifyDataSetChanged();
+                            initializeRecycler(productsCategory);
                         } else {
-                            showEmptyView();
+                            if (isLoadedBefore) shouldLoadMore = false;
+                            else showEmptyView();
                         }
                     }
                 }
@@ -594,7 +655,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     @Override
     public void onClickProduct(int id, int pos) {
         position_detail = pos;
-        startActivityForResult(new Intent(getContext(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
+        startActivityForResult(new Intent(getContext(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", allProductsCategory).putExtra("getLike", allProductsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
         Animatoo.animateSwipeLeft(getContext());
     }
 
@@ -606,7 +667,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
         Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
         if (PreferenceUtils.getCompanyLogin(getContext())) {
             getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(likePost);
-        }else {
+        } else {
             getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(likePost);
         }
         getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
@@ -633,9 +694,9 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
         AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
         Call<GetAddToCardResponse> getAddToCardResponseCall;
         if (PreferenceUtils.getCompanyLogin(getContext())) {
-            cartPost.put("language" , "arabic");
+            cartPost.put("language", "arabic");
             getAddToCardResponseCall = addToCardApi.getAddToCartcompany(cartPost);
-        }else {
+        } else {
             getAddToCardResponseCall = addToCardApi.getAddToCart(cartPost);
         }
         getAddToCardResponseCall.enqueue(new Callback<GetAddToCardResponse>() {

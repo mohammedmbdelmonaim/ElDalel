@@ -95,6 +95,8 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
     private int categoryId;
     private int subcategoryId;
 
+    int currentPage = 1;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -229,7 +231,7 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
     private void filterResults() {
         reloadDialog.show();
         FilterAPI filterAPI = APIClient.getClient(SERVER_API_TEST).create(FilterAPI.class);
-        filterAPI.getProductsFromFilter(filterMap, token).enqueue(new Callback<GetProducts>() {
+        filterAPI.getProductsFromFilter(filterMap, token, currentPage).enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {

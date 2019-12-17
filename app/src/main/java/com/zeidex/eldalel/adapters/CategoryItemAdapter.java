@@ -42,6 +42,17 @@ public class CategoryItemAdapter extends RecyclerView.Adapter<CategoryItemAdapte
         this.categoryOperation = categoryOperation;
     }
 
+    public int updateProductsList(List<ProductsCategory> newProducts){
+        productsList.addAll(newProducts);
+        notifyDataSetChanged();
+        return getItemCount();
+    }
+
+    public void clearList(){
+        productsList.clear();
+        notifyDataSetChanged();
+    }
+
     public CategoryItemAdapter(Context context, List<ProductsCategory> productsList) {
         this.context = context;
         this.productsList = productsList;

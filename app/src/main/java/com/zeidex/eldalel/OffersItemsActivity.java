@@ -104,11 +104,21 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
 
     Map<String, String> cartPost;
     Map<String, String> likePost;
-    private ArrayList<ProductsCategory> productsCategory;
+    private ArrayList<ProductsCategory> allProductsCategory;
     private Map<String, Object> filterMap;
     private PopupMenu dropDownMenu;
     private int subcategoryId;
     private int categoryId;
+
+    int currentPage = 1;
+    private int productsPerLoad = 19;
+    private boolean isLoadedBefore = false;
+    private boolean shouldLoadMore = true;
+    //This is used to differentiate between any "getproducts" process and sorting
+    //because in case of sorting getproducts should be called before incrementing page number
+    //as when clearing the list the listener on scroll will be triggered immediately
+    private boolean shouldSort = false;
+    private boolean shouldReload = false;
 
 
     @Override
@@ -116,8 +126,30 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offer_item);
         ButterKnife.bind(this);
-        initializeRecycler();
+//        initializeRecycler();
+        setupRecyclerPagination();
         findViews();
+    }
+
+    private void setupRecyclerPagination() {
+        offer_category_item_recycler_list.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                //When the recycler hits the end,
+                if (!recyclerView.canScrollVertically(1) && shouldLoadMore) {
+                    if (shouldSort) {
+                        filterResults();
+                        currentPage++;
+                    } else if (shouldReload) {
+
+                    } else {
+                        currentPage++;
+                        onLoadPage();
+                    }
+                }
+            }
+        });
     }
 
     @OnClick(R.id.offer_item_back)
@@ -128,7 +160,7 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
     boolean is_offered;
 
     public void findViews() {
-        is_offered =  getIntent().getBooleanExtra("is_offered", false);
+        is_offered = getIntent().getBooleanExtra("is_offered", false);
         if (PreferenceUtils.getCompanyLogin(this)) {
             token = PreferenceUtils.getCompanyToken(this);
         } else if (PreferenceUtils.getUserLogin(this)) {
@@ -156,6 +188,17 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
         if (is_offered) {
             filterMap.put("status", OFFERS);
         }
+
+        initializeRecycler();
+        initializePopupMenu();
+        initializeSubcategoriesRecycler();
+        allProductsCategory = new ArrayList<>();
+
+        showDialog();
+        onLoadPage();
+    }
+
+    private void initializePopupMenu() {
         dropDownMenu = new PopupMenu(this, offer_descendant_items_category);
         dropDownMenu.getMenuInflater().inflate(R.menu.menu_sort_dropdown, dropDownMenu.getMenu());
         dropDownMenu.getMenu().getItem(SORT_DATE_DESC_INDEX).setChecked(true);
@@ -186,15 +229,22 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
                         filterMap.remove("order_price");
                         break;
                 }
-                filterResults();
+
+                if (productsAdapter != null) {
+                    allProductsCategory.clear();
+                    productsAdapter.clearList();
+                    currentPage = 1;
+                    isLoadedBefore = false;
+                    shouldLoadMore = true;
+                    shouldSort = true;
+                }
+//                filterResults();
                 return true;
             }
         });
-        showDialog();
-        onLoadPage();
     }
 
-    private void onLoadPage() {
+    private void initializeSubcategoriesRecycler() {
         offerItemHeaderText.setText(getIntent().getStringExtra(CATEGORY_NAME_INTENT_EXTRA));
         subcategories = getIntent().getParcelableArrayListExtra(SUBCATEGORIES_INTENT_EXTRA_KEY);
         if (subcategories != null && subcategories.size() > 0) {
@@ -202,27 +252,41 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
             subCategoriesAdapter.setSubCategoryOperation(this);
             offer_item_recycler_categories.setAdapter(subCategoriesAdapter);
             subcategoryId = subcategories.get(0).getId();
-            categoryId = getIntent().getIntExtra(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
+        }
+        categoryId = getIntent().getIntExtra(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
+    }
+
+    private void onLoadPage() {
+//        offerItemHeaderText.setText(getIntent().getStringExtra(CATEGORY_NAME_INTENT_EXTRA));
+//        subcategories = getIntent().getParcelableArrayListExtra(SUBCATEGORIES_INTENT_EXTRA_KEY);
+        if (subcategories != null && subcategories.size() > 0) {
+//            subCategoriesAdapter = new SubCategoriesAdapter(this, subcategories, true);
+//            subCategoriesAdapter.setSubCategoryOperation(this);
+//            offer_item_recycler_categories.setAdapter(subCategoriesAdapter);
+//            subcategoryId = subcategories.get(0).getId();
+//            categoryId = getIntent().getIntExtra(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
             filterMap.put("subcat_id", subcategoryId);
             getSubcategoryProducts(subcategoryId);
         } else {
-            categoryId = getIntent().getIntExtra(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
+//            categoryId = getIntent().getIntExtra(CATEGORY_ID_INTENT_EXTRA_KEY, -1);
             filterMap.put("cat_id", categoryId);
             getCategoryProducts(categoryId);
         }
 
     }
+
     String status = "";
+
     private void getCategoryProducts(int categoryId) {
         reloadDialog.show();
         OffersAPI offersAPI = APIClient.getClient(SERVER_API_TEST).create(OffersAPI.class);
 
-        if (is_offered){
+        if (is_offered) {
             status = OFFERS;
-        }else{
+        } else {
             status = "";
         }
-        offersAPI.getOffersProductsFromCategories(status, categoryId, token).enqueue(new Callback<GetProducts>() {
+        offersAPI.getOffersProductsFromCategories(status, categoryId, token, currentPage).enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {
@@ -230,13 +294,12 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
                     if (code == 200) {
                         List<GetProducts.Data> offers = response.body().getProducts().getDataAll();
                         if (offers.size() > 0) {
-                            labelCountText.setText(String.valueOf(offers.size()));
-                            productsCategory = getProductsFromResponse(offers);
-                            productsAdapter.setProductsList(productsCategory);
-                            productsAdapter.notifyDataSetChanged();
-                            showRecycler();
+                            ArrayList<ProductsCategory> productsCategory = getProductsFromResponse(offers);
+                            allProductsCategory.addAll(productsCategory);
+                            updateRecycler(productsCategory);
                         } else {
-                            showEmptyView();
+                            if (isLoadedBefore) shouldLoadMore = false;
+                            else showEmptyView();
                         }
                     }
                     reloadDialog.dismiss();
@@ -253,13 +316,13 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
 
     public void getSubcategoryProducts(int subcategoryId) {
         reloadDialog.show();
-        if (is_offered){
+        if (is_offered) {
             status = OFFERS;
-        }else{
+        } else {
             status = "";
         }
         OffersAPI offersAPI = APIClient.getClient(SERVER_API_TEST).create(OffersAPI.class);
-        offersAPI.getOffersProducts(status, subcategoryId, token).enqueue(new Callback<GetProducts>() {
+        offersAPI.getOffersProducts(status, subcategoryId, token, currentPage).enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {
@@ -267,13 +330,12 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
                     if (code == 200) {
                         List<GetProducts.Data> offers = response.body().getProducts().getDataAll();
                         if (offers.size() > 0) {
-                            labelCountText.setText(String.valueOf(offers.size()));
-                            productsCategory = getProductsFromResponse(offers);
-                            productsAdapter.setProductsList(productsCategory);
-                            productsAdapter.notifyDataSetChanged();
-                            showRecycler();
+                            ArrayList<ProductsCategory> productsCategory = getProductsFromResponse(offers);
+                            allProductsCategory.addAll(productsCategory);
+                            updateRecycler(productsCategory);
                         } else {
-                            showEmptyView();
+                            if (isLoadedBefore) shouldLoadMore = false;
+                            else showEmptyView();
                         }
                     }
                     reloadDialog.dismiss();
@@ -291,7 +353,7 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
     private void filterResults() {
         reloadDialog.show();
         FilterAPI filterAPI = APIClient.getClient(SERVER_API_TEST).create(FilterAPI.class);
-        filterAPI.getProductsFromFilter(filterMap, token).enqueue(new Callback<GetProducts>() {
+        filterAPI.getProductsFromFilter(filterMap, token, currentPage).enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {
@@ -299,12 +361,12 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
                     if (code == 200) {
                         List<GetProducts.Data> products = response.body().getProducts().getDataAll();
                         if (products.size() > 0) {
-                            productsCategory = getProductsFromResponse(products);
-                            productsAdapter.setProductsList(productsCategory);
-                            productsAdapter.notifyDataSetChanged();
-                            labelCountText.setText(String.valueOf(products.size()));
+                            ArrayList<ProductsCategory> productsCategory = getProductsFromResponse(products);
+                            allProductsCategory.addAll(productsCategory);
+                            updateRecycler(productsCategory);
                         } else {
-                            showEmptyView();
+                            if (isLoadedBefore) shouldLoadMore = false;
+                            else showEmptyView();
                         }
                     }
                 }
@@ -415,21 +477,29 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
 
 
     @Override
-    public void onClickSubCategory(int subcategoryId, String subcategoryName , int pos) {
+    public void onClickSubCategory(int subcategoryId, String subcategoryName, int pos) {
         this.subcategoryId = subcategoryId;
         filterMap.put("subcat_id", subcategoryId);
+
+        shouldReload = true;
+        allProductsCategory.clear();
+        productsAdapter.clearList();
+        currentPage = 1;
+        isLoadedBefore = false;
+        shouldLoadMore = true;
+
         getSubcategoryProducts(subcategoryId);
     }
 
     @Override
-    public void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subcategoryName, int subcategoryId , int pos) {
+    public void onClickSubCategoryWithSubSub(ArrayList<Subsubcategory> subsubcategories, String subcategoryName, int subcategoryId, int pos) {
 
     }
 
     @Override
     public void onClickProduct(int id, int pos) {
         position_detail = pos;
-        startActivityForResult(new Intent(this, DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
+        startActivityForResult(new Intent(this, DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", allProductsCategory).putExtra("getLike", allProductsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
         Animatoo.animateSwipeLeft(this);
     }
 
@@ -441,7 +511,7 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
         Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
         if (PreferenceUtils.getCompanyLogin(OffersItemsActivity.this)) {
             getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(likePost);
-        }else {
+        } else {
             getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(likePost);
         }
         getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
@@ -469,9 +539,9 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
 
         Call<GetAddToCardResponse> getAddToCardResponseCall;
         if (PreferenceUtils.getCompanyLogin(OffersItemsActivity.this)) {
-            cartPost.put("language" , "arabic");
+            cartPost.put("language", "arabic");
             getAddToCardResponseCall = addToCardApi.getAddToCartcompany(cartPost);
-        }else {
+        } else {
             getAddToCardResponseCall = addToCardApi.getAddToCart(cartPost);
         }
         getAddToCardResponseCall.enqueue(new Callback<GetAddToCardResponse>() {
@@ -493,6 +563,18 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
                 reloadDialog.dismiss();
             }
         });
+    }
+
+    private void updateRecycler(ArrayList<ProductsCategory> productsCategory) {
+        shouldReload = false;
+        int currentSize = productsAdapter.updateProductsList(productsCategory);
+        labelCountText.setText(String.valueOf(currentSize));
+        showRecycler();
+        isLoadedBefore = true;
+
+        if (productsCategory.size() < productsPerLoad) {
+            shouldLoadMore = false;
+        }
     }
 
     public void prepareCartMap(int id) {
@@ -529,11 +611,11 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1111) {
             if (data.getBooleanExtra("databack", false)) {
-                productsCategory.get(position_detail).setLike("1");
+                allProductsCategory.get(position_detail).setLike("1");
                 productsAdapter.notifyItemChanged(position_detail);
             }
             if (data.getBooleanExtra("added_to_cart", false)) {
-                productsCategory.get(position_detail).setCart("0");
+                allProductsCategory.get(position_detail).setCart("0");
                 productsAdapter.notifyItemChanged(position_detail);
             }
         }
