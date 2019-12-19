@@ -91,11 +91,19 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
 
     CategoryItemAdapter productsAdapter;
     //    private int subcategoryId;
-    private ArrayList<ProductsCategory> productsCategory;
+    private ArrayList<ProductsCategory> allProductsCategory;
     private int categoryId;
     private int subcategoryId;
 
-    int currentPage = 1;
+    private int currentPage = 1;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private int productsPerLoad = 19;
+    private boolean isLoadedBefore = false;
+    private boolean shouldLoadMore = true;
+    //This is used to differentiate between any "getproducts" process and sorting
+    //because in case of sorting getproducts should be called before incrementing page number
+    //as when clearing the list the listener on scroll will be triggered immediately
+    private boolean shouldSort = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -111,6 +119,26 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
         findViews();
     }
 
+    private void setupRecyclerPagination() {
+        category_item_recycler_list.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                //When the recycler hits the end,
+                if (!recyclerView.canScrollVertically(1) && shouldLoadMore) {
+                    if (!shouldSort) {
+                        currentPage++;
+                        onLoadPage();
+                    } else {
+                        filterResults();
+                        currentPage++;
+                    }
+
+                }
+            }
+        });
+    }
+
     private void findViews() {
         if (PreferenceUtils.getCompanyLogin(getContext())) {
             token = PreferenceUtils.getCompanyToken(getContext());
@@ -118,8 +146,21 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
             token = PreferenceUtils.getUserToken(getContext());
         }
 
+        allProductsCategory = new ArrayList<>();
+        setupRecyclerPagination();
+        initializePopupMenu();
+
         filterMap = new HashMap<>();
         filterMap.put("status", NEW_ARRIVAL);
+
+        categoryId = getArguments().getInt(CATEGORY_ID_INTENT_EXTRA_KEY);
+        subcategoryId = getArguments().getInt(SUBCATEGORY_ID_INTENT_EXTRA, -1);
+
+        showDialog();
+        onLoadPage();
+    }
+
+    private void initializePopupMenu() {
         dropDownMenu = new PopupMenu(getContext(), descendantItemsCategoryImage);
         dropDownMenu.getMenuInflater().inflate(R.menu.menu_sort_dropdown, dropDownMenu.getMenu());
         dropDownMenu.getMenu().getItem(SORT_DATE_DESC_INDEX).setChecked(true);
@@ -150,21 +191,25 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
                         filterMap.remove("order_price");
                         break;
                 }
-                filterResults();
+
+                if (productsAdapter != null) {
+                    allProductsCategory.clear();
+                    productsAdapter.clearList();
+                    currentPage = 1;
+                    isLoadedBefore = false;
+                    shouldLoadMore = true;
+                    shouldSort = true;
+                }
+
+//                filterResults();
                 return true;
             }
         });
-        showDialog();
-        onLoadPage();
     }
 
     private void onLoadPage() {
-        productsCategory = new ArrayList<>();
-        categoryId = getArguments().getInt(CATEGORY_ID_INTENT_EXTRA_KEY);
-        subcategoryId = getArguments().getInt(SUBCATEGORY_ID_INTENT_EXTRA, -1);
         if (subcategoryId != -1) {
             getProductsFromSubcategory(subcategoryId);
-
         } else {
             getProductsFromCategory(categoryId);
         }
@@ -173,7 +218,7 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
     private void getProductsFromCategory(int categoryId) {
         reloadDialog.show();
         NewArrivalsAPI newArrivalsAPI = APIClient.getClient(SERVER_API_TEST).create(NewArrivalsAPI.class);
-        newArrivalsAPI.getNewArrivalsProductsFromCategory(categoryId, NEW_ARRIVAL, token).enqueue(new Callback<GetProducts>() {
+        newArrivalsAPI.getNewArrivalsProductsFromCategory(categoryId, NEW_ARRIVAL, token, currentPage).enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {
@@ -181,10 +226,12 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
                     if (code == 200) {
                         List<GetProducts.Data> products = response.body().getProducts().getDataAll();
                         if (products.size() > 0) {
-                            productsCategory = getProductsFromResponse(products);
+                            ArrayList<ProductsCategory> productsCategory = getProductsFromResponse(products);
+                            allProductsCategory.addAll(productsCategory);
                             initializeRecycler(productsCategory);
                         } else {
-                            showEmptyView();
+                            if (isLoadedBefore) shouldLoadMore = false;
+                            else showEmptyView();
                         }
                     }
                 }
@@ -202,7 +249,7 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
     private void getProductsFromSubcategory(int subcategoryId) {
         reloadDialog.show();
         NewArrivalsAPI newArrivalsAPI = APIClient.getClient(SERVER_API_TEST).create(NewArrivalsAPI.class);
-        newArrivalsAPI.getNewArrivalsProductsFromSubCategory(subcategoryId, NEW_ARRIVAL, token).enqueue(new Callback<GetProducts>() {
+        newArrivalsAPI.getNewArrivalsProductsFromSubCategory(subcategoryId, NEW_ARRIVAL, token, currentPage).enqueue(new Callback<GetProducts>() {
             @Override
             public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
                 if (response.body() != null) {
@@ -210,10 +257,12 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
                     if (code == 200) {
                         List<GetProducts.Data> products = response.body().getProducts().getDataAll();
                         if (products.size() > 0) {
-                            productsCategory = getProductsFromResponse(products);
+                            ArrayList<ProductsCategory> productsCategory = getProductsFromResponse(products);
+                            allProductsCategory.addAll(productsCategory);
                             initializeRecycler(productsCategory);
                         } else {
-                            showEmptyView();
+                            if (isLoadedBefore) shouldLoadMore = false;
+                            else showEmptyView();
                         }
                     }
                 }
@@ -239,12 +288,15 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
                     if (code == 200) {
                         List<GetProducts.Data> products = response.body().getProducts().getDataAll();
                         if (products.size() > 0) {
-                            productsCategory = getProductsFromResponse(products);
-                            productsAdapter.setProductsList(productsCategory);
-                            productsAdapter.notifyDataSetChanged();
-                            labelCountText.setText(String.valueOf(products.size()));
+                            ArrayList<ProductsCategory> productsCategory = getProductsFromResponse(products);
+                            allProductsCategory.addAll(productsCategory);
+                            initializeRecycler(productsCategory);
+//                            productsAdapter.setProductsList(productsCategory);
+//                            productsAdapter.notifyDataSetChanged();
+//                            labelCountText.setText(String.valueOf(products.size()));
                         } else {
-                            showEmptyView();
+                            if (isLoadedBefore) shouldLoadMore = false;
+                            else showEmptyView();
                         }
                     }
                 }
@@ -318,21 +370,29 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
     }
 
     public void initializeRecycler(List<ProductsCategory> products) {
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
-        category_item_recycler_list.setLayoutManager(mLayoutManager);
-        category_item_recycler_list.setItemAnimator(new DefaultItemAnimator());
+        if (productsAdapter == null) {
+            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
+            category_item_recycler_list.setLayoutManager(mLayoutManager);
+            category_item_recycler_list.setItemAnimator(new DefaultItemAnimator());
 
-        int spanCount = 2; // 3 columns
-        int spacing = 20; // 50px
-        boolean includeEdge = true;
-        category_item_recycler_list.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+            int spanCount = 2; // 3 columns
+            int spacing = 20; // 50px
+            boolean includeEdge = true;
+            category_item_recycler_list.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
 
-        productsAdapter = new CategoryItemAdapter(getContext(), products);
-        productsAdapter.setCategoryOperation(NewArrivalProductsFragment.this);
-        category_item_recycler_list.setAdapter(productsAdapter);
+            productsAdapter = new CategoryItemAdapter(getContext(), products);
+            productsAdapter.setCategoryOperation(NewArrivalProductsFragment.this);
+            category_item_recycler_list.setAdapter(productsAdapter);
+        } else {
+            int currentSize = productsAdapter.updateProductsList(products);
+            labelCountText.setText(String.valueOf(currentSize));
+        }
 
-        labelCountText.setText(String.valueOf(products.size()));
         itemDetailsHeader.setVisibility(View.VISIBLE);
+
+        if (products.size() < productsPerLoad) {
+            shouldLoadMore = false;
+        }
     }
 
     private void showDialog() {
@@ -377,18 +437,18 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1111) {
             if (data.getBooleanExtra("databack", false)) {
-                    productsCategory.get(position_detail).setLike("1");
-                    productsAdapter.notifyItemChanged(position_detail);
+                allProductsCategory.get(position_detail).setLike("1");
+                productsAdapter.notifyItemChanged(position_detail);
             }
             if (data.getBooleanExtra("added_to_cart", false)) {
-                productsCategory.get(position_detail).setCart("0");
+                allProductsCategory.get(position_detail).setCart("0");
                 productsAdapter.notifyItemChanged(position_detail);
             }
         }
 
-        if(requestCode == FINISH_ACTIVITY_CODE && data != null){
+        if (requestCode == FINISH_ACTIVITY_CODE && data != null) {
             boolean shouldFinishActivity = data.getBooleanExtra("should_finish_activity", false);
-            if(shouldFinishActivity) getActivity().finish();
+            if (shouldFinishActivity) getActivity().finish();
         }
     }
 
@@ -411,7 +471,7 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
     @Override
     public void onClickProduct(int id, int pos) {
         position_detail = pos;
-        startActivityForResult(new Intent(getContext(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
+        startActivityForResult(new Intent(getContext(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", allProductsCategory).putExtra("getLike", allProductsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
         Animatoo.animateSwipeLeft(getContext());
     }
 
@@ -423,7 +483,7 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
         Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
         if (PreferenceUtils.getCompanyLogin(getContext())) {
             getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(likePost);
-        }else {
+        } else {
             getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(likePost);
         }
         getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
@@ -450,9 +510,9 @@ public class NewArrivalProductsFragment extends Fragment implements /*CategoryIt
         AddToCardApi addToCardApi = APIClient.getClient(SERVER_API_TEST).create(AddToCardApi.class);
         Call<GetAddToCardResponse> getAddToCardResponseCall;
         if (PreferenceUtils.getCompanyLogin(getContext())) {
-            cartPost.put("language" , "arabic");
+            cartPost.put("language", "arabic");
             getAddToCardResponseCall = addToCardApi.getAddToCartcompany(cartPost);
-        }else {
+        } else {
             getAddToCardResponseCall = addToCardApi.getAddToCart(cartPost);
         }
         getAddToCardResponseCall.enqueue(new Callback<GetAddToCardResponse>() {
