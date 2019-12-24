@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -92,6 +93,8 @@ public class MainActivity extends BaseActivity {
                 token = PreferenceUtils.getUserToken(this);
             } else if (PreferenceUtils.getCompanyLogin(this)) {
                 token = PreferenceUtils.getCompanyToken(this);
+            } else if (PreferenceUtils.getSalesmanLogin(this)){
+                token = PreferenceUtils.getSalesmanToken(this);
             }
             btn_rating.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -123,6 +126,11 @@ public class MainActivity extends BaseActivity {
                 }
             });
             rate_dialog.show();
+        }
+
+        if(PreferenceUtils.getSalesmanLogin(this)){
+            startActivity(new Intent(this, SalesmanActivity.class));
+            finish();
         }
 
 //        frag = new FragmentFooterView();

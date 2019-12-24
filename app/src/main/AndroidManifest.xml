@@ -32,6 +32,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".SalesmanActivity"
+            android:label="@string/title_activity_salesman"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -59,11 +63,10 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-<!--        <activity-->
-<!--            android:name=".ProductsActivity"-->
-<!--            android:screenOrientation="portrait"-->
-<!--            android:windowSoftInputMode="adjustResize|stateHidden" />-->
+            android:windowSoftInputMode="adjustResize|stateHidden" /> <!-- <activity -->
+        <!-- android:name=".ProductsActivity" -->
+        <!-- android:screenOrientation="portrait" -->
+        <!-- android:windowSoftInputMode="adjustResize|stateHidden" /> -->
         <activity
             android:name=".DetailItemActivity"
             android:screenOrientation="portrait"
@@ -95,19 +98,17 @@
         <activity
             android:name=".ElementsOrderActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-<!--        <activity-->
-<!--            android:name=".LikesElementsFragment"-->
-<!--            android:screenOrientation="portrait"-->
-<!--            android:windowSoftInputMode="adjustResize|stateHidden" />-->
+            android:windowSoftInputMode="adjustResize|stateHidden" /> <!-- <activity -->
+        <!-- android:name=".LikesElementsFragment" -->
+        <!-- android:screenOrientation="portrait" -->
+        <!-- android:windowSoftInputMode="adjustResize|stateHidden" /> -->
         <activity
             android:name=".FilterActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-<!--        <activity-->
-<!--            android:name=".OfferItemActivity"-->
-<!--            android:screenOrientation="portrait"-->
-<!--            android:windowSoftInputMode="adjustResize|stateHidden" />-->
+            android:windowSoftInputMode="adjustResize|stateHidden" /> <!-- <activity -->
+        <!-- android:name=".OfferItemActivity" -->
+        <!-- android:screenOrientation="portrait" -->
+        <!-- android:windowSoftInputMode="adjustResize|stateHidden" /> -->
         <activity
             android:name=".PaymentActivity"
             android:screenOrientation="portrait"

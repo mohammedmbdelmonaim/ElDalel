@@ -57,6 +57,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     AppCompatCheckBox login_remember_checkbox;
 
     boolean checked = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,8 +66,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         findViews();
     }
 
-    public void findViews(){
-        if (!PreferenceUtils.getEmail(this).equalsIgnoreCase("") && !PreferenceUtils.getPassword(this).equalsIgnoreCase("")){
+    public void findViews() {
+        if (!PreferenceUtils.getEmail(this).equalsIgnoreCase("") && !PreferenceUtils.getPassword(this).equalsIgnoreCase("")) {
             login_mail_edittext.setText(PreferenceUtils.getEmail(this));
             login_pass_edittext.setText(PreferenceUtils.getPassword(this));
             login_remember_checkbox.setChecked(true);
@@ -82,9 +83,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         login_remember_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
+                if (isChecked) {
                     checked = true;
-                }else {
+                } else {
                     checked = false;
                 }
             }
@@ -93,36 +94,39 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
 
     String lang;
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch (id){
-            case R.id.login_go_enter_text:{
+        switch (id) {
+            case R.id.login_go_enter_text: {
 
                 Locale locale = ChangeLang.getLocale(getResources());
                 String loo = locale.getLanguage();
                 if (loo.equalsIgnoreCase("en")) {
                     lang = "english";
-                }else if (loo.equalsIgnoreCase("ar")){
+                } else if (loo.equalsIgnoreCase("ar")) {
                     lang = "arabic";
                 }
 
                 checkLogin();
                 break;
             }
-            case R.id.login_no_have_account_text:{
+            case R.id.login_no_have_account_text: {
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
                 Animatoo.animateSwipeLeft(LoginActivity.this);
                 break;
             }
-            case R.id.login_not_now_text:{
+            case R.id.login_not_now_text: {
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 Animatoo.animateSwipeLeft(LoginActivity.this);
                 break;
             }
         }
     }
+
     Map<String, String> login_post;
+
     private void convertDaraToJson() {
         login_post = new HashMap<>();
         String emil = login_mail_edittext.getText().toString();
@@ -133,6 +137,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     Map<String, String> device_token_post;
+
     private void convertDaraToJsonToken() {
         String dev = PreferenceUtils.getDeviceToken(this);
         device_token_post = new HashMap<>();
@@ -143,9 +148,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
 
     String token = "";
-    public void checkLogin(){
+
+    public void checkLogin() {
         final boolean fieldsOK = validate(new EditText[]{login_mail_edittext, login_pass_edittext});
-        if (fieldsOK){
+        if (fieldsOK) {
             convertDaraToJson();
             reloadDialog.show();
             LoginApi loginApi = APIClient.getClient(SERVER_API_TEST).create(LoginApi.class);
@@ -156,27 +162,31 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     GetLoginResponse getLoginResponse = response.body();
                     String status = getLoginResponse.getSuccess();
                     if (status.equals("true")) {
-                        if (getLoginResponse.getTokenUser() != null){
+                        if (getLoginResponse.getTokenUser() != null) {
                             PreferenceUtils.saveUserToken(LoginActivity.this, getLoginResponse.getTokenUser());
-                            PreferenceUtils.saveUserLogin(LoginActivity.this , true);
+                            PreferenceUtils.saveUserLogin(LoginActivity.this, true);
                             token = getLoginResponse.getTokenUser();
-                        }else if (getLoginResponse.getTokenCompany() != null){
+                        } else if (getLoginResponse.getTokenCompany() != null) {
                             PreferenceUtils.saveCompanyToken(LoginActivity.this, getLoginResponse.getTokenCompany());
-                            PreferenceUtils.saveCompanyLogin(LoginActivity.this , true);
+                            PreferenceUtils.saveCompanyLogin(LoginActivity.this, true);
                             token = getLoginResponse.getTokenCompany();
+                        } else if (getLoginResponse.getTokenSalesman() != null) {
+                            PreferenceUtils.saveSalesmanToken(LoginActivity.this, getLoginResponse.getTokenSalesman());
+                            PreferenceUtils.saveSalesmanLogin(LoginActivity.this, true);
+                            token = getLoginResponse.getTokenSalesman();
                         }
 
-                        if (checked){
-                            PreferenceUtils.saveEmail(LoginActivity.this , login_mail_edittext.getText().toString());
-                            PreferenceUtils.savePassword(LoginActivity.this , login_pass_edittext.getText().toString());
-                        }else {
-                            PreferenceUtils.saveEmail(LoginActivity.this , "");
-                            PreferenceUtils.savePassword(LoginActivity.this , "");
+                        if (checked) {
+                            PreferenceUtils.saveEmail(LoginActivity.this, login_mail_edittext.getText().toString());
+                            PreferenceUtils.savePassword(LoginActivity.this, login_pass_edittext.getText().toString());
+                        } else {
+                            PreferenceUtils.saveEmail(LoginActivity.this, "");
+                            PreferenceUtils.savePassword(LoginActivity.this, "");
                         }
 
                         sendDeviceToken();
 
-                    }else if (status.equalsIgnoreCase("false")){
+                    } else if (status.equalsIgnoreCase("false")) {
                         Toasty.error(LoginActivity.this, getLoginResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
                     reloadDialog.dismiss();
@@ -192,20 +202,22 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
 
-    public void sendDeviceToken(){
+    public void sendDeviceToken() {
         convertDaraToJsonToken();
         SendDeviceTokenApi sendDeviceTokenApi = APIClient.getClient(SERVER_API_TEST).create(SendDeviceTokenApi.class);
         Call<GetSendDeviceTokenResponse> getSendDeviceTokenResponseCall;
-        if (PreferenceUtils.getCompanyLogin(this)){
+        if (PreferenceUtils.getCompanyLogin(this)) {
             getSendDeviceTokenResponseCall = sendDeviceTokenApi.sendDeviceTokenResponsecompany(device_token_post);
-        }else {
+        } else if (PreferenceUtils.getSalesmanLogin(this)) {
+            getSendDeviceTokenResponseCall = sendDeviceTokenApi.sendDeviceTokenResponseSalesman(device_token_post);
+        } else {
             getSendDeviceTokenResponseCall = sendDeviceTokenApi.sendDeviceTokenResponse(device_token_post);
         }
         getSendDeviceTokenResponseCall.enqueue(new Callback<GetSendDeviceTokenResponse>() {
             @Override
             public void onResponse(Call<GetSendDeviceTokenResponse> call, Response<GetSendDeviceTokenResponse> response) {
                 GetSendDeviceTokenResponse getSendDeviceTokenResponse = response.body();
-                if (getSendDeviceTokenResponse.getSuccess().equalsIgnoreCase("true")){
+                if (getSendDeviceTokenResponse.getSuccess().equalsIgnoreCase("true")) {
                     startActivity(new Intent(LoginActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                     Animatoo.animateSwipeLeft(LoginActivity.this);
                 }
@@ -219,7 +231,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             }
         });
     }
-
 
 
     private boolean validate(EditText[] fields) {

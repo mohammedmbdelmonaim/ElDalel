@@ -212,4 +212,15 @@
     <string name="favorites">المفضله</string>
     <string name="rating_name">تقييمك يهمنا</string>
     <string name="comment_rating">التعليق</string>
+    <string name="salesman_menu_customers_new_orders">الطلبات الجديدة للزبائن</string>
+    <string name="log_out">تسجيل الخروج</string>
+    <string name="salesman_menu_company_new_orders">الطلبات الجديدة للمحلات</string>
+    <string name="salesman_menu_language">اللغة</string>
+    <string name="company_name_title">اسم الشركة</string>
+    <string name="responsible_title">المسؤول</string>
+    <string name="order_id_text">رقم الطلب </string>
+    <string name="shipment_title">الشحنة:</string>
+
+    <string name="total_price_include_tax_title">التكلفة الاجمالية شاملة الضريبة:</string>
+    <string name="no_pending_orders">You Have No Pending Orders</string>
 </resources>

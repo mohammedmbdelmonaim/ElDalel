@@ -59,6 +59,19 @@ public class PreferenceUtils {
         return preferences.getBoolean(Constants.KEY_COMPANYLOGIN, false);
     }
 
+    public static boolean saveSalesmanLogin(Context context, boolean login) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(Constants.KEY_SALESMANLOGIN, login);
+        editor.apply();
+        return true;
+    }
+
+    public static boolean getSalesmanLogin(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getBoolean(Constants.KEY_SALESMANLOGIN, false);
+    }
+
 
 
     public static boolean saveUriImage(Context context, String photoUri) {
@@ -97,6 +110,19 @@ public class PreferenceUtils {
     public static String getCompanyToken(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(Constants.COMPANYTOKEN, "");
+    }
+
+    public static boolean saveSalesmanToken(Context context, String token) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(Constants.SALESMANTOKEN, token);
+        editor.apply();
+        return true;
+    }
+
+    public static String getSalesmanToken(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(Constants.SALESMANTOKEN, "");
     }
 
     public static boolean saveDeviceToken(Context context, String token) {

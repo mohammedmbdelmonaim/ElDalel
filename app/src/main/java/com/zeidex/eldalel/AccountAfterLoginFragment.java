@@ -105,6 +105,8 @@ public class AccountAfterLoginFragment extends androidx.fragment.app.Fragment im
                 PreferenceUtils.saveUserToken(getContext(), "");
                 PreferenceUtils.saveCompanyToken(getContext(), "");
                 PreferenceUtils.saveCompanyLogin(getContext(), false);
+                PreferenceUtils.saveSalesmanToken(getContext(), "");
+                PreferenceUtils.saveSalesmanLogin(getContext(), false);
                 PreferenceUtils.saveCountOfItemsBasket(getContext(), 0);
                 ((MainActivity) getActivity()).updateBasketBadge();
                 startActivity(new Intent(getContext(), MainActivity.class));

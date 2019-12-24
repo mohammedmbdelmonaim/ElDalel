@@ -15,4 +15,9 @@ public interface SendDeviceTokenApi {
 
     @POST("company/reg/notify")
     Call<GetSendDeviceTokenResponse> sendDeviceTokenResponsecompany(@Body Map<String, String> partMap);
+
+    @POST("salesman/reg/notify")
+    Call<GetSendDeviceTokenResponse> sendDeviceTokenResponseSalesman(@Body Map<String, String> partMap);
+
+
 }

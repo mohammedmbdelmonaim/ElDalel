@@ -202,11 +202,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 switch (checkedId) {
                     case R.id.radio_ar_register:
                         // do operations specific to this selection
-                        lang = "arabic";
+                        lang = "ar";
                         break;
                     case R.id.radio_en_register:
                         // do operations specific to this selection
-                        lang = "english";
+                        lang = "en";
                         break;
                 }
             }
@@ -298,7 +298,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                         GetRegisterResponse getRegisterResponse = response.body();
                         String status = getRegisterResponse.getSuccess();
                         if (status.equals("true")) {
-                            if (lang.equals("arabic")) {
+                            if (lang.equals("ar")) {
                                 ChangeLang.setNewLocale(RegisterActivity.this, "ar");
                             } else {
                                 ChangeLang.setNewLocale(RegisterActivity.this, "en");
@@ -357,7 +357,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                         String status = getRegisterResponse.getSuccess();
                         if (status != null) {
                             if (status.equals("true")) {
-                                if (lang.equals("arabic")) {
+                                if (lang.equals("ar")) {
                                     ChangeLang.setNewLocale(RegisterActivity.this, "ar");
                                 } else {
                                     ChangeLang.setNewLocale(RegisterActivity.this, "en");

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginStart="@dimen/dimen_16dp"
+    android:layout_marginTop="@dimen/dimen_16dp"
+    android:layout_marginEnd="@dimen/dimen_16dp"
+    android:orientation="vertical"
+    android:elevation="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimen_8dp">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <TextView
+            android:id="@+id/shipment_id_title_tv"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="wrap_content"
+            android:fontFamily="@font/cairo_bold"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp16"
+            android:textColor="@color/colorPrimary"
+            android:text="@string/shipment_title"/>
+
+        <TextView
+            android:id="@+id/order_id_value_tv"
+            android:layout_width="wrap_content"
+            android:fontFamily="@font/cairo_bold"
+            android:textSize="@dimen/sp16"
+            android:layout_marginStart="@dimen/dimen_4dp"
+            android:layout_height="wrap_content"
+            tools:text="87"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintBaseline_toBaselineOf="@id/shipment_id_title_tv"
+            app:layout_constraintStart_toEndOf="@id/shipment_id_title_tv"/>
+
+        <TextView
+            android:id="@+id/payment_type_title_tv"
+            app:layout_constraintTop_toBottomOf="@id/shipment_id_title_tv"
+            android:layout_width="wrap_content"
+            android:textColor="@color/black_color"
+            android:layout_marginTop="@dimen/dimen_8dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/payment_type_label"/>
+
+        <TextView
+            android:id="@+id/payment_type_value_tv"
+            android:layout_width="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/guideline"
+            tools:text="On Deliver"
+            android:gravity="right"
+            app:layout_constraintBaseline_toBaselineOf="@id/payment_type_title_tv"/>
+
+        <TextView
+            android:id="@+id/company_name_title_tv"
+            app:layout_constraintTop_toBottomOf="@id/payment_type_title_tv"
+            android:layout_width="wrap_content"
+            android:textColor="@color/black_color"
+            android:layout_marginTop="@dimen/dimen_8dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/name_payment_addresses_text"/>
+
+        <TextView
+            android:id="@+id/user_name_value_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/guideline"
+            tools:text="demo"
+            android:gravity="right"
+            app:layout_constraintBaseline_toBaselineOf="@id/company_name_title_tv"/>
+
+        <TextView
+            android:id="@+id/mobile_title_tv"
+            app:layout_constraintTop_toBottomOf="@id/company_name_title_tv"
+            android:layout_width="wrap_content"
+            android:textColor="@color/black_color"
+            android:layout_marginTop="@dimen/dimen_8dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/mobile_payment_addresses_text"/>
+
+        <TextView
+            android:id="@+id/mobile_value_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/guideline"
+            tools:text="555 9014 777"
+            android:gravity="right"
+            app:layout_constraintBaseline_toBaselineOf="@id/mobile_title_tv"/>
+
+        <TextView
+            android:id="@+id/order_date_title_tv"
+            app:layout_constraintTop_toBottomOf="@id/mobile_title_tv"
+            android:layout_width="wrap_content"
+            android:textColor="@color/black_color"
+            android:layout_marginTop="@dimen/dimen_8dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/elements_order_date_text"/>
+
+        <TextView
+            android:id="@+id/order_date_value_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="16/12/2019"
+            android:gravity="right"
+            app:layout_constraintStart_toStartOf="@id/guideline"
+            app:layout_constraintBaseline_toBaselineOf="@id/order_date_title_tv"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

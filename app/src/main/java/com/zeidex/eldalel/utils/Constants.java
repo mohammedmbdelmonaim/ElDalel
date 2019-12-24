@@ -5,11 +5,13 @@ public class Constants {
     public static final String KEY_USERNAME = "username";
     public static final String KEY_USERLOGIN = "user_login";
     public static final String KEY_COMPANYLOGIN = "company_login";
+    public static final String KEY_SALESMANLOGIN = "salesman_login";
     public static final String KEY_USERPASSWORD = "user_state";
     public static final String KEY_LOCALE = "language";
     public static final String URI_IMAGR = "photoUri";
     public static final String TOKEN = "user_token";
     public static final String COMPANYTOKEN = "company_token";
+    public static final String SALESMANTOKEN = "salesman_token";
     public static final String DEVICE_TOKEN = "device_token";
     public static final String USERNAME = "user_name";
     public static final String USEREMAIL = "user_email";

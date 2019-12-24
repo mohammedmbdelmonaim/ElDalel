@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.zeidex.eldalel.ui.salesmanhome.SalesmanHomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_salesman_home" >
+        <action
+            android:id="@+id/action_nav_home_to_nav_company"
+            app:destination="@id/nav_company" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_customer"
+            app:destination="@id/nav_customer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_company"
+        android:name="com.zeidex.eldalel.ui.salesmancompany.SalesmanCompanyFragment"
+        android:label="@string/salesman_menu_company_new_orders"
+        tools:layout="@layout/fragment_salesman_company" />
+
+    <fragment
+        android:id="@+id/nav_customer"
+        android:name="com.zeidex.eldalel.ui.salesmancustomer.SalesmanUsersFragment"
+        android:label="@string/salesman_menu_customers_new_orders"
+        tools:layout="@layout/fragment_salesman_users" />
+
+<!--    <fragment-->
+<!--        android:id="@+id/nav_language"-->
+<!--        android:name="com.zeidex.eldalel.ui.tools.ToolsFragment"-->
+<!--        android:label="@string/salesman_menu_language"-->
+<!--        tools:layout="@layout/fragment_tools" />-->
+
+<!--    <fragment-->
+<!--        android:id="@+id/nav_share"-->
+<!--        android:name="com.zeidex.eldalel.ui.share.ShareFragment"-->
+<!--        android:label="@string/menu_share"-->
+<!--        tools:layout="@layout/fragment_share" />-->
+
+<!--    <fragment-->
+<!--        android:id="@+id/nav_send"-->
+<!--        android:name="com.zeidex.eldalel.ui.send.SalesmanUsersFragment"-->
+<!--        android:label="@string/menu_send"-->
+<!--        tools:layout="@layout/fragment_send" />-->
+</navigation>

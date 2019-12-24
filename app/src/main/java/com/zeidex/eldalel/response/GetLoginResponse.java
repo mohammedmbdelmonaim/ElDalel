@@ -12,6 +12,9 @@ public class GetLoginResponse {
     @SerializedName("tokenCompany")
     String tokenCompany;
 
+    @SerializedName("tokenSalesman")
+    String tokenSalesman;
+
     @SerializedName("message")
     String message;
 
@@ -45,5 +48,13 @@ public class GetLoginResponse {
 
     public void setTokenCompany(String tokenCompany) {
         this.tokenCompany = tokenCompany;
+    }
+
+    public String getTokenSalesman() {
+        return tokenSalesman;
+    }
+
+    public void setTokenSalesman(String tokenSalesman) {
+        this.tokenSalesman = tokenSalesman;
     }
 }
