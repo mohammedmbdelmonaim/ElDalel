@@ -34,10 +34,6 @@ public class SalesmanCompaniesOrdersAdapter extends RecyclerView.Adapter<Salesma
         this.companiesOrders = new ArrayList<>();
     }
 
-    public SalesmanCompaniesOrdersAdapter(Context context, List<GetCompaniesOrders.Order> orders) {
-        this.context = context;
-        this.companiesOrders = orders;
-    }
 
     @NonNull
     @Override
@@ -50,8 +46,29 @@ public class SalesmanCompaniesOrdersAdapter extends RecyclerView.Adapter<Salesma
     @Override
     public void onBindViewHolder(@NonNull CompanyOrdersHolder holder, int position) {
         GetCompaniesOrders.Order companyOrder = companiesOrders.get(position);
-        holder.order_id_value_tv.setText(companyOrder.getShipmentId()+"");
-        holder.payment_type_value_tv.setText(companyOrder.getCompany().getPaymentType()+ "");
+        holder.shipment_id_value_tv.setText(companyOrder.getShipment().getShipmentNumber() +"");
+
+        String paymentType;
+        int paymentId = companyOrder.getCompany().getPaymentType();
+
+        switch (paymentId) {
+            case 1:
+                paymentType = context.getResources().getString(R.string.credit_card_payment_txt_label);
+                break;
+
+            case 2:
+                paymentType = context.getResources().getString(R.string.pay_on_arrive_payment_txt_label);
+                break;
+
+            case 3:
+                paymentType = context.getResources().getString(R.string.bank_payment_txt_label);
+                break;
+
+            default:
+                paymentType = context.getResources().getString(R.string.credit_card_payment_txt_label);
+                break;
+        }
+        holder.payment_type_value_tv.setText(paymentType);
         holder.company_name_value_tv.setText(companyOrder.getCompany().getName());
         holder.responsible_value_tv.setText(companyOrder.getCompany().getResponsible());
         holder.mobile_value_tv.setText(companyOrder.getCompany().getMobile()+"");
@@ -64,7 +81,7 @@ public class SalesmanCompaniesOrdersAdapter extends RecyclerView.Adapter<Salesma
     }
 
     public class CompanyOrdersHolder extends RecyclerView.ViewHolder {
-        public TextView payment_type_value_tv, company_name_value_tv,responsible_value_tv, mobile_value_tv, order_date_value_tv, order_id_value_tv;
+        public TextView payment_type_value_tv, company_name_value_tv,responsible_value_tv, mobile_value_tv, order_date_value_tv, shipment_id_value_tv ;
 
         public CompanyOrdersHolder(View itemView) {
             super(itemView);
@@ -72,7 +89,7 @@ public class SalesmanCompaniesOrdersAdapter extends RecyclerView.Adapter<Salesma
             company_name_value_tv = itemView.findViewById(R.id.company_name_value_tv);
             mobile_value_tv = itemView.findViewById(R.id.mobile_value_tv);
             order_date_value_tv = itemView.findViewById(R.id.order_date_value_tv);
-            order_id_value_tv = itemView.findViewById(R.id.order_id_value_tv);
+            shipment_id_value_tv = itemView.findViewById(R.id.shipment_id_value_tv);
             responsible_value_tv = itemView.findViewById(R.id.responsible_value_tv);
 
             view.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +99,7 @@ public class SalesmanCompaniesOrdersAdapter extends RecyclerView.Adapter<Salesma
                     bundle.putString("shipment_id", companiesOrders.get(getAdapterPosition()).getShipmentId().toString());
                     bundle.putString("order_id", companiesOrders.get(getAdapterPosition()).getId().toString());
                     bundle.putString("type", "company");
+                    bundle.putInt("shipment_number", companiesOrders.get(getAdapterPosition()).getShipment().getShipmentNumber());
                     Navigation.findNavController(v).navigate(R.id.action_nav_company_to_salesmanShipmentProductsFragment, bundle);
                 }
             });

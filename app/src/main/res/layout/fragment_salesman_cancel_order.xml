@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white_color"
     tools:context=".ui.salesmanShipment.SalesmanCancelOrderFragment">
 
     <androidx.cardview.widget.CardView
@@ -23,34 +24,42 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
                 android:gravity="start"
                 android:padding="@dimen/dimen_8dp"
                 android:text="@string/note_title"
-                android:textSize="@dimen/sp16" />
+                android:textSize="@dimen/sp16"
+                android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/cancel_order_notes_et"
+            <Spinner
+                android:id="@+id/cancel_order_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:inputType="textCapSentences|textMultiLine"
+                android:entries="@array/cancel_order_reasons"
                 android:gravity="start"
-                android:padding="@dimen/dimen_16dp" />
+                android:paddingTop="@dimen/dimen_16dp"
+                android:paddingBottom="@dimen/dimen_16dp" />
+            <!--            <EditText-->
+            <!--                android:id="@+id/cancel_order_notes_et"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:background="@android:color/transparent"-->
+            <!--                android:inputType="textCapSentences|textMultiLine"-->
+            <!--                android:gravity="start"-->
+            <!--                android:padding="@dimen/dimen_16dp" />-->
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <Button
         android:id="@+id/cancel_order_submit_btn"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/dimen_16dp"
         android:background="@drawable/dialog_cancel_background"
-        android:layout_height="wrap_content"
-        android:text="@string/dialog_text_cancel_label"
-        android:textStyle="bold"
+        android:text="@string/cancel_order_label"
         android:textColor="@color/white_color"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/notes_card"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/notes_card" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

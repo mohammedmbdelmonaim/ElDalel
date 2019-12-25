@@ -16,14 +16,19 @@
             android:id="@+id/nav_customer"
             android:icon="@drawable/ic_avatar"
             android:title="@string/salesman_menu_customers_new_orders" />
+    </group>
+
         <item
             android:id="@+id/nav_language"
-            android:title="@string/salesman_menu_language" />
+            android:title="@string/salesman_menu_language"
+            android:icon="@drawable/ic_language_24dp"
+            android:onClick="chooseLanguage"/>
 
         <item
             android:id="@+id/nav_log_out"
             android:title="@string/log_out"
-            android:icon="@drawable/ic_logout"/>
-    </group>
+            android:icon="@drawable/ic_logout"
+            android:onClick="logout"/>
+
 
 </menu>

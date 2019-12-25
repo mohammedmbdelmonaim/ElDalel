@@ -8,12 +8,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatTextView;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zeidex.eldalel.R;
-import com.zeidex.eldalel.response.GetShipments;
 import com.zeidex.eldalel.response.GetUsersOrders;
 
 import java.util.ArrayList;
@@ -25,7 +23,7 @@ public class SalesmanUsersOrdersAdapter extends RecyclerView.Adapter<SalesmanUse
     List<GetUsersOrders.Order> usersOrders;
 
 
-    public void setUsersOrders(List<GetUsersOrders.Order> usersOrders){
+    public void setUsersOrders(List<GetUsersOrders.Order> usersOrders) {
         this.usersOrders = usersOrders;
         notifyDataSetChanged();
     }
@@ -33,11 +31,6 @@ public class SalesmanUsersOrdersAdapter extends RecyclerView.Adapter<SalesmanUse
     public SalesmanUsersOrdersAdapter(Context context) {
         this.context = context;
         this.usersOrders = new ArrayList<>();
-    }
-
-    public SalesmanUsersOrdersAdapter(Context context, List<GetUsersOrders.Order> orders) {
-        this.context = context;
-        this.usersOrders = orders;
     }
 
     @NonNull
@@ -51,11 +44,33 @@ public class SalesmanUsersOrdersAdapter extends RecyclerView.Adapter<SalesmanUse
     @Override
     public void onBindViewHolder(@NonNull UserOrdersHolder holder, int position) {
         GetUsersOrders.Order userOrder = usersOrders.get(position);
-        holder.order_id_value_tv.setText(userOrder.getShipmentId()+"");
-        holder.payment_type_value_tv.setText(userOrder.getUser().getPaymentType()+ "");
-        holder.user_name_value_tv.setText(userOrder.getUser().getFirstName() + " " + userOrder.getUser().getLastName()+"");
-        holder.mobile_value_tv.setText(userOrder.getUser().getMobile()+"");
-        holder.order_date_value_tv.setText(userOrder.getCreatedAt()+"");
+        holder.order_id_value_tv.setText(userOrder.getShipment().getShipmentNumber() + "");
+
+        String paymentType;
+        int paymentId = userOrder.getUser().getPaymentType();
+
+        switch (paymentId) {
+            case 1:
+                paymentType = context.getResources().getString(R.string.credit_card_payment_txt_label);
+                break;
+
+            case 2:
+                paymentType = context.getResources().getString(R.string.pay_on_arrive_payment_txt_label);
+                break;
+
+            case 3:
+                paymentType = context.getResources().getString(R.string.bank_payment_txt_label);
+                break;
+
+            default:
+                paymentType = context.getResources().getString(R.string.credit_card_payment_txt_label);
+                break;
+        }
+
+        holder.payment_type_value_tv.setText(paymentType);
+        holder.user_name_value_tv.setText(userOrder.getUser().getFirstName() + " " + userOrder.getUser().getLastName() + "");
+        holder.mobile_value_tv.setText(userOrder.getUser().getMobile() + "");
+        holder.order_date_value_tv.setText(userOrder.getCreatedAt() + "");
     }
 
     @Override
@@ -81,6 +96,7 @@ public class SalesmanUsersOrdersAdapter extends RecyclerView.Adapter<SalesmanUse
                     bundle.putString("order_id", usersOrders.get(getAdapterPosition()).getId().toString());
                     bundle.putString("shipment_id", usersOrders.get(getAdapterPosition()).getShipmentId().toString());
                     bundle.putString("type", "user");
+                    bundle.putInt("shipment_number", usersOrders.get(getAdapterPosition()).getShipment().getShipmentNumber());
                     Navigation.findNavController(v).navigate(R.id.action_nav_customer_to_salesmanShipmentProductsFragment, bundle);
                 }
             });

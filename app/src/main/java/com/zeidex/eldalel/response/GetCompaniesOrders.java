@@ -465,7 +465,7 @@ this.data = data;
         private Integer id;
         @SerializedName("shipment_number")
         @Expose
-        private Object shipmentNumber;
+        private Integer shipmentNumber;
         @SerializedName("user_id")
         @Expose
         private Object userId;
@@ -505,11 +505,11 @@ this.data = data;
             this.id = id;
         }
 
-        public Object getShipmentNumber() {
+        public Integer getShipmentNumber() {
             return shipmentNumber;
         }
 
-        public void setShipmentNumber(Object shipmentNumber) {
+        public void setShipmentNumber(Integer shipmentNumber) {
             this.shipmentNumber = shipmentNumber;
         }
 
@@ -662,7 +662,7 @@ this.data = data;
         private Object pId;
         @SerializedName("payment_type")
         @Expose
-        private Object paymentType;
+        private Integer paymentType;
         @SerializedName("showroom_id")
         @Expose
         private Object showroomId;
@@ -835,11 +835,11 @@ this.data = data;
             this.pId = pId;
         }
 
-        public Object getPaymentType() {
+        public Integer getPaymentType() {
             return paymentType;
         }
 
-        public void setPaymentType(Object paymentType) {
+        public void setPaymentType(Integer paymentType) {
             this.paymentType = paymentType;
         }
 

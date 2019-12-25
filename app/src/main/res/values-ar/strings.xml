@@ -165,7 +165,7 @@
     <string name="no_addresse_text">لا يوجد عنواين في الوقت الحالي</string>
     <string name="shipment_to_address_text">الشحن الى العنوان</string>
     <string name="shipment_from_branch_text">الإستلام من الفرع</string>
-    <string name="credit_card_payment_txt_label">البطاقة الإتمانية</string>
+    <string name="credit_card_payment_txt_label">البطاقة الائتمانية</string>
     <string name="bank_payment_txt_label">التحويل البنكى</string>
     <string name="pay_on_arrive_payment_txt_label">الدفع عند الإستلام</string>
     <string name="fragment_payid_paying_label">أدفع الآن</string>
@@ -222,17 +222,27 @@
     <string name="shipment_title">الشحنة:</string>
 
     <string name="total_price_include_tax_title">التكلفة الاجمالية شاملة الضريبة:</string>
-    <string name="no_pending_orders">You Have No Pending Orders</string>
+    <string name="no_pending_orders">ليس لديك شحنات معلقة</string>
     <string name="no_shipment_products_tv">هذه الشحنة فارغة</string>
-    <string name="note_title">Notes</string>
-    <string name="update_text">Update</string>
-    <string name="cancel_order_label">Cancel Order</string>
-    <string name="edit_quantity_label">Change Quantity</string>
-    <string name="delivered_successfully">Order delivered successfully</string>
-    <string name="changed_successfully">Quantity changed successfully</string>
-    <string name="cancelled_successfully">Order cancelled successfully</string>
-    <string name="sure_you_delivered">Are you sure you delivered the order?</string>
-    <string name="delivered">Delivered</string>
-    <string name="complete_fields_toast_text">Please complete all fields</string>
-    <string name="enter_valid_quantity_error">Please, enter valid quantity!</string>
+    <string name="note_title">ملاحظة</string>
+    <string name="update_text">تعديل</string>
+    <string name="cancel_order_label">الغاء الطلب</string>
+    <string name="edit_quantity_label">تغيير الكمية</string>
+    <string name="delivered_successfully">تم توصيل الطلب بنجاح!</string>
+    <string name="changed_successfully">تم تغيير الكمية بنجاح!</string>
+    <string name="cancelled_successfully">تم الغاء الطلب!</string>
+    <string name="sure_you_delivered">متأكد أنك قمت بتوصيل الطلب؟</string>
+    <string name="delivered">تم التوصيل</string>
+    <string name="complete_fields_toast_text">من فضلك أكمل جميع الحقول!</string>
+    <string name="enter_valid_quantity_error">من فضلك أدخل كمية صحيحة!</string>
+    <string name="log_out_success_toast">تم تسجيل الخروج!</string>
+    <string name="sure_you_want_cancel">متأكد أنك تريد الغاء هذا الطلب</string>
+    <string name="dismiss">رجوع</string>
+    <string name="cancel_order_reason__1">تم الغاء الطلب من قبل العميل</string>
+    <string name="cancel_order_reason_2">لم يتم الرد على مندوب التوصيل</string>
+    <string name="cancel_order_reason_3">لم يتم استلام الشحنة من قبل العميل</string>
+    <string name="cancel_order_reason_4">خطأ في رقم الجوال/الهاتف المسجل</string>
+    <string name="cancel_order_reason_5">خطأ في عنوان التوصيل</string>
+
+    <string name="menu_home">الرئيسية</string>
 </resources>

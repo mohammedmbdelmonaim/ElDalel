@@ -45,14 +45,21 @@ public class SalesmanShipmentProductsFragment extends Fragment implements OrderS
     RecyclerView shipmentProductsRecycler;
     @BindView(R.id.no_products_tv)
     TextView noProductsTextView;
+    @BindView(R.id.order_address_tv)
+    TextView orderAddressTv;
+    @BindView(R.id.order_phone_tv)
+    TextView orderPhoneTv;
 
     String shipmentId;
     String orderId;
     String type;
+    int shipmentNumber;
 
     SalesmanShipmentProductsViewModel mSalesmanShipmentProductsViewModel;
     UserShipmentProductsAdapter mUserShipmentProductsAdapter;
     CompanyShipmentProductsAdapter mCompanyShipmentProductsAdapter;
+    private String mAddress;
+    private String mMobile;
 
     @Nullable
     @Override
@@ -61,10 +68,11 @@ public class SalesmanShipmentProductsFragment extends Fragment implements OrderS
         ButterKnife.bind(this, root);
 
         shipmentId = getArguments().getString("shipment_id");
+        shipmentNumber = getArguments().getInt("shipment_number");
         orderId = getArguments().getString("order_id");
         type = getArguments().getString("type");
 
-        ((SalesmanActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.shipment_title) + " " + shipmentId);
+        ((SalesmanActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.shipment_title) + " " + shipmentNumber);
 
         if (mSalesmanShipmentProductsViewModel == null) {
             mSalesmanShipmentProductsViewModel =
@@ -82,13 +90,17 @@ public class SalesmanShipmentProductsFragment extends Fragment implements OrderS
                 mSalesmanShipmentProductsViewModel.fetchCompanyShipmentProducts(shipmentId, PreferenceUtils.getSalesmanToken(getContext()));
             }
             reloadDialog.show();
-        }else{
+        } else {
             if (type.equals("user")) {
                 mUserShipmentProductsAdapter.setShipmentAction(this);
                 shipmentProductsRecycler.setAdapter(mUserShipmentProductsAdapter);
+                orderAddressTv.setText(mAddress + "");
+                orderPhoneTv.setText(mMobile + "");
             } else if (type.equals("company")) {
                 mCompanyShipmentProductsAdapter.setShipmentAction(this);
                 shipmentProductsRecycler.setAdapter(mCompanyShipmentProductsAdapter);
+                orderAddressTv.setText(mAddress + "");
+                orderPhoneTv.setText(mMobile + "");
             }
             shipmentProductsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         }
@@ -101,6 +113,11 @@ public class SalesmanShipmentProductsFragment extends Fragment implements OrderS
             @Override
             public void onChanged(GetUserShipmentProducts getUserShipmentProducts) {
                 mUserShipmentProductsAdapter.setShipmentProducts(getUserShipmentProducts.getData().getOrders());
+                GetUserShipmentProducts.User user = getUserShipmentProducts.getData().getOrders().get(0).getUser();
+                mAddress = user.getAddressHome();
+                mMobile = user.getMobile();
+                orderAddressTv.setText(mAddress + "");
+                orderPhoneTv.setText(mMobile + "");
                 reloadDialog.dismiss();
             }
         });
@@ -109,6 +126,11 @@ public class SalesmanShipmentProductsFragment extends Fragment implements OrderS
             @Override
             public void onChanged(GetCompanyShipmentProducts getCompanyShipmentProducts) {
                 mCompanyShipmentProductsAdapter.setShipmentProducts(getCompanyShipmentProducts.getData().getOrders());
+                GetCompanyShipmentProducts.Company company = getCompanyShipmentProducts.getData().getOrders().get(0).getCompany();
+                mAddress = company.getAddress();
+                mMobile = company.getMobile();
+                orderAddressTv.setText(mAddress + "");
+                orderPhoneTv.setText(mMobile + "");
                 reloadDialog.dismiss();
             }
         });
@@ -131,6 +153,8 @@ public class SalesmanShipmentProductsFragment extends Fragment implements OrderS
                 if (!hasOrders) {
                     noProductsTextView.setVisibility(View.VISIBLE);
                     shipmentProductsRecycler.setVisibility(View.GONE);
+                    orderAddressTv.setText("");
+                    orderPhoneTv.setText("");
                     reloadDialog.dismiss();
                 } else {
                     noProductsTextView.setVisibility(View.GONE);

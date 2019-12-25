@@ -66,6 +66,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#232222"
+            android:textSize="@dimen/sp16"
+            android:layout_marginTop="@dimen/dimen_6dp"
             app:layout_constraintStart_toStartOf="@id/order_product_name_tv"
             app:layout_constraintTop_toBottomOf="@id/order_product_name_tv"
             tools:text="2" />
@@ -77,9 +79,11 @@
             android:layout_marginStart="@dimen/dimen_2dp"
             android:textColor="#232222"
             android:textStyle="bold"
+            android:textSize="@dimen/sp16"
+            android:layout_marginTop="@dimen/dimen_6dp"
             app:layout_constraintStart_toEndOf="@id/order_product_quantity_tv"
             app:layout_constraintTop_toBottomOf="@id/order_product_name_tv"
-            android:text="x" />
+            android:text="X" />
 
         <TextView
             android:id="@+id/order_product_price_tv"
@@ -87,6 +91,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_2dp"
             android:textColor="#232222"
+            android:textSize="@dimen/sp16"
+            android:layout_marginTop="@dimen/dimen_6dp"
             app:layout_constraintStart_toEndOf="@id/order_product_amount_x"
             app:layout_constraintTop_toBottomOf="@id/order_product_name_tv"
             tools:text="1888.50 SAR" />

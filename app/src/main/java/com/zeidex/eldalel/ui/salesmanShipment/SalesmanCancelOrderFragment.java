@@ -1,7 +1,9 @@
 package com.zeidex.eldalel.ui.salesmanShipment;
 
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.zeidex.eldalel.R;
@@ -31,8 +34,11 @@ import es.dmoral.toasty.Toasty;
 
 public class SalesmanCancelOrderFragment extends Fragment {
 
-    @BindView(R.id.cancel_order_notes_et)
-    EditText notesEt;
+//    @BindView(R.id.cancel_order_notes_et)
+//    EditText notesEt;
+
+    @BindView(R.id.cancel_order_spinner)
+    Spinner cancelOrderSpinner;
 
     SalesmanShipmentProductsViewModel mSalesmanShipmentProductsViewModel;
     private int mPosition;
@@ -45,13 +51,26 @@ public class SalesmanCancelOrderFragment extends Fragment {
 
     @OnClick(R.id.cancel_order_submit_btn)
     void cancelOrder() {
-        String notes = notesEt.getText().toString();
-        if (TextUtils.isEmpty(notes)) {
-            Toasty.error(getContext(), getString(R.string.complete_fields_toast_text), Toast.LENGTH_LONG).show();
-        } else {
-            reloadDialog.show();
-            mSalesmanShipmentProductsViewModel.cancelOrder(mPosition, notes, PreferenceUtils.getSalesmanToken(getContext()), String.valueOf(mOrderId), ChangeLang.getLocale(getContext().getResources()).getLanguage(), mType);
-        }
+//        String notes = notesEt.getText().toString();
+//        if (TextUtils.isEmpty(notes)) {
+//            Toasty.error(getContext(), getString(R.string.complete_fields_toast_text), Toast.LENGTH_LONG).show();
+//        } else {
+        String notes = cancelOrderSpinner.getSelectedItem().toString();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setMessage(R.string.sure_you_want_cancel).setPositiveButton(R.string.cancel_order_label, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    reloadDialog.show();
+                    mSalesmanShipmentProductsViewModel.cancelOrder(mPosition, notes, PreferenceUtils.getSalesmanToken(getContext()), String.valueOf(mOrderId), ChangeLang.getLocale(getContext().getResources()).getLanguage(), mType);
+                    dialog.dismiss();
+                }
+            }).setNegativeButton(R.string.dismiss, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).create().show();
+//        }
     }
 
     @Override

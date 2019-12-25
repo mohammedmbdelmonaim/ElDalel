@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
         
+    <string-array name="cancel_order_reasons">
+        <item>@string/cancel_order_reason__1</item>
+        <item>@string/cancel_order_reason_2</item>
+        <item>@string/cancel_order_reason_3</item>
+        <item>@string/cancel_order_reason_4</item>
+        <item>@string/cancel_order_reason_5</item>
+    </string-array>
+
     <string name="app_name"> Network directory </string>
         
     <string name="splash_text_label1"> All rights reserved to the network directory store </string>
@@ -418,11 +426,7 @@
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-    <string name="menu_tools">Tools</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_send">Send</string>
+
     <string name="salesman_menu_customers_new_orders">Customers New Orders</string>
     <string name="salesman_menu_company_new_orders">Company New Orders</string>
     <string name="log_out">Log Out</string>
@@ -437,7 +441,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="note_title">Notes</string>
+    <string name="note_title">Note</string>
     <string name="update_text">Update</string>
     <string name="cancel_order_label">Cancel Order</string>
     <string name="edit_quantity_label">Change Quantity</string>
@@ -448,5 +452,13 @@
     <string name="delivered">Delivered</string>
     <string name="complete_fields_toast_text">Please complete all fields</string>
     <string name="enter_valid_quantity_error">Please, enter valid quantity!</string>
+    <string name="log_out_success_toast">Signed out successfully!</string>
+    <string name="sure_you_want_cancel">Sure you want to cancel this order?</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="cancel_order_reason__1">Order cancelled by customer</string>
+    <string name="cancel_order_reason_2">Customer didn\'t answer the phone</string>
+    <string name="cancel_order_reason_3">Customer didn\'t receive the order</string>
+    <string name="cancel_order_reason_4">Could\'t reach client - Wrong phone number</string>
+    <string name="cancel_order_reason_5">Wrong delivery address</string>
 
 </resources>

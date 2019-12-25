@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
@@ -29,6 +30,7 @@ public class CompanyShipmentProductsAdapter extends RecyclerView.Adapter<Company
     private Context context;
     List<GetCompanyShipmentProducts.Order> shipmentProducts;
     OrderShipmentsActions mOrderShipmentsActions;
+    private CircularProgressDrawable mCircularProgressDrawable;
 
     public void setShipmentAction(OrderShipmentsActions orderShipmentsActions) {
         mOrderShipmentsActions = orderShipmentsActions;
@@ -42,11 +44,10 @@ public class CompanyShipmentProductsAdapter extends RecyclerView.Adapter<Company
     public CompanyShipmentProductsAdapter(Context context) {
         this.context = context;
         this.shipmentProducts = new ArrayList<>();
-    }
-
-    public CompanyShipmentProductsAdapter(Context context, List<GetCompanyShipmentProducts.Order> shipmentProducts) {
-        this.context = context;
-        this.shipmentProducts = shipmentProducts;
+        mCircularProgressDrawable = new CircularProgressDrawable(context);
+        mCircularProgressDrawable.setStrokeWidth(5f);
+        mCircularProgressDrawable.setCenterRadius(30f);
+        mCircularProgressDrawable.start();
     }
 
     @NonNull
@@ -70,7 +71,8 @@ public class CompanyShipmentProductsAdapter extends RecyclerView.Adapter<Company
         }
 
         holder.order_id_value_tv.setText(companyShipmentProduct.getId() + "");
-        holder.order_product_price_tv.setText(companyShipmentProduct.getProduct().getPrice() + "");
+        double priceDouble = companyShipmentProduct.getProduct().getPrice().doubleValue();
+        holder.order_product_price_tv.setText(PriceFormatter.toDecimalRsString(priceDouble, context));
         holder.order_product_quantity_tv.setText(companyShipmentProduct.getAvailableQuantity() + "");
         if (companyShipmentProduct.getTotalPriceWithTax() != null) {
             double totalPriceDouble = companyShipmentProduct.getTotalPriceWithTax().doubleValue();
@@ -80,7 +82,7 @@ public class CompanyShipmentProductsAdapter extends RecyclerView.Adapter<Company
 
         Glide.with(context)
                 .load("https://www.dleel-sh.com/homepages/get/" + companyShipmentProduct.getProduct().getPhotos().get(0).getFilename())
-                .placeholder(R.drawable.condition_logo)
+                .placeholder(mCircularProgressDrawable)
                 .centerCrop()
                 .into(holder.order_product_iv);
     }
