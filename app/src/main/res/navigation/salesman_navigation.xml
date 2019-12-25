@@ -22,15 +22,46 @@
         android:id="@+id/nav_company"
         android:name="com.zeidex.eldalel.ui.salesmancompany.SalesmanCompanyFragment"
         android:label="@string/salesman_menu_company_new_orders"
-        tools:layout="@layout/fragment_salesman_company" />
+        tools:layout="@layout/fragment_salesman_company" >
+        <action
+            android:id="@+id/action_nav_company_to_salesmanShipmentProductsFragment"
+            app:destination="@id/salesmanShipmentProductsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_customer"
         android:name="com.zeidex.eldalel.ui.salesmancustomer.SalesmanUsersFragment"
         android:label="@string/salesman_menu_customers_new_orders"
-        tools:layout="@layout/fragment_salesman_users" />
+        tools:layout="@layout/fragment_salesman_users" >
+        <action
+            android:id="@+id/action_nav_customer_to_salesmanShipmentProductsFragment"
+            app:destination="@id/salesmanShipmentProductsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/salesmanShipmentProductsFragment"
+        android:name="com.zeidex.eldalel.ui.salesmanShipmentProducts.SalesmanShipmentProductsFragment"
+        android:label=""
+        tools:layout="@layout/fragment_salesman_shipment_products" >
+        <action
+            android:id="@+id/action_salesmanShipmentProductsFragment_to_salesEditQuantityFragment"
+            app:destination="@id/salesEditQuantityFragment"
+            app:popUpTo="@+id/salesmanShipmentProductsFragment" />
+        <action
+            android:id="@+id/action_salesmanShipmentProductsFragment_to_salesmanCancelOrder"
+            app:destination="@id/salesmanCancelOrder" />
+    </fragment>
+    <fragment
+        android:id="@+id/salesmanCancelOrder"
+        android:name="com.zeidex.eldalel.ui.salesmanShipment.SalesmanCancelOrderFragment"
+        android:label="@string/cancel_order_label"
+        tools:layout="@layout/fragment_salesman_cancel_order" />
+    <fragment
+        android:id="@+id/salesEditQuantityFragment"
+        android:name="com.zeidex.eldalel.ui.salesmanShipment.SalesEditQuantityFragment"
+        android:label="@string/edit_quantity_label"
+        tools:layout="@layout/fragment_salesman_edit_quantity"/>
 
-<!--    <fragment-->
+    <!--    <fragment-->
 <!--        android:id="@+id/nav_language"-->
 <!--        android:name="com.zeidex.eldalel.ui.tools.ToolsFragment"-->
 <!--        android:label="@string/salesman_menu_language"-->

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zeidex.eldalel.R;
@@ -49,7 +50,7 @@ public class SalesmanCompaniesOrdersAdapter extends RecyclerView.Adapter<Salesma
     @Override
     public void onBindViewHolder(@NonNull CompanyOrdersHolder holder, int position) {
         GetCompaniesOrders.Order companyOrder = companiesOrders.get(position);
-        holder.order_id_value_tv.setText(companyOrder.getId()+"");
+        holder.order_id_value_tv.setText(companyOrder.getShipmentId()+"");
         holder.payment_type_value_tv.setText(companyOrder.getCompany().getPaymentType()+ "");
         holder.company_name_value_tv.setText(companyOrder.getCompany().getName());
         holder.responsible_value_tv.setText(companyOrder.getCompany().getResponsible());
@@ -79,7 +80,9 @@ public class SalesmanCompaniesOrdersAdapter extends RecyclerView.Adapter<Salesma
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
                     bundle.putString("shipment_id", companiesOrders.get(getAdapterPosition()).getShipmentId().toString());
-//                    Navigation.findNavController(v).navigate(R.id.action_nav_home_to_nav_company, bundle);
+                    bundle.putString("order_id", companiesOrders.get(getAdapterPosition()).getId().toString());
+                    bundle.putString("type", "company");
+                    Navigation.findNavController(v).navigate(R.id.action_nav_company_to_salesmanShipmentProductsFragment, bundle);
                 }
             });
         }

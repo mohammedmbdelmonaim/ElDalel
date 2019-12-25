@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.salesmanShipment.SalesmanCancelOrderFragment">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/notes_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:gravity="start"
+                android:padding="@dimen/dimen_8dp"
+                android:text="@string/note_title"
+                android:textSize="@dimen/sp16" />
+
+            <EditText
+                android:id="@+id/cancel_order_notes_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:inputType="textCapSentences|textMultiLine"
+                android:gravity="start"
+                android:padding="@dimen/dimen_16dp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/cancel_order_submit_btn"
+        android:layout_width="0dp"
+        android:layout_margin="@dimen/dimen_16dp"
+        android:background="@drawable/dialog_cancel_background"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_text_cancel_label"
+        android:textStyle="bold"
+        android:textColor="@color/white_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/notes_card"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

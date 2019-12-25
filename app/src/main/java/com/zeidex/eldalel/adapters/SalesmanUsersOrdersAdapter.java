@@ -51,7 +51,7 @@ public class SalesmanUsersOrdersAdapter extends RecyclerView.Adapter<SalesmanUse
     @Override
     public void onBindViewHolder(@NonNull UserOrdersHolder holder, int position) {
         GetUsersOrders.Order userOrder = usersOrders.get(position);
-        holder.order_id_value_tv.setText(userOrder.getId()+"");
+        holder.order_id_value_tv.setText(userOrder.getShipmentId()+"");
         holder.payment_type_value_tv.setText(userOrder.getUser().getPaymentType()+ "");
         holder.user_name_value_tv.setText(userOrder.getUser().getFirstName() + " " + userOrder.getUser().getLastName()+"");
         holder.mobile_value_tv.setText(userOrder.getUser().getMobile()+"");
@@ -78,8 +78,10 @@ public class SalesmanUsersOrdersAdapter extends RecyclerView.Adapter<SalesmanUse
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
+                    bundle.putString("order_id", usersOrders.get(getAdapterPosition()).getId().toString());
                     bundle.putString("shipment_id", usersOrders.get(getAdapterPosition()).getShipmentId().toString());
-//                    Navigation.findNavController(v).navigate(R.id.action_nav_home_to_nav_company, bundle);
+                    bundle.putString("type", "user");
+                    Navigation.findNavController(v).navigate(R.id.action_nav_customer_to_salesmanShipmentProductsFragment, bundle);
                 }
             });
         }

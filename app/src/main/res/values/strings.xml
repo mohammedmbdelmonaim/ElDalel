@@ -433,5 +433,20 @@
     <string name="shipment_title">Shipment Id:</string>
     <string name="total_price_include_tax_title">Total Price Include Tax:</string>
     <string name="no_pending_orders">You Have No Pending Orders</string>
+    <string name="no_shipment_products_tv">This shipment is empty</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="note_title">Notes</string>
+    <string name="update_text">Update</string>
+    <string name="cancel_order_label">Cancel Order</string>
+    <string name="edit_quantity_label">Change Quantity</string>
+    <string name="delivered_successfully">Order delivered successfully</string>
+    <string name="changed_successfully">Quantity changed successfully</string>
+    <string name="cancelled_successfully">Order cancelled successfully</string>
+    <string name="sure_you_delivered">Are you sure you delivered the order?</string>
+    <string name="delivered">Delivered</string>
+    <string name="complete_fields_toast_text">Please complete all fields</string>
+    <string name="enter_valid_quantity_error">Please, enter valid quantity!</string>
 
 </resources>

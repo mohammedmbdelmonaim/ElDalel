@@ -56,12 +56,6 @@ public class SalesmanCompanyFragment extends Fragment {
 
         mSalesmanCompanyViewModel.fetchCompaniesOrders(PreferenceUtils.getSalesmanToken(getContext()));
         reloadDialog.show();
-//        mSalesmanCustomersViewModel.getText().observe(this, new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//
-//            }
-//        });
         return root;
     }
 

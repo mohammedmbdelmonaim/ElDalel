@@ -56,6 +56,9 @@ public class GetUserShipmentProducts {
         @SerializedName("success")
         @Expose
         private String success;
+        @SerializedName("error")
+        @Expose
+        private List<String> errors;
         @SerializedName("orders")
         @Expose
         private List<Order> orders = null;
@@ -76,6 +79,13 @@ public class GetUserShipmentProducts {
             this.orders = orders;
         }
 
+        public List<String> getErrors() {
+            return errors;
+        }
+
+        public void setErrors(List<String> errors) {
+            this.errors = errors;
+        }
     }
 
     public class Order {
@@ -570,6 +580,9 @@ public class GetUserShipmentProducts {
         @SerializedName("updated_at")
         @Expose
         private String updatedAt;
+        @SerializedName("photos")
+        @Expose
+        private List<Photo> photos;
 
         public Integer getId() {
             return id;
@@ -865,6 +878,14 @@ public class GetUserShipmentProducts {
 
         public void setUpdatedAt(String updatedAt) {
             this.updatedAt = updatedAt;
+        }
+
+        public List<Photo> getPhotos() {
+            return photos;
+        }
+
+        public void setPhotos(List<Photo> photos) {
+            this.photos = photos;
         }
 
     }
@@ -1315,6 +1336,99 @@ public class GetUserShipmentProducts {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+    }
+
+    public class Photo {
+
+        @SerializedName("id")
+        @Expose
+        private Integer id;
+        @SerializedName("product_id")
+        @Expose
+        private Integer productId;
+        @SerializedName("option_id")
+        @Expose
+        private Integer optionId;
+        @SerializedName("filename")
+        @Expose
+        private String filename;
+        @SerializedName("mime")
+        @Expose
+        private String mime;
+        @SerializedName("original_filename")
+        @Expose
+        private String originalFilename;
+        @SerializedName("created_at")
+        @Expose
+        private String createdAt;
+        @SerializedName("updated_at")
+        @Expose
+        private String updatedAt;
+
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+
+        public Integer getProductId() {
+            return productId;
+        }
+
+        public void setProductId(Integer productId) {
+            this.productId = productId;
+        }
+
+        public Integer getOptionId() {
+            return optionId;
+        }
+
+        public void setOptionId(Integer optionId) {
+            this.optionId = optionId;
+        }
+
+        public String getFilename() {
+            return filename;
+        }
+
+        public void setFilename(String filename) {
+            this.filename = filename;
+        }
+
+        public String getMime() {
+            return mime;
+        }
+
+        public void setMime(String mime) {
+            this.mime = mime;
+        }
+
+        public String getOriginalFilename() {
+            return originalFilename;
+        }
+
+        public void setOriginalFilename(String originalFilename) {
+            this.originalFilename = originalFilename;
+        }
+
+        public String getCreatedAt() {
+            return createdAt;
+        }
+
+        public void setCreatedAt(String createdAt) {
+            this.createdAt = createdAt;
+        }
+
+        public String getUpdatedAt() {
+            return updatedAt;
+        }
+
+        public void setUpdatedAt(String updatedAt) {
+            this.updatedAt = updatedAt;
         }
 
     }
