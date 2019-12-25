@@ -52,9 +52,9 @@ public class SalesmanCompaniesOrdersAdapter extends RecyclerView.Adapter<Salesma
         int paymentId = companyOrder.getCompany().getPaymentType();
 
         switch (paymentId) {
-            case 1:
-                paymentType = context.getResources().getString(R.string.credit_card_payment_txt_label);
-                break;
+//            case 1:
+//                paymentType = context.getResources().getString(R.string.credit_card_payment_txt_label);
+//                break;
 
             case 2:
                 paymentType = context.getResources().getString(R.string.pay_on_arrive_payment_txt_label);
@@ -64,8 +64,12 @@ public class SalesmanCompaniesOrdersAdapter extends RecyclerView.Adapter<Salesma
                 paymentType = context.getResources().getString(R.string.bank_payment_txt_label);
                 break;
 
+            case 4:
+                paymentType = context.getResources().getString(R.string.postpaid_payment_method);
+                break;
+
             default:
-                paymentType = context.getResources().getString(R.string.credit_card_payment_txt_label);
+                paymentType = "";
                 break;
         }
         holder.payment_type_value_tv.setText(paymentType);

@@ -245,4 +245,7 @@
     <string name="cancel_order_reason_5">خطأ في عنوان التوصيل</string>
 
     <string name="menu_home">الرئيسية</string>
+    <string name="postpaid_payment_method">الدفع الآجل</string>
+    <string name="my_wallet">محفظتي</string>
+    <string name="no_enough_wallet">No enough credit in your wallet!</string>
 </resources>

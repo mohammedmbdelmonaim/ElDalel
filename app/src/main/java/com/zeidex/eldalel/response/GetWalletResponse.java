@@ -8,7 +8,7 @@ import java.util.List;
 public class GetWalletResponse {
     @SerializedName("status")
     @Expose
-    private Boolean status;
+    private String status;
     @SerializedName("data")
     @Expose
     private List<Datum> data = null;
@@ -16,11 +16,11 @@ public class GetWalletResponse {
     @Expose
     private Integer total;
 
-    public Boolean getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

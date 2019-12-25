@@ -460,5 +460,8 @@
     <string name="cancel_order_reason_3">Customer didn\'t receive the order</string>
     <string name="cancel_order_reason_4">Could\'t reach client - Wrong phone number</string>
     <string name="cancel_order_reason_5">Wrong delivery address</string>
+    <string name="postpaid_payment_method">Postpaid</string>
+    <string name="my_wallet">My Wallet</string>
+    <string name="no_enough_wallet">No enough credit in your wallet!</string>
 
 </resources>

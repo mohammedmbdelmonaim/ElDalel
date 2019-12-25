@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -190,6 +191,7 @@
                 android:layout_marginTop="@dimen/dimen_20dp"
                 android:background="@drawable/type_payment_method_bg"
                 android:gravity="center_vertical"
+                android:visibility="gone"
                 android:orientation="horizontal"
                 android:paddingStart="@dimen/dimen_16dp"
                 android:paddingTop="@dimen/dimen_25dp"
@@ -305,6 +307,99 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/post_paid_payment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/type_payment_method_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:paddingStart="@dimen/dimen_16dp"
+                android:paddingTop="@dimen/dimen_25dp"
+                android:paddingEnd="@dimen/dimen_16dp"
+                android:paddingBottom="@dimen/dimen_25dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pay_on_arrive_payment">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/post_paid_payment_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_bill" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/post_paid_payment_txt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_25dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/postpaid_payment_method"
+                    android:textAlignment="viewStart"
+                    android:textColor="#AAAAAA"
+                    android:textSize="@dimen/dimen_14sp" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/post_paid_payment_imgcheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_unchecked_pay_method" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/my_wallet_payment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/type_payment_method_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:paddingStart="@dimen/dimen_16dp"
+                android:paddingTop="@dimen/dimen_25dp"
+                android:paddingEnd="@dimen/dimen_16dp"
+                android:paddingBottom="@dimen/dimen_25dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/post_paid_payment">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/my_wallet_payment_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_wallet_grey" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/my_wallet_payment_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_25dp"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/my_wallet"
+                    android:textAlignment="viewStart"
+                    android:textColor="#AAAAAA"
+                    android:textSize="@dimen/dimen_14sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/my_wallet_amount_txt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/dimen_16dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/cairo_bold"
+                    tools:text="400SR"
+                    android:textAlignment="viewStart"
+                    android:textColor="#AAAAAA"
+                    android:textSize="@dimen/dimen_14sp" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/my_wallet_payment_imgcheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_unchecked_pay_method" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/fragment_payid_total_price_products_linear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -314,7 +409,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pay_on_arrive_payment">
+                app:layout_constraintTop_toBottomOf="@+id/my_wallet_payment">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="0dp"

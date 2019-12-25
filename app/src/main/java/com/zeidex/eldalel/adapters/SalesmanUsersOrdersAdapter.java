@@ -62,8 +62,12 @@ public class SalesmanUsersOrdersAdapter extends RecyclerView.Adapter<SalesmanUse
                 paymentType = context.getResources().getString(R.string.bank_payment_txt_label);
                 break;
 
+            case 5:
+                paymentType = context.getResources().getString(R.string.my_wallet);
+                break;
+
             default:
-                paymentType = context.getResources().getString(R.string.credit_card_payment_txt_label);
+                paymentType = "";
                 break;
         }
 

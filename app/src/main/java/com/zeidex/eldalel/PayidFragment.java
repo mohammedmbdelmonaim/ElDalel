@@ -31,8 +31,10 @@ import com.zeidex.eldalel.response.GetBookingResponse;
 import com.zeidex.eldalel.response.GetBranches;
 import com.zeidex.eldalel.response.GetCountries;
 import com.zeidex.eldalel.response.GetMakeOrderResponse;
+import com.zeidex.eldalel.response.GetPostPaidResponse;
 import com.zeidex.eldalel.response.GetProfileInfo;
 import com.zeidex.eldalel.response.GetRegions;
+import com.zeidex.eldalel.response.GetWalletResponse;
 import com.zeidex.eldalel.services.BookingResponse;
 import com.zeidex.eldalel.services.BranchesApi;
 import com.zeidex.eldalel.services.CountriesApi;
@@ -42,6 +44,7 @@ import com.zeidex.eldalel.services.RegionsApi;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.PreferenceUtils;
+import com.zeidex.eldalel.utils.PriceFormatter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -145,6 +148,37 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.payment_webview)
     WebView payment_webview;
 
+    @BindView(R.id.post_paid_payment)
+    LinearLayoutCompat postPaidPaymentLayout;
+
+    @BindView(R.id.post_paid_payment_txt)
+    AppCompatTextView post_paid_payment_txt;
+
+    @BindView(R.id.post_paid_payment_img)
+    AppCompatImageView post_paid_payment_img;
+
+    @BindView(R.id.post_paid_payment_imgcheck)
+    AppCompatImageView post_paid_payment_imgcheck;
+
+    @BindView(R.id.my_wallet_payment)
+    LinearLayoutCompat myWalletPayment;
+
+    @BindView(R.id.my_wallet_payment_txt)
+    AppCompatTextView my_wallet_payment_txt;
+
+    @BindView(R.id.my_wallet_amount_txt)
+    AppCompatTextView my_wallet_amount_txt;
+
+    @BindView(R.id.my_wallet_payment_img)
+    AppCompatImageView my_wallet_payment_img;
+
+    @BindView(R.id.my_wallet_payment_imgcheck)
+    AppCompatImageView my_wallet_payment_imgcheck;
+
+
+
+
+
     @BindView(R.id.payment_contain)
     ConstraintLayout payment_contain;
 
@@ -154,6 +188,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
     String total_price = BasketFragment.totalString;
     String total_products = BasketFragment.totalwithoutString;
     String tax = BasketFragment.taxString;
+    private double mWalletAmount;
 
 
     @Override
@@ -175,7 +210,10 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             fragment_payid_total_price_text.setText(total_price);
             fragment_payid_tax_text.setText(tax);
             fragment_payid_paying.setOnClickListener(this);
+            getPostPaidStatus();
         } else {
+            credit_card_payment.setVisibility(View.VISIBLE);
+            getWalletStatus();
             countries = new ArrayList<>();
             ids_countries = new ArrayList<>();
             countries.add(getString(R.string.country_spinner_label));
@@ -343,7 +381,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                                                         PreferenceUtils.saveCoupon(getContext(), "");
                                                         PreferenceUtils.saveCountOfItemsBasket(getContext(), 0);
                                                     } else {
-                                                        Toasty.error(getContext() , getBookingResponse.getMessage() , Toast.LENGTH_LONG).show();
+                                                        Toasty.error(getContext(), getBookingResponse.getMessage(), Toast.LENGTH_LONG).show();
                                                         payment_webview.setVisibility(View.GONE);
                                                         payment_contain.setVisibility(View.VISIBLE);
                                                     }
@@ -491,36 +529,43 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         credit_card_payment.setSelected(true);
         bank_payment.setSelected(false);
         pay_on_arrive_payment.setSelected(false);
+        myWalletPayment.setSelected(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             credit_card_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_credit_card_check));
             bank_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bank_pay));
             pay_on_arrive_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_pay_on_arrive));
-
+            my_wallet_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_wallet_grey));
         } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_credit_card_check);
             bank_payment_img.setImageResource(R.drawable.ic_bank_pay);
             pay_on_arrive_payment_img.setImageResource(R.drawable.ic_pay_on_arrive);
+            my_wallet_payment_img.setImageResource(R.drawable.ic_wallet_grey);
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             credit_card_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_checked_payment));
             bank_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_pay_method));
             pay_on_arrive_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_pay_method));
-
+            my_wallet_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_pay_method));
         } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_checked_payment);
             bank_payment_imgcheck.setImageResource(R.drawable.ic_unchecked_pay_method);
             pay_on_arrive_payment_imgcheck.setImageResource(R.drawable.ic_unchecked_pay_method);
+            my_wallet_payment_imgcheck.setImageResource(R.drawable.ic_unchecked_pay_method);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             credit_card_payment_txt.setTextColor(ContextCompat.getColor(getContext(), R.color.white_color));
             bank_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
             pay_on_arrive_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
+            my_wallet_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
+            my_wallet_amount_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
         } else {
             credit_card_payment_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
             bank_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             pay_on_arrive_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            my_wallet_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            my_wallet_amount_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
         }
     }
 
@@ -530,36 +575,53 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         credit_card_payment.setSelected(false);
         bank_payment.setSelected(true);
         pay_on_arrive_payment.setSelected(false);
+        myWalletPayment.setSelected(false);
+        postPaidPaymentLayout.setSelected(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             credit_card_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_credit_card));
             bank_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bank_pay_checked));
             pay_on_arrive_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_pay_on_arrive));
+            my_wallet_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_wallet_grey));
+            post_paid_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bill));
 
         } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_credit_card);
             bank_payment_img.setImageResource(R.drawable.ic_bank_pay_checked);
             pay_on_arrive_payment_img.setImageResource(R.drawable.ic_pay_on_arrive);
+            my_wallet_payment_img.setImageResource(R.drawable.ic_wallet_grey);
+            post_paid_payment_img.setImageResource(R.drawable.ic_bill);
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             credit_card_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_payment));
             bank_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_checked_payment));
             pay_on_arrive_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_pay_method));
+            post_paid_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_pay_method));
+            my_wallet_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_pay_method));
 
         } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_unchecked_pay_method);
             bank_payment_imgcheck.setImageResource(R.drawable.ic_checked_payment);
             pay_on_arrive_payment_imgcheck.setImageResource(R.drawable.ic_unchecked_pay_method);
+            post_paid_payment_imgcheck.setImageResource(R.drawable.ic_unchecked_pay_method);
+            my_wallet_payment_imgcheck.setImageResource(R.drawable.ic_unchecked_pay_method);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             credit_card_payment_txt.setTextColor(ContextCompat.getColor(getContext(), R.color.colorshipmenttype));
             bank_payment_txt.setTextColor(getContext().getColor(R.color.white_color));
             pay_on_arrive_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
+            post_paid_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
+            my_wallet_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
+            my_wallet_amount_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
         } else {
             credit_card_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             bank_payment_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
             pay_on_arrive_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            post_paid_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            my_wallet_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            my_wallet_amount_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+
         }
     }
 
@@ -569,39 +631,142 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         credit_card_payment.setSelected(false);
         bank_payment.setSelected(false);
         pay_on_arrive_payment.setSelected(true);
+        myWalletPayment.setSelected(false);
+        postPaidPaymentLayout.setSelected(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             credit_card_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_credit_card));
             bank_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bank_pay));
             pay_on_arrive_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_pay_on_arrive_checked));
+            my_wallet_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_wallet_grey));
+            post_paid_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bill));
 
         } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_credit_card);
             bank_payment_img.setImageResource(R.drawable.ic_bank_pay);
             pay_on_arrive_payment_img.setImageResource(R.drawable.ic_pay_on_arrive_checked);
+            my_wallet_payment_img.setImageResource(R.drawable.ic_wallet_grey);
+            post_paid_payment_img.setImageResource(R.drawable.ic_bill);
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             credit_card_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_payment));
             bank_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_payment));
             pay_on_arrive_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_checked_payment));
+            post_paid_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_pay_method));
+            my_wallet_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_pay_method));
 
         } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_unchecked_pay_method);
             bank_payment_imgcheck.setImageResource(R.drawable.ic_unchecked_payment);
             pay_on_arrive_payment_imgcheck.setImageResource(R.drawable.ic_checked_payment);
+            post_paid_payment_imgcheck.setImageResource(R.drawable.ic_unchecked_pay_method);
+            my_wallet_payment_imgcheck.setImageResource(R.drawable.ic_unchecked_pay_method);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             credit_card_payment_txt.setTextColor(ContextCompat.getColor(getContext(), R.color.colorshipmenttype));
             bank_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
             pay_on_arrive_payment_txt.setTextColor(getContext().getColor(R.color.white_color));
+            post_paid_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
+            my_wallet_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
+            my_wallet_amount_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
         } else {
             credit_card_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             bank_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             pay_on_arrive_payment_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
+            post_paid_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            my_wallet_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            my_wallet_amount_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+
         }
     }
 
+    @OnClick(R.id.post_paid_payment)
+    public void checkPostPaid() {
+        shipment_method = 4;
+        bank_payment.setSelected(false);
+        pay_on_arrive_payment.setSelected(false);
+        postPaidPaymentLayout.setSelected(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            bank_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bank_pay));
+            pay_on_arrive_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_pay_on_arrive));
+            post_paid_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bill_checked));
+
+        } else {
+            bank_payment_img.setImageResource(R.drawable.ic_bank_pay);
+            pay_on_arrive_payment_img.setImageResource(R.drawable.ic_pay_on_arrive);
+            post_paid_payment_img.setImageResource(R.drawable.ic_bill_checked);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            bank_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_payment));
+            pay_on_arrive_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_payment));
+            post_paid_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_checked_payment));
+
+        } else {
+            bank_payment_imgcheck.setImageResource(R.drawable.ic_unchecked_payment);
+            pay_on_arrive_payment_imgcheck.setImageResource(R.drawable.ic_unchecked_payment);
+            post_paid_payment_imgcheck.setImageResource(R.drawable.ic_checked_payment);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            bank_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
+            pay_on_arrive_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
+            post_paid_payment_txt.setTextColor(getContext().getColor(R.color.white_color));
+        } else {
+            bank_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            pay_on_arrive_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            post_paid_payment_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
+        }
+    }
+
+    @OnClick(R.id.my_wallet_payment)
+    public void checkMyWallet() {
+        shipment_method = 5;
+        credit_card_payment.setSelected(false);
+        bank_payment.setSelected(false);
+        pay_on_arrive_payment.setSelected(false);
+        myWalletPayment.setSelected(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            credit_card_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_credit_card));
+            bank_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bank_pay));
+            pay_on_arrive_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_pay_on_arrive));
+            my_wallet_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_wallet_checked));
+        } else {
+            credit_card_payment_img.setImageResource(R.drawable.ic_credit_card);
+            bank_payment_img.setImageResource(R.drawable.ic_bank_pay);
+            pay_on_arrive_payment_img.setImageResource(R.drawable.ic_pay_on_arrive);
+            my_wallet_payment_img.setImageResource(R.drawable.ic_wallet_checked);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            credit_card_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_pay_method));
+            bank_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_pay_method));
+            pay_on_arrive_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_pay_method));
+            my_wallet_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_checked_payment));
+        } else {
+            credit_card_payment_img.setImageResource(R.drawable.ic_unchecked_pay_method);
+            bank_payment_imgcheck.setImageResource(R.drawable.ic_unchecked_pay_method);
+            pay_on_arrive_payment_imgcheck.setImageResource(R.drawable.ic_unchecked_pay_method);
+            my_wallet_payment_imgcheck.setImageResource(R.drawable.ic_checked_payment);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            credit_card_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
+            bank_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
+            pay_on_arrive_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
+            my_wallet_payment_txt.setTextColor(ContextCompat.getColor(getContext(), R.color.white_color));
+            my_wallet_amount_txt.setTextColor(ContextCompat.getColor(getContext(), R.color.white_color));
+        } else {
+            credit_card_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            bank_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            pay_on_arrive_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            my_wallet_payment_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
+            my_wallet_amount_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
+
+        }
+    }
 
     ArrayList<String> countries;
     ArrayList<Integer> ids_countries;
@@ -763,8 +928,56 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                 reloadDialog.dismiss();
             }
         });
+    }
 
+    private void getWalletStatus(){
+        reloadDialog.show();
+        MakeOrderApi makeOrderApi = APIClient.getClient(SERVER_API_TEST).create(MakeOrderApi.class);
+        makeOrderApi.getWalletStatus(PreferenceUtils.getUserToken(getContext())).enqueue(new Callback<GetWalletResponse>() {
+            @Override
+            public void onResponse(Call<GetWalletResponse> call, Response<GetWalletResponse> response) {
+                if(response.body() != null && response.body().getStatus().equals("success")){
+                    if(response.body().getTotal() > 0){
+                        myWalletPayment.setVisibility(View.VISIBLE);
+                        mWalletAmount = response.body().getTotal().doubleValue();
+                        my_wallet_amount_txt.setText(PriceFormatter.toDecimalRsString(mWalletAmount, getContext()));
+                    }else {
+                        myWalletPayment.setVisibility(View.GONE);
+                    }
+                }
+                reloadDialog.dismiss();
+            }
 
+            @Override
+            public void onFailure(Call<GetWalletResponse> call, Throwable t) {
+                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
+    }
+
+    private void getPostPaidStatus(){
+        reloadDialog.show();
+        MakeOrderApi makeOrderApi = APIClient.getClient(SERVER_API_TEST).create(MakeOrderApi.class);
+        makeOrderApi.getPostPaidStatus(PreferenceUtils.getCompanyToken(getContext())).enqueue(new Callback<GetPostPaidResponse>() {
+            @Override
+            public void onResponse(Call<GetPostPaidResponse> call, Response<GetPostPaidResponse> response) {
+                reloadDialog.dismiss();
+                if(response.body() != null && response.body().getStatus().equals("success")){
+                    if(response.body().getAvailable()){
+                        postPaidPaymentLayout.setVisibility(View.VISIBLE);
+                    }else {
+                        postPaidPaymentLayout.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetPostPaidResponse> call, Throwable t) {
+                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
     }
 
     private boolean validate(EditText[] fields) {
