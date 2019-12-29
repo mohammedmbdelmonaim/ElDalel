@@ -8,19 +8,19 @@ import java.util.List;
 public class GetWalletResponse {
     @SerializedName("status")
     @Expose
-    private String status;
+    private Boolean status;
     @SerializedName("data")
     @Expose
     private List<Datum> data = null;
     @SerializedName("total")
     @Expose
-    private Integer total;
+    private Double total;
 
-    public String getStatus() {
+    public Boolean getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 
@@ -32,11 +32,11 @@ public class GetWalletResponse {
         this.data = data;
     }
 
-    public Integer getTotal() {
+    public Double getTotal() {
         return total;
     }
 
-    public void setTotal(Integer total) {
+    public void setTotal(Double total) {
         this.total = total;
     }
 
@@ -53,7 +53,7 @@ public class GetWalletResponse {
         private Object companyId;
         @SerializedName("amount")
         @Expose
-        private Integer amount;
+        private Double amount;
         @SerializedName("amount_type")
         @Expose
         private String amountType;
@@ -94,11 +94,11 @@ public class GetWalletResponse {
             this.companyId = companyId;
         }
 
-        public Integer getAmount() {
+        public Double getAmount() {
             return amount;
         }
 
-        public void setAmount(Integer amount) {
+        public void setAmount(Double amount) {
             this.amount = amount;
         }
 

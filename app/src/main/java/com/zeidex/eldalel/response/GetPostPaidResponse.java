@@ -7,16 +7,16 @@ public class GetPostPaidResponse {
 
     @SerializedName("available")
     @Expose
-    private Boolean available;
+    private String available;
     @SerializedName("status")
     @Expose
     private String status;
 
-    public Boolean getAvailable() {
+    public String getAvailable() {
         return available;
     }
 
-    public void setAvailable(Boolean available) {
+    public void setAvailable(String available) {
         this.available = available;
     }
 

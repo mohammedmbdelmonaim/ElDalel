@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.zeidex.eldalel.R;
 import com.zeidex.eldalel.response.GetWalletResponse;
 import com.zeidex.eldalel.utils.ChangeLang;
+import com.zeidex.eldalel.utils.PriceFormatter;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -60,7 +61,8 @@ public class OperationsWalletAdapter extends RecyclerView.Adapter<OperationsWall
         }else{
             holder.wallet_type_text.setText(operation.getAmountType());
         }
-        holder.order_amount_text.setText(operation.getAmount()+"");
+
+        holder.order_amount_text.setText(PriceFormatter.toDecimalString(operation.getAmount(), context)+"");
         holder.wallet_date_text.setText(operation.getCreatedAt());
     }
 

@@ -1,5 +1,6 @@
 package com.zeidex.eldalel.services;
 
+import com.zeidex.eldalel.response.GetActivatePostpaidResponse;
 import com.zeidex.eldalel.response.GetMakeOrderResponse;
 import com.zeidex.eldalel.response.GetPostPaidResponse;
 import com.zeidex.eldalel.response.GetWalletResponse;
@@ -25,4 +26,8 @@ public interface MakeOrderApi {
 
     @GET("user/wallet")
     Call<GetWalletResponse> getWalletStatus(@Query("token") String token);
+
+    @POST("company/postPay")
+    Call<GetActivatePostpaidResponse> activatePostpaid(@Query("token") String token);
+
 }

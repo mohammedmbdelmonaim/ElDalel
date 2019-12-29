@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
+import com.zeidex.eldalel.response.GetActivatePostpaidResponse;
 import com.zeidex.eldalel.response.GetBookingResponse;
 import com.zeidex.eldalel.response.GetBranches;
 import com.zeidex.eldalel.response.GetCountries;
@@ -160,6 +161,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.post_paid_payment_imgcheck)
     AppCompatImageView post_paid_payment_imgcheck;
 
+    @BindView(R.id.activation_request_tv)
+    TextView activationRequestTv;
+
     @BindView(R.id.my_wallet_payment)
     LinearLayoutCompat myWalletPayment;
 
@@ -176,9 +180,6 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
     AppCompatImageView my_wallet_payment_imgcheck;
 
 
-
-
-
     @BindView(R.id.payment_contain)
     ConstraintLayout payment_contain;
 
@@ -189,6 +190,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
     String total_products = BasketFragment.totalwithoutString;
     String tax = BasketFragment.taxString;
     private double mWalletAmount;
+    private boolean isPostpaidActive;
 
 
     @Override
@@ -210,6 +212,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             fragment_payid_total_price_text.setText(total_price);
             fragment_payid_tax_text.setText(tax);
             fragment_payid_paying.setOnClickListener(this);
+            postPaidPaymentLayout.setVisibility(View.VISIBLE);
             getPostPaidStatus();
         } else {
             credit_card_payment.setVisibility(View.VISIBLE);
@@ -583,14 +586,17 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             bank_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bank_pay_checked));
             pay_on_arrive_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_pay_on_arrive));
             my_wallet_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_wallet_grey));
-            post_paid_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bill));
-
+            if (isPostpaidActive) {
+                post_paid_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bill));
+            }
         } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_credit_card);
             bank_payment_img.setImageResource(R.drawable.ic_bank_pay_checked);
             pay_on_arrive_payment_img.setImageResource(R.drawable.ic_pay_on_arrive);
             my_wallet_payment_img.setImageResource(R.drawable.ic_wallet_grey);
-            post_paid_payment_img.setImageResource(R.drawable.ic_bill);
+            if (isPostpaidActive) {
+                post_paid_payment_img.setImageResource(R.drawable.ic_bill);
+            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -599,7 +605,6 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             pay_on_arrive_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_pay_method));
             post_paid_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_pay_method));
             my_wallet_payment_imgcheck.setImageDrawable(getContext().getDrawable(R.drawable.ic_unchecked_pay_method));
-
         } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_unchecked_pay_method);
             bank_payment_imgcheck.setImageResource(R.drawable.ic_checked_payment);
@@ -611,14 +616,18 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             credit_card_payment_txt.setTextColor(ContextCompat.getColor(getContext(), R.color.colorshipmenttype));
             bank_payment_txt.setTextColor(getContext().getColor(R.color.white_color));
             pay_on_arrive_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
-            post_paid_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
+            if (isPostpaidActive) {
+                post_paid_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
+            }
             my_wallet_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
             my_wallet_amount_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
         } else {
             credit_card_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             bank_payment_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
             pay_on_arrive_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
-            post_paid_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            if (isPostpaidActive) {
+                post_paid_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            }
             my_wallet_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             my_wallet_amount_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
 
@@ -639,14 +648,17 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             bank_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bank_pay));
             pay_on_arrive_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_pay_on_arrive_checked));
             my_wallet_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_wallet_grey));
-            post_paid_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bill));
-
+            if (isPostpaidActive) {
+                post_paid_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bill));
+            }
         } else {
             credit_card_payment_img.setImageResource(R.drawable.ic_credit_card);
             bank_payment_img.setImageResource(R.drawable.ic_bank_pay);
             pay_on_arrive_payment_img.setImageResource(R.drawable.ic_pay_on_arrive_checked);
             my_wallet_payment_img.setImageResource(R.drawable.ic_wallet_grey);
-            post_paid_payment_img.setImageResource(R.drawable.ic_bill);
+            if (isPostpaidActive) {
+                post_paid_payment_img.setImageResource(R.drawable.ic_bill);
+            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -667,14 +679,18 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             credit_card_payment_txt.setTextColor(ContextCompat.getColor(getContext(), R.color.colorshipmenttype));
             bank_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
             pay_on_arrive_payment_txt.setTextColor(getContext().getColor(R.color.white_color));
-            post_paid_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
+            if (isPostpaidActive) {
+                post_paid_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
+            }
             my_wallet_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
             my_wallet_amount_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
         } else {
             credit_card_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             bank_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             pay_on_arrive_payment_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
-            post_paid_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            if (isPostpaidActive) {
+                post_paid_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+            }
             my_wallet_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             my_wallet_amount_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
 
@@ -683,6 +699,10 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
 
     @OnClick(R.id.post_paid_payment)
     public void checkPostPaid() {
+        if (!isPostpaidActive) {
+            Toasty.error(getContext(), getString(R.string.ask_activation_toast), Toast.LENGTH_LONG).show();
+            return;
+        }
         shipment_method = 4;
         bank_payment.setSelected(false);
         pay_on_arrive_payment.setSelected(false);
@@ -691,12 +711,15 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             bank_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bank_pay));
             pay_on_arrive_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_pay_on_arrive));
-            post_paid_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bill_checked));
-
+            if (isPostpaidActive) {
+                post_paid_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bill_checked));
+            }
         } else {
             bank_payment_img.setImageResource(R.drawable.ic_bank_pay);
             pay_on_arrive_payment_img.setImageResource(R.drawable.ic_pay_on_arrive);
-            post_paid_payment_img.setImageResource(R.drawable.ic_bill_checked);
+            if (isPostpaidActive) {
+                post_paid_payment_img.setImageResource(R.drawable.ic_bill_checked);
+            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -713,16 +736,26 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             bank_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
             pay_on_arrive_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
-            post_paid_payment_txt.setTextColor(getContext().getColor(R.color.white_color));
+            if (isPostpaidActive) {
+                post_paid_payment_txt.setTextColor(getContext().getColor(R.color.white_color));
+            }
         } else {
             bank_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             pay_on_arrive_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
-            post_paid_payment_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
+            if (isPostpaidActive) {
+                post_paid_payment_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
+            }
         }
     }
 
     @OnClick(R.id.my_wallet_payment)
     public void checkMyWallet() {
+//        String totalPriceNoSymbol = total_price.replaceAll("\\D.","");
+//        double totalPriceDouble = Double.valueOf(totalPriceNoSymbol);
+//        if(mWalletAmount < totalPriceDouble){
+//            Toast.makeText(getContext(), R.string.no_enough_wallet, Toast.LENGTH_LONG).show();
+//            return;
+//        }
         shipment_method = 5;
         credit_card_payment.setSelected(false);
         bank_payment.setSelected(false);
@@ -930,18 +963,17 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    private void getWalletStatus(){
+    private void getWalletStatus() {
         reloadDialog.show();
         MakeOrderApi makeOrderApi = APIClient.getClient(SERVER_API_TEST).create(MakeOrderApi.class);
         makeOrderApi.getWalletStatus(PreferenceUtils.getUserToken(getContext())).enqueue(new Callback<GetWalletResponse>() {
             @Override
             public void onResponse(Call<GetWalletResponse> call, Response<GetWalletResponse> response) {
-                if(response.body() != null && response.body().getStatus().equals("success")){
-                    if(response.body().getTotal() > 0){
+                if (response.body() != null && response.body().getStatus()) {
+                    if (response.body().getTotal() > 0) {
                         myWalletPayment.setVisibility(View.VISIBLE);
-                        mWalletAmount = response.body().getTotal().doubleValue();
-                        my_wallet_amount_txt.setText(PriceFormatter.toDecimalRsString(mWalletAmount, getContext()));
-                    }else {
+                        my_wallet_amount_txt.setText(PriceFormatter.toDecimalRsString(response.body().getTotal(), getContext()));
+                    } else {
                         myWalletPayment.setVisibility(View.GONE);
                     }
                 }
@@ -956,25 +988,75 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    private void getPostPaidStatus(){
+    private void getPostPaidStatus() {
         reloadDialog.show();
         MakeOrderApi makeOrderApi = APIClient.getClient(SERVER_API_TEST).create(MakeOrderApi.class);
         makeOrderApi.getPostPaidStatus(PreferenceUtils.getCompanyToken(getContext())).enqueue(new Callback<GetPostPaidResponse>() {
             @Override
             public void onResponse(Call<GetPostPaidResponse> call, Response<GetPostPaidResponse> response) {
-                reloadDialog.dismiss();
-                if(response.body() != null && response.body().getStatus().equals("success")){
-                    if(response.body().getAvailable()){
-                        postPaidPaymentLayout.setVisibility(View.VISIBLE);
-                    }else {
-                        postPaidPaymentLayout.setVisibility(View.GONE);
+                if (response.body() != null && response.body().getStatus().equals("success")) {
+                    String availabilityStatus = response.body().getAvailable();
+                    if (availabilityStatus.equals("ACTIVE")) {
+                        isPostpaidActive = true;
+                        activationRequestTv.setVisibility(View.GONE);
+                        setPostpaidActiveUI();
+                        post_paid_payment_imgcheck.setVisibility(View.VISIBLE);
+                    } else if (availabilityStatus.equals("AVAILABLE")) {
+                        activationRequestTv.setVisibility(View.VISIBLE);
+                        post_paid_payment_imgcheck.setVisibility(View.GONE);
+                    } else if (availabilityStatus.equals("UNAVAILABLE")) {
+                        activationRequestTv.setVisibility(View.GONE);
+                        post_paid_payment_imgcheck.setVisibility(View.GONE);
                     }
                 }
+                reloadDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<GetPostPaidResponse> call, Throwable t) {
                 Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                reloadDialog.dismiss();
+            }
+        });
+    }
+
+    private void setPostpaidActiveUI() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            post_paid_payment_img.setImageDrawable(getContext().getDrawable(R.drawable.ic_bill));
+        } else {
+            my_wallet_payment_img.setImageResource(R.drawable.ic_bill);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            post_paid_payment_txt.setTextColor(getContext().getColor(R.color.colorshipmenttype));
+        } else {
+            post_paid_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
+        }
+    }
+
+    @OnClick(R.id.activation_request_tv)
+    void requestActivation() {
+        reloadDialog.show();
+        MakeOrderApi makeOrderApi = APIClient.getClient(SERVER_API_TEST).create(MakeOrderApi.class);
+        makeOrderApi.activatePostpaid(PreferenceUtils.getCompanyToken(getContext())).enqueue(new Callback<GetActivatePostpaidResponse>() {
+            @Override
+            public void onResponse(Call<GetActivatePostpaidResponse> call, Response<GetActivatePostpaidResponse> response) {
+                if (response.body() != null && getContext() != null) {
+                    if (response.body().getStatus().equals("success")) {
+                        activationRequestTv.setVisibility(View.GONE);
+                        Toasty.success(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toasty.success(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                reloadDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<GetActivatePostpaidResponse> call, Throwable t) {
+                if (getContext() != null) {
+                    Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                }
                 reloadDialog.dismiss();
             }
         });

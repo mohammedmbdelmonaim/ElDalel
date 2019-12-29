@@ -463,5 +463,7 @@
     <string name="postpaid_payment_method">Postpaid</string>
     <string name="my_wallet">My Wallet</string>
     <string name="no_enough_wallet">No enough credit in your wallet!</string>
+    <string name="activation_request_button_text">Activation Request</string>
+    <string name="ask_activation_toast">This option is not active, contact technical support to activate it</string>
 
 </resources>

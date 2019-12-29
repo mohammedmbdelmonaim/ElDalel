@@ -708,6 +708,11 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
                     productsAdapter.getProductsList().get(position).setCart("0");
                     productsAdapter.notifyItemChanged(position);
                     PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                    try{
+                        ((MainActivity) getActivity()).updateBasketBadge();
+                    }catch(Exception ex){
+
+                    }
                 }
                 reloadDialog.dismiss();
             }

@@ -313,11 +313,11 @@
                 android:background="@drawable/type_payment_method_bg"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:visibility="gone"
                 android:paddingStart="@dimen/dimen_16dp"
                 android:paddingTop="@dimen/dimen_25dp"
                 android:paddingEnd="@dimen/dimen_16dp"
                 android:paddingBottom="@dimen/dimen_25dp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pay_on_arrive_payment">
@@ -326,7 +326,7 @@
                     android:id="@+id/post_paid_payment_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_bill" />
+                    app:srcCompat="@drawable/ic_bill_disabled" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/post_paid_payment_txt"
@@ -337,13 +337,23 @@
                     android:fontFamily="@font/cairo_bold"
                     android:text="@string/postpaid_payment_method"
                     android:textAlignment="viewStart"
-                    android:textColor="#AAAAAA"
+                    android:textColor="@color/disabled_postpaid_color"
                     android:textSize="@dimen/dimen_14sp" />
+
+                <TextView
+                    android:id="@+id/activation_request_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:padding="@dimen/dimen_12dp"
+                    android:text="@string/activation_request_button_text"
+                    android:textColor="@color/colorPrimary" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/post_paid_payment_imgcheck"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     app:srcCompat="@drawable/ic_unchecked_pay_method" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 

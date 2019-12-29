@@ -247,5 +247,7 @@
     <string name="menu_home">الرئيسية</string>
     <string name="postpaid_payment_method">الدفع الآجل</string>
     <string name="my_wallet">محفظتي</string>
-    <string name="no_enough_wallet">No enough credit in your wallet!</string>
+    <string name="no_enough_wallet">لا يوجد رصيد كافي في المحفظة</string>
+    <string name="activation_request_button_text">طلب التفعيل</string>
+    <string name="ask_activation_toast">هذا الخيار غير مفعل، بإمكانك التواصل مع الدعم الفني لتفعيله</string>
 </resources>

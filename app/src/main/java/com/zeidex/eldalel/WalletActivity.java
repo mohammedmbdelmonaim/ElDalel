@@ -90,7 +90,7 @@ public class WalletActivity extends BaseActivity {
             public void onResponse(Call<GetWalletResponse> call, Response<GetWalletResponse> response) {
                 GetWalletResponse getWalletResponse = response.body();
                 operations_wallet = (ArrayList<GetWalletResponse.Datum>) getWalletResponse.getData();
-                if (operations_wallet.size() == 0){
+                if (operations_wallet != null && operations_wallet.size() == 0){
                     activity_operations_wallet_no.setVisibility(View.VISIBLE);
                     activity_operations_wallet_total_label.setVisibility(View.GONE);
                     activity_operations_wallet_total_result.setVisibility(View.GONE);
