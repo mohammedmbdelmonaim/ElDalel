@@ -81,8 +81,9 @@ public class CompanyShipmentProductsAdapter extends RecyclerView.Adapter<Company
         holder.order_date_tv.setText(companyShipmentProduct.getCreatedAt() + "");
 
         Glide.with(context)
-                .load("https://www.dleel-sh.com/homepages/get/" + companyShipmentProduct.getProduct().getPhotos().get(0).getFilename())
+                .load("https://dleel.com/homepages/get/" + companyShipmentProduct.getProduct().getPhotos().get(0).getFilename())
                 .placeholder(mCircularProgressDrawable)
+                .error(R.drawable.ic_logo)
                 .centerCrop()
                 .into(holder.order_product_iv);
     }

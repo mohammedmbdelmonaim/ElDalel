@@ -19,6 +19,45 @@ public class PreferenceUtils {
         return preferences.getString(Constants.COPOUNDATA, "");
     }
 
+    public static boolean saveCouponExpiredDate(Context context, String expiredDate) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("coupon_expiry", expiredDate);
+        editor.apply();
+        return true;
+    }
+
+    public static String getCoupounExpiredDate(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString("coupon_expiry", "");
+    }
+
+    public static boolean saveCouponAmountType(Context context, String amountType) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("coupon_type", amountType);
+        editor.apply();
+        return true;
+    }
+
+    public static String getCoupounAmountType(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString("coupon_type", "");
+    }
+
+    public static boolean saveCouponAmount(Context context, int amount) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("coupon_amount", amount);
+        editor.apply();
+        return true;
+    }
+
+    public static int getCoupounAmount(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getInt("coupon_amount", -1);
+    }
+
     public static boolean saveLocaleKey(Context context, String lang) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();

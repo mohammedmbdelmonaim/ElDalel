@@ -31,6 +31,7 @@ import com.zeidex.eldalel.response.GetActivatePostpaidResponse;
 import com.zeidex.eldalel.response.GetBookingResponse;
 import com.zeidex.eldalel.response.GetBranches;
 import com.zeidex.eldalel.response.GetCountries;
+import com.zeidex.eldalel.response.GetDeliveryFee;
 import com.zeidex.eldalel.response.GetMakeOrderResponse;
 import com.zeidex.eldalel.response.GetPostPaidResponse;
 import com.zeidex.eldalel.response.GetProfileInfo;
@@ -39,6 +40,7 @@ import com.zeidex.eldalel.response.GetWalletResponse;
 import com.zeidex.eldalel.services.BookingResponse;
 import com.zeidex.eldalel.services.BranchesApi;
 import com.zeidex.eldalel.services.CountriesApi;
+import com.zeidex.eldalel.services.DeliveryFeeApi;
 import com.zeidex.eldalel.services.MakeOrderApi;
 import com.zeidex.eldalel.services.ProfileInfoApi;
 import com.zeidex.eldalel.services.RegionsApi;
@@ -179,6 +181,24 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.my_wallet_payment_imgcheck)
     AppCompatImageView my_wallet_payment_imgcheck;
 
+    @BindView(R.id.fragment_payid_coupon_linear)
+    LinearLayoutCompat fragment_payid_coupon_linear;
+
+    @BindView(R.id.fragment_payid_coupon_view)
+    View fragment_payid_coupon_view;
+
+    @BindView(R.id.fragment_payid_coupon_text)
+    AppCompatTextView fragment_payid_coupon_text;
+
+    @BindView(R.id.fragment_payid_delivery_linear)
+    LinearLayoutCompat fragment_payid_delivery_linear;
+
+    @BindView(R.id.fragment_payid_delivery_view)
+    View fragment_payid_delivery_view;
+
+    @BindView(R.id.fragment_payid_delivery_text)
+    AppCompatTextView fragment_payid_delivery_text;
+
 
     @BindView(R.id.payment_contain)
     ConstraintLayout payment_contain;
@@ -188,9 +208,12 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
     int address_id = ShoopingListAddressesFragment.address_id;
     String total_price = BasketFragment.totalString;
     String total_products = BasketFragment.totalwithoutString;
+    double finalPriceDouble;
+    String couponDiscount;
     String tax = BasketFragment.taxString;
     private double mWalletAmount;
     private boolean isPostpaidActive;
+    int deliveryFee = -1;
 
 
     @Override
@@ -206,10 +229,22 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         showDialog();
+        getDeliveryFee();
+        if (!PreferenceUtils.getCoupoun(getContext()).equals("")) {
+            finalPriceDouble = BasketFragment.finalPrice;
+//            total_price = BasketFragment.totalWithDiscountString;
+            couponDiscount = BasketFragment.couponDiscountString;
+            fragment_payid_coupon_linear.setVisibility(View.VISIBLE);
+            fragment_payid_coupon_view.setVisibility(View.VISIBLE);
+            fragment_payid_coupon_text.setText(couponDiscount);
+        }else{
+            finalPriceDouble = BasketFragment.mTotal_price;
+        }
+
         if (PreferenceUtils.getCompanyLogin(getContext())) {
             fragment_payid_linear_methods.setVisibility(View.GONE);
             fragment_payid_total_products_text.setText(total_products);
-            fragment_payid_total_price_text.setText(total_price);
+            fragment_payid_total_price_text.setText(PriceFormatter.toDecimalRsString(finalPriceDouble, getContext()));
             fragment_payid_tax_text.setText(tax);
             fragment_payid_paying.setOnClickListener(this);
             postPaidPaymentLayout.setVisibility(View.VISIBLE);
@@ -236,7 +271,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             spinner_address_add_branches_shipment.setItems(branches);
 
             fragment_payid_total_products_text.setText(total_products);
-            fragment_payid_total_price_text.setText(total_price);
+            fragment_payid_total_price_text.setText(PriceFormatter.toDecimalRsString(finalPriceDouble, getContext()));
             fragment_payid_tax_text.setText(tax);
             getCountries();
 
@@ -258,6 +293,24 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                 shipment_from_branch_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             }
         }
+    }
+
+    private void getDeliveryFee() {
+        DeliveryFeeApi deliveryFeeApi = APIClient.getClient(SERVER_API_TEST).create(DeliveryFeeApi.class);
+    deliveryFeeApi.getDeliveryFee().enqueue(new Callback<GetDeliveryFee>() {
+        @Override
+        public void onResponse(Call<GetDeliveryFee> call, Response<GetDeliveryFee> response) {
+            if(response.body() != null){
+                deliveryFee = response.body().getData();
+                fragment_payid_delivery_text.setText(PriceFormatter.toDecimalRsString(deliveryFee, getContext()));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GetDeliveryFee> call, Throwable t) {
+
+        }
+    });
     }
 
     Map<String, String> payment_post;
@@ -382,6 +435,8 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                                                         payment_contain.setVisibility(View.VISIBLE);
                                                         ((PaymentActivity) getContext()).goToOrderFragment();
                                                         PreferenceUtils.saveCoupon(getContext(), "");
+                                                        PreferenceUtils.saveCouponAmountType(getContext(), "");
+                                                        PreferenceUtils.saveCouponAmount(getContext(), -1);
                                                         PreferenceUtils.saveCountOfItemsBasket(getContext(), 0);
                                                     } else {
                                                         Toasty.error(getContext(), getBookingResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -420,6 +475,8 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                                 payment_webview.setVisibility(View.GONE);
                                 ((PaymentActivity) getContext()).goToOrderFragment();
                                 PreferenceUtils.saveCoupon(getContext(), "");
+                                PreferenceUtils.saveCouponAmountType(getContext(), "");
+                                PreferenceUtils.saveCouponAmount(getContext(), -1);
                                 PreferenceUtils.saveCountOfItemsBasket(getContext(), 0);
                             }
 
@@ -570,6 +627,8 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             my_wallet_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             my_wallet_amount_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
         }
+
+        hideDelivery();
     }
 
     @OnClick(R.id.bank_payment)
@@ -632,6 +691,8 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             my_wallet_amount_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
 
         }
+
+        hideDelivery();
     }
 
     @OnClick(R.id.pay_on_arrive_payment)
@@ -693,8 +754,9 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             }
             my_wallet_payment_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
             my_wallet_amount_txt.setTextColor(getContext().getResources().getColor(R.color.colorshipmenttype));
-
         }
+
+        showDelivery();
     }
 
     @OnClick(R.id.post_paid_payment)
@@ -746,6 +808,8 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                 post_paid_payment_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
             }
         }
+
+        hideDelivery();
     }
 
     @OnClick(R.id.my_wallet_payment)
@@ -799,6 +863,8 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             my_wallet_amount_txt.setTextColor(getContext().getResources().getColor(R.color.white_color));
 
         }
+
+        hideDelivery();
     }
 
     ArrayList<String> countries;
@@ -1075,6 +1141,21 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
     }
 
     Dialog reloadDialog;
+
+    private void showDelivery(){
+        if(PreferenceUtils.getUserLogin(getContext())){
+        fragment_payid_delivery_linear.setVisibility(View.VISIBLE);
+        fragment_payid_delivery_view.setVisibility(View.VISIBLE);
+        fragment_payid_total_price_text.setText(PriceFormatter.toDecimalRsString(finalPriceDouble + deliveryFee, getContext()));
+    }}
+
+    private void hideDelivery(){
+        if(PreferenceUtils.getUserLogin(getContext())) {
+            fragment_payid_delivery_linear.setVisibility(View.GONE);
+            fragment_payid_delivery_view.setVisibility(View.GONE);
+            fragment_payid_total_price_text.setText(PriceFormatter.toDecimalRsString(finalPriceDouble, getContext()));
+        }
+    }
 
     private void showDialog() {
         reloadDialog = new Dialog(getContext());

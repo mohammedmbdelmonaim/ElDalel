@@ -95,7 +95,7 @@ public class ElementsOrdersAdapter extends RecyclerView.Adapter<ElementsOrdersAd
             holder.order_element_price.setText(PriceFormatter.toDecimalString(price, context.getApplicationContext()));
 
         Glide.with(context)
-                .load("https://www.dleel-sh.com/homepages/get/" + order.getPhotos().get(0).getFilename())
+                .load("https://dleel.com/homepages/get/" + order.getPhotos().get(0).getFilename())
                 .placeholder(R.drawable.condition_logo)
                 .centerCrop()
                 .into(holder.order_element_img);

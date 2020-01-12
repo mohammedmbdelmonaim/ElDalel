@@ -10,10 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.navigation.fragment.NavHostFragment;
@@ -83,7 +86,28 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
     @BindView(R.id.fragment_basket_edittext_linear)
     LinearLayoutCompat fragment_basket_edittext_linear;
 
+    @BindView(R.id.fragment_basket_coupon_linear)
+    LinearLayoutCompat fragment_basket_coupon_linear;
+
+    @BindView(R.id.fragment_basket_coupon_view)
+    View fragment_basket_coupon_view;
+
+    @BindView(R.id.fragment_basket_coupon_text)
+    TextView fragment_basket_coupon_text;
+
+    @BindView(R.id.coupon_valid_iv)
+    AppCompatImageView couponValidIv;
+
+    @BindView(R.id.expired_text_tv)
+    AppCompatTextView expiredTextTv;
+
     BasketElementsAdapter basketElementsAdapter;
+    public static double mTotal_price; //in case of no discount
+    public static double finalPrice; // in case of discount
+
+
+    boolean isCouponAlreadyAdded; //used to check from server if coupon still valid (used once at page first load)
+    private boolean hasCouponDiscount; //used to update coupon discount if amount changed or item deleted
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -98,6 +122,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         initializeRecycler();
+        fragment_basket_paying.setOnClickListener(this);
         if (basketProducts == null) {
             findViews();
         } else {
@@ -108,37 +133,62 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
 
     public void findViews() {
         showDialog();
-        fragment_basket_paying.setOnClickListener(this);
         onLoadPage();
     }
 
     @OnClick({R.id.fragment_basket_elements_enter_code})
-    public void onEnterCoupoun() {
-        final boolean fieldscomOK = validate(new EditText[]{fragment_basket_elements_edittext});
-        if (fieldscomOK) {
-            reloadDialog.show();
-            CheckCouponAPI checkCouponAPI = APIClient.getClient(SERVER_API_TEST).create(CheckCouponAPI.class);
-            Call<GetCheckCouponResponse> getCheckCouponResponseCall = checkCouponAPI.checkCouponResponse(fragment_basket_elements_edittext.getText().toString());
-            getCheckCouponResponseCall.enqueue(new Callback<GetCheckCouponResponse>() {
-                @Override
-                public void onResponse(Call<GetCheckCouponResponse> call, Response<GetCheckCouponResponse> response) {
-                    GetCheckCouponResponse getCheckCouponResponse = response.body();
-                    if (getCheckCouponResponse.getStatus().equalsIgnoreCase("false")) {
-                        Toasty.error(getContext(), getCheckCouponResponse.getError(), Toast.LENGTH_LONG).show();
-                    } else {
-                        PreferenceUtils.saveCoupon(getContext(), fragment_basket_elements_edittext.getText().toString());
-                        fragment_basket_elements_edittext.setText("");
-                        Toasty.success(getContext(), "مبروك", Toast.LENGTH_LONG).show();
-                    }
-                    reloadDialog.dismiss();
-                }
+    public void onEnterCoupoun(View view) {
+        if (((TextView) view).getText().equals(getString(R.string.fragment_basket_elements_enter_code_label)) || isCouponAlreadyAdded) {
+            final boolean fieldscomOK = validate(new EditText[]{fragment_basket_elements_edittext});
+            if (fieldscomOK) {
+                reloadDialog.show();
+                CheckCouponAPI checkCouponAPI = APIClient.getClient(SERVER_API_TEST).create(CheckCouponAPI.class);
+                Call<GetCheckCouponResponse> getCheckCouponResponseCall = checkCouponAPI.checkCouponResponse(fragment_basket_elements_edittext.getText().toString());
+                getCheckCouponResponseCall.enqueue(new Callback<GetCheckCouponResponse>() {
+                    @Override
+                    public void onResponse(Call<GetCheckCouponResponse> call, Response<GetCheckCouponResponse> response) {
+                        GetCheckCouponResponse getCheckCouponResponse = response.body();
+                        if (getContext() != null) {
+                            if (getCheckCouponResponse.getStatus().equalsIgnoreCase("false")) {
+                                if (isCouponAlreadyAdded) {
+                                    couponValidIv.setVisibility(View.GONE);
+                                    expiredTextTv.setVisibility(View.VISIBLE);
 
-                @Override
-                public void onFailure(Call<GetCheckCouponResponse> call, Throwable t) {
-                    Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
-                    reloadDialog.dismiss();
-                }
-            });
+                                    fragment_basket_coupon_linear.setVisibility(View.GONE);
+                                    fragment_basket_coupon_view.setVisibility(View.GONE);
+                                    fragment_basket_coupon_text.setText("0");
+                                    fragment_basket_total_price_text.setText(totalString);
+
+                                    isCouponAlreadyAdded = false;
+                                    hasCouponDiscount = false;
+                                } else {
+                                    Toasty.error(getContext(), getCheckCouponResponse.getError(), Toast.LENGTH_LONG).show();
+                                }
+                            } else {
+                                if (!isCouponAlreadyAdded) {
+                                    addCoupon(fragment_basket_elements_edittext.getText().toString(), response.body().getData());
+                                    Toasty.success(getContext(), getString(R.string.code_added_successfully), Toast.LENGTH_LONG).show();
+                                } else {
+                                    isCouponAlreadyAdded = false;
+                                }
+                            }
+                        }
+                        reloadDialog.dismiss();
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<GetCheckCouponResponse> call, Throwable t) {
+                        if (getContext() != null) {
+                            Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                        }
+                        reloadDialog.dismiss();
+
+                    }
+                });
+            }
+        } else if (((TextView) view).getText().equals(getString(R.string.remove))) {
+            resetCoupon();
         }
     }
 
@@ -157,6 +207,8 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
     public static String totalString;
     public static String totalwithoutString;
     public static String taxString;
+    public static String couponDiscountString;
+    public static String totalWithDiscountString;
 
     public void onLoadPage() {
         if (PreferenceUtils.getUserLogin(getContext())) {
@@ -175,136 +227,68 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                 @Override
                 public void onResponse(Call<GetBasketCompanyProducts> call, Response<GetBasketCompanyProducts> response) {
                     GetBasketCompanyProducts getBasketProducts = response.body();
-                    Locale locale = ChangeLang.getLocale(getContext().getResources());
-                    String loo = locale.getLanguage();
-                    if (loo.equalsIgnoreCase("en")) {
-                        language = "english";
-                        for (int i = 0; i < getBasketProducts.getCarts().size(); i++) {
-                            String arr[] = getBasketProducts.getCarts().get(i).getProduct().getName().split(" ", 2); // get first word
-                            String firstWord = arr[0];
-                            if (getBasketProducts.getCarts().get(i).getProduct().getPhotos().size() == 0) {
-                                if (PreferenceUtils.getUserLogin(getContext())) {
-                                    basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
-                                            firstWord, "", getBasketProducts.getCarts().get(i).getProduct().getName(),
-                                            getBasketProducts.getCarts().get(i).getProduct().getPrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
-                                } else if (PreferenceUtils.getCompanyLogin(getContext())) {
-                                    basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
-                                            firstWord, "", getBasketProducts.getCarts().get(i).getProduct().getName(),
-                                            getBasketProducts.getCarts().get(i).getProduct().getWholesalePrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
-                                }
-                            } else {
-
-                                if (PreferenceUtils.getUserLogin(getContext())) {
-                                    basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
-                                            firstWord, getBasketProducts.getCarts().get(i).getProduct().getPhotos().get(0).getFilename(), getBasketProducts.getCarts().get(i).getProduct().getName(),
-                                            getBasketProducts.getCarts().get(i).getProduct().getPrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
-                                } else if (PreferenceUtils.getCompanyLogin(getContext())) {
-                                    basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
-                                            firstWord, getBasketProducts.getCarts().get(i).getProduct().getPhotos().get(0).getFilename(), getBasketProducts.getCarts().get(i).getProduct().getName(),
-                                            getBasketProducts.getCarts().get(i).getProduct().getWholesalePrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
-                                }
-                            }
-                        }
-
-                    } else if (loo.equalsIgnoreCase("ar")) {
-                        language = "arabic";
-                        for (int i = 0; i < getBasketProducts.getCarts().size(); i++) {
-                            String arr[] = getBasketProducts.getCarts().get(i).getProduct().getNameAr().split(" ", 2); // get first word
-                            String firstWord = arr[0];
-                            if (getBasketProducts.getCarts().get(i).getProduct().getPhotos().size() == 0) {
-                                if (PreferenceUtils.getUserLogin(getContext())) {
-                                    basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
-                                            firstWord, "", getBasketProducts.getCarts().get(i).getProduct().getNameAr(),
-                                            getBasketProducts.getCarts().get(i).getProduct().getPrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
-                                } else if (PreferenceUtils.getCompanyLogin(getContext())) {
-                                    basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
-                                            firstWord, "", getBasketProducts.getCarts().get(i).getProduct().getNameAr(),
-                                            getBasketProducts.getCarts().get(i).getProduct().getWholesalePrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
-                                }
-                            } else {
-
-                                if (PreferenceUtils.getUserLogin(getContext())) {
-                                    basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
-                                            firstWord, getBasketProducts.getCarts().get(i).getProduct().getPhotos().get(0).getFilename(), getBasketProducts.getCarts().get(i).getProduct().getNameAr(),
-                                            getBasketProducts.getCarts().get(i).getProduct().getPrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
-                                } else if (PreferenceUtils.getCompanyLogin(getContext())) {
-                                    basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
-                                            firstWord, getBasketProducts.getCarts().get(i).getProduct().getPhotos().get(0).getFilename(), getBasketProducts.getCarts().get(i).getProduct().getNameAr(),
-                                            getBasketProducts.getCarts().get(i).getProduct().getWholesalePrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
-                                }
-                            }
-                        }
-                    }
-
-                    if (basketProducts.size() == 0) {
-                        fragment_basket_elements_recycler_noitems.setVisibility(View.VISIBLE);
-                        fragment_basket_paying.setVisibility(View.GONE);
-                        fragment_basket_edittext_linear.setVisibility(View.GONE);
-                        reloadDialog.dismiss();
-                        return;
-                    }
-
-                    double total_without_tax = Double.parseDouble(getBasketProducts.getOrderTotalPrice());
-                    double tax = (Double.parseDouble(getBasketProducts.getOrderTotalPrice()) * 5) / 100;
-                    double total_price = Double.parseDouble(getBasketProducts.getOrderTotalPrice()) + tax;
-
-                    totalString = PriceFormatter.toDecimalRsString(total_price, getContext());
-                    totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getContext());
-                    taxString = PriceFormatter.toDecimalRsString(tax, getContext());
-
-                    updateUI();
-
-                    reloadDialog.dismiss();
-                }
-
-                @Override
-                public void onFailure(Call<GetBasketCompanyProducts> call, Throwable t) {
-                    Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
-                    reloadDialog.dismiss();
-                }
-            });
-        } else {
-            getBasketProductsCall = basketProductsApi.getBasketProducts(token);
-            getBasketProductsCall.enqueue(new Callback<GetBasketProducts>() {
-                @Override
-                public void onResponse(Call<GetBasketProducts> call, Response<GetBasketProducts> response) {
-                    GetBasketProducts getBasketProducts = response.body();
-                    int code = Integer.parseInt(getBasketProducts.getCode());
-                    if (code == 200) {
+                    if (getContext() != null) {
                         Locale locale = ChangeLang.getLocale(getContext().getResources());
                         String loo = locale.getLanguage();
                         if (loo.equalsIgnoreCase("en")) {
                             language = "english";
-                            for (int i = 0; i < getBasketProducts.getProducts().size(); i++) {
-                                String arr[] = getBasketProducts.getProducts().get(i).getName().split(" ", 2); // get first word
+                            for (int i = 0; i < getBasketProducts.getCarts().size(); i++) {
+                                String arr[] = getBasketProducts.getCarts().get(i).getProduct().getName().split(" ", 2); // get first word
                                 String firstWord = arr[0];
-                                if (getBasketProducts.getProducts().get(i).getPhotos().size() == 0) {
-                                    basketProducts.add(new BasketProducts(getBasketProducts.getProducts().get(i).getCartId(), getBasketProducts.getProducts().get(i).getId(),
-                                            firstWord, "", getBasketProducts.getProducts().get(i).getName(),
-                                            getBasketProducts.getProducts().get(i).getPrice(), getBasketProducts.getProducts().get(i).getOldPrice(), getBasketProducts.getProducts().get(i).getItemCount()));
+                                if (getBasketProducts.getCarts().get(i).getProduct().getPhotos().size() == 0) {
+                                    if (PreferenceUtils.getUserLogin(getContext())) {
+                                        basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
+                                                firstWord, "", getBasketProducts.getCarts().get(i).getProduct().getName(),
+                                                getBasketProducts.getCarts().get(i).getProduct().getPrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+                                    } else if (PreferenceUtils.getCompanyLogin(getContext())) {
+                                        basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
+                                                firstWord, "", getBasketProducts.getCarts().get(i).getProduct().getName(),
+                                                getBasketProducts.getCarts().get(i).getProduct().getWholesalePrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+                                    }
                                 } else {
-                                    basketProducts.add(new BasketProducts(getBasketProducts.getProducts().get(i).getCartId(), getBasketProducts.getProducts().get(i).getId(),
-                                            firstWord, getBasketProducts.getProducts().get(i).getPhotos().get(0).getFilename(), getBasketProducts.getProducts().get(i).getName(),
-                                            getBasketProducts.getProducts().get(i).getPrice(), getBasketProducts.getProducts().get(i).getOldPrice(), getBasketProducts.getProducts().get(i).getItemCount()));
+
+                                    if (PreferenceUtils.getUserLogin(getContext())) {
+                                        basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
+                                                firstWord, getBasketProducts.getCarts().get(i).getProduct().getPhotos().get(0).getFilename(), getBasketProducts.getCarts().get(i).getProduct().getName(),
+                                                getBasketProducts.getCarts().get(i).getProduct().getPrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+                                    } else if (PreferenceUtils.getCompanyLogin(getContext())) {
+                                        basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
+                                                firstWord, getBasketProducts.getCarts().get(i).getProduct().getPhotos().get(0).getFilename(), getBasketProducts.getCarts().get(i).getProduct().getName(),
+                                                getBasketProducts.getCarts().get(i).getProduct().getWholesalePrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+                                    }
                                 }
                             }
 
                         } else if (loo.equalsIgnoreCase("ar")) {
                             language = "arabic";
-                            for (int i = 0; i < getBasketProducts.getProducts().size(); i++) {
-                                String arr[] = getBasketProducts.getProducts().get(i).getNameAr().split(" ", 2); // get first word
+                            for (int i = 0; i < getBasketProducts.getCarts().size(); i++) {
+                                String arr[] = getBasketProducts.getCarts().get(i).getProduct().getNameAr().split(" ", 2); // get first word
                                 String firstWord = arr[0];
-                                if (getBasketProducts.getProducts().get(i).getPhotos().size() == 0) {
-                                    basketProducts.add(new BasketProducts(getBasketProducts.getProducts().get(i).getCartId(), getBasketProducts.getProducts().get(i).getId(),
-                                            firstWord, "", getBasketProducts.getProducts().get(i).getNameAr(),
-                                            getBasketProducts.getProducts().get(i).getPrice(), getBasketProducts.getProducts().get(i).getOldPrice(), getBasketProducts.getProducts().get(i).getItemCount()));
+                                if (getBasketProducts.getCarts().get(i).getProduct().getPhotos().size() == 0) {
+                                    if (PreferenceUtils.getUserLogin(getContext())) {
+                                        basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
+                                                firstWord, "", getBasketProducts.getCarts().get(i).getProduct().getNameAr(),
+                                                getBasketProducts.getCarts().get(i).getProduct().getPrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+                                    } else if (PreferenceUtils.getCompanyLogin(getContext())) {
+                                        basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
+                                                firstWord, "", getBasketProducts.getCarts().get(i).getProduct().getNameAr(),
+                                                getBasketProducts.getCarts().get(i).getProduct().getWholesalePrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+                                    }
                                 } else {
-                                    basketProducts.add(new BasketProducts(getBasketProducts.getProducts().get(i).getCartId(), getBasketProducts.getProducts().get(i).getId(),
-                                            firstWord, getBasketProducts.getProducts().get(i).getPhotos().get(0).getFilename(), getBasketProducts.getProducts().get(i).getNameAr(),
-                                            getBasketProducts.getProducts().get(i).getPrice(), getBasketProducts.getProducts().get(i).getOldPrice(), getBasketProducts.getProducts().get(i).getItemCount()));
+
+                                    if (PreferenceUtils.getUserLogin(getContext())) {
+                                        basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
+                                                firstWord, getBasketProducts.getCarts().get(i).getProduct().getPhotos().get(0).getFilename(), getBasketProducts.getCarts().get(i).getProduct().getNameAr(),
+                                                getBasketProducts.getCarts().get(i).getProduct().getPrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+                                    } else if (PreferenceUtils.getCompanyLogin(getContext())) {
+                                        basketProducts.add(new BasketProducts(getBasketProducts.getCarts().get(i).getProduct().getCartId(), getBasketProducts.getCarts().get(i).getProduct().getId(),
+                                                firstWord, getBasketProducts.getCarts().get(i).getProduct().getPhotos().get(0).getFilename(), getBasketProducts.getCarts().get(i).getProduct().getNameAr(),
+                                                getBasketProducts.getCarts().get(i).getProduct().getWholesalePrice(), getBasketProducts.getCarts().get(i).getProduct().getOldPrice(), getBasketProducts.getCarts().get(i).getProduct().getItemCount()));
+                                    }
                                 }
                             }
                         }
+
                         if (basketProducts.size() == 0) {
                             fragment_basket_elements_recycler_noitems.setVisibility(View.VISIBLE);
                             fragment_basket_paying.setVisibility(View.GONE);
@@ -313,22 +297,100 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                             return;
                         }
 
-                        double total_without_tax = Double.parseDouble(getBasketProducts.getTotal());
-                        double tax = (Double.parseDouble(getBasketProducts.getTotal()) * 5) / 100;
-                        double total_price = Double.parseDouble(getBasketProducts.getTotal()) + tax;
 
-                        totalString = PriceFormatter.toDecimalRsString(total_price, getContext());
+                        mTotal_price = Double.parseDouble(getBasketProducts.getOrderTotalPrice());
+                        double total_without_tax = mTotal_price * 100 / 105;
+                        double tax = mTotal_price - total_without_tax;
+
+                        totalString = PriceFormatter.toDecimalRsString(mTotal_price, getContext());
                         totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getContext());
                         taxString = PriceFormatter.toDecimalRsString(tax, getContext());
 
-                       updateUI();
+                        updateUI();
+                    }
+                    reloadDialog.dismiss();
+
+                }
+
+                @Override
+                public void onFailure(Call<GetBasketCompanyProducts> call, Throwable t) {
+                    if (getContext() != null) {
+                        Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                    }
+                    reloadDialog.dismiss();
+
+                }
+            });
+        } else {
+            getBasketProductsCall = basketProductsApi.getBasketProducts(token);
+            getBasketProductsCall.enqueue(new Callback<GetBasketProducts>() {
+                @Override
+                public void onResponse(Call<GetBasketProducts> call, Response<GetBasketProducts> response) {
+                    GetBasketProducts getBasketProducts = response.body();
+                    if (getContext() != null) {
+                        int code = Integer.parseInt(getBasketProducts.getCode());
+                        if (code == 200) {
+                            Locale locale = ChangeLang.getLocale(getContext().getResources());
+                            String loo = locale.getLanguage();
+                            if (loo.equalsIgnoreCase("en")) {
+                                language = "english";
+                                for (int i = 0; i < getBasketProducts.getProducts().size(); i++) {
+                                    String arr[] = getBasketProducts.getProducts().get(i).getName().split(" ", 2); // get first word
+                                    String firstWord = arr[0];
+                                    if (getBasketProducts.getProducts().get(i).getPhotos().size() == 0) {
+                                        basketProducts.add(new BasketProducts(getBasketProducts.getProducts().get(i).getCartId(), getBasketProducts.getProducts().get(i).getId(),
+                                                firstWord, "", getBasketProducts.getProducts().get(i).getName(),
+                                                getBasketProducts.getProducts().get(i).getPrice(), getBasketProducts.getProducts().get(i).getOldPrice(), getBasketProducts.getProducts().get(i).getItemCount()));
+                                    } else {
+                                        basketProducts.add(new BasketProducts(getBasketProducts.getProducts().get(i).getCartId(), getBasketProducts.getProducts().get(i).getId(),
+                                                firstWord, getBasketProducts.getProducts().get(i).getPhotos().get(0).getFilename(), getBasketProducts.getProducts().get(i).getName(),
+                                                getBasketProducts.getProducts().get(i).getPrice(), getBasketProducts.getProducts().get(i).getOldPrice(), getBasketProducts.getProducts().get(i).getItemCount()));
+                                    }
+                                }
+
+                            } else if (loo.equalsIgnoreCase("ar")) {
+                                language = "arabic";
+                                for (int i = 0; i < getBasketProducts.getProducts().size(); i++) {
+                                    String arr[] = getBasketProducts.getProducts().get(i).getNameAr().split(" ", 2); // get first word
+                                    String firstWord = arr[0];
+                                    if (getBasketProducts.getProducts().get(i).getPhotos().size() == 0) {
+                                        basketProducts.add(new BasketProducts(getBasketProducts.getProducts().get(i).getCartId(), getBasketProducts.getProducts().get(i).getId(),
+                                                firstWord, "", getBasketProducts.getProducts().get(i).getNameAr(),
+                                                getBasketProducts.getProducts().get(i).getPrice(), getBasketProducts.getProducts().get(i).getOldPrice(), getBasketProducts.getProducts().get(i).getItemCount()));
+                                    } else {
+                                        basketProducts.add(new BasketProducts(getBasketProducts.getProducts().get(i).getCartId(), getBasketProducts.getProducts().get(i).getId(),
+                                                firstWord, getBasketProducts.getProducts().get(i).getPhotos().get(0).getFilename(), getBasketProducts.getProducts().get(i).getNameAr(),
+                                                getBasketProducts.getProducts().get(i).getPrice(), getBasketProducts.getProducts().get(i).getOldPrice(), getBasketProducts.getProducts().get(i).getItemCount()));
+                                    }
+                                }
+                            }
+                            if (basketProducts.size() == 0) {
+                                fragment_basket_elements_recycler_noitems.setVisibility(View.VISIBLE);
+                                fragment_basket_paying.setVisibility(View.GONE);
+                                fragment_basket_edittext_linear.setVisibility(View.GONE);
+                                reloadDialog.dismiss();
+                                return;
+                            }
+
+                            mTotal_price = Double.parseDouble(getBasketProducts.getTotal());
+                            double total_without_tax = mTotal_price * 100 / 105;
+                            double tax = mTotal_price - total_without_tax;
+
+                            totalString = PriceFormatter.toDecimalRsString(mTotal_price, getContext());
+                            totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getContext());
+                            taxString = PriceFormatter.toDecimalRsString(tax, getContext());
+
+                            updateUI();
+                        }
                     }
                     reloadDialog.dismiss();
                 }
 
                 @Override
                 public void onFailure(Call<GetBasketProducts> call, Throwable t) {
-                    Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                    if (getContext() != null) {
+                        Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                    }
                     reloadDialog.dismiss();
                 }
             });
@@ -349,6 +411,12 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
             fragment_basket_total_price_products_text.setText(totalwithoutString);
             fragment_basket_tax_text.setText(taxString);
             fragment_basket_total_price_text.setText(totalString);
+
+            if (!PreferenceUtils.getCoupoun(getContext()).equals("")) {
+                isCouponAlreadyAdded = true;
+                hasCouponDiscount = true;
+                showCoupon();
+            }
         }
     }
 
@@ -442,39 +510,48 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                         @Override
                         public void onResponse(Call<GetChangeQuantityResponse> call, Response<GetChangeQuantityResponse> response) {
                             GetChangeQuantityResponse changeQuantityResponse = response.body();
-                            int code = changeQuantityResponse.getCode();
-                            if (code == 200) {
-                                if (changeQuantityResponse.getStatus() == true) {
+                            if (getContext() != null) {
+                                int code = changeQuantityResponse.getCode();
+                                if (code == 200) {
+                                    if (changeQuantityResponse.getStatus() == true) {
 
-                                    double total_without_tax = Double.parseDouble(changeQuantityResponse.getTotal_price());
-                                    double tax = (Double.parseDouble(changeQuantityResponse.getTotal_price()) * 5) / 100;
-                                    double total_price = Double.parseDouble(changeQuantityResponse.getTotal_price()) + tax;
-                                    totalString = PriceFormatter.toDecimalRsString(total_price, getContext());
-                                    totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getContext());
-                                    taxString = PriceFormatter.toDecimalRsString(tax, getContext());
-                                    fragment_basket_total_price_text.setText(totalString);
-                                    fragment_basket_total_price_products_text.setText(totalwithoutString);
-                                    fragment_basket_tax_text.setText(taxString);
+                                        mTotal_price = Double.parseDouble(changeQuantityResponse.getTotal_price());
+                                        double total_without_tax = mTotal_price * 100 / 105;
+                                        double tax = mTotal_price - total_without_tax;
 
-                                    Toasty.success(getContext(), changeQuantityResponse.getSuccessMessage(), Toast.LENGTH_LONG).show();
-                                    BasketProducts basketProductsModel = basketProducts.get(pos);
-                                    basketProductsModel.setItem_count(changeQuantityResponse.getProdcutQuantity());
-                                    basketProducts.set(pos, basketProductsModel);
-                                    basketElementsAdapter.notifyItemChanged(pos);
-                                    PreferenceUtils.saveCountOfItemsBasket(getContext().getApplicationContext(), Integer.parseInt(changeQuantityResponse.getAllCartItemsCount()));
-                                    ((MainActivity) getActivity()).updateBasketBadge();
-                                    reloadDialog.dismiss();
-                                    changeQuantity.dismiss();
-                                } else {
-                                    Toasty.error(getContext(), changeQuantityResponse.getMessage(), Toast.LENGTH_LONG).show();
-                                    reloadDialog.dismiss();
+                                        totalString = PriceFormatter.toDecimalRsString(mTotal_price, getContext());
+                                        totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getContext());
+                                        taxString = PriceFormatter.toDecimalRsString(tax, getContext());
+                                        if (hasCouponDiscount) {
+                                            updateCouponDiscount();
+                                        } else {
+                                            fragment_basket_total_price_text.setText(totalString);
+                                        }
+                                        fragment_basket_total_price_products_text.setText(totalwithoutString);
+                                        fragment_basket_tax_text.setText(taxString);
+
+                                        Toasty.success(getContext(), changeQuantityResponse.getSuccessMessage(), Toast.LENGTH_LONG).show();
+                                        BasketProducts basketProductsModel = basketProducts.get(pos);
+                                        basketProductsModel.setItem_count(changeQuantityResponse.getProdcutQuantity());
+                                        basketProducts.set(pos, basketProductsModel);
+                                        basketElementsAdapter.notifyItemChanged(pos);
+                                        PreferenceUtils.saveCountOfItemsBasket(getContext().getApplicationContext(), Integer.parseInt(changeQuantityResponse.getAllCartItemsCount()));
+                                        ((MainActivity) getActivity()).updateBasketBadge();
+                                        changeQuantity.dismiss();
+                                    } else {
+                                        Toasty.error(getContext(), changeQuantityResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
                                 }
                             }
+                            reloadDialog.dismiss();
+
                         }
 
                         @Override
                         public void onFailure(Call<GetChangeQuantityResponse> call, Throwable t) {
-                            Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                            if (getContext() != null) {
+                                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                            }
                             reloadDialog.dismiss();
                         }
                     });
@@ -511,38 +588,147 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
             @Override
             public void onResponse(Call<DeleteBasketResponse> call, Response<DeleteBasketResponse> response) {
                 DeleteBasketResponse responseBody = response.body();
-                if (response != null && responseBody.getCode() == 200) {
-                    basketElementsAdapter.getBasketProducts().remove(pos);
-                    basketElementsAdapter.notifyItemRemoved(pos);
+                if (getContext() != null) {
+                    if (response != null && responseBody.getCode() == 200) {
+                        basketElementsAdapter.getBasketProducts().remove(pos);
+                        basketElementsAdapter.notifyItemRemoved(pos);
 
-                    double total_price = responseBody.getData().getOrderTotalPrice();
-                    double total_without_tax = responseBody.getData().getOrderTotalPrice() - ((responseBody.getData().getOrderTotalPrice() * 5) / 100);
-                    double tax = (responseBody.getData().getOrderTotalPrice() * 5) / 100;
-                    totalString = PriceFormatter.toDecimalRsString(total_price, getContext());
-                    totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getContext());
-                    taxString = PriceFormatter.toDecimalRsString(tax, getContext());
-                    fragment_basket_total_price_text.setText(totalString);
-                    fragment_basket_total_price_products_text.setText(totalwithoutString);
-                    fragment_basket_tax_text.setText(taxString);
+                        mTotal_price = responseBody.getData().getOrderTotalPrice();
+                        double total_without_tax = mTotal_price * 100 / 105;
+                        double tax = mTotal_price - total_without_tax;
 
-                    PreferenceUtils.saveCountOfItemsBasket(getContext().getApplicationContext(), responseBody.getData().getAllCartItemsCount());
-                    ((MainActivity) getActivity()).updateBasketBadge();
-                    Toasty.success(getContext(), getString(R.string.delete_cart_toast), Toast.LENGTH_LONG).show();
-                    if (responseBody.getData().getAllCartItemsCount() == 0) {
-                        fragment_basket_elements_recycler_noitems.setVisibility(View.VISIBLE);
-                        fragment_basket_paying.setVisibility(View.GONE);
-                        reloadDialog.dismiss();
-                        return;
+                        totalString = PriceFormatter.toDecimalRsString(mTotal_price, getContext());
+                        totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getContext());
+                        taxString = PriceFormatter.toDecimalRsString(tax, getContext());
+
+                        if (hasCouponDiscount) {
+                            updateCouponDiscount();
+                        } else {
+                            fragment_basket_total_price_text.setText(totalString);
+                        }
+                        fragment_basket_total_price_products_text.setText(totalwithoutString);
+                        fragment_basket_tax_text.setText(taxString);
+
+                        PreferenceUtils.saveCountOfItemsBasket(getContext().getApplicationContext(), responseBody.getData().getAllCartItemsCount());
+                        ((MainActivity) getActivity()).updateBasketBadge();
+                        Toasty.success(getContext(), getString(R.string.delete_cart_toast), Toast.LENGTH_LONG).show();
+                        if (responseBody.getData().getAllCartItemsCount() == 0) {
+                            fragment_basket_elements_recycler_noitems.setVisibility(View.VISIBLE);
+                            fragment_basket_paying.setVisibility(View.GONE);
+                            fragment_basket_edittext_linear.setVisibility(View.GONE);
+                            resetCoupon();
+                            reloadDialog.dismiss();
+                            return;
+                        }
                     }
                 }
                 reloadDialog.dismiss();
+
             }
 
             @Override
             public void onFailure(Call<DeleteBasketResponse> call, Throwable t) {
-                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                if (getContext() != null) {
+                    Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                }
                 reloadDialog.dismiss();
+
             }
         });
+    }
+
+    private void resetCoupon() {
+        PreferenceUtils.saveCoupon(getContext(), "");
+        PreferenceUtils.saveCouponAmountType(getContext(), "");
+        PreferenceUtils.saveCouponAmount(getContext(), -1);
+
+        fragment_basket_elements_edittext.setText("");
+        fragment_basket_elements_edittext.setEnabled(true);
+        fragment_basket_elements_enter_code.setText(R.string.fragment_basket_elements_enter_code_label);
+
+        fragment_basket_coupon_linear.setVisibility(View.GONE);
+        fragment_basket_coupon_view.setVisibility(View.GONE);
+        fragment_basket_coupon_text.setText("0");
+        fragment_basket_total_price_text.setText(totalString);
+
+        couponValidIv.setVisibility(View.GONE);
+        expiredTextTv.setVisibility(View.GONE);
+
+        hasCouponDiscount = false;
+    }
+
+    private void addCoupon(String coupon, GetCheckCouponResponse.Data couponData) {
+        String amountType = couponData.getAmountType();
+        int amount = couponData.getAmount();
+        PreferenceUtils.saveCoupon(getContext(), coupon);
+        PreferenceUtils.saveCouponAmountType(getContext(), amountType);
+        PreferenceUtils.saveCouponAmount(getContext(), amount);
+
+        fragment_basket_elements_edittext.setText(coupon);
+        fragment_basket_elements_edittext.setEnabled(false);
+        fragment_basket_elements_enter_code.setText(R.string.remove);
+
+        fragment_basket_coupon_linear.setVisibility(View.VISIBLE);
+        fragment_basket_coupon_view.setVisibility(View.VISIBLE);
+        couponValidIv.setVisibility(View.VISIBLE);
+
+        double couponDiscount = calculateDiscount(amountType, amount);
+
+        couponDiscountString = PriceFormatter.toDecimalRsString(-couponDiscount, getContext());
+
+        finalPrice = mTotal_price - couponDiscount;
+        totalWithDiscountString = PriceFormatter.toDecimalRsString(finalPrice, getContext());
+        fragment_basket_coupon_text.setText(couponDiscountString);
+        fragment_basket_total_price_text.setText(totalWithDiscountString);
+
+        hasCouponDiscount = true;
+
+    }
+
+    private void updateCouponDiscount() {
+        String amountType = PreferenceUtils.getCoupounAmountType(getContext());
+        int amount = PreferenceUtils.getCoupounAmount(getContext());
+
+        double couponDiscount = calculateDiscount(amountType, amount);
+        couponDiscountString = PriceFormatter.toDecimalRsString(-couponDiscount, getContext());
+        finalPrice = mTotal_price - couponDiscount;
+        totalWithDiscountString = PriceFormatter.toDecimalRsString(finalPrice, getContext());
+
+        fragment_basket_coupon_text.setText(couponDiscountString);
+        fragment_basket_total_price_text.setText(totalWithDiscountString);
+    }
+
+    private void showCoupon() {
+        String coupon = PreferenceUtils.getCoupoun(getContext());
+        String amountType = PreferenceUtils.getCoupounAmountType(getContext());
+        int amount = PreferenceUtils.getCoupounAmount(getContext());
+
+        fragment_basket_elements_edittext.setText(coupon);
+        fragment_basket_elements_edittext.setEnabled(false);
+        fragment_basket_elements_enter_code.setText(R.string.remove);
+
+        fragment_basket_coupon_linear.setVisibility(View.VISIBLE);
+        fragment_basket_coupon_view.setVisibility(View.VISIBLE);
+        couponValidIv.setVisibility(View.VISIBLE);
+
+        double couponDiscount = calculateDiscount(amountType, amount);
+
+        couponDiscountString = PriceFormatter.toDecimalRsString(-couponDiscount, getContext());
+        finalPrice = mTotal_price - couponDiscount;
+        totalWithDiscountString = PriceFormatter.toDecimalRsString(finalPrice, getContext());
+
+        fragment_basket_coupon_text.setText(couponDiscountString);
+        fragment_basket_total_price_text.setText(totalWithDiscountString);
+
+        onEnterCoupoun(fragment_basket_elements_enter_code);
+
+    }
+
+    private double calculateDiscount(String amountType, int amount) {
+        if (amountType.equals("percentage")) {
+            return mTotal_price * amount / 100;
+        } else if (amountType.equals("fixed")) {
+            return amount;
+        } else return 0;
     }
 }

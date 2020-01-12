@@ -264,11 +264,11 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                                 Toasty.success(DetailItemActivity.this, getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
                                 isLike = true;
                                 int pos = getIntent().getIntExtra("pos", -1);
-                                ArrayList<ProductsCategory> productsCategories = getIntent().getParcelableArrayListExtra("similar_products");
-                                if (productsCategories != null && productsCategories.size() > 0) {
-                                    ProductsCategory productsCategory = productsCategories.get(pos);
+//                                ArrayList<ProductsCategory> productsCategories = getIntent().getParcelableArrayListExtra("similar_products");
+                                if (related_products != null && related_products.size() > 0) {
+                                    ProductsCategory productsCategory = related_products.get(pos);
                                     productsCategory.setLike("1");
-                                    productsCategories.set(pos, productsCategory);
+                                    related_products.set(pos, productsCategory);
                                     phonesAdapter.notifyItemChanged(pos);
                                 }
                             }
@@ -444,7 +444,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                     if (code == 200) {
                         currentProduct = getDetailProduct.getData().getProduct();
                         for (int i = 0; i < currentProduct.getPhotos().size(); i++) {
-                            images.add("https://www.dleel-sh.com/homepages/get/" + getDetailProduct.getData().getProduct().getPhotos().get(i).getFilename());
+                            images.add("https://dleel.com/homepages/get/" + getDetailProduct.getData().getProduct().getPhotos().get(i).getFilename());
                         }
                         if (flag) {
                             slider_adapter = new SliderAdapter(DetailItemActivity.this, images);
@@ -667,9 +667,10 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
 
     @Override
     public void onClickProduct3(int id, int pos) {
-        ProductsCategory productsCategory = (ProductsCategory) getIntent().getParcelableArrayListExtra("similar_products").get(pos);
-        String like = productsCategory.getLike();
-        startActivity(new Intent(this, DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", getIntent().getParcelableArrayListExtra("similar_products")).putExtra("getLike", like).putExtra("pos", pos).putExtra("samethis", true));
+//        ProductsCategory productsCategory = (ProductsCategory) getIntent().getParcelableArrayListExtra("similar_products").get(pos);
+//        String like = productsCategory.getLike();
+        String like = related_products.get(pos).getLike();
+        startActivity(new Intent(this, DetailItemActivity.class).putExtra("id", id)./*putExtra("similar_products", getIntent().getParcelableArrayListExtra("similar_products")).*/putExtra("getLike", like).putExtra("pos", pos).putExtra("samethis", true));
         Animatoo.animateSwipeLeft(this);
     }
 

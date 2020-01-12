@@ -91,7 +91,7 @@
         
     <string name="fragment_basket_elements_enter_code_label"> Apply </string>
         
-    <string name="fragment_basket_elements_edittext_hint"> Enter code or coupon </string>
+    <string name="fragment_basket_elements_edittext_hint"> Enter coupon </string>
         
     <string name="fragment_basket_total_price_products_label"> Total Products </string>
         
@@ -465,5 +465,10 @@
     <string name="no_enough_wallet">No enough credit in your wallet!</string>
     <string name="activation_request_button_text">Activation Request</string>
     <string name="ask_activation_toast">This option is not active, contact technical support to activate it</string>
+    <string name="code_added_successfully">Coupon added successfully</string>
+    <string name="remove">Remove</string>
+    <string name="expired">Expired!</string>
+    <string name="coupon_discount">Coupon Discount</string>
+    <string name="delivery_fee_string">Delivery Fee</string>
 
 </resources>

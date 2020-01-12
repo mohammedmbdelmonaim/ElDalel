@@ -4,9 +4,12 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,6 +45,24 @@ public class ElementsOrderActivity extends BaseActivity implements ElementsOrder
     @BindView(R.id.activity_elemetnts_orders_total_price_text)
     AppCompatTextView activity_elemetnts_orders_total_price_text;
 
+    @BindView(R.id.activity_elemetnts_orders_coupon_linear)
+    LinearLayoutCompat activity_elemetnts_orders_coupon_linear;
+
+    @BindView(R.id.activity_elemetnts_orders_coupon_view)
+    View activity_elemetnts_orders_coupon_view;
+
+    @BindView(R.id.activity_elemetnts_orders_coupon_text)
+    TextView activity_elemetnts_orders_coupon_text;
+
+    @BindView(R.id.activity_elemetnts_orders_delivery_linear)
+    LinearLayoutCompat activity_elemetnts_orders_delivery_linear;
+
+    @BindView(R.id.activity_elemetnts_orders_delivery_view)
+    View activity_elemetnts_orders_delivery_view;
+
+    @BindView(R.id.activity_elemetnts_orders_delivery_text)
+    TextView activity_elemetnts_orders_delivery_text;
+
     ElementsOrdersAdapter elementsOrderAdapter;
 
     @Override
@@ -70,9 +91,9 @@ public class ElementsOrderActivity extends BaseActivity implements ElementsOrder
     String token;
     ArrayList<GetShipmentOrders.Order> orders;
 
-    double price_with_tax;
-    double price;
-    double total_without_tax;
+    double total_with_coupon_and_tax;
+    double total_with_tax_only;
+    double total_inc_coupon_tax_delivery;
 
     public void onLoadShipments() {
         reloadDialog.show();
@@ -84,9 +105,9 @@ public class ElementsOrderActivity extends BaseActivity implements ElementsOrder
         int id = getIntent().getIntExtra("shipment_id", 0);
         ShipmentOrdersApi shipmentOrdersApi = APIClient.getClient(SERVER_API_TEST).create(ShipmentOrdersApi.class);
         Call<GetShipmentOrders> getShipmentOrdersCall;
-        if (PreferenceUtils.getCompanyLogin(ElementsOrderActivity.this)){
+        if (PreferenceUtils.getCompanyLogin(ElementsOrderActivity.this)) {
             getShipmentOrdersCall = shipmentOrdersApi.getShipmentOrderscompany(id, token);
-        }else{
+        } else {
             getShipmentOrdersCall = shipmentOrdersApi.getShipmentOrders(id, token);
         }
         getShipmentOrdersCall.enqueue(new Callback<GetShipmentOrders>() {
@@ -98,21 +119,40 @@ public class ElementsOrderActivity extends BaseActivity implements ElementsOrder
 //                    shipments_recycler_noitems.setVisibility(View.VISIBLE);
 //                    return;
 //                }
+                double total_with_tax = 0;
                 for (int i = 0; i < orders.size(); i++) {
 //                    price += orders.get(i).getProductPrice();
-                    total_without_tax += orders.get(i).getProductPrice();
+                    total_with_tax_only += orders.get(i).getProductPrice() * orders.get(i).getQuantity();
+                    total_inc_coupon_tax_delivery += orders.get(i).getTotalPriceWithTax();
                 }
 
-                double tax = (total_without_tax * 5)/100;
-                double total_with_tax = total_without_tax + tax;
+                if (PreferenceUtils.getUserLogin(ElementsOrderActivity.this) && getShipmentOrders.getPaymentType() == 2){
+                    total_with_coupon_and_tax = total_inc_coupon_tax_delivery - 18;
+                    activity_elemetnts_orders_delivery_linear.setVisibility(View.VISIBLE);
+                    activity_elemetnts_orders_delivery_view.setVisibility(View.VISIBLE);
+                    activity_elemetnts_orders_delivery_text.setText(PriceFormatter.toDecimalRsString(18.0, ElementsOrderActivity.this));
+                } else {
+                    total_with_coupon_and_tax = total_inc_coupon_tax_delivery;
+                }
 
-                String totalString = PriceFormatter.toDecimalRsString(total_with_tax, ElementsOrderActivity.this);
+                double coupon = total_with_tax_only - total_with_coupon_and_tax;
+
+                double total_without_tax = total_with_tax_only * 100 / 105;
+                double tax = total_with_tax_only - total_without_tax;
+//                double total_with_tax = total_without_tax + tax;
+
+                if (Math.round(coupon) > 0) {
+                    activity_elemetnts_orders_coupon_linear.setVisibility(View.VISIBLE);
+                    activity_elemetnts_orders_coupon_view.setVisibility(View.VISIBLE);
+                    activity_elemetnts_orders_coupon_text.setText(PriceFormatter.toDecimalRsString(-coupon, ElementsOrderActivity.this));
+                }
+
+                String totalString = PriceFormatter.toDecimalRsString(total_inc_coupon_tax_delivery, ElementsOrderActivity.this);
                 String totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, ElementsOrderActivity.this);
                 String taxString = PriceFormatter.toDecimalRsString(tax, ElementsOrderActivity.this);
+
                 activity_elemetnts_orders_total_price_products_text.setText(totalwithoutString);
-
                 activity_elemetnts_orders_tax_text.setText(taxString);
-
                 activity_elemetnts_orders_total_price_text.setText(totalString);
 
                 elementsOrderAdapter = new ElementsOrdersAdapter(ElementsOrderActivity.this, orders);

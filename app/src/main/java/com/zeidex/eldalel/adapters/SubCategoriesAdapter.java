@@ -78,7 +78,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
         }
 
         Glide.with(context)
-                .load("https://www.dleel-sh.com/homepages/get/" + currentSubCategory.getImagePath())
+                .load("https://dleel.com/homepages/get/" + currentSubCategory.getImagePath())
                 .placeholder(R.drawable.condition_logo)
                 .fitCenter()
                 .into(holder.subCategoryImageView);

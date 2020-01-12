@@ -69,7 +69,7 @@ public class DetailColorsItemAdapter extends RecyclerView.Adapter<DetailColorsIt
 //        }
 
         Glide.with(context)
-                .load("https://www.dleel-sh.com/homepages/get/" + colors.get(position).getPhoto())
+                .load(colors.get(position).getPhoto())
                 .into(holder.detail_color_img_url);
 
 

@@ -24,92 +24,88 @@ import java.util.List;
 
 import es.dmoral.toasty.Toasty;
 
-public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCategory3Adapter.ProductsCategory3Holder> {
+public class HomeOfferAdapter extends RecyclerView.Adapter<HomeOfferAdapter.HomeOfferHolder> {
+
     private Context context;
-    List<ProductsCategory> productsCategoryList;
-
-    public List<ProductsCategory> getProductsCategoryList() {
-        return productsCategoryList;
+    public List<ProductsCategory> getOfferList() {
+        return offerList;
     }
 
-    public void setProductsList(List<ProductsCategory> productsCategoryList) {
-        this.productsCategoryList = productsCategoryList;
-    }
-
+    List<ProductsCategory> offerList;
     View view;
 
-    private ProductsCategory3Operation productsCategory3Operation;
+    private HomeOfferAdapter.OffersOperation offersOperation;
 
-    public void setProductsCategory3Operation(ProductsCategory3Operation productsCategory3Operation) {
-        this.productsCategory3Operation = productsCategory3Operation;
+    public void setOffersOperation(OffersOperation offersOperation) {
+        this.offersOperation = offersOperation;
     }
 
-    public void setProductsCategoryList(ArrayList<ProductsCategory> productList){
-        this.productsCategoryList = productList;
+    public void setOfferList(ArrayList<ProductsCategory> offerList){
+        this.offerList = offerList;
         notifyDataSetChanged();
     }
 
-    public ProductsCategory3Adapter(Context context) {
+    public HomeOfferAdapter(Context context) {
         this.context = context;
     }
 
-    public ProductsCategory3Adapter(Context context, List<ProductsCategory> productsCategoryList) {
+    public HomeOfferAdapter(Context context, List<ProductsCategory> offerList) {
         this.context = context;
-        this.productsCategoryList = productsCategoryList;
+        this.offerList = offerList;
     }
 
     @NonNull
     @Override
-    public ProductsCategory3Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public HomeOfferAdapter.HomeOfferHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         view = LayoutInflater.from(context).inflate(R.layout.phone_row, parent, false);
-        final ProductsCategory3Holder productsCategory3Holder = new ProductsCategory3Holder(view);
-        return productsCategory3Holder;
+        final HomeOfferAdapter.HomeOfferHolder homeOfferHolder = new HomeOfferAdapter.HomeOfferHolder(view);
+        return homeOfferHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ProductsCategory3Holder holder, int position) {
-        ProductsCategory productsCategory = productsCategoryList.get(position);
-        if (productsCategory.getLike() == null) {
-
-        } else if (productsCategory.getLike().equalsIgnoreCase("1")) {
+    public void onBindViewHolder(@NonNull HomeOfferAdapter.HomeOfferHolder holder, int position) {
+        ProductsCategory offer = offerList.get(position);
+        if (offer.getLike() == null) {
+        } else if (Integer.parseInt(offer.getLike()) == 1) {
             holder.phone_image_like.setChecked(true);
         } else {
             holder.phone_image_like.setChecked(false);
         }
 
-        if (productsCategory.getDiscount() == null) {
+        if (offer.getDiscount() == null) {
             holder.discount_linear.setVisibility(View.GONE);
         } else {
             holder.discount_linear.setVisibility(View.VISIBLE);
-            holder.discount_result.setText(productsCategory.getDiscount());
+            holder.discount_result.setText(offer.getDiscount());
         }
 
-        if (productsCategory.getPrice_before() == null) {
+        if (offer.getPrice_before() == null || offer.getPrice_before().equals("")) {
             holder.phone_text_price_before.setVisibility(View.GONE);
             holder.phone_text_price_before_label.setVisibility(View.GONE);
             holder.phone_text_price_before_view.setVisibility(View.GONE);
             holder.phone_text_price_before_label_view.setVisibility(View.GONE);
-
         } else {
             holder.phone_text_price_before_label.setVisibility(View.VISIBLE);
             holder.phone_text_price_before_view.setVisibility(View.VISIBLE);
             holder.phone_text_price_before_label_view.setVisibility(View.VISIBLE);
             holder.phone_text_price_before.setVisibility(View.VISIBLE);
-            holder.phone_text_price_before.setText(PriceFormatter.toDecimalString(Double.parseDouble(productsCategory.getPrice_before()), context.getApplicationContext()));
+            Double priceBefore = Double.parseDouble(offer.getPrice_before());
+            holder.phone_text_price_before.setText(PriceFormatter.toDecimalString(priceBefore, context.getApplicationContext()));
         }
 
-        holder.phone_text_name.setText(productsCategory.getName());
-        holder.phone_text_type.setText(productsCategory.getType());
-        holder.phone_text_price.setText(PriceFormatter.toDecimalString(Double.parseDouble(productsCategory.getPrice()), context.getApplicationContext()));
-
+        holder.phone_text_name.setText(offer.getName());
+        holder.phone_text_type.setText(offer.getType());
+        double price = Double.parseDouble(offer.getPrice());
+        String priceDecimal = PriceFormatter.toDecimalString(price, context.getApplicationContext());
+        holder.phone_text_price.setText(priceDecimal);
         Glide.with(context)
-                .load("https://dleel.com/homepages/get/" + productsCategory.getImgUrl())
+                .load("https://dleel.com/homepages/get/" + offer.getImgUrl())
                 .placeholder(R.drawable.condition_logo)
                 .centerCrop()
                 .into(holder.phone_img_url);
 
         if (PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) {
-            int cartStatus = Integer.parseInt(productsCategory.getCart());
+            int cartStatus = Integer.parseInt(offer.getCart());
             if (cartStatus == 2) {
                 holder.phone_row_add_to_card.setBackgroundResource(R.drawable.row_out_of_stock_cart);
                 holder.phone_row_add_to_card.setText(R.string.cart_out_of_stock_label);
@@ -125,17 +121,17 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
 
     @Override
     public int getItemCount() {
-        return productsCategoryList.size() > 0 ? productsCategoryList.size() : 0;
+        return offerList.size();
     }
 
-    public class ProductsCategory3Holder extends RecyclerView.ViewHolder {
+    public class HomeOfferHolder extends RecyclerView.ViewHolder {
         public AppCompatImageView phone_img_url;
         public AppCompatCheckBox phone_image_like;
         public AppCompatTextView discount_result, phone_text_type, phone_text_name, phone_text_price, phone_text_price_before, phone_text_price_before_label, phone_row_add_to_card;
         View phone_text_price_before_view, phone_text_price_before_label_view;
         LinearLayoutCompat discount_linear;
 
-        public ProductsCategory3Holder(View itemView) {
+        public HomeOfferHolder(View itemView) {
             super(itemView);
             phone_img_url = itemView.findViewById(R.id.phone_img_url);
             phone_image_like = itemView.findViewById(R.id.phone_image_like);
@@ -158,8 +154,8 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
                         return;
                     }
                     if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context))) {
-                        if (Integer.parseInt(productsCategoryList.get(getAdapterPosition()).getCart()) == 1)
-                            productsCategory3Operation.onAddToProductCategory3Cart(Integer.parseInt(productsCategoryList.get(getAdapterPosition()).getId()), getAdapterPosition());
+                        if (Integer.parseInt(offerList.get(getAdapterPosition()).getCart()) == 1)
+                            offersOperation.onAddToOfferCart(Integer.parseInt(offerList.get(getAdapterPosition()).getId()), getAdapterPosition());
                     }
                 }
             });
@@ -180,7 +176,7 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
                         return;
                     }
                     if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) && isChecked) {
-                        productsCategory3Operation.onCliickProductsCategory3Like(Integer.parseInt(productsCategoryList.get(getAdapterPosition()).getId()), getAdapterPosition());
+                        offersOperation.onCliickOfferLike(Integer.parseInt(offerList.get(getAdapterPosition()).getId()), getAdapterPosition());
                     }
 
                 }
@@ -189,17 +185,18 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    productsCategory3Operation.onClickProduct3(Integer.parseInt(productsCategoryList.get(getAdapterPosition()).getId()), getAdapterPosition());
+                    offersOperation.onClickOffer(Integer.parseInt(offerList.get(getAdapterPosition()).getId()), getAdapterPosition());
                 }
             });
         }
     }
 
-    public interface ProductsCategory3Operation {
-        void onClickProduct3(int id, int pos);
+    public interface OffersOperation {
+        void onClickOffer(int id, int pos);
 
-        void onCliickProductsCategory3Like(int id, int pos);
+        void onCliickOfferLike(int id, int position);
 
-        void onAddToProductCategory3Cart(int id, int position);
+        void onAddToOfferCart(int id, int position);
     }
+
 }

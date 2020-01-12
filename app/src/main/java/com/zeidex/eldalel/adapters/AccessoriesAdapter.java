@@ -19,6 +19,7 @@ import com.zeidex.eldalel.models.ProductsCategory;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 import com.zeidex.eldalel.utils.PriceFormatter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
@@ -37,6 +38,11 @@ public class AccessoriesAdapter extends RecyclerView.Adapter<AccessoriesAdapter.
 
     public void setAccessoriesOperation(AccessoriesOperation accessoriesOperation) {
         this.accessoriesOperation = accessoriesOperation;
+    }
+
+    public void setAccessoryList(ArrayList<ProductsCategory> accessoryList){
+        this.accessoryList = accessoryList;
+        notifyDataSetChanged();
     }
 
     public AccessoriesAdapter(Context context) {
@@ -93,7 +99,7 @@ public class AccessoriesAdapter extends RecyclerView.Adapter<AccessoriesAdapter.
         double price = Double.parseDouble(accessory.getPrice());
         holder.phone_text_price.setText(PriceFormatter.toDecimalString(price, context.getApplicationContext()));
         Glide.with(context)
-                .load("https://www.dleel-sh.com/homepages/get/" + accessory.getImgUrl())
+                .load("https://dleel.com/homepages/get/" + accessory.getImgUrl())
                 .placeholder(R.drawable.condition_logo)
                 .centerCrop()
                 .into(holder.phone_img_url);
@@ -170,7 +176,7 @@ public class AccessoriesAdapter extends RecyclerView.Adapter<AccessoriesAdapter.
                         return;
                     }
                     if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) && isChecked) {
-                        accessoriesOperation.onCliickAccessoryLike(Integer.parseInt(accessoryList.get(getAdapterPosition()).getId()));
+                        accessoriesOperation.onCliickAccessoryLike(Integer.parseInt(accessoryList.get(getAdapterPosition()).getId()), getAdapterPosition());
                     }
 
                 }
@@ -188,7 +194,7 @@ public class AccessoriesAdapter extends RecyclerView.Adapter<AccessoriesAdapter.
     public interface AccessoriesOperation {
         void onClickAcssesory(int id, int pos);
 
-        void onCliickAccessoryLike(int id);
+        void onCliickAccessoryLike(int id, int position);
 
         void onAddToAccessoryCart(int id, int position);
     }

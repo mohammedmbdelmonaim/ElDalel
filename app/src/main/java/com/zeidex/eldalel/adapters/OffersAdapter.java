@@ -63,7 +63,7 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.OffersHold
         }
 
         Glide.with(context)
-                .load("https://www.dleel-sh.com/homepages/get/" + currentCategory.getPhoto())
+                .load("https://dleel.com/homepages/get/" + currentCategory.getPhoto())
                 .placeholder(R.drawable.condition_logo)
                 .fitCenter()
                 .into(holder.offerRowImage);

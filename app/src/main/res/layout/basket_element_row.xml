@@ -177,6 +177,7 @@
         android:id="@+id/basket_element_currency_img_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="@dimen/dimen_10dp"
         android:layout_marginTop="@dimen/dimen_14dp"
         android:layout_marginEnd="@dimen/dimen_18dp"
         app:srcCompat="@drawable/ic_delete"

@@ -134,17 +134,20 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
         offersCategoriesAPI.getOffersCategories(OFFER).enqueue(new Callback<GetOffersCategories>() {
             @Override
             public void onResponse(Call<GetOffersCategories> call, Response<GetOffersCategories> response) {
-                int code = response.body().getCode();
-                if (code == 200) {
-                    categories = response.body().getData().getCategories();
-                    updateUI();
+                if (getContext() != null && response.body() != null) {
+                    int code = response.body().getCode();
+                    if (code == 200) {
+                        categories = response.body().getData().getCategories();
+                        updateUI();
 
+                    }
                 }
                 reloadDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<GetOffersCategories> call, Throwable t) {
+                if(getContext() != null)
                 Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }

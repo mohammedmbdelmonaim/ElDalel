@@ -119,10 +119,10 @@ this.data = data;
         private Integer availableQuantity;
         @SerializedName("product_price")
         @Expose
-        private Integer productPrice;
+        private Double productPrice;
         @SerializedName("total_price")
         @Expose
-        private Integer totalPrice;
+        private Double totalPrice;
         @SerializedName("total_price_with_tax")
         @Expose
         private Double totalPriceWithTax;
@@ -277,19 +277,19 @@ this.data = data;
             this.availableQuantity = availableQuantity;
         }
 
-        public Integer getProductPrice() {
+        public Double getProductPrice() {
             return productPrice;
         }
 
-        public void setProductPrice(Integer productPrice) {
+        public void setProductPrice(Double productPrice) {
             this.productPrice = productPrice;
         }
 
-        public Integer getTotalPrice() {
+        public Double getTotalPrice() {
             return totalPrice;
         }
 
-        public void setTotalPrice(Integer totalPrice) {
+        public void setTotalPrice(Double totalPrice) {
             this.totalPrice = totalPrice;
         }
 
@@ -475,7 +475,7 @@ this.data = data;
         private Integer paymentType;
         @SerializedName("discount")
         @Expose
-        private Object discount;
+        private Double discount;
         @SerializedName("total_price")
         @Expose
         private Double totalPrice;
@@ -550,11 +550,11 @@ this.data = data;
             this.paymentType = paymentType;
         }
 
-        public Object getDiscount() {
+        public Double getDiscount() {
             return discount;
         }
 
-        public void setDiscount(Object discount) {
+        public void setDiscount(Double discount) {
             this.discount = discount;
         }
 

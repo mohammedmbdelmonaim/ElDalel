@@ -56,7 +56,7 @@ public class NewArrivalsCategoriesAdapter extends RecyclerView.Adapter<NewArriva
         }
 
         Glide.with(context)
-                .load("https://www.dleel-sh.com/homepages/get/" + currentCategory.getPhoto())
+                .load("https://dleel.com/homepages/get/" + currentCategory.getPhoto())
                 .placeholder(R.drawable.condition_logo)
                 .fitCenter()
                 .into(holder.categoryImageView);

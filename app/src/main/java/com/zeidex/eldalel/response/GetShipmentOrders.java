@@ -10,6 +10,10 @@ public class GetShipmentOrders {
     @Expose
     private List<Order> orders = null;
 
+    @SerializedName("payment_type")
+    @Expose
+    private Integer paymentType;
+
     public List<Order> getOrders() {
         return orders;
     }
@@ -17,6 +21,15 @@ public class GetShipmentOrders {
     public void setOrders(List<Order> orders) {
         this.orders = orders;
     }
+
+    public Integer getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(Integer paymentType) {
+        this.paymentType = paymentType;
+    }
+
     public class Order {
 
         @SerializedName("id")

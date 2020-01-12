@@ -70,7 +70,7 @@ public class BasketElementsAdapter extends RecyclerView.Adapter<BasketElementsAd
             holder.basket_element_price.setText(PriceFormatter.toDecimalString(price, context.getApplicationContext()));
 
         Glide.with(context)
-                .load("https://www.dleel-sh.com/homepages/get/" + basketProductsModel.getImgurl())
+                .load("https://dleel.com/homepages/get/" + basketProductsModel.getImgurl())
                 .placeholder(R.drawable.condition_logo)
                 .centerCrop()
                 .into(holder.basket_element_img);

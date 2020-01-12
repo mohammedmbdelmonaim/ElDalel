@@ -15,8 +15,7 @@
             android:id="@+id/like_item_image_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_7dp"
-            android:layout_marginTop="@dimen/dimen_10dp"
+            android:padding="@dimen/dimen_10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_delete" />
@@ -75,6 +74,7 @@
             android:textAlignment="viewStart"
             android:textColor="#AAAAAA"
             android:textSize="@dimen/dimen_10sp"
+            android:layout_marginStart="@dimen/dimen_6dp"
             app:layout_constraintStart_toStartOf="@+id/like_item_image_delete"
             app:layout_constraintTop_toBottomOf="@+id/like_item_img_url" />
 
@@ -87,6 +87,8 @@
             android:textAlignment="viewStart"
             android:textColor="#232222"
             android:textSize="@dimen/dimen_12sp"
+            android:layout_marginEnd="@dimen/dimen_6dp"
+            android:layout_marginStart="@dimen/dimen_6dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/like_item_image_delete"
             app:layout_constraintTop_toBottomOf="@+id/like_item_text_type" />
@@ -100,6 +102,8 @@
             android:paddingBottom="@dimen/dimen_2dp"
             android:text="177.45"
             android:textAlignment="viewStart"
+            android:layout_marginStart="@dimen/dimen_6dp"
+
             android:textColor="#232222"
             android:textSize="@dimen/dimen_18sp"
             app:layout_constraintStart_toStartOf="@+id/like_item_image_delete"

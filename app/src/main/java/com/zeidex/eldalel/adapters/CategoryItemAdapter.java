@@ -140,7 +140,7 @@ public class CategoryItemAdapter extends RecyclerView.Adapter<CategoryItemAdapte
 
         if (!TextUtils.isEmpty(currentOffer.getImgUrl())) {
             Glide.with(context)
-                    .load("https://www.dleel-sh.com/homepages/get/" + currentOffer.getImgUrl())
+                    .load("https://dleel.com/homepages/get/" + currentOffer.getImgUrl())
                     .placeholder(R.drawable.condition_logo)
                     .centerCrop()
                     .into(holder.offerItemImage);

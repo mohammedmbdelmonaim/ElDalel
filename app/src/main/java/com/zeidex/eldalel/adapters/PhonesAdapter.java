@@ -19,6 +19,7 @@ import com.zeidex.eldalel.models.ProductsCategory;
 import com.zeidex.eldalel.utils.PreferenceUtils;
 import com.zeidex.eldalel.utils.PriceFormatter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
@@ -37,6 +38,11 @@ public class PhonesAdapter extends RecyclerView.Adapter<PhonesAdapter.PhoneHolde
 
     public void setnPhones(PhonesOperation phonesOperation) {
         this.phonesOperation = phonesOperation;
+    }
+
+    public void setPhoneList(ArrayList<ProductsCategory> phoneList){
+        this.phoneList = phoneList;
+        notifyDataSetChanged();
     }
 
     public PhonesAdapter(Context context) {
@@ -97,7 +103,7 @@ public class PhonesAdapter extends RecyclerView.Adapter<PhonesAdapter.PhoneHolde
         holder.phone_text_price_before.setText(phoneModel.getPrice_before());
 
         Glide.with(context)
-                .load("https://www.dleel-sh.com/homepages/get/" + phoneModel.getImgUrl())
+                .load("https://dleel.com/homepages/get/" + phoneModel.getImgUrl())
                 .placeholder(R.drawable.condition_logo)
                 .centerCrop()
                 .into(holder.phone_img_url);
@@ -173,7 +179,7 @@ public class PhonesAdapter extends RecyclerView.Adapter<PhonesAdapter.PhoneHolde
                         return;
                     }
                     if ((PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) && isChecked) {
-                        phonesOperation.onCliickPhoneLike(Integer.parseInt(phoneList.get(getAdapterPosition()).getId()));
+                        phonesOperation.onCliickPhoneLike(Integer.parseInt(phoneList.get(getAdapterPosition()).getId()), getAdapterPosition());
                     }
 
                 }
@@ -191,7 +197,7 @@ public class PhonesAdapter extends RecyclerView.Adapter<PhonesAdapter.PhoneHolde
     public interface PhonesOperation {
         void onClickPhone(int id, int position);
 
-        void onCliickPhoneLike(int id);
+        void onCliickPhoneLike(int id, int position);
 
         void onAddToPhoneCart(int id, int position);
     }

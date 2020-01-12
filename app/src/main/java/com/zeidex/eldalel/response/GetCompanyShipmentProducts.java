@@ -376,13 +376,13 @@ public class GetCompanyShipmentProducts {
         private Integer availableQuantity;
         @SerializedName("product_price")
         @Expose
-        private Integer productPrice;
+        private Double productPrice;
         @SerializedName("total_price")
         @Expose
-        private Integer totalPrice;
+        private Double totalPrice;
         @SerializedName("total_price_with_tax")
         @Expose
-        private Integer totalPriceWithTax;
+        private Double totalPriceWithTax;
         @SerializedName("supervisor_status")
         @Expose
         private String supervisorStatus;
@@ -409,7 +409,7 @@ public class GetCompanyShipmentProducts {
         private Object userReceipt;
         @SerializedName("user_note")
         @Expose
-        private Object userNote;
+        private String userNote;
         @SerializedName("company_status")
         @Expose
         private Object companyStatus;
@@ -537,27 +537,27 @@ public class GetCompanyShipmentProducts {
             this.availableQuantity = availableQuantity;
         }
 
-        public Integer getProductPrice() {
+        public Double getProductPrice() {
             return productPrice;
         }
 
-        public void setProductPrice(Integer productPrice) {
+        public void setProductPrice(Double productPrice) {
             this.productPrice = productPrice;
         }
 
-        public Integer getTotalPrice() {
+        public Double getTotalPrice() {
             return totalPrice;
         }
 
-        public void setTotalPrice(Integer totalPrice) {
+        public void setTotalPrice(Double totalPrice) {
             this.totalPrice = totalPrice;
         }
 
-        public Integer getTotalPriceWithTax() {
+        public Double getTotalPriceWithTax() {
             return totalPriceWithTax;
         }
 
-        public void setTotalPriceWithTax(Integer totalPriceWithTax) {
+        public void setTotalPriceWithTax(Double totalPriceWithTax) {
             this.totalPriceWithTax = totalPriceWithTax;
         }
 
@@ -625,11 +625,11 @@ public class GetCompanyShipmentProducts {
             this.userReceipt = userReceipt;
         }
 
-        public Object getUserNote() {
+        public String getUserNote() {
             return userNote;
         }
 
-        public void setUserNote(Object userNote) {
+        public void setUserNote(String userNote) {
             this.userNote = userNote;
         }
 
@@ -749,22 +749,22 @@ public class GetCompanyShipmentProducts {
         private String nameAr;
         @SerializedName("price")
         @Expose
-        private Integer price;
+        private Double price;
         @SerializedName("old_price")
         @Expose
-        private Object oldPrice;
+        private Double oldPrice;
         @SerializedName("wholesale_price")
         @Expose
-        private Integer wholesalePrice;
+        private Double wholesalePrice;
         @SerializedName("wholesale_old_price")
         @Expose
-        private Object wholesaleOldPrice;
+        private Double wholesaleOldPrice;
         @SerializedName("weight")
         @Expose
-        private Object weight;
+        private Double weight;
         @SerializedName("cartDesc")
         @Expose
-        private Object cartDesc;
+        private String cartDesc;
         @SerializedName("shortDesc")
         @Expose
         private String shortDesc;
@@ -809,7 +809,7 @@ public class GetCompanyShipmentProducts {
         private Object discountContentEn;
         @SerializedName("discount")
         @Expose
-        private Object discount;
+        private Double discount;
         @SerializedName("content_ar")
         @Expose
         private Object contentAr;
@@ -913,51 +913,51 @@ public class GetCompanyShipmentProducts {
             this.nameAr = nameAr;
         }
 
-        public Integer getPrice() {
+        public Double getPrice() {
             return price;
         }
 
-        public void setPrice(Integer price) {
+        public void setPrice(Double price) {
             this.price = price;
         }
 
-        public Object getOldPrice() {
+        public Double getOldPrice() {
             return oldPrice;
         }
 
-        public void setOldPrice(Object oldPrice) {
+        public void setOldPrice(Double oldPrice) {
             this.oldPrice = oldPrice;
         }
 
-        public Integer getWholesalePrice() {
+        public Double getWholesalePrice() {
             return wholesalePrice;
         }
 
-        public void setWholesalePrice(Integer wholesalePrice) {
+        public void setWholesalePrice(Double wholesalePrice) {
             this.wholesalePrice = wholesalePrice;
         }
 
-        public Object getWholesaleOldPrice() {
+        public Double getWholesaleOldPrice() {
             return wholesaleOldPrice;
         }
 
-        public void setWholesaleOldPrice(Object wholesaleOldPrice) {
+        public void setWholesaleOldPrice(Double wholesaleOldPrice) {
             this.wholesaleOldPrice = wholesaleOldPrice;
         }
 
-        public Object getWeight() {
+        public Double getWeight() {
             return weight;
         }
 
-        public void setWeight(Object weight) {
+        public void setWeight(Double weight) {
             this.weight = weight;
         }
 
-        public Object getCartDesc() {
+        public String getCartDesc() {
             return cartDesc;
         }
 
-        public void setCartDesc(Object cartDesc) {
+        public void setCartDesc(String cartDesc) {
             this.cartDesc = cartDesc;
         }
 
@@ -1073,11 +1073,11 @@ public class GetCompanyShipmentProducts {
             this.discountContentEn = discountContentEn;
         }
 
-        public Object getDiscount() {
+        public Double getDiscount() {
             return discount;
         }
 
-        public void setDiscount(Object discount) {
+        public void setDiscount(Double discount) {
             this.discount = discount;
         }
 
@@ -1167,10 +1167,10 @@ public class GetCompanyShipmentProducts {
         private Integer paymentType;
         @SerializedName("discount")
         @Expose
-        private Object discount;
+        private Double discount;
         @SerializedName("total_price")
         @Expose
-        private Integer totalPrice;
+        private Double totalPrice;
         @SerializedName("created_at")
         @Expose
         private String createdAt;
@@ -1242,19 +1242,19 @@ public class GetCompanyShipmentProducts {
             this.paymentType = paymentType;
         }
 
-        public Object getDiscount() {
+        public Double getDiscount() {
             return discount;
         }
 
-        public void setDiscount(Object discount) {
+        public void setDiscount(Double discount) {
             this.discount = discount;
         }
 
-        public Integer getTotalPrice() {
+        public Double getTotalPrice() {
             return totalPrice;
         }
 
-        public void setTotalPrice(Integer totalPrice) {
+        public void setTotalPrice(Double totalPrice) {
             this.totalPrice = totalPrice;
         }
 

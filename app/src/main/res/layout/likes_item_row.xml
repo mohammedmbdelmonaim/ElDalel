@@ -16,8 +16,7 @@
             android:id="@+id/like_item_image_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_7dp"
-            android:layout_marginTop="@dimen/dimen_10dp"
+            android:padding="@dimen/dimen_10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_delete" />
@@ -74,6 +73,8 @@
             android:fontFamily="@font/cairo_bold"
             android:text="زندور"
             android:textAlignment="viewStart"
+
+            android:layout_marginStart="@dimen/dimen_6dp"
             android:textColor="#AAAAAA"
             android:textSize="@dimen/dimen_10sp"
             app:layout_constraintStart_toStartOf="@+id/like_item_image_delete"
@@ -86,6 +87,8 @@
             android:fontFamily="@font/cairo_bold"
             android:text="شاحن بنك طاقة متنقل مدخل تايب سى"
             android:textAlignment="viewStart"
+            android:layout_marginEnd="@dimen/dimen_6dp"
+            android:layout_marginStart="@dimen/dimen_6dp"
             android:textColor="#232222"
             android:textSize="@dimen/dimen_12sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -100,6 +103,8 @@
             android:paddingTop="@dimen/dimen_2dp"
             android:paddingBottom="@dimen/dimen_2dp"
             android:text="177.45"
+
+            android:layout_marginStart="@dimen/dimen_6dp"
             android:textAlignment="viewStart"
             android:textColor="#232222"
             android:textSize="@dimen/dimen_18sp"

@@ -115,20 +115,21 @@
             android:layout_marginStart="@dimen/dimen_2dp"
             android:textColor="#232222"
             android:gravity="right"
+            android:textSize="@dimen/sp16"
             android:layout_marginEnd="@dimen/dimen_2dp"
-            app:layout_constraintBaseline_toBaselineOf="@id/order_product_total_price_title_tv"
+            app:layout_constraintTop_toBottomOf="@id/order_product_total_price_title_tv"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/order_product_total_price_title_tv"
+            app:layout_constraintStart_toStartOf="@id/order_product_total_price_title_tv"
             tools:text="3655.00 SAR" />
 
         <TextView
             android:id="@+id/order_date_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_2dp"
+            android:layout_marginTop="@dimen/dimen_4dp"
             android:textColor="#232222"
             app:layout_constraintStart_toStartOf="@id/order_product_name_tv"
-            app:layout_constraintTop_toBottomOf="@id/order_product_total_price_title_tv"
+            app:layout_constraintTop_toBottomOf="@id/order_product_total_price_value_tv"
             tools:text="12/8/2019 02:08 PM" />
 
         <ImageButton

@@ -143,7 +143,7 @@ public class CategoriesFragment extends androidx.fragment.app.Fragment {
         allCategoriesAPI.getAllCategories(NO_PRODUCTS_STATUS).enqueue(new Callback<GetAllCategories>() {
             @Override
             public void onResponse(Call<GetAllCategories> call, Response<GetAllCategories> response) {
-                if (response.body() != null) {
+                if (getContext() != null && response.body() != null) {
                     int code = response.body().getCode();
                     if (code == 200) {
                         categoriesWithSub = new ArrayList<>();
@@ -167,6 +167,7 @@ public class CategoriesFragment extends androidx.fragment.app.Fragment {
 
             @Override
             public void onFailure(Call<GetAllCategories> call, Throwable t) {
+                if(getContext() != null)
                 Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }

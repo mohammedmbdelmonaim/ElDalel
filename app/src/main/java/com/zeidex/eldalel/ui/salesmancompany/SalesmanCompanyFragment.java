@@ -72,7 +72,8 @@ public class SalesmanCompanyFragment extends Fragment {
             @Override
             public void onChanged(String s) {
                 if (!TextUtils.isEmpty(s)) {
-                    Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                    Toasty.error(getContext(), s, Toast.LENGTH_LONG).show();
+                    mSalesmanCompanyViewModel.onErrorShowCompleted();
                     reloadDialog.dismiss();
                 }
             }

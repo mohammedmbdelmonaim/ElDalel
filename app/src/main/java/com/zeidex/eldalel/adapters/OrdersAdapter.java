@@ -47,12 +47,12 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.BasketElem
         holder.order_date_text.setText(shipment.getCreatedAt());
         holder.order_number_order_text.setText(shipment.getOrdersCount()+"");
         holder.order_state_text.setText(shipment.getPaymentType());
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ordersOperation.onClickOrder(shipment.getId());
-            }
-        });
+//        view.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ordersOperation.onClickOrder(shipment.getId());
+//            }
+//        });
     }
 
     @Override
@@ -68,6 +68,12 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.BasketElem
             order_number_order_text = itemView.findViewById(R.id.order_number_order_text);
             order_date_text = itemView.findViewById(R.id.order_date_text);
             order_state_text = itemView.findViewById(R.id.order_state_text);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ordersOperation.onClickOrder(shipments.get(getAdapterPosition()).getId());
+                }
+            });
         }
     }
 

@@ -21,6 +21,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -52,6 +53,7 @@ import com.zeidex.eldalel.services.AddToCardApi;
 import com.zeidex.eldalel.services.AddToFavouriteApi;
 import com.zeidex.eldalel.services.AllCategoriesAPI;
 import com.zeidex.eldalel.services.DetailProduct;
+import com.zeidex.eldalel.sharedviewmodels.MainDetailSharedViewModel;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
@@ -160,6 +162,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
     DetailColorsItemAdapter detailColorsItemAdapter;
     List<String> desc_names;
     DetailDescriptionsAdapter detailDescriptionsAdapter;
+    MainDetailSharedViewModel mMainDetailSharedViewModel;
 
     String token = "";
     private int productId;
@@ -169,6 +172,8 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
     Fragment frag = null;
 
     FirstPageFragmentListener mFirstPageFragmentListener;
+    private int categorySection; //used to know this detail is navigated to from which main category section
+    private int position;
 
     @Nullable
     @Override
@@ -231,6 +236,8 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
     }
 
     public void findViews() {
+        mMainDetailSharedViewModel = ViewModelProviders.of(getActivity()).get(MainDetailSharedViewModel.class);
+
         imageSlider.setIndicatorAnimation(IndicatorAnimations.WORM); //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
         imageSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
         imageSlider.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
@@ -289,16 +296,22 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                             if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
                                 Toasty.success(getContext(), getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
                                 isLike = true;
-                                int pos = getArguments().getInt("pos");
-                                if (getArguments().getParcelableArrayList("similar_products") != null) {
-                                    ArrayList<ProductsCategory> productsCategories = getArguments().getParcelableArrayList("similar_products");
-                                    if (productsCategories != null && productsCategories.size() > 0) {
-                                        ProductsCategory productsCategory = productsCategories.get(pos);
-                                        productsCategory.setLike("1");
-                                        productsCategories.set(pos, productsCategory);
-                                        phonesAdapter.notifyItemChanged(pos);
-                                    }
-                                }
+                                if (categorySection == 1)
+                                    mMainDetailSharedViewModel.changeFav1Status(position);
+                                if (categorySection == 2)
+                                    mMainDetailSharedViewModel.changeFav2Status(position);
+                                if(categorySection == 3)
+                                    mMainDetailSharedViewModel.changeFav3Status(position);
+//                                int pos = getArguments().getInt("pos");
+//                                if (/*getArguments().getParcelableArrayList("similar_products")*/related_products != null && related_products.size() > 0) {
+////                                    ArrayList<ProductsCategory> productsCategories = getArguments().getParcelableArrayList("similar_products");
+////                                    if (productsCategories != null && productsCategories.size() > 0) {
+//                                        ProductsCategory productsCategory = related_products.get(pos);
+//                                        productsCategory.setLike("1");
+//                                        related_products.set(pos, productsCategory);
+//                                        phonesAdapter.notifyItemChanged(pos);
+////                                    }
+//                                }
                             }
                             reloadDialog.dismiss();
                         }
@@ -316,7 +329,6 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
 
 
     boolean isLike = false;
-
 
 //    @Override
 //    public void onBackPressed() {
@@ -361,6 +373,8 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
 
     public void onLoadPage() {
         productId = getArguments().getInt("id");
+        position = getArguments().getInt("pos");
+        categorySection = getArguments().getInt("category_section");
         images = new ArrayList<>();
         colors = new ArrayList<>();
         capicities = new ArrayList<>();
@@ -451,20 +465,22 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
             }
         });
     }
+
     String lang;
     ArrayList<ProductsCategory> related_products;
+
     public void getDetarServer(int id, boolean flag) {
         related_products = new ArrayList<>();
         Locale locale = ChangeLang.getLocale(getResources());
         String loo = locale.getLanguage();
         if (loo.equalsIgnoreCase("en")) {
             lang = "en";
-        }else if (loo.equalsIgnoreCase("ar")) {
+        } else if (loo.equalsIgnoreCase("ar")) {
             lang = "ar";
         }
         images = new ArrayList<>();
         DetailProduct detailProduct = APIClient.getClient(SERVER_API_TEST).create(DetailProduct.class);
-        Call<GetDetailProduct> getDetailProductCall = detailProduct.getDetailProduct(id, token , lang);
+        Call<GetDetailProduct> getDetailProductCall = detailProduct.getDetailProduct(id, token, lang);
         getDetailProductCall.enqueue(new Callback<GetDetailProduct>() {
             @Override
             public void onResponse(Call<GetDetailProduct> call, Response<GetDetailProduct> response) {
@@ -474,7 +490,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                     if (code == 200) {
                         currentProduct = getDetailProduct.getData().getProduct();
                         for (int i = 0; i < currentProduct.getPhotos().size(); i++) {
-                            images.add("https://www.dleel-sh.com/homepages/get/" + getDetailProduct.getData().getProduct().getPhotos().get(i).getFilename());
+                            images.add(getDetailProduct.getData().getProduct().getPhotos().get(i).getPhotoPath());
                         }
                         if (flag) {
                             slider_adapter = new SliderAdapter(getContext(), images);
@@ -600,7 +616,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                                     colors.add(new ColorProduct(currentProduct.getColors().get(i).getProduct_id(), currentProduct.getColors().get(i).getName(), currentProduct.getColors().get(i).getPhoto()));
                                 }
                             }
-                        }else if (loo.equalsIgnoreCase("ar")) {
+                        } else if (loo.equalsIgnoreCase("ar")) {
                             if (!flag) {
                                 for (int i = 0; i < currentProduct.getColors().size(); i++) {
                                     colors.add(new ColorProduct(currentProduct.getColors().get(i).getProduct_id(), currentProduct.getColors().get(i).getName_ar(), currentProduct.getColors().get(i).getPhoto()));
@@ -670,7 +686,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
 
             @Override
             public void onFailure(Call<GetDetailProduct> call, Throwable t) {
-                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                Toasty.error(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -695,18 +711,19 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
 
     @Override
     public void onClickProduct3(int id, int pos) {
-        ArrayList<ProductsCategory> products = getArguments().getParcelableArrayList("similar_products");
-        if (products != null) {
-            ProductsCategory productsCategory = products.get(pos);
+//        ArrayList<ProductsCategory> products = getArguments().getParcelableArrayList("similar_products");
+        if (related_products != null) {
+            ProductsCategory productsCategory = related_products.get(pos);
             String like = productsCategory.getLike();
+
 //            Bundle bundle = new Bundle();
 //            bundle.putInt("id", id);
 //            bundle.putParcelableArrayList("similar_products", products);
 //            bundle.putInt("pos", pos);
 //            bundle.putString("getLike",like);
 //            NavHostFragment.findNavController(this).navigate(R.id.action_detailItemActivity_self, bundle);
-        startActivity(new Intent(getContext(), DetailItemActivity.class).putExtra("id", id).putExtra("similar_products", getArguments().getParcelableArray("similar_products")).putExtra("getLike", like).putExtra("pos", pos).putExtra("samethis", true));
-        Animatoo.animateSwipeLeft(getContext());
+            startActivity(new Intent(getContext(), DetailItemActivity.class).putExtra("id", id)/*.putExtra("similar_products", getArguments().getParcelableArray("similar_products"))*/.putExtra("getLike", like).putExtra("pos", pos).putExtra("samethis", true));
+            Animatoo.animateSwipeLeft(getContext());
         }
     }
 
@@ -756,12 +773,17 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
                 GetAddToCardResponse getAddToCardResponse = response.body();
                 if (getAddToCardResponse.getCode() == 200) {
-                    Toasty.success(getContext(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
-                    phonesAdapter.getProductsCategoryList().get(position).setCart("0");
-                    phonesAdapter.notifyItemChanged(position);
-                    isChanged = true;
-                    PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
-                    ((MainActivity) getActivity()).updateBasketBadge();
+                    if (getAddToCardResponse.getStatus()) {
+                        Toasty.success(getContext(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
+                        phonesAdapter.getProductsCategoryList().get(position).setCart("0");
+                        phonesAdapter.notifyItemChanged(position);
+                        isChanged = true;
+                        PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                        ((MainActivity) getActivity()).updateBasketBadge();
+                    } else {
+                        Toasty.error(getContext(), getAddToCardResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                    }
                 }
                 reloadDialog.dismiss();
             }
@@ -807,9 +829,16 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                         isAdded = true;
                         PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
                         ((MainActivity) getActivity()).updateBasketBadge();
-                        AddToCartCallback callback = (AddToCartCallback) getArguments().getSerializable("added_to_cart");
-                        if(callback != null)
-                        callback.setAddToCartResult(getAddToCardResponse.getItemsCount());
+
+                        if (categorySection == 1)
+                            mMainDetailSharedViewModel.changeCart1Status(position);
+                        if (categorySection == 2)
+                            mMainDetailSharedViewModel.changeCart2Status(position);
+                        if(categorySection == 3)
+                            mMainDetailSharedViewModel.changeCart3Status(position);
+//                        AddToCartCallback callback = (AddToCartCallback) getArguments().getSerializable("added_to_cart");
+//                        if(callback != null)
+//                        callback.setAddToCartResult(getAddToCardResponse.getItemsCount());
                     }
                 }
                 reloadDialog.dismiss();

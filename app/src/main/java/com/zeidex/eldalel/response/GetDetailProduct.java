@@ -606,6 +606,8 @@ public class GetDetailProduct {
     public class Photo{
         @SerializedName("filename")
         String filename;
+        @SerializedName("photo_path")
+        String photoPath;
 
         public String getFilename() {
             return filename;
@@ -613,6 +615,14 @@ public class GetDetailProduct {
 
         public void setFilename(String filename) {
             this.filename = filename;
+        }
+
+        public String getPhotoPath() {
+            return photoPath;
+        }
+
+        public void setPhotoPath(String photoPath) {
+            this.photoPath = photoPath;
         }
     }
 

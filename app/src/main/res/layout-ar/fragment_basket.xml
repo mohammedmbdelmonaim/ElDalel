@@ -60,7 +60,8 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/fragment_basket_elements_recycler"
                     android:layout_width="match_parent"
-                    android:layout_height="400dp" />
+                    android:layout_height="wrap_content"
+                    android:minHeight="200dp" />
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/fragment_basket_elements_recycler_noitems"
                     android:layout_width="match_parent"
@@ -88,28 +89,45 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/fragment_basket_elements_recycler_frame">
 
-                 <androidx.appcompat.widget.AppCompatEditText android:textAlignment="viewStart"
+                <androidx.appcompat.widget.AppCompatEditText android:textAlignment="viewStart"
                     android:id="@+id/fragment_basket_elements_edittext"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="@dimen/dimen_55dp"
-                    android:layout_weight="1"
                     android:background="@null"
                     android:paddingStart="@dimen/dimen_15dp"
+                    android:paddingEnd="@dimen/dimen_15dp"
                     android:fontFamily="@font/cairo_bold"
                     android:hint="@string/fragment_basket_elements_edittext_hint"
                     android:textColor="#606060"
                     android:textColorHint="#AAAAAA"
                     android:textSize="@dimen/dimen_15sp" />
 
-                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/fragment_basket_elements_enter_code"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/dimen_20dp"
+                    android:layout_height="@dimen/dimen_20dp"
+                    android:layout_gravity="center_vertical"
+                    android:visibility="gone"
+                    android:id="@+id/coupon_valid_iv"
+                    app:srcCompat="@drawable/ic_checked_congrate"/>
+
+                <TextView
+                    android:id="@+id/expired_text_tv"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/expired"
+                    android:visibility="gone"
+                    android:textColor="@android:color/holo_red_dark"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/fragment_basket_elements_enter_code"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/dimen_16dp"
-                    android:gravity="center"
+                    android:layout_marginStart="@dimen/dimen_32dp"
+                    android:gravity="center_vertical|end"
                     android:layout_marginEnd="@dimen/dimen_12dp"
                     android:fontFamily="@font/cairo_bold"
                     android:text="@string/fragment_basket_elements_enter_code_label"
+                    android:layout_gravity="right"
                     android:textColor="#047AC0"
                     android:textSize="@dimen/dimen_12sp" />
 
@@ -262,6 +280,55 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/fragment_basket_coupon_linear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_basket_tax_view">
+
+                <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dimen_6dp"
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="@string/coupon_discount"
+                    android:textColor="#606060"
+                    android:textSize="@dimen/dimen_12sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
+                    android:id="@+id/fragment_basket_coupon_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="0"
+                    android:layout_marginEnd="@dimen/dimen_5dp"
+                    android:fontFamily="@font/cairo_bold"
+                    android:textColor="#606060"
+                    android:textSize="@dimen/dimen_12sp" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <View
+                android:id="@+id/fragment_basket_coupon_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1dp"
+                android:background="#E8E8E8"
+                android:visibility="gone"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_basket_coupon_linear"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/fragment_basket_total_price_linear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -274,7 +341,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fragment_basket_tax_view">
+                app:layout_constraintTop_toBottomOf="@+id/fragment_basket_coupon_view">
 
                  <androidx.appcompat.widget.AppCompatTextView android:textAlignment="viewStart"
                     android:layout_width="0dp"
@@ -304,6 +371,7 @@
                     <!--android:text="@string/currancy_label"-->
                     <!--android:textColor="#606060"-->
                     <!--android:textSize="@dimen/dimen_12sp" />-->
+
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -350,6 +350,56 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/category3_label"></androidx.recyclerview.widget.RecyclerView>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_offer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_16dp"
+                android:background="#FFFFFF">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/offer_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_15dp"
+                    android:fontFamily="@font/cairo_bold"
+                    android:textAlignment="viewStart"
+                    android:textColor="#606060"
+                    android:text="@string/offers_header_text"
+                    android:textSize="@dimen/dimen_12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/offer_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dimen_15dp"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/acc_more_text"
+                    android:textAlignment="viewStart"
+                    android:textColor="#047AC0"
+                    android:textSize="@dimen/dimen_10sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/offer_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:paddingStart="@dimen/dimen_12dp"
+                    android:paddingEnd="@dimen/dimen_12dp"
+                    android:paddingBottom="@dimen/dimen_12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/offer_label"/>
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.appcompat.widget.LinearLayoutCompat>

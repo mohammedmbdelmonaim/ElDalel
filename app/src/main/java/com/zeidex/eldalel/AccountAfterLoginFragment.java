@@ -165,6 +165,7 @@ public class AccountAfterLoginFragment extends androidx.fragment.app.Fragment im
                         PreferenceUtils.saveUserLogin(getContext() , false);
                         PreferenceUtils.saveUserToken(getContext(), "");
                         PreferenceUtils.saveCountOfItemsBasket(getContext(), 0);
+                        PreferenceUtils.saveCoupon(getContext(), "");
                         ((MainActivity) getActivity()).updateBasketBadge();
                         startActivity(new Intent(getContext(), MainActivity.class));
                         Animatoo.animateSwipeLeft(getContext());
@@ -195,6 +196,7 @@ public class AccountAfterLoginFragment extends androidx.fragment.app.Fragment im
                         PreferenceUtils.saveCompanyToken(getContext(), "");
                         PreferenceUtils.saveCompanyLogin(getContext(), false);
                         PreferenceUtils.saveCountOfItemsBasket(getContext(), 0);
+                        PreferenceUtils.saveCoupon(getContext(), "");
                         ((MainActivity) getActivity()).updateBasketBadge();
                         startActivity(new Intent(getContext(), MainActivity.class));
                         Animatoo.animateSwipeLeft(getContext());

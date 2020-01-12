@@ -104,7 +104,7 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
         String imageName = getArguments().getString(CATEGORY_IMAGE_NAME);
         if(imageName != null){
             Glide.with(getContext())
-                    .load("https://www.dleel-sh.com/homepages/get/" + imageName)
+                    .load("https://dleel.com/homepages/get/" + imageName)
                     .placeholder(R.drawable.condition_logo)
                     .centerCrop()
                     .into(categoryCardImage);

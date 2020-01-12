@@ -21,6 +21,7 @@ public class SalesmanCompanyViewModel extends ViewModel {
     private MutableLiveData<Boolean> mHasOrders;
     private MutableLiveData<String> mError;
 
+
     public SalesmanCompanyViewModel() {
         mCompaniesOrders = new MutableLiveData<>();
         mError = new MutableLiveData<>();
@@ -32,6 +33,10 @@ public class SalesmanCompanyViewModel extends ViewModel {
     }
     public LiveData<String> getError(){return  mError;}
     public LiveData<Boolean> getHasOrders(){return mHasOrders;}
+
+    public void onErrorShowCompleted(){
+        mError.setValue("");
+    }
 
     public void fetchCompaniesOrders(String token) {
         SalesmanApi salesmanApi = APIClient.getClient(SERVER_API_TEST).create(SalesmanApi.class);
@@ -48,7 +53,7 @@ public class SalesmanCompanyViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<GetCompaniesOrders> call, Throwable t) {
-                mError.setValue("Please make sure you are connected to the Internet!");
+                mError.setValue(t.getMessage());
             }
         });
     }

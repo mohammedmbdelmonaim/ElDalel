@@ -45,7 +45,7 @@
     <string name="fragment_basket_elements_label">عناصر سلة التسوق</string>
     <string name="fragment_basket_elements_label_header">سلة التسوق</string>
     <string name="fragment_basket_elements_enter_code_label">تطبيق</string>
-    <string name="fragment_basket_elements_edittext_hint">أدخل الكود أو الكوبون</string>
+    <string name="fragment_basket_elements_edittext_hint">أدخل الكوبون</string>
     <string name="fragment_basket_total_price_products_label">مجموع المنتجات</string>
     <string name="currancy_label">ر.س</string>
     <string name="fragment_basket_total_shipments_label">الشحن</string>
@@ -250,4 +250,9 @@
     <string name="no_enough_wallet">لا يوجد رصيد كافي في المحفظة</string>
     <string name="activation_request_button_text">طلب التفعيل</string>
     <string name="ask_activation_toast">هذا الخيار غير مفعل، بإمكانك التواصل مع الدعم الفني لتفعيله</string>
+    <string name="code_added_successfully">تم اضافة الكود!</string>
+    <string name="remove">إزالة</string>
+    <string name="expired">انتهت صلاحيته!</string>
+    <string name="coupon_discount">خصم الكوبون</string>
+    <string name="delivery_fee_string">تكلفة التوصيل</string>
 </resources>

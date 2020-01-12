@@ -144,7 +144,7 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
         getFavoritesCall.enqueue(new Callback<GetFavorites>() {
             @Override
             public void onResponse(Call<GetFavorites> call, Response<GetFavorites> response) {
-                if (response.body() != null) {
+                if (getContext() != null && response.body() != null) {
                     int code = response.body().getCode();
                     if (code == 200) {
                         List<GetFavorites.Favorite> favorites = response.body().getData().getFavorites();
@@ -165,6 +165,7 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
 
             @Override
             public void onFailure(Call<GetFavorites> call, Throwable t) {
+                if(getContext() != null)
                 Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
@@ -268,7 +269,7 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
         bundle.putParcelableArrayList("similar_products", products);
         bundle.putString("getLike", "1");
         bundle.putInt("pos", pos);
-        bundle.putSerializable("added_to_cart", callback);
+//        bundle.putSerializable("added_to_cart", callback);
         NavHostFragment.findNavController(this).navigate(R.id.action_likesElementsFragment_to_detailItemActivity, bundle);
 //        mDetailItemFragment = new DetailItemFragment(null, bundle);
 //        getSupportFragmentManager().beginTransaction().replace(R.id.container, mDetailItemFragment).commit();
@@ -296,7 +297,7 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
             @Override
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
                 GetAddToCardResponse getAddToCardResponse = response.body();
-                if (getAddToCardResponse.getCode() == 200) {
+                if (getContext() != null && getAddToCardResponse.getCode() == 200) {
                     Toasty.success(getContext(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
                     likesElementsAdapter.getProductsList().get(position).setCart("0");
                     likesElementsAdapter.notifyItemChanged(position);
@@ -309,6 +310,7 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
 
             @Override
             public void onFailure(Call<GetAddToCardResponse> call, Throwable t) {
+                if(getContext() != null)
                 Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
@@ -329,7 +331,7 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
             @Override
             public void onResponse(Call<DeleteFavoriteResponse> call, Response<DeleteFavoriteResponse> response) {
                 DeleteFavoriteResponse deleteFavoriteResponse = response.body();
-                if (deleteFavoriteResponse != null) {
+                if (getContext() != null && deleteFavoriteResponse != null) {
                     int code = deleteFavoriteResponse.getCode();
                     if (code == 200) {
                         Toasty.success(getContext(), getString(R.string.remove_fav), Toast.LENGTH_LONG).show();
@@ -350,6 +352,7 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
 
             @Override
             public void onFailure(Call<DeleteFavoriteResponse> call, Throwable t) {
+                if(getContext() != null)
                 Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
