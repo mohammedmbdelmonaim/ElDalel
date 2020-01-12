@@ -215,6 +215,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
             token = PreferenceUtils.getUserToken(getContext());
         } else if (PreferenceUtils.getCompanyLogin(getContext())) {
             token = PreferenceUtils.getCompanyToken(getContext());
+            fragment_basket_edittext_linear.setVisibility(View.GONE);
         }
         reloadDialog.show();
         basketProducts = new ArrayList<>();

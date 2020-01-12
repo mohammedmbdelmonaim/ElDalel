@@ -237,7 +237,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             fragment_payid_coupon_linear.setVisibility(View.VISIBLE);
             fragment_payid_coupon_view.setVisibility(View.VISIBLE);
             fragment_payid_coupon_text.setText(couponDiscount);
-        }else{
+        } else {
             finalPriceDouble = BasketFragment.mTotal_price;
         }
 
@@ -297,20 +297,20 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
 
     private void getDeliveryFee() {
         DeliveryFeeApi deliveryFeeApi = APIClient.getClient(SERVER_API_TEST).create(DeliveryFeeApi.class);
-    deliveryFeeApi.getDeliveryFee().enqueue(new Callback<GetDeliveryFee>() {
-        @Override
-        public void onResponse(Call<GetDeliveryFee> call, Response<GetDeliveryFee> response) {
-            if(response.body() != null){
-                deliveryFee = response.body().getData();
-                fragment_payid_delivery_text.setText(PriceFormatter.toDecimalRsString(deliveryFee, getContext()));
+        deliveryFeeApi.getDeliveryFee().enqueue(new Callback<GetDeliveryFee>() {
+            @Override
+            public void onResponse(Call<GetDeliveryFee> call, Response<GetDeliveryFee> response) {
+                if (response.body() != null) {
+                    deliveryFee = response.body().getData();
+                    fragment_payid_delivery_text.setText(PriceFormatter.toDecimalRsString(deliveryFee, getContext()));
+                }
             }
-        }
 
-        @Override
-        public void onFailure(Call<GetDeliveryFee> call, Throwable t) {
+            @Override
+            public void onFailure(Call<GetDeliveryFee> call, Throwable t) {
 
-        }
-    });
+            }
+        });
     }
 
     Map<String, String> payment_post;
@@ -896,17 +896,21 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                         }
                     }
 
-                    if (ids_countries.contains(id_country)) {
-                        int index = ids_countries.indexOf(id_country);
-                        Collections.swap(ids_countries, 0, index);
-                        Collections.swap(countries, 0, index);
-                        getRegions(id_country);
-                    }
+//                    if (ids_countries.contains(id_country)) {
+//                        int index = ids_countries.indexOf(id_country);
+//                        Collections.swap(ids_countries, 0, index);
+//                        Collections.swap(countries, 0, index);
+//                        getRegions(id_country);
+//                    }
                     spinner_address_add_country_shipment.setItems(countries);
                     spinner_address_add_country_shipment.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
                             id_country = ids_countries.get(position);
+                            if (countries.size() > 1 && countries.contains(getString(R.string.country_spinner_label))) {
+                                ids_countries.remove(Integer.valueOf(-1));
+                                countries.remove(getString(R.string.country_spinner_label));
+                            }
                             getRegions(id_country);
                         }
                     });
@@ -935,7 +939,16 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             public void onResponse(Call<GetRegions> call, Response<GetRegions> response) {
                 GetRegions getRegions = response.body();
                 int code = Integer.parseInt(getRegions.getCode());
-                if (code == 200) {
+                if (getContext() != null && code == 200) {
+                    if(!regions.contains(getString(R.string.regions_spinner_label))){
+                        regions.clear();
+                        ids_regions.clear();
+                    }else {
+                        regions.clear();
+                        ids_regions.clear();
+                        regions.add(getString(R.string.regions_spinner_label));
+                        ids_regions.add(-1);
+                    }
                     Locale locale = ChangeLang.getLocale(getContext().getResources());
                     String loo = locale.getLanguage();
                     if (loo.equalsIgnoreCase("en")) {
@@ -950,18 +963,22 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
                             ids_regions.add(Integer.parseInt(getRegions.getData().getSubsidiaries().get(i).getId()));
                         }
                     }
-                    if (ids_regions.contains(id_region)) {
-                        int index = ids_regions.indexOf(id_region);
-                        Collections.swap(ids_regions, 0, index);
-                        Collections.swap(regions, 0, index);
-                        getCities(id_region);
-                    }
+//                    if (ids_regions.contains(id_region)) {
+//                        int index = ids_regions.indexOf(id_region);
+//                        Collections.swap(ids_regions, 0, index);
+//                        Collections.swap(regions, 0, index);
+//                        getCities(id_region);
+//                    }
 
                     spinner_address_add_regions_shipment.setItems(regions);
                     spinner_address_add_regions_shipment.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
                             id_region = ids_regions.get(position);
+                            if (regions.size() > 1 && regions.contains(getString(R.string.regions_spinner_label))) {
+                                ids_regions.remove(Integer.valueOf(-1));
+                                regions.remove(getString(R.string.regions_spinner_label));
+                            }
                             getCities(id_region);
                         }
                     });
@@ -971,7 +988,8 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onFailure(Call<GetRegions> call, Throwable t) {
-                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                if (getContext() != null)
+                    Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -989,35 +1007,49 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         getBranchesCall.enqueue(new Callback<GetBranches>() {
             @Override
             public void onResponse(Call<GetBranches> call, Response<GetBranches> response) {
-                GetBranches getBranches = response.body();
-                Locale locale = ChangeLang.getLocale(getContext().getResources());
-                String loo = locale.getLanguage();
-                if (loo.equalsIgnoreCase("en")) {
-                    for (int i = 0; i < getBranches.getData().getShowrooms().size(); i++) { //category loop
-                        branches.add(getBranches.getData().getShowrooms().get(i).getName_en());
-                        ids_branches.add(Integer.parseInt(getBranches.getData().getShowrooms().get(i).getId()));
+                if (getContext() != null && response.body() != null) {
+                    GetBranches getBranches = response.body();
+                    if(!branches.contains(getString(R.string.branch_spinner))){
+                        branches.clear();
+                        ids_branches.clear();
+                    }else {
+                        branches.clear();
+                        ids_branches.clear();
+                        branches.add(getString(R.string.branch_spinner));
+                        ids_branches.add(-1);
                     }
+                    Locale locale = ChangeLang.getLocale(getContext().getResources());
+                    String loo = locale.getLanguage();
+                    if (loo.equalsIgnoreCase("en")) {
+                        for (int i = 0; i < getBranches.getData().getShowrooms().size(); i++) { //category loop
+                            branches.add(getBranches.getData().getShowrooms().get(i).getName_en());
+                            ids_branches.add(Integer.parseInt(getBranches.getData().getShowrooms().get(i).getId()));
+                        }
 
-                } else if (loo.equalsIgnoreCase("ar")) {
-                    for (int i = 0; i < getBranches.getData().getShowrooms().size(); i++) { //category loop
-                        branches.add(getBranches.getData().getShowrooms().get(i).getName_ar());
-                        ids_branches.add(Integer.parseInt(getBranches.getData().getShowrooms().get(i).getId()));
+                    } else if (loo.equalsIgnoreCase("ar")) {
+                        for (int i = 0; i < getBranches.getData().getShowrooms().size(); i++) { //category loop
+                            branches.add(getBranches.getData().getShowrooms().get(i).getName_ar());
+                            ids_branches.add(Integer.parseInt(getBranches.getData().getShowrooms().get(i).getId()));
+                        }
                     }
+//                    if (ids_branches.contains(id_branch)) {
+//                        int index = ids_branches.indexOf(id_branch);
+//                        Collections.swap(ids_branches, 0, index);
+//                        Collections.swap(branches, 0, index);
+//                    }
+
+                    spinner_address_add_branches_shipment.setItems(branches);
+                    spinner_address_add_branches_shipment.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+                            id_branch = ids_branches.get(position);
+                            if (branches.size() > 1 && branches.contains(getString(R.string.branch_spinner))) {
+                                ids_branches.remove(Integer.valueOf(-1));
+                                branches.remove(getString(R.string.branch_spinner));
+                            }
+                        }
+                    });
                 }
-                if (ids_branches.contains(id_branch)) {
-                    int index = ids_branches.indexOf(id_branch);
-                    Collections.swap(ids_branches, 0, index);
-                    Collections.swap(branches, 0, index);
-                }
-
-                spinner_address_add_branches_shipment.setItems(branches);
-                spinner_address_add_branches_shipment.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
-                        id_branch = ids_branches.get(position);
-                    }
-                });
-
                 reloadDialog.dismiss();
             }
 
@@ -1142,15 +1174,16 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
 
     Dialog reloadDialog;
 
-    private void showDelivery(){
-        if(PreferenceUtils.getUserLogin(getContext())){
-        fragment_payid_delivery_linear.setVisibility(View.VISIBLE);
-        fragment_payid_delivery_view.setVisibility(View.VISIBLE);
-        fragment_payid_total_price_text.setText(PriceFormatter.toDecimalRsString(finalPriceDouble + deliveryFee, getContext()));
-    }}
+    private void showDelivery() {
+        if (PreferenceUtils.getUserLogin(getContext())) {
+            fragment_payid_delivery_linear.setVisibility(View.VISIBLE);
+            fragment_payid_delivery_view.setVisibility(View.VISIBLE);
+            fragment_payid_total_price_text.setText(PriceFormatter.toDecimalRsString(finalPriceDouble + deliveryFee, getContext()));
+        }
+    }
 
-    private void hideDelivery(){
-        if(PreferenceUtils.getUserLogin(getContext())) {
+    private void hideDelivery() {
+        if (PreferenceUtils.getUserLogin(getContext())) {
             fragment_payid_delivery_linear.setVisibility(View.GONE);
             fragment_payid_delivery_view.setVisibility(View.GONE);
             fragment_payid_total_price_text.setText(PriceFormatter.toDecimalRsString(finalPriceDouble, getContext()));
