@@ -21,6 +21,8 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -40,6 +42,7 @@ import com.zeidex.eldalel.services.AddToCardApi;
 import com.zeidex.eldalel.services.AddToFavouriteApi;
 import com.zeidex.eldalel.services.FilterAPI;
 import com.zeidex.eldalel.services.OffersAPI;
+import com.zeidex.eldalel.sharedviewmodels.MainDetailSharedViewModel;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
@@ -104,6 +107,9 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
     CategoryItemAdapter productsAdapter;
     SubCategoriesAdapter subCategoriesAdapter;
 
+
+    MainDetailSharedViewModel mMainDetailSharedViewModel;
+
     int currentPage = 1;
 
     int position_detail;
@@ -129,6 +135,7 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
     //as when clearing the list the listener on scroll will be triggered immediately
     private boolean shouldSort = false;
     private boolean shouldReload = false;
+    private boolean isOfferChanged;
 
     @Nullable
     @Override
@@ -256,6 +263,8 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
     boolean is_offered;
 
     public void findViews() {
+        setupViewModel();
+
         is_offered = OfferItemActivityArgs.fromBundle(getArguments()).getIsOffered();
         if (PreferenceUtils.getCompanyLogin(getContext())) {
             token = PreferenceUtils.getCompanyToken(getContext());
@@ -326,8 +335,8 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
 
         if (allProductsCategory.size() > 0) {
             labelCountText.setText(String.valueOf(allProductsCategory.size()));
-            productsAdapter.setProductsList(allProductsCategory);
-            productsAdapter.notifyDataSetChanged();
+            productsAdapter.clearList();
+            productsAdapter.updateProductsList(allProductsCategory);
             showRecycler();
         } else {
             showEmptyView();
@@ -468,16 +477,27 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
                 String arr[] = currentProductResponse.getName_ar().split(" ", 2); // get first word
                 String firstWord = arr[0];
 
+                String discount;
+                String price;
+                String oldPrice;
+                if (PreferenceUtils.getCompanyLogin(getContext())) {
+                    discount = currentProductResponse.getDiscount_company();
+                    price = currentProductResponse.getWholesale_price();
+                    oldPrice = currentProductResponse.getWholesale_old_price();
+                } else {
+                    discount = currentProductResponse.getDiscount_user();
+                    price = currentProductResponse.getPrice();
+                    oldPrice = currentProductResponse.getOld_price();
+                }
+
                 if (productsResponse.get(j).getPhotos().size() == 0) {
                     products.add(new ProductsCategory(currentProductResponse.getId(), "",
-                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName_ar(),
-                            currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
+                            discount, firstWord, currentProductResponse.getName_ar(), price, oldPrice,
                             currentProductResponse.getFavorite(), currentProductResponse.getCart(),
                             currentProductResponse.getAvailable_quantity()));
                 } else {
                     products.add(new ProductsCategory(currentProductResponse.getId(), currentProductResponse.getPhotos().get(0).getFilename(),
-                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName_ar(),
-                            currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
+                            discount, firstWord, currentProductResponse.getName_ar(), price, oldPrice,
                             currentProductResponse.getFavorite(), currentProductResponse.getCart(), currentProductResponse.getAvailable_quantity()));
                 }
             }
@@ -488,17 +508,29 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
                 String arr[] = currentProductResponse.getName().split(" ", 2); // get first word
                 String firstWord = arr[0];
 
+                String discount;
+                String price;
+                String oldPrice;
+
+                if (PreferenceUtils.getCompanyLogin(getContext())) {
+                    discount = currentProductResponse.getDiscount_company();
+                    price = currentProductResponse.getWholesale_price();
+                    oldPrice = currentProductResponse.getWholesale_old_price();
+                } else {
+                    discount = currentProductResponse.getDiscount_user();
+                    price = currentProductResponse.getPrice();
+                    oldPrice = currentProductResponse.getOld_price();
+                }
+
                 if (productsResponse.get(j).getPhotos().size() == 0) {
                     products.add(new ProductsCategory(currentProductResponse.getId(), "",
-                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName(),
-                            currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
+                            discount, firstWord, currentProductResponse.getName(), price, oldPrice,
                             currentProductResponse.getFavorite(), currentProductResponse.getCart(),
                             currentProductResponse.getAvailable_quantity()));
 
                 } else {
                     products.add(new ProductsCategory(currentProductResponse.getId(), currentProductResponse.getPhotos().get(0).getFilename(),
-                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName(),
-                            currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
+                            discount, firstWord, currentProductResponse.getName(), price, oldPrice,
                             currentProductResponse.getFavorite(), currentProductResponse.getCart(), currentProductResponse.getAvailable_quantity()));
                 }
             }
@@ -564,6 +596,37 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
         getSubcategoryProducts(subcategoryId);
     }
 
+    private void setupViewModel() {
+
+        mMainDetailSharedViewModel = ViewModelProviders.of(getActivity()).get(MainDetailSharedViewModel.class);
+
+//        mMainDetailSharedViewModel.getIsOffersChanged().observe(this, new Observer<Boolean>() {
+//            @Override
+//            public void onChanged(Boolean isOffersChanged) {
+//                if (isOffersChanged) {
+//                    isOfferChanged = true;
+////                    onLoadPage();
+////                    mMainDetailSharedViewModel.resetOffersChanged();
+//                }
+//            }
+//        });
+
+        mMainDetailSharedViewModel.getOfferChangedProp().observe(this, new Observer<Map<String, Integer>>() {
+            @Override
+            public void onChanged(Map<String, Integer> offerPropMap) {
+                if(offerPropMap.size() > 0){
+                    int changedPos = offerPropMap.get("position");
+                    int cartStatus = offerPropMap.get("cart");
+                    int favStatus = offerPropMap.get("fav");
+                    if(cartStatus == 1) productsAdapter.getProductsList().get(changedPos).setCart("0");
+                    if(favStatus == 1) productsAdapter.getProductsList().get(changedPos).setLike("1");
+                    productsAdapter.notifyItemChanged(changedPos);
+                    mMainDetailSharedViewModel.resetOffersChanged();
+                }
+            }
+        });
+    }
+
     @Override
     public void onClickSubCategoryWithSubSub
             (ArrayList<Subsubcategory> subsubcategories, String subcategoryName, int subcategoryId,
@@ -584,8 +647,9 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
         bundle.putInt("pos", pos);
         bundle.putString("getLike", allProductsCategory.get(pos).getLike());
         bundle.putInt("id", id);
-        bundle.putParcelableArrayList("similar_products", allProductsCategory);
-        bundle.putSerializable("added_to_cart", callback);
+        bundle.putString("fragment", "offer");
+//        bundle.putParcelableArrayList("similar_products", allProductsCategory);
+//        bundle.putSerializable("added_to_cart", callback);
         NavHostFragment.findNavController(this).navigate(R.id.action_offerItemActivity_to_detailItemActivity, bundle);
 //        OfferItemActivityDirections.actionOfferItemActivityToDetailItemActivity(id, pos, productsCategory.toArray(new ProductsCategory[productsCategory.size()]), productsCategory.get(pos).getLike());
 //        startActivityForResult(new Intent(this, DetailItemFragment.class).putExtra("id", id).putExtra("similar_products", productsCategory).putExtra("getLike", productsCategory.get(pos).getLike()).putExtra("pos", pos), 1111);
@@ -642,12 +706,14 @@ public class OfferItemActivity extends Fragment implements CategoryItemAdapter.C
             @Override
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
                 GetAddToCardResponse getAddToCardResponse = response.body();
-                if (getAddToCardResponse.getCode() == 200) {
+                if (getAddToCardResponse.getCode() == 200 && getAddToCardResponse.getStatus()) {
                     Toasty.success(getContext(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
                     productsAdapter.getProductsList().get(position).setCart("0");
                     productsAdapter.notifyItemChanged(position);
                     PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
                     ((MainActivity) getActivity()).updateBasketBadge();
+                }else {
+                    Toasty.error(getContext(), getAddToCardResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
                 reloadDialog.dismiss();
             }

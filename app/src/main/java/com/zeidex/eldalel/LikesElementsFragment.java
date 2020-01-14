@@ -15,6 +15,8 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -27,8 +29,10 @@ import com.zeidex.eldalel.models.ProductsCategory;
 import com.zeidex.eldalel.response.DeleteFavoriteResponse;
 import com.zeidex.eldalel.response.GetAddToCardResponse;
 import com.zeidex.eldalel.response.GetFavorites;
+import com.zeidex.eldalel.response.GetHomeProducts;
 import com.zeidex.eldalel.services.AddToCardApi;
 import com.zeidex.eldalel.services.FavoritesAPI;
+import com.zeidex.eldalel.sharedviewmodels.MainDetailSharedViewModel;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.GridSpacingItemDecoration;
@@ -67,6 +71,7 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
     private ArrayList<ProductsCategory> products;
     Map<String, String> cartPost;
     private DetailItemFragment mDetailItemFragment;
+    MainDetailSharedViewModel mMainDetailSharedViewModel;
 
     @Nullable
     @Override
@@ -116,6 +121,8 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
 //    }
 
     private void findViews() {
+        setupViewModel();
+
         if (PreferenceUtils.getCompanyLogin(getContext())) {
             token = PreferenceUtils.getCompanyToken(getContext());
         } else if (PreferenceUtils.getUserLogin(getContext())) {
@@ -165,9 +172,24 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
 
             @Override
             public void onFailure(Call<GetFavorites> call, Throwable t) {
-                if(getContext() != null)
-                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                if (getContext() != null)
+                    Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
+            }
+        });
+    }
+
+    private void setupViewModel() {
+
+        mMainDetailSharedViewModel = ViewModelProviders.of(getActivity()).get(MainDetailSharedViewModel.class);
+
+        mMainDetailSharedViewModel.getIsFavoritesChanged().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isFavoriteChanged) {
+                if (isFavoriteChanged) {
+                    onLoadPage();
+                    mMainDetailSharedViewModel.resetFavoriteChanged();
+                }
             }
         });
     }
@@ -200,23 +222,37 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
                 String arr[] = currentProductResponse.getProduct().getNameAr().split(" ", 2); // get first word
                 String firstWord = arr[0];
 
-                Double price = currentProductResponse.getProduct().getPrice();
+                Double price;
+                Double oldPrice;
+                String discount;
+
+                if (PreferenceUtils.getCompanyLogin(getContext())) {
+                    price = currentProductResponse.getProduct().getWholesalePrice();
+                    oldPrice = currentProductResponse.getProduct().getWholesaleOldPrice();
+                    discount = currentProductResponse.getProduct().getDiscount_company();
+                } else {
+                    price = currentProductResponse.getProduct().getPrice();
+                    oldPrice = currentProductResponse.getProduct().getOldPrice();
+                    discount = currentProductResponse.getProduct().getDiscount();
+                }
+
+//                Double price = currentProductResponse.getProduct().getPrice();
                 String priceString = String.valueOf(price);
-                Integer discount = currentProductResponse.getProduct().getDiscount();
-                String discountString = discount != null ? String.valueOf(discount) : null;
-                Double priceBefore = currentProductResponse.getProduct().getOldPrice();
-                String priceBeforeString = priceBefore != null ? String.valueOf(priceBefore) : null;
+//                Integer discount = currentProductResponse.getProduct().getDiscount();
+//                String discountString = discount != null ? String.valueOf(discount) : null;
+//                Double priceBefore = currentProductResponse.getProduct().getOldPrice();
+                String priceBeforeString = oldPrice != null ? String.valueOf(oldPrice) : null;
 
                 if (currentProductResponse.getProduct().getPhotos().size() == 0) {
                     products.add(new ProductsCategory(String.valueOf(currentProductResponse.getProduct().getId()), "",
-                            discountString, firstWord, currentProductResponse.getProduct().getNameAr(),
+                            discount, firstWord, currentProductResponse.getProduct().getNameAr(),
                             priceString, priceBeforeString,
                             "", currentProductResponse.getProduct().getCart(),
                             currentProductResponse.getProduct().getAvailableQuantity() + ""));
                 } else {
                     products.add(new ProductsCategory(String.valueOf(currentProductResponse.getProduct().getId()),
                             currentProductResponse.getProduct().getPhotos().get(0).getFilename(),
-                            discountString, firstWord, currentProductResponse.getProduct().getNameAr(),
+                            discount, firstWord, currentProductResponse.getProduct().getNameAr(),
                             priceString, priceBeforeString,
                             "", currentProductResponse.getProduct().getCart(),
                             currentProductResponse.getProduct().getAvailableQuantity() + ""));
@@ -229,23 +265,37 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
                 String arr[] = currentProductResponse.getProduct().getName().split(" ", 2); // get first word
                 String firstWord = arr[0];
 
-                Integer discount = currentProductResponse.getProduct().getDiscount();
-                String discountString = discount != null ? String.valueOf(discount) : null;
-                Double priceBefore = currentProductResponse.getProduct().getOldPrice();
-                String priceBeforeString = priceBefore != null ? String.valueOf(priceBefore) : null;
+                Double price;
+                Double oldPrice;
+                String discount;
+
+                if (PreferenceUtils.getCompanyLogin(getContext())) {
+                    price = currentProductResponse.getProduct().getWholesalePrice();
+                    oldPrice = currentProductResponse.getProduct().getWholesaleOldPrice();
+                    discount = currentProductResponse.getProduct().getDiscount_company();
+                } else {
+                    price = currentProductResponse.getProduct().getPrice();
+                    oldPrice = currentProductResponse.getProduct().getOldPrice();
+                    discount = currentProductResponse.getProduct().getDiscount();
+                }
+
+//                Integer discount = currentProductResponse.getProduct().getDiscount();
+//                String discountString = discount != null ? String.valueOf(discount) : null;
+//                Double priceBefore = currentProductResponse.getProduct().getOldPrice();
+                String priceBeforeString = oldPrice != null ? String.valueOf(oldPrice) : null;
 
                 if (currentProductResponse.getProduct().getPhotos().size() == 0) {
                     products.add(new ProductsCategory(String.valueOf(currentProductResponse.getProduct().getId()), "",
-                            discountString, firstWord, currentProductResponse.getProduct().getName(),
-                            String.valueOf(currentProductResponse.getProduct().getPrice()), priceBeforeString,
+                            discount, firstWord, currentProductResponse.getProduct().getName(),
+                            String.valueOf(price), priceBeforeString,
                             "", currentProductResponse.getProduct().getCart(),
                             currentProductResponse.getProduct().getAvailableQuantity() + ""));
 
                 } else {
                     products.add(new ProductsCategory(String.valueOf(currentProductResponse.getProduct().getId()),
                             currentProductResponse.getProduct().getPhotos().get(0).getFilename(),
-                            discountString, firstWord, currentProductResponse.getProduct().getName(),
-                            String.valueOf(currentProductResponse.getProduct().getPrice()), priceBeforeString,
+                            discount, firstWord, currentProductResponse.getProduct().getName(),
+                            String.valueOf(price), priceBeforeString,
                             "", currentProductResponse.getProduct().getCart(),
                             currentProductResponse.getProduct().getAvailableQuantity() + ""));
                 }
@@ -269,6 +319,7 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
         bundle.putParcelableArrayList("similar_products", products);
         bundle.putString("getLike", "1");
         bundle.putInt("pos", pos);
+        bundle.putString("fragment", "favorite");
 //        bundle.putSerializable("added_to_cart", callback);
         NavHostFragment.findNavController(this).navigate(R.id.action_likesElementsFragment_to_detailItemActivity, bundle);
 //        mDetailItemFragment = new DetailItemFragment(null, bundle);
@@ -297,21 +348,27 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
             @Override
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
                 GetAddToCardResponse getAddToCardResponse = response.body();
-                if (getContext() != null && getAddToCardResponse.getCode() == 200) {
-                    Toasty.success(getContext(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
-                    likesElementsAdapter.getProductsList().get(position).setCart("0");
-                    likesElementsAdapter.notifyItemChanged(position);
-                    if (getAddToCardResponse.getItemsCount() != null){
-                        PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
-                        ((MainActivity) getActivity()).updateBasketBadge();
-                    }}
+
+                if (getContext() != null) {
+                    if (getAddToCardResponse.getCode() == 200 && getAddToCardResponse.getStatus()) {
+                        Toasty.success(getContext(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
+                        likesElementsAdapter.getProductsList().get(position).setCart("0");
+                        likesElementsAdapter.notifyItemChanged(position);
+                        if (getAddToCardResponse.getItemsCount() != null) {
+                            PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                            ((MainActivity) getActivity()).updateBasketBadge();
+                        }
+                    }else {
+                        Toasty.error(getContext(), getAddToCardResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
                 reloadDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<GetAddToCardResponse> call, Throwable t) {
-                if(getContext() != null)
-                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                if (getContext() != null)
+                    Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });
@@ -352,8 +409,8 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
 
             @Override
             public void onFailure(Call<DeleteFavoriteResponse> call, Throwable t) {
-                if(getContext() != null)
-                Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                if (getContext() != null)
+                    Toasty.error(getContext(), getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
                 reloadDialog.dismiss();
             }
         });

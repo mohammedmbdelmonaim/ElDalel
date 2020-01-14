@@ -395,16 +395,27 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
                 String arr[] = currentProductResponse.getName_ar().split(" ", 2); // get first word
                 String firstWord = arr[0];
 
+                String discount;
+                String price;
+                String oldPrice;
+                if (PreferenceUtils.getCompanyLogin(OffersItemsActivity.this)) {
+                    discount = currentProductResponse.getDiscount_company();
+                    price = currentProductResponse.getWholesale_price();
+                    oldPrice = currentProductResponse.getWholesale_old_price();
+                } else {
+                    discount = currentProductResponse.getDiscount_user();
+                    price = currentProductResponse.getPrice();
+                    oldPrice = currentProductResponse.getOld_price();
+                }
+
                 if (productsResponse.get(j).getPhotos().size() == 0) {
                     products.add(new ProductsCategory(currentProductResponse.getId(), "",
-                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName_ar(),
-                            currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
+                            discount, firstWord, currentProductResponse.getName_ar(), price, oldPrice,
                             currentProductResponse.getFavorite(), currentProductResponse.getCart(),
                             currentProductResponse.getAvailable_quantity()));
                 } else {
                     products.add(new ProductsCategory(currentProductResponse.getId(), currentProductResponse.getPhotos().get(0).getFilename(),
-                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName_ar(),
-                            currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
+                            discount, firstWord, currentProductResponse.getName_ar(), price, oldPrice,
                             currentProductResponse.getFavorite(), currentProductResponse.getCart(), currentProductResponse.getAvailable_quantity()));
                 }
             }
@@ -415,17 +426,28 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
                 String arr[] = currentProductResponse.getName().split(" ", 2); // get first word
                 String firstWord = arr[0];
 
+                String discount;
+                String price;
+                String oldPrice;
+                if (PreferenceUtils.getCompanyLogin(OffersItemsActivity.this)) {
+                    discount = currentProductResponse.getDiscount_company();
+                    price = currentProductResponse.getWholesale_price();
+                    oldPrice = currentProductResponse.getWholesale_old_price();
+                } else {
+                    discount = currentProductResponse.getDiscount_user();
+                    price = currentProductResponse.getPrice();
+                    oldPrice = currentProductResponse.getOld_price();
+                }
+
                 if (productsResponse.get(j).getPhotos().size() == 0) {
                     products.add(new ProductsCategory(currentProductResponse.getId(), "",
-                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName(),
-                            currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
+                            discount, firstWord, currentProductResponse.getName(), price, oldPrice,
                             currentProductResponse.getFavorite(), currentProductResponse.getCart(),
                             currentProductResponse.getAvailable_quantity()));
 
                 } else {
                     products.add(new ProductsCategory(currentProductResponse.getId(), currentProductResponse.getPhotos().get(0).getFilename(),
-                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName(),
-                            currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
+                            discount, firstWord, currentProductResponse.getName(), price, oldPrice,
                             currentProductResponse.getFavorite(), currentProductResponse.getCart(), currentProductResponse.getAvailable_quantity()));
                 }
             }
@@ -548,11 +570,13 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
             @Override
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
                 GetAddToCardResponse getAddToCardResponse = response.body();
-                if (getAddToCardResponse.getCode() == 200) {
+                if (getAddToCardResponse.getCode() == 200 && getAddToCardResponse.getStatus()) {
                     Toasty.success(OffersItemsActivity.this, getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
                     productsAdapter.getProductsList().get(position).setCart("0");
                     productsAdapter.notifyItemChanged(position);
                     PreferenceUtils.saveCountOfItemsBasket(OffersItemsActivity.this, Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                }else {
+                    Toasty.error(OffersItemsActivity.this, getAddToCardResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
                 reloadDialog.dismiss();
             }

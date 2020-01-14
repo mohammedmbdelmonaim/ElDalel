@@ -109,6 +109,9 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
     @BindView(R.id.constraint_home_category3)
     ConstraintLayout constraint_home_category3;
 
+    @BindView(R.id.constraint_offer)
+    ConstraintLayout offerLayout;
+
     @BindView(R.id.imageSlider)
     SliderView imageSlider;
     private List<GetSliders.Data> sliders;
@@ -130,7 +133,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
 
     @OnClick(R.id.offer_more)
     void navigateToOffers() {
-
+        ((MainActivity) getActivity()).navigateToOffers();
     }
 
     ArrayList<Subcategory> subCategoriesModel;
@@ -194,7 +197,8 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
     }
 
     public void findViews() {
-        mMainDetailSharedViewModel = ViewModelProviders.of(getActivity()).get(MainDetailSharedViewModel.class);
+
+        setupViewModel();
 
         if (PreferenceUtils.getCompanyLogin(getContext())) {
             token = PreferenceUtils.getCompanyToken(getContext());
@@ -363,23 +367,32 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
 
                             List<GetHomeProducts.Offer> homeOffers = getHomeProducts.getData().getOffers();
                             mOffersModel = new ArrayList<>();
-                            for (GetHomeProducts.Offer homeOffer : homeOffers) {
-                                String offerPhoto = "";
-                                if (homeOffer.getPhotos() != null && homeOffer.getPhotos().size() > 0)
-                                    offerPhoto = homeOffer.getPhotos().get(0).getFilename();
-                                String discount = null;
-                                if (PreferenceUtils.getCompanyLogin(getContext())) {
-                                    discount = homeOffer.getDiscountCompany();
-                                } else {
-                                    discount = homeOffer.getDiscountUser();
-                                }
+                            if (homeOffers != null && homeOffers.size() > 0) {
+                                offerLayout.setVisibility(View.VISIBLE);
+                                for (GetHomeProducts.Offer homeOffer : homeOffers) {
+                                    String offerPhoto = "";
+                                    if (homeOffer.getPhotos() != null && homeOffer.getPhotos().size() > 0)
+                                        offerPhoto = homeOffer.getPhotos().get(0).getFilename();
+                                    String discount;
+                                    String price;
+                                    String oldPrice;
+                                    if (PreferenceUtils.getCompanyLogin(getContext())) {
+                                        discount = homeOffer.getDiscountCompany();
+                                        price = homeOffer.getWholesalePrice();
+                                        oldPrice = homeOffer.getWholesaleOldPrice();
+                                    } else {
+                                        discount = homeOffer.getDiscountUser();
+                                        price = homeOffer.getPrice();
+                                        oldPrice = homeOffer.getOldPrice();
+                                    }
 
-                                Locale locale = ChangeLang.getLocale(getContext().getResources());
-                                String loo = locale.getLanguage();
-                                if (loo.equalsIgnoreCase("ar")) {
-                                    mOffersModel.add(new ProductsCategory(String.valueOf(homeOffer.getId()), offerPhoto, discount, homeOffer.getNameAr().split(" ", 2)[0], homeOffer.getNameAr(), homeOffer.getPrice(), homeOffer.getOldPrice(), homeOffer.getFavorite(), homeOffer.getCart(), homeOffer.getAvailableQuantity()));
-                                } else {
-                                    mOffersModel.add(new ProductsCategory(String.valueOf(homeOffer.getId()), offerPhoto, discount, homeOffer.getName().split(" ", 2)[0], homeOffer.getName(), homeOffer.getPrice(), homeOffer.getOldPrice(), homeOffer.getFavorite(), homeOffer.getCart(), homeOffer.getAvailableQuantity()));
+                                    Locale locale = ChangeLang.getLocale(getContext().getResources());
+                                    String loo = locale.getLanguage();
+                                    if (loo.equalsIgnoreCase("ar")) {
+                                        mOffersModel.add(new ProductsCategory(String.valueOf(homeOffer.getId()), offerPhoto, discount, homeOffer.getNameAr().split(" ", 2)[0], homeOffer.getNameAr(), price, oldPrice, homeOffer.getFavorite(), homeOffer.getCart(), homeOffer.getAvailableQuantity()));
+                                    } else {
+                                        mOffersModel.add(new ProductsCategory(String.valueOf(homeOffer.getId()), offerPhoto, discount, homeOffer.getName().split(" ", 2)[0], homeOffer.getName(), price, oldPrice, homeOffer.getFavorite(), homeOffer.getCart(), homeOffer.getAvailableQuantity()));
+                                    }
                                 }
                             }
 
@@ -395,23 +408,32 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                                     categories_names.add(getHomeProducts.getData().getCategories().get(i).getName());
 
                                     for (int j = 0; j < getHomeProducts.getData().getCategories().get(i).getProducts().size(); j++) { // product loop
-
-                                        String arr[] = getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName().split(" ", 2); // get first word
+                                        GetHomeProducts.Product currentProduct = getHomeProducts.getData().getCategories().get(i).getProducts().get(j);
+                                        String[] arr = currentProduct.getName().split(" ", 2); // get first word
                                         String firstWord = arr[0];
+                                        String price;
+                                        String oldPrice;
+                                        String discount;
+
+                                        if (PreferenceUtils.getCompanyLogin(getContext())) {
+                                            price = currentProduct.getWholesale_price();
+                                            oldPrice = currentProduct.getWholesale_old_price();
+                                            discount = currentProduct.getDiscount_company();
+                                        } else {
+                                            price = currentProduct.getPrice();
+                                            oldPrice = currentProduct.getOld_price();
+                                            discount = currentProduct.getDiscount_user();
+                                        }
 
                                         if (getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().size() == 0) {
                                             home_category1.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), "",
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                                    discount, firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
+                                                    price, oldPrice, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
                                         } else {
                                             home_category1.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().get(0).getFilename(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                                    discount, firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
+                                                    price, oldPrice, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
                                         }
-
-
                                     }
 
                                 } else if (loo.equalsIgnoreCase("ar")) {
@@ -423,16 +445,29 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                                         String arr[] = getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar().split(" ", 2); // get first word
                                         String firstWord = arr[0];
 
+                                        GetHomeProducts.Product currentProduct = getHomeProducts.getData().getCategories().get(i).getProducts().get(j);
+                                        String price;
+                                        String oldPrice;
+                                        String discount;
+
+                                        if (PreferenceUtils.getCompanyLogin(getContext())) {
+                                            price = currentProduct.getWholesale_price();
+                                            oldPrice = currentProduct.getWholesale_old_price();
+                                            discount = currentProduct.getDiscount_company();
+                                        } else {
+                                            price = currentProduct.getPrice();
+                                            oldPrice = currentProduct.getOld_price();
+                                            discount = currentProduct.getDiscount_user();
+                                        }
+
                                         if (getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().size() == 0) {
                                             home_category1.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), "",
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                                    discount, firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
+                                                    price, oldPrice, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
                                         } else {
                                             home_category1.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().get(0).getFilename(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                                    discount, firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
+                                                    price, oldPrice, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
                                         }
                                     }
                                 }
@@ -458,18 +493,30 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                                         String arr[] = getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName().split(" ", 2); // get first word
                                         String firstWord = arr[0];
 
-                                        if (getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().size() == 0) {
-                                            home_category2.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), "",
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                        GetHomeProducts.Product currentProduct = getHomeProducts.getData().getCategories().get(i).getProducts().get(j);
+                                        String price;
+                                        String oldPrice;
+                                        String discount;
+
+                                        if (PreferenceUtils.getCompanyLogin(getContext())) {
+                                            price = currentProduct.getWholesale_price();
+                                            oldPrice = currentProduct.getWholesale_old_price();
+                                            discount = currentProduct.getDiscount_company();
                                         } else {
-                                            home_category2.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().get(0).getFilename(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                            price = currentProduct.getPrice();
+                                            oldPrice = currentProduct.getOld_price();
+                                            discount = currentProduct.getDiscount_user();
                                         }
 
+                                        if (getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().size() == 0) {
+                                            home_category2.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), "",
+                                                    discount, firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
+                                                    price, oldPrice, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                        } else {
+                                            home_category2.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().get(0).getFilename(),
+                                                    discount, firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
+                                                    price, oldPrice, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                        }
                                     }
 
                                 } else if (loo.equalsIgnoreCase("ar")) {
@@ -481,15 +528,30 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                                         String arr[] = getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar().split(" ", 2); // get first word
                                         String firstWord = arr[0];
 
+                                        GetHomeProducts.Product currentProduct = getHomeProducts.getData().getCategories().get(i).getProducts().get(j);
+                                        String price;
+                                        String oldPrice;
+                                        String discount;
+
+                                        if (PreferenceUtils.getCompanyLogin(getContext())) {
+                                            price = currentProduct.getWholesale_price();
+                                            oldPrice = currentProduct.getWholesale_old_price();
+                                            discount = currentProduct.getDiscount_company();
+                                        } else {
+                                            price = currentProduct.getPrice();
+                                            oldPrice = currentProduct.getOld_price();
+                                            discount = currentProduct.getDiscount_user();
+                                        }
+
                                         if (getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().size() == 0) {
                                             home_category2.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), "",
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
+                                                    discount, firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
+                                                    price, oldPrice,
                                                     getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
                                         } else {
                                             home_category2.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().get(0).getFilename(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
+                                                    discount, firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
+                                                    price, oldPrice,
                                                     getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
                                         }
 
@@ -517,17 +579,29 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
 
                                         String arr[] = getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName().split(" ", 2); // get first word
                                         String firstWord = arr[0];
+                                        GetHomeProducts.Product currentProduct = getHomeProducts.getData().getCategories().get(i).getProducts().get(j);
+                                        String price;
+                                        String oldPrice;
+                                        String discount;
+
+                                        if (PreferenceUtils.getCompanyLogin(getContext())) {
+                                            price = currentProduct.getWholesale_price();
+                                            oldPrice = currentProduct.getWholesale_old_price();
+                                            discount = currentProduct.getDiscount_company();
+                                        } else {
+                                            price = currentProduct.getPrice();
+                                            oldPrice = currentProduct.getOld_price();
+                                            discount = currentProduct.getDiscount_user();
+                                        }
 
                                         if (getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().size() == 0) {
                                             home_category3.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), "",
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                                    discount, firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
+                                                    price, oldPrice, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
                                         } else {
                                             home_category3.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().get(0).getFilename(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                                    discount, firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName(),
+                                                    price, oldPrice, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
                                         }
 
                                     }
@@ -541,16 +615,29 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                                         String arr[] = getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar().split(" ", 2); // get first word
                                         String firstWord = arr[0];
 
+                                        GetHomeProducts.Product currentProduct = getHomeProducts.getData().getCategories().get(i).getProducts().get(j);
+                                        String price;
+                                        String oldPrice;
+                                        String discount;
+
+                                        if (PreferenceUtils.getCompanyLogin(getContext())) {
+                                            price = currentProduct.getWholesale_price();
+                                            oldPrice = currentProduct.getWholesale_old_price();
+                                            discount = currentProduct.getDiscount_company();
+                                        } else {
+                                            price = currentProduct.getPrice();
+                                            oldPrice = currentProduct.getOld_price();
+                                            discount = currentProduct.getDiscount_user();
+                                        }
+
                                         if (getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().size() == 0) {
                                             home_category3.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), "",
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                                    discount, firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
+                                                    price, oldPrice, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
                                         } else {
                                             home_category3.add(new ProductsCategory(getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getId(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPhotos().get(0).getFilename(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getDiscount(), firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getPrice(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getOld_price(),
-                                                    getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
+                                                    discount, firstWord, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getName_ar(),
+                                                    price, oldPrice, getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getFavorite(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getCart(), getHomeProducts.getData().getCategories().get(i).getProducts().get(j).getAvailable_quantity()));
                                         }
                                     }
                                 }
@@ -560,7 +647,6 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                         }
 
                         updateUI();
-                        setupViewModel();
                     }
                 }
                 reloadDialog.dismiss();
@@ -586,31 +672,31 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
     }
 
     private void setupViewModel() {
-        mMainDetailSharedViewModel.setHome_category1(home_category1);
-        mMainDetailSharedViewModel.setHome_category2(home_category2);
-        mMainDetailSharedViewModel.setOffers(mOffersModel);
+//        mMainDetailSharedViewModel.setHome_category1(home_category1);
+//        mMainDetailSharedViewModel.setHome_category2(home_category2);
+//        mMainDetailSharedViewModel.setOffers(mOffersModel);
 //        mMainDetailSharedViewModel.setHome_category3(home_category3);
 
-        mMainDetailSharedViewModel.getHome_category1().observe(MainFragment.this, new Observer<ArrayList<ProductsCategory>>() {
-            @Override
-            public void onChanged(ArrayList<ProductsCategory> accessoryList) {
-                accessoriesAdapter.setAccessoryList(accessoryList);
-            }
-        });
-
-        mMainDetailSharedViewModel.getHome_category2().observe(MainFragment.this, new Observer<ArrayList<ProductsCategory>>() {
-            @Override
-            public void onChanged(ArrayList<ProductsCategory> phoneList) {
-                phonesAdapter.setPhoneList(phoneList);
-            }
-        });
-
-        mMainDetailSharedViewModel.getOffers().observe(MainFragment.this, new Observer<ArrayList<ProductsCategory>>() {
-            @Override
-            public void onChanged(ArrayList<ProductsCategory> offerList) {
-                homeOfferAdapter.setOfferList(offerList);
-            }
-        });
+//        mMainDetailSharedViewModel.getHome_category1().observe(MainFragment.this, new Observer<ArrayList<ProductsCategory>>() {
+//            @Override
+//            public void onChanged(ArrayList<ProductsCategory> accessoryList) {
+//                accessoriesAdapter.setAccessoryList(accessoryList);
+//            }
+//        });
+//
+//        mMainDetailSharedViewModel.getHome_category2().observe(MainFragment.this, new Observer<ArrayList<ProductsCategory>>() {
+//            @Override
+//            public void onChanged(ArrayList<ProductsCategory> phoneList) {
+//                phonesAdapter.setPhoneList(phoneList);
+//            }
+//        });
+//
+//        mMainDetailSharedViewModel.getOffers().observe(MainFragment.this, new Observer<ArrayList<ProductsCategory>>() {
+//            @Override
+//            public void onChanged(ArrayList<ProductsCategory> offerList) {
+//                homeOfferAdapter.setOfferList(offerList);
+//            }
+//        });
 
 //        mMainDetailSharedViewModel.getHome_category3().observe(MainFragment.this, new Observer<ArrayList<ProductsCategory>>() {
 //            @Override
@@ -618,6 +704,18 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
 //                category3Adapter.setProductsList(productList);
 //            }
 //        });
+
+        mMainDetailSharedViewModel = ViewModelProviders.of(getActivity()).get(MainDetailSharedViewModel.class);
+
+        mMainDetailSharedViewModel.getIsMainChanged().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isMainChanged) {
+                if (isMainChanged) {
+                    onLoadPage();
+                    mMainDetailSharedViewModel.resetMainChanged();
+                }
+            }
+        });
     }
 
     private void updateUI() {
@@ -646,6 +744,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
         }
 
         if (mOffersModel.size() > 0) {
+            offerLayout.setVisibility(View.VISIBLE);
             homeOfferAdapter = new HomeOfferAdapter(getContext(), mOffersModel);
             homeOfferAdapter.setOffersOperation(MainFragment.this);
             offer_recycler.setAdapter(homeOfferAdapter);
@@ -818,7 +917,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
         Bundle bundle = new Bundle();
         bundle.putInt("pos", pos);
         bundle.putInt("id", id);
-        bundle.putInt("category_section", 3);
+        bundle.putString("fragment", "main");
 //        bundle.putParcelableArrayList("similar_products", home_category3);
         bundle.putString("getLike", home_category3.get(pos).getLike());
 //        bundle.putSerializable("added_to_cart", callback);
@@ -851,7 +950,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                         Toasty.success(getContext(), getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
                         category3Adapter.getProductsCategoryList().get(pos).setLike("1");
                         category3Adapter.notifyItemChanged(pos);
-                        mMainDetailSharedViewModel.changeFav3Status(pos);
+//                        mMainDetailSharedViewModel.changeFav3Status(pos);
                     }
                 }
                 reloadDialog.dismiss();
@@ -886,15 +985,17 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
                 GetAddToCardResponse getAddToCardResponse = response.body();
                 if (getContext() != null) {
-                    if (getAddToCardResponse.getCode() == 200) {
+                    if (getAddToCardResponse.getCode() == 200 && getAddToCardResponse.getStatus()) {
                         Toasty.success(getContext(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
                         category3Adapter.getProductsCategoryList().get(position).setCart("0");
                         category3Adapter.notifyItemChanged(position);
-                        mMainDetailSharedViewModel.changeCart3Status(position);
+//                        mMainDetailSharedViewModel.changeCart3Status(position);
                         fragment_main_basket_top_txt.setText(getAddToCardResponse.getItemsCount());
                         fragment_main_basket_top_txt.setVisibility(View.VISIBLE);
                         PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
                         ((MainActivity) getActivity()).updateBasketBadge();
+                    } else {
+                        Toasty.error(getContext(), getAddToCardResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
                 reloadDialog.dismiss();
@@ -925,7 +1026,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
         bundle.putInt("pos", pos);
         bundle.putInt("id", id);
 
-        bundle.putInt("category_section", 2);
+        bundle.putString("fragment", "main");
 //        bundle.putParcelableArrayList("similar_products", home_category2);
         bundle.putString("getLike", home_category2.get(pos).getLike());
 //        bundle.putSerializable("added_to_cart", callback);
@@ -959,7 +1060,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                         Toasty.success(getContext(), getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
 //                    phonesAdapter.getPhoneList().get(position).setLike("1");
 //                    phonesAdapter.notifyItemChanged(position);
-                        mMainDetailSharedViewModel.changeFav2Status(position);
+//                        mMainDetailSharedViewModel.changeFav2Status(position);
 
                     }
                 }
@@ -995,15 +1096,17 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
                 GetAddToCardResponse getAddToCardResponse = response.body();
                 if (getContext() != null) {
-                    if (getAddToCardResponse.getCode() == 200) {
+                    if (getAddToCardResponse.getCode() == 200 && getAddToCardResponse.getStatus()) {
                         Toasty.success(getContext(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
                         phonesAdapter.getPhoneList().get(position).setCart("0");
                         phonesAdapter.notifyItemChanged(position);
-                        mMainDetailSharedViewModel.changeCart2Status(position);
+//                        mMainDetailSharedViewModel.changeCart2Status(position);
                         fragment_main_basket_top_txt.setText(getAddToCardResponse.getItemsCount());
                         fragment_main_basket_top_txt.setVisibility(View.VISIBLE);
                         PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
                         ((MainActivity) getActivity()).updateBasketBadge();
+                    } else {
+                        Toasty.error(getContext(), getAddToCardResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
                 reloadDialog.dismiss();
@@ -1033,7 +1136,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
         Bundle bundle = new Bundle();
         bundle.putInt("pos", pos);
         bundle.putInt("id", id);
-        bundle.putInt("category_section", 1);
+        bundle.putString("fragment", "main");
         bundle.putString("getLike", home_category1.get(pos).getLike());
 //        bundle.putSerializable("added_to_cart", callback);
 
@@ -1068,7 +1171,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                     if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
                         accessoriesAdapter.getAccessoryList().get(position).setLike("1");
                         accessoriesAdapter.notifyItemChanged(position);
-                        mMainDetailSharedViewModel.changeFav1Status(position);
+//                        mMainDetailSharedViewModel.changeFav1Status(position);
                         Toasty.success(getContext(), getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
                     }
                     reloadDialog.dismiss();
@@ -1107,7 +1210,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                             Toasty.success(getContext(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
                             accessoriesAdapter.getAccessoryList().get(position).setCart("0");
                             accessoriesAdapter.notifyItemChanged(position);
-                            mMainDetailSharedViewModel.changeCart1Status(position);
+//                            mMainDetailSharedViewModel.changeCart1Status(position);
                             fragment_main_basket_top_txt.setText(getAddToCardResponse.getItemsCount());
                             fragment_main_basket_top_txt.setVisibility(View.VISIBLE);
                             if (getAddToCardResponse.getItemsCount() != null) {
@@ -1140,8 +1243,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
         Bundle bundle = new Bundle();
         bundle.putInt("pos", pos);
         bundle.putInt("id", id);
-
-        bundle.putInt("category_section", 4);
+        bundle.putString("fragment", "main");
         bundle.putString("getLike", mOffersModel.get(pos).getLike());
         NavHostFragment.findNavController(this).navigate(R.id.action_mainFragment_to_detailItemFragment, bundle);
     }
@@ -1165,7 +1267,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                     if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
                         homeOfferAdapter.getOfferList().get(position).setLike("1");
                         homeOfferAdapter.notifyItemChanged(position);
-                        mMainDetailSharedViewModel.changeFavOfferStatus(position);
+//                        mMainDetailSharedViewModel.changeFavOfferStatus(position);
                         Toasty.success(getContext(), getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
                     }
                 }
@@ -1206,7 +1308,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
                             Toasty.success(getContext(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
                             homeOfferAdapter.getOfferList().get(position).setCart("0");
                             homeOfferAdapter.notifyItemChanged(position);
-                            mMainDetailSharedViewModel.changeCartOfferStatus(position);
+//                            mMainDetailSharedViewModel.changeCartOfferStatus(position);
                             fragment_main_basket_top_txt.setText(getAddToCardResponse.getItemsCount());
                             fragment_main_basket_top_txt.setVisibility(View.VISIBLE);
                             if (getAddToCardResponse.getItemsCount() != null) {

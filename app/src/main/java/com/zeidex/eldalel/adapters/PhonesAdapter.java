@@ -73,14 +73,14 @@ public class PhonesAdapter extends RecyclerView.Adapter<PhonesAdapter.PhoneHolde
             holder.phone_image_like.setChecked(false);
         }
 
-        if (phoneModel.getDiscount() == null) {
+        if (phoneModel.getDiscount() == null || phoneModel.getDiscount().equals("0")) {
             holder.discount_linear.setVisibility(View.GONE);
         } else {
             holder.discount_linear.setVisibility(View.VISIBLE);
             holder.discount_result.setText(phoneModel.getDiscount());
         }
 
-        if (phoneModel.getPrice_before() == null) {
+        if (phoneModel.getPrice_before() == null || phoneModel.getPrice_before().equals("0")) {
             holder.phone_text_price_before.setVisibility(View.GONE);
             holder.phone_text_price_before_label.setVisibility(View.GONE);
             holder.phone_text_price_before_view.setVisibility(View.GONE);
@@ -100,7 +100,7 @@ public class PhonesAdapter extends RecyclerView.Adapter<PhonesAdapter.PhoneHolde
 
         double price = Double.parseDouble(phoneModel.getPrice());
         holder.phone_text_price.setText(PriceFormatter.toDecimalString(price, context.getApplicationContext()));
-        holder.phone_text_price_before.setText(phoneModel.getPrice_before());
+//        holder.phone_text_price_before.setText(phoneModel.getPrice_before());
 
         Glide.with(context)
                 .load("https://dleel.com/homepages/get/" + phoneModel.getImgUrl())

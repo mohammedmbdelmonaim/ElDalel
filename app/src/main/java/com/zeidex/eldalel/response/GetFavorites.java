@@ -220,10 +220,10 @@ public class GetFavorites {
         @SerializedName("old_price")
         @Expose
         private Double oldPrice;
-        @SerializedName("wholesale_price")
+        @SerializedName("wholesaler_price")
         @Expose
         private Double wholesalePrice;
-        @SerializedName("wholesale_old_price")
+        @SerializedName("wholesaler_old_price")
         @Expose
         private Double wholesaleOldPrice;
         @SerializedName("weight")
@@ -268,9 +268,12 @@ public class GetFavorites {
         @SerializedName("discount_content_en")
         @Expose
         private Object discountContentEn;
-        @SerializedName("discount")
+        @SerializedName("discount_user")
         @Expose
-        private Integer discount;
+        private String discount;
+        @SerializedName("discount_company")
+        @Expose
+        private String discount_company;
         @SerializedName("content_ar")
         @Expose
         private Object contentAr;
@@ -523,12 +526,20 @@ public class GetFavorites {
             this.discountContentEn = discountContentEn;
         }
 
-        public Integer getDiscount() {
+        public String getDiscount() {
             return discount;
         }
 
-        public void setDiscount(Integer discount) {
+        public void setDiscount(String discount) {
             this.discount = discount;
+        }
+
+        public String getDiscount_company() {
+            return discount_company;
+        }
+
+        public void setDiscount_company(String discount_company) {
+            this.discount_company = discount_company;
         }
 
         public Object getContentAr() {

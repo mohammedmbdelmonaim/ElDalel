@@ -114,10 +114,10 @@ public class GetProducts {
         @SerializedName("old_price")
         String old_price;
 
-        @SerializedName("wholesale_price")
+        @SerializedName("wholesaler_price")
         String wholesale_price;
 
-        @SerializedName("wholesale_old_price")
+        @SerializedName("wholesaler_old_price")
         String wholesale_old_price;
 
         @SerializedName("weight")
@@ -153,8 +153,11 @@ public class GetProducts {
         @SerializedName("discount_content")
         String discount_content;
 
-        @SerializedName("discount")
-        String discount;
+        @SerializedName("discount_user")
+        String discount_user;
+
+        @SerializedName("discount_company")
+        String discount_company;
 
         @SerializedName("limit_user_quantity")
         String limit_user_quantity;
@@ -387,12 +390,20 @@ public class GetProducts {
             this.discount_content = discount_content;
         }
 
-        public String getDiscount() {
-            return discount;
+        public String getDiscount_user() {
+            return discount_user;
         }
 
-        public void setDiscount(String discount) {
-            this.discount = discount;
+        public void setDiscount_user(String discount) {
+            this.discount_user = discount;
+        }
+
+        public String getDiscount_company() {
+            return discount_company;
+        }
+
+        public void setDiscount_company(String discount_company) {
+            this.discount_company = discount_company;
         }
 
         public String getLimit_user_quantity() {

@@ -52,7 +52,7 @@ public class BasketElementsAdapter extends RecyclerView.Adapter<BasketElementsAd
         BasketProducts basketProductsModel = basketProducts.get(position);
 
 
-        if (basketProductsModel.getPrice_before() == null) {
+        if (basketProductsModel.getPrice_before() == null || basketProductsModel.getPrice_before().equals("0")) {
             holder.phone_text_price_before_linear.setVisibility(View.GONE);
 
         } else {

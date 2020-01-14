@@ -220,10 +220,10 @@ public class GetFavorites {
         @SerializedName("old_price")
         @Expose
         private Double oldPrice;
-        @SerializedName("wholesale_price")
+        @SerializedName("wholesaler_price")
         @Expose
         private Double wholesalePrice;
-        @SerializedName("wholesale_old_price")
+        @SerializedName("wholesaler_old_price")
         @Expose
         private Double wholesaleOldPrice;
         @SerializedName("weight")

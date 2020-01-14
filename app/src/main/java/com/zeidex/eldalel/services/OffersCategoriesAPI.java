@@ -8,5 +8,5 @@ import retrofit2.http.Query;
 
 public interface OffersCategoriesAPI {
     @GET("categories")
-    Call<GetOffersCategories> getOffersCategories(@Query("status") String status);
+    Call<GetOffersCategories> getOffersCategories(@Query("status") String status, @Query("token") String token);
 }

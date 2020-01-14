@@ -56,6 +56,7 @@ import retrofit2.Response;
 import static com.zeidex.eldalel.FilterActivity.FILTER_CATEGORY_ID;
 import static com.zeidex.eldalel.FilterActivity.FILTER_PRICE_FROM;
 import static com.zeidex.eldalel.FilterActivity.FILTER_PRICE_TO;
+import static com.zeidex.eldalel.FilterActivity.FILTER_PRODUCT_NAME;
 import static com.zeidex.eldalel.FilterActivity.FILTER_SUBCATEGORY_ID;
 import static com.zeidex.eldalel.OffersFragment.CATEGORY_ID_INTENT_EXTRA_KEY;
 import static com.zeidex.eldalel.SearchActivity.FILTER_STATUS;
@@ -70,6 +71,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     public static final String SORT_DESC = "desc";
     public static final int SORT_DATE_DESC_INDEX = 0;
     public static final int FINISH_ACTIVITY_CODE = 458;
+
     @BindView(R.id.category_item_recycler_list)
     RecyclerView category_item_recycler_list;
     @BindView(R.id.categories_no_items_layout)
@@ -113,6 +115,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     //because in case of sorting getproducts should be called before incrementing page number
     //as when clearing the list the listener on scroll will be triggered immediately
     private boolean shouldSort = false;
+    private String filterProductName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -169,6 +172,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
         filterPriceTo = getArguments().getInt(FILTER_PRICE_TO, -1);
         filterSubcategoryId = getArguments().getInt(FILTER_SUBCATEGORY_ID, -1);
         filterStatus = getArguments().getString(FILTER_STATUS);
+        filterProductName = getArguments().getString(FILTER_PRODUCT_NAME);
 
         filterMap = new HashMap<>();
 
@@ -240,6 +244,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
             if (filterStatus != null) {
                 filterMap.put(FILTER_STATUS, filterStatus);
             }
+            if(filterProductName != null) filterMap.put("product_name", filterProductName);
 //            initializeRecycler(new ArrayList<>());
             filterResults();
         }
@@ -388,17 +393,28 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
                 String arr[] = currentProductResponse.getName_ar().split(" ", 2); // get first word
                 String firstWord = arr[0];
 
+                String discount;
+                String price;
+                String oldPrice;
+                if (PreferenceUtils.getCompanyLogin(getContext())) {
+                    discount = currentProductResponse.getDiscount_company();
+                    price = currentProductResponse.getWholesale_price();
+                    oldPrice = currentProductResponse.getWholesale_old_price();
+                } else {
+                    discount = currentProductResponse.getDiscount_user();
+                    price = currentProductResponse.getPrice();
+                    oldPrice = currentProductResponse.getOld_price();
+                }
+
                 if (productsResponse.get(j).getPhotos().size() == 0) {
                     products.add(new ProductsCategory(currentProductResponse.getId(), "",
-                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName_ar(),
-                            currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
-                            currentProductResponse.getFavorite(), currentProductResponse.getCart(),
+                            discount, firstWord, currentProductResponse.getName_ar(),
+                            price, oldPrice, currentProductResponse.getFavorite(), currentProductResponse.getCart(),
                             currentProductResponse.getAvailable_quantity()));
                 } else {
                     products.add(new ProductsCategory(currentProductResponse.getId(), currentProductResponse.getPhotos().get(0).getFilename(),
-                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName_ar(),
-                            currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
-                            currentProductResponse.getFavorite(), currentProductResponse.getCart(), currentProductResponse.getAvailable_quantity()));
+                            discount, firstWord, currentProductResponse.getName_ar(),
+                            price, oldPrice, currentProductResponse.getFavorite(), currentProductResponse.getCart(), currentProductResponse.getAvailable_quantity()));
                 }
             }
         } else {
@@ -409,20 +425,32 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
                 String arr[] = currentProductResponse.getName().split(" ", 2); // get first word
                 String firstWord = arr[0];
 
+                String discount;
+                String price;
+                String oldPrice;
+                if (PreferenceUtils.getCompanyLogin(getContext())) {
+                    discount = currentProductResponse.getDiscount_company();
+                    price = currentProductResponse.getWholesale_price();
+                    oldPrice = currentProductResponse.getWholesale_old_price();
+                } else {
+                    discount = currentProductResponse.getDiscount_user();
+                    price = currentProductResponse.getPrice();
+                    oldPrice = currentProductResponse.getOld_price();
+                }
+
                 if (productsResponse.get(j).getPhotos().size() == 0) {
                     products.add(new ProductsCategory(currentProductResponse.getId(), "",
-                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName(),
-                            currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
+                            discount, firstWord, currentProductResponse.getName(), price, oldPrice,
                             currentProductResponse.getFavorite(), currentProductResponse.getCart(),
                             currentProductResponse.getAvailable_quantity()));
                 } else {
                     products.add(new ProductsCategory(currentProductResponse.getId(), currentProductResponse.getPhotos().get(0).getFilename(),
-                            currentProductResponse.getDiscount(), firstWord, currentProductResponse.getName(),
-                            currentProductResponse.getPrice(), currentProductResponse.getOld_price(),
+                            discount, firstWord, currentProductResponse.getName(), price, oldPrice,
                             currentProductResponse.getFavorite(), currentProductResponse.getCart(), currentProductResponse.getAvailable_quantity()));
                 }
             }
         }
+
 
         return products;
     }
@@ -574,9 +602,18 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
     @OnClick(R.id.search_items_category)
     void navigateToFilterActivity() {
         Intent intent = new Intent(getContext(), FilterActivity.class);
+        if(filterStatus != null && filterStatus.equals("new_arrival")){
+            intent.putExtra("is_new_arrival", true);
+        }else if (filterStatus != null && filterStatus.equals("offer")){
+            intent.putExtra("has_offer", true);
+        }
+
+        if(searchName != null){
+            intent.putExtra(FILTER_PRODUCT_NAME, searchName);
+        }
         intent.putExtra(CATEGORY_ID_INTENT_EXTRA_KEY, categoryId);
         intent.putExtra(SUBCATEGORY_ID_INTENT_EXTRA, subcategoryId);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivityForResult(intent, FINISH_ACTIVITY_CODE);
         Animatoo.animateSwipeLeft(getContext());
     }
@@ -602,7 +639,7 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
 
         if (requestCode == FINISH_ACTIVITY_CODE && data != null) {
             boolean shouldFinishActivity = data.getBooleanExtra("should_finish_activity", false);
-            if (shouldFinishActivity) getActivity().finish();
+            if (shouldFinishActivity && getActivity() != null && !getActivity().getLocalClassName().equals("MainActivity")) getActivity().finish();
         }
 
 //        if (requestCode == FILTER_REQUEST_CODE && data != null) {
@@ -703,16 +740,18 @@ public class ProductsFragment extends Fragment implements /*CategoryItemAdapter.
             @Override
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
                 GetAddToCardResponse getAddToCardResponse = response.body();
-                if (getAddToCardResponse.getCode() == 200) {
+                if (getAddToCardResponse.getCode() == 200 && getAddToCardResponse.getStatus()) {
                     Toasty.success(getContext(), getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
                     productsAdapter.getProductsList().get(position).setCart("0");
                     productsAdapter.notifyItemChanged(position);
                     PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
-                    try{
+                    try {
                         ((MainActivity) getActivity()).updateBasketBadge();
-                    }catch(Exception ex){
+                    } catch (Exception ex) {
 
                     }
+                } else {
+                    Toasty.error(getContext(), getAddToCardResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
                 reloadDialog.dismiss();
             }

@@ -274,18 +274,20 @@ public class MainActivity extends BaseActivity {
 //        }
     }
 
-    public void navigateToCategories(int categoryId) {
-        CategoriesFragment categoriesFragment = new CategoriesFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt("category_id", categoryId);
-        categoriesFragment.setArguments(bundle);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
-        ft.replace(R.id.container_activity, categoriesFragment, "categorie_fragment");
-        ft.commit();
-        MenuItem categoriesItem = mBottomNav.getMenu().getItem(1);
-        mSelectedItem = categoriesItem.getItemId();
-        categoriesItem.setChecked(true);
+    public void navigateToOffers() {
+//        CategoriesFragment categoriesFragment = new CategoriesFragment();
+//        Bundle bundle = new Bundle();
+//        bundle.putInt("category_id", categoryId);
+//        categoriesFragment.setArguments(bundle);
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        ft.setCustomAnimations(R.anim.animate_slide_up_enter, R.anim.animate_slide_up_exit);
+//        ft.replace(R.id.container_activity, categoriesFragment, "categorie_fragment");
+//        ft.commit();
+        MenuItem offersItem = mBottomNav.getMenu().getItem(2);
+        offersItem.setChecked(true);
+        selectFragment(offersItem);
+//        mSelectedItem = categoriesItem.getItemId();
+//        categoriesItem.setChecked(true);
     }
 
     String tag;

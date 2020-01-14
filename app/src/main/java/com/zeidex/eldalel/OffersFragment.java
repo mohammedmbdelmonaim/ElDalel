@@ -28,6 +28,7 @@ import com.zeidex.eldalel.services.OffersCategoriesAPI;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.ChangeLang;
 import com.zeidex.eldalel.utils.GridSpacingItemDecoration;
+import com.zeidex.eldalel.utils.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,8 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
     RecyclerView ofeers_recycler;
     @BindView(R.id.item_offers_search)
     SearchView item_offers_search;
+
+    String token;
 
     OffersAdapter offersAdapter;
 
@@ -124,6 +127,12 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
     }
 
     private void findViews() {
+        if (PreferenceUtils.getCompanyLogin(getContext())) {
+            token = PreferenceUtils.getCompanyToken(getContext());
+        } else if (PreferenceUtils.getUserLogin(getContext())) {
+            token = PreferenceUtils.getUserToken(getContext());
+        }
+
         showDialog();
         onLoadPage();
     }
@@ -131,7 +140,7 @@ public class OffersFragment extends androidx.fragment.app.Fragment implements Of
     private void onLoadPage() {
         reloadDialog.show();
         OffersCategoriesAPI offersCategoriesAPI = APIClient.getClient(SERVER_API_TEST).create(OffersCategoriesAPI.class);
-        offersCategoriesAPI.getOffersCategories(OFFER).enqueue(new Callback<GetOffersCategories>() {
+        offersCategoriesAPI.getOffersCategories(OFFER, token).enqueue(new Callback<GetOffersCategories>() {
             @Override
             public void onResponse(Call<GetOffersCategories> call, Response<GetOffersCategories> response) {
                 if (getContext() != null && response.body() != null) {

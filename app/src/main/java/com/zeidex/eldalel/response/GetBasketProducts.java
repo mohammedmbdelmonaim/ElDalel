@@ -19,6 +19,15 @@ public class GetBasketProducts {
     @SerializedName("cartCount")
     @Expose
     private String cartCount;
+    @SerializedName("taxes_percentage")
+    @Expose
+    private Double taxes_percentage;
+    @SerializedName("total_without_taxes")
+    @Expose
+    private Double total_without_taxes;
+    @SerializedName("taxes_amount")
+    @Expose
+    private Double taxes_amount;
     @SerializedName("products")
     @Expose
     private List<Product> products = null;
@@ -45,6 +54,30 @@ public class GetBasketProducts {
 
     public void setTotal(String total) {
         this.total = total;
+    }
+
+    public Double getTaxes_percentage() {
+        return taxes_percentage;
+    }
+
+    public void setTaxes_percentage(Double taxes_percentage) {
+        this.taxes_percentage = taxes_percentage;
+    }
+
+    public Double getTotal_without_taxes() {
+        return total_without_taxes;
+    }
+
+    public void setTotal_without_taxes(Double total_without_taxes) {
+        this.total_without_taxes = total_without_taxes;
+    }
+
+    public Double getTaxes_amount() {
+        return taxes_amount;
+    }
+
+    public void setTaxes_amount(Double taxes_amount) {
+        this.taxes_amount = taxes_amount;
     }
 
     public String getCartCount() {
@@ -196,10 +229,10 @@ public class GetBasketProducts {
         @SerializedName("old_price")
         @Expose
         private String oldPrice;
-        @SerializedName("wholesale_price")
+        @SerializedName("wholesaler_price")
         @Expose
         private String wholesalePrice;
-        @SerializedName("wholesale_old_price")
+        @SerializedName("wholesaler_old_price")
         @Expose
         private String wholesaleOldPrice;
         @SerializedName("weight")

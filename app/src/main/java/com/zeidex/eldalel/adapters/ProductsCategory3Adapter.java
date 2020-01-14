@@ -77,14 +77,14 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
             holder.phone_image_like.setChecked(false);
         }
 
-        if (productsCategory.getDiscount() == null) {
+        if (productsCategory.getDiscount() == null || productsCategory.getDiscount().equals("0")) {
             holder.discount_linear.setVisibility(View.GONE);
         } else {
             holder.discount_linear.setVisibility(View.VISIBLE);
             holder.discount_result.setText(productsCategory.getDiscount());
         }
 
-        if (productsCategory.getPrice_before() == null) {
+        if (productsCategory.getPrice_before() == null || productsCategory.getPrice_before().equals("0")) {
             holder.phone_text_price_before.setVisibility(View.GONE);
             holder.phone_text_price_before_label.setVisibility(View.GONE);
             holder.phone_text_price_before_view.setVisibility(View.GONE);

@@ -72,14 +72,14 @@ public class AccessoriesAdapter extends RecyclerView.Adapter<AccessoriesAdapter.
             holder.phone_image_like.setChecked(false);
         }
 
-        if (accessory.getDiscount() == null) {
+        if (accessory.getDiscount() == null || accessory.getDiscount().equals("0")) {
             holder.discount_linear.setVisibility(View.GONE);
         } else {
             holder.discount_linear.setVisibility(View.VISIBLE);
             holder.discount_result.setText(accessory.getDiscount());
         }
 
-        if (accessory.getPrice_before() == null) {
+        if (accessory.getPrice_before() == null|| accessory.getPrice_before().equals("0")) {
             holder.phone_text_price_before.setVisibility(View.GONE);
             holder.phone_text_price_before_label.setVisibility(View.GONE);
             holder.phone_text_price_before_view.setVisibility(View.GONE);

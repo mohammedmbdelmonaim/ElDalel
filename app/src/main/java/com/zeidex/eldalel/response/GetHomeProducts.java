@@ -138,6 +138,12 @@ public class GetHomeProducts {
         @SerializedName("old_price")
         String old_price;
 
+        @SerializedName("wholesaler_price")
+        String wholesale_price;
+
+        @SerializedName("wholesaler_old_price")
+        String wholesale_old_price;
+
         @SerializedName("shortDesc")
         String shortDesc;
 
@@ -162,8 +168,11 @@ public class GetHomeProducts {
         @SerializedName("favorite")
         String favorite;
 
-        @SerializedName("discount")
-        String discount;
+        @SerializedName("discount_user")
+        String discount_user;
+
+        @SerializedName("discount_company")
+        String discount_company;
 
         @SerializedName("available_quantity")
         String available_quantity;
@@ -286,12 +295,36 @@ public class GetHomeProducts {
             this.storage_group = storage_group;
         }
 
-        public String getDiscount() {
-            return discount;
+        public String getWholesale_price() {
+            return wholesale_price;
         }
 
-        public void setDiscount(String discount) {
-            this.discount = discount;
+        public void setWholesale_price(String wholesale_price) {
+            this.wholesale_price = wholesale_price;
+        }
+
+        public String getWholesale_old_price() {
+            return wholesale_old_price;
+        }
+
+        public void setWholesale_old_price(String wholesale_old_price) {
+            this.wholesale_old_price = wholesale_old_price;
+        }
+
+        public String getDiscount_user() {
+            return discount_user;
+        }
+
+        public void setDiscount_user(String discount_user) {
+            this.discount_user = discount_user;
+        }
+
+        public String getDiscount_company() {
+            return discount_company;
+        }
+
+        public void setDiscount_company(String discount_company) {
+            this.discount_company = discount_company;
         }
 
         public String getAvailable_quantity() {
@@ -345,12 +378,12 @@ public class GetHomeProducts {
         @SerializedName("old_price")
         @Expose
         private String oldPrice;
-        @SerializedName("wholesale_price")
+        @SerializedName("wholesaler_price")
         @Expose
-        private Double wholesalePrice;
-        @SerializedName("wholesale_old_price")
+        private String wholesalePrice;
+        @SerializedName("wholesaler_old_price")
         @Expose
-        private Double wholesaleOldPrice;
+        private String wholesaleOldPrice;
         @SerializedName("shortDesc")
         @Expose
         private String shortDesc;
@@ -473,19 +506,19 @@ public class GetHomeProducts {
             this.oldPrice = oldPrice;
         }
 
-        public Double getWholesalePrice() {
+        public String getWholesalePrice() {
             return wholesalePrice;
         }
 
-        public void setWholesalePrice(Double wholesalePrice) {
+        public void setWholesalePrice(String wholesalePrice) {
             this.wholesalePrice = wholesalePrice;
         }
 
-        public Double getWholesaleOldPrice() {
+        public String getWholesaleOldPrice() {
             return wholesaleOldPrice;
         }
 
-        public void setWholesaleOldPrice(Double wholesaleOldPrice) {
+        public void setWholesaleOldPrice(String wholesaleOldPrice) {
             this.wholesaleOldPrice = wholesaleOldPrice;
         }
 

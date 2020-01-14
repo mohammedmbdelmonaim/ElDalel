@@ -72,14 +72,14 @@ public class HomeOfferAdapter extends RecyclerView.Adapter<HomeOfferAdapter.Home
             holder.phone_image_like.setChecked(false);
         }
 
-        if (offer.getDiscount() == null) {
+        if (offer.getDiscount() == null || offer.getDiscount().equals("0")) {
             holder.discount_linear.setVisibility(View.GONE);
         } else {
             holder.discount_linear.setVisibility(View.VISIBLE);
             holder.discount_result.setText(offer.getDiscount());
         }
 
-        if (offer.getPrice_before() == null || offer.getPrice_before().equals("")) {
+        if (offer.getPrice_before() == null || offer.getPrice_before().equals("0")) {
             holder.phone_text_price_before.setVisibility(View.GONE);
             holder.phone_text_price_before_label.setVisibility(View.GONE);
             holder.phone_text_price_before_view.setVisibility(View.GONE);

@@ -260,7 +260,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                                 }
                             }
 
-                        } else if (loo.equalsIgnoreCase("ar")) {
+                        } else {
                             language = "arabic";
                             for (int i = 0; i < getBasketProducts.getCarts().size(); i++) {
                                 String arr[] = getBasketProducts.getCarts().get(i).getProduct().getNameAr().split(" ", 2); // get first word
@@ -374,8 +374,10 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                             }
 
                             mTotal_price = Double.parseDouble(getBasketProducts.getTotal());
-                            double total_without_tax = mTotal_price * 100 / 105;
-                            double tax = mTotal_price - total_without_tax;
+                            double total_without_tax = getBasketProducts.getTotal_without_taxes();
+                            double tax = getBasketProducts.getTaxes_amount();
+//                            double total_without_tax = mTotal_price * 100 / 105;
+//                            double tax = mTotal_price - total_without_tax;
 
                             totalString = PriceFormatter.toDecimalRsString(mTotal_price, getContext());
                             totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getContext());

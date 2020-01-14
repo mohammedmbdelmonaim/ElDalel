@@ -25,6 +25,7 @@ import com.zeidex.eldalel.services.NewArrivalsAPI;
 import com.zeidex.eldalel.utils.APIClient;
 import com.zeidex.eldalel.utils.Animatoo;
 import com.zeidex.eldalel.utils.ChangeLang;
+import com.zeidex.eldalel.utils.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,7 @@ public class NewArrivalsFragment extends androidx.fragment.app.Fragment implemen
     @BindView(R.id.new_arrival_recycler)
     RecyclerView new_arrival_recycler;
     NewArrivalsCategoriesAdapter newArrivalsCategoriesAdapter;
+    String token;
 
     Dialog reloadDialog;
     private List<GetOffersCategories.Category> categories;
@@ -74,6 +76,11 @@ public class NewArrivalsFragment extends androidx.fragment.app.Fragment implemen
     }
 
     private void findViews() {
+        if (PreferenceUtils.getCompanyLogin(getContext())) {
+            token = PreferenceUtils.getCompanyToken(getContext());
+        } else if (PreferenceUtils.getUserLogin(getContext())) {
+            token = PreferenceUtils.getUserToken(getContext());
+        }
         showDialog();
         onLoadPage();
     }
@@ -81,7 +88,7 @@ public class NewArrivalsFragment extends androidx.fragment.app.Fragment implemen
     private void onLoadPage() {
         reloadDialog.show();
         NewArrivalsAPI offersCategoriesAPI = APIClient.getClient(SERVER_API_TEST).create(NewArrivalsAPI.class);
-        offersCategoriesAPI.getNewArrivalsCategories(NO_PRODUCTS_STATUS, NEW_ARRIVAL).enqueue(new Callback<GetOffersCategories>() {
+        offersCategoriesAPI.getNewArrivalsCategories(NO_PRODUCTS_STATUS, NEW_ARRIVAL, token).enqueue(new Callback<GetOffersCategories>() {
             @Override
             public void onResponse(Call<GetOffersCategories> call, Response<GetOffersCategories> response) {
                 int code = response.body().getCode();

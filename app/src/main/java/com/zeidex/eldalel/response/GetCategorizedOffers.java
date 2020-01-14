@@ -114,10 +114,10 @@ public class GetCategorizedOffers {
             @SerializedName("old_price")
             @Expose
             private Object oldPrice;
-            @SerializedName("wholesale_price")
+            @SerializedName("wholesaler_price")
             @Expose
             private Integer wholesalePrice;
-            @SerializedName("wholesale_old_price")
+            @SerializedName("wholesaler_old_price")
             @Expose
             private Object wholesaleOldPrice;
             @SerializedName("weight")

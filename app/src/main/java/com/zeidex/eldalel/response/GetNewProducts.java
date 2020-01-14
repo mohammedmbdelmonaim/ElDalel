@@ -80,10 +80,10 @@ public class GetNewProducts {
         @SerializedName("old_price")
         String old_price;
 
-        @SerializedName("wholesale_price")
+        @SerializedName("wholesaler_price")
         String wholesale_price;
 
-        @SerializedName("wholesale_old_price")
+        @SerializedName("wholesaler_old_price")
         String wholesale_old_price;
 
         @SerializedName("weight")

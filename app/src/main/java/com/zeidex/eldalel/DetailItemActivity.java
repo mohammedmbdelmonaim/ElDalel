@@ -231,60 +231,53 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
         });
     }
 
-
-    public void onClickLike(int id) {
-        detail_like_img.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!PreferenceUtils.getUserLogin(DetailItemActivity.this) && isChecked && !PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
-                    Toasty.error(DetailItemActivity.this, getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
-                    detail_like_img.setChecked(false);
-                    return;
-                }
-                if ((PreferenceUtils.getUserLogin(DetailItemActivity.this) || PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) && !isChecked) {
-                    Toasty.error(DetailItemActivity.this, getString(R.string.unlike_fiv), Toast.LENGTH_LONG).show();
-                    detail_like_img.setChecked(true);
-                    return;
-                }
-                if ((PreferenceUtils.getUserLogin(DetailItemActivity.this) || PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) && isChecked) {
-                    reloadDialog.show();
-                    convertDaraToJson(id);
-                    AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
-                    Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
-                    if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
-                        getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(favourite_post);
-                    } else {
-                        getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(favourite_post);
+        public void onClickLike(int id) {
+            detail_like_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!PreferenceUtils.getUserLogin(DetailItemActivity.this) && !PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
+                        Toasty.error(DetailItemActivity.this, getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
+                        detail_like_img.setChecked(false);
+                        return;
                     }
-                    getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
-                        @Override
-                        public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
-                            GetAddToFavouriteResponse getAddToFavouriteResponse = response.body();
-                            if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
-                                Toasty.success(DetailItemActivity.this, getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
-                                isLike = true;
-                                int pos = getIntent().getIntExtra("pos", -1);
-//                                ArrayList<ProductsCategory> productsCategories = getIntent().getParcelableArrayListExtra("similar_products");
-                                if (related_products != null && related_products.size() > 0) {
-                                    ProductsCategory productsCategory = related_products.get(pos);
-                                    productsCategory.setLike("1");
-                                    related_products.set(pos, productsCategory);
-                                    phonesAdapter.notifyItemChanged(pos);
+                    if ((PreferenceUtils.getUserLogin(DetailItemActivity.this) || PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) && !detail_like_img.isChecked()) {
+                        Toasty.error(DetailItemActivity.this, getString(R.string.unlike_fiv), Toast.LENGTH_LONG).show();
+                        detail_like_img.setChecked(true);
+                        return;
+                    }
+                    if ((PreferenceUtils.getUserLogin(DetailItemActivity.this) || PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) && detail_like_img.isChecked()) {
+                        reloadDialog.show();
+                        convertDaraToJson(id);
+                        AddToFavouriteApi addToFavouriteApi = APIClient.getClient(SERVER_API_TEST).create(AddToFavouriteApi.class);
+                        Call<GetAddToFavouriteResponse> getAddToFavouriteResponseCall;
+                        if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
+                            getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavouritecompany(favourite_post);
+                        } else {
+                            getAddToFavouriteResponseCall = addToFavouriteApi.getAddToFavourite(favourite_post);
+                        }
+                        getAddToFavouriteResponseCall.enqueue(new Callback<GetAddToFavouriteResponse>() {
+                            @Override
+                            public void onResponse(Call<GetAddToFavouriteResponse> call, Response<GetAddToFavouriteResponse> response) {
+                                GetAddToFavouriteResponse getAddToFavouriteResponse = response.body();
+                                if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
+                                    Toasty.success(DetailItemActivity.this, getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
+                                    isLike = true;
                                 }
+                                reloadDialog.dismiss();
                             }
-                            reloadDialog.dismiss();
-                        }
 
-                        @Override
-                        public void onFailure(Call<GetAddToFavouriteResponse> call, Throwable t) {
-                            Toasty.error(DetailItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
-                            reloadDialog.dismiss();
-                        }
-                    });
+                            @Override
+                            public void onFailure(Call<GetAddToFavouriteResponse> call, Throwable t) {
+                                Toasty.error(DetailItemActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                                reloadDialog.dismiss();
+                            }
+                        });
+                    }
+
                 }
-            }
-        });
-    }
+            });
+        }
+
 
 
     boolean isLike = false;
@@ -452,20 +445,34 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                             imageSlider.startAutoCycle();
                         }
 
-                        if (currentProduct.getDiscount() == null) {
+                        String discount;
+                        Double price;
+                        Double oldPrice;
+
+                        if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
+                            discount = currentProduct.getDiscount_company();
+                            price = currentProduct.getWholesale_price();
+                            oldPrice = currentProduct.getWholesale_old_price();
+                        } else {
+                            discount = currentProduct.getDiscount();
+                            price = currentProduct.getPrice();
+                            oldPrice = currentProduct.getOld_price();
+                        }
+
+                        if (discount == null || discount.equals("0")) {
                             detailـdiscount_linear.setVisibility(View.INVISIBLE);
                         } else {
                             detailـdiscount_linear.setVisibility(View.VISIBLE);
-                            detail_discound_text.setText(getDetailProduct.getData().getProduct().getDiscount());
+                            detail_discound_text.setText(discount);
                         }
 
-                        if (currentProduct.getOld_price() == null) {
+                        if (oldPrice == null || oldPrice == 0) {
                             detail_item_text_price_before_linear.setVisibility(View.GONE);
-
                         } else {
                             detail_item_text_price_before_linear.setVisibility(View.VISIBLE);
-                            detail_item_text_price_before.setText(PriceFormatter.toDecimalString(getDetailProduct.getData().getProduct().getOld_price(), getApplicationContext()));
+                            detail_item_text_price_before.setText(PriceFormatter.toDecimalString(oldPrice, DetailItemActivity.this));
                         }
+
                         if (!token.equalsIgnoreCase("")) {
 
                             int cartStatus = Integer.parseInt(currentProduct.getCart());
@@ -499,7 +506,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
 
                         categoryId = Integer.parseInt(getDetailProduct.getData().getProduct().getSubcategory().getCategory_id());
 
-                        detail_item_text_price.setText(PriceFormatter.toDecimalString(getDetailProduct.getData().getProduct().getPrice(), getApplicationContext()));
+                        detail_item_text_price.setText(PriceFormatter.toDecimalString(price, getApplicationContext()));
 
                         Locale locale = ChangeLang.getLocale(getResources());
                         String loo = locale.getLanguage();
@@ -516,20 +523,35 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                                 String arr[] = getDetailProduct.getData().getRelated().get(j).getName().split(" ", 2); // get first word
                                 String firstWord = arr[0];
 
+                                GetDetailProduct.Related relatedProduct = getDetailProduct.getData().getRelated().get(j);
+                                String related_discount;
+                                String related_price;
+                                String related_oldPrice;
+
+                                if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
+                                    related_discount = relatedProduct.getDiscount();
+                                    related_price = relatedProduct.getWholesale_price();
+                                    related_oldPrice = relatedProduct.getWholesale_old_price();
+                                } else {
+                                    related_discount = relatedProduct.getDiscount();
+                                    related_price = relatedProduct.getPrice();
+                                    related_oldPrice = relatedProduct.getOld_price();
+                                }
+
                                 if (getDetailProduct.getData().getRelated().get(j).getPhotos().size() == 0) {
                                     related_products.add(new ProductsCategory(getDetailProduct.getData().getRelated().get(j).getId(), "",
-                                            getDetailProduct.getData().getRelated().get(j).getDiscount(), firstWord, getDetailProduct.getData().getRelated().get(j).getName(),
-                                            getDetailProduct.getData().getRelated().get(j).getPrice(), getDetailProduct.getData().getRelated().get(j).getOld_price(),
+                                            related_discount, firstWord, getDetailProduct.getData().getRelated().get(j).getName(),
+                                            related_price, related_oldPrice,
                                             getDetailProduct.getData().getRelated().get(j).getFavorite(), getDetailProduct.getData().getRelated().get(j).getCart(), getDetailProduct.getData().getRelated().get(j).getAvailable_quantity()));
                                 } else {
                                     related_products.add(new ProductsCategory(getDetailProduct.getData().getRelated().get(j).getId(), getDetailProduct.getData().getRelated().get(j).getPhotos().get(0).getFilename(),
-                                            getDetailProduct.getData().getRelated().get(j).getDiscount(), firstWord, getDetailProduct.getData().getRelated().get(j).getName(),
-                                            getDetailProduct.getData().getRelated().get(j).getPrice(), getDetailProduct.getData().getRelated().get(j).getOld_price(),
+                                            related_discount, firstWord, getDetailProduct.getData().getRelated().get(j).getName(),
+                                            related_price, related_oldPrice,
                                             getDetailProduct.getData().getRelated().get(j).getFavorite(), getDetailProduct.getData().getRelated().get(j).getCart(), getDetailProduct.getData().getRelated().get(j).getAvailable_quantity()));
                                 }
                             }
 
-                        } else if (loo.equalsIgnoreCase("ar")) {
+                        } else {
                             category_name = getDetailProduct.getData().getProduct().getName_ar();
                             detail_title_header_text.setText(getDetailProduct.getData().getProduct().getName_ar());
                             detail_name_text.setText(getDetailProduct.getData().getProduct().getSubcategory().getName_ar());
@@ -542,15 +564,30 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                                 String arr[] = getDetailProduct.getData().getRelated().get(j).getName().split(" ", 2); // get first word
                                 String firstWord = arr[0];
 
+                                GetDetailProduct.Related relatedProduct = getDetailProduct.getData().getRelated().get(j);
+                                String related_discount;
+                                String related_price;
+                                String related_oldPrice;
+
+                                if (PreferenceUtils.getCompanyLogin(DetailItemActivity.this)) {
+                                    related_discount = relatedProduct.getDiscount();
+                                    related_price = relatedProduct.getWholesale_price();
+                                    related_oldPrice = relatedProduct.getWholesale_old_price();
+                                } else {
+                                    related_discount = relatedProduct.getDiscount();
+                                    related_price = relatedProduct.getPrice();
+                                    related_oldPrice = relatedProduct.getOld_price();
+                                }
+
                                 if (getDetailProduct.getData().getRelated().get(j).getPhotos().size() == 0) {
                                     related_products.add(new ProductsCategory(getDetailProduct.getData().getRelated().get(j).getId(), "",
-                                            getDetailProduct.getData().getRelated().get(j).getDiscount(), firstWord, getDetailProduct.getData().getRelated().get(j).getName_ar(),
-                                            getDetailProduct.getData().getRelated().get(j).getPrice(), getDetailProduct.getData().getRelated().get(j).getOld_price(),
+                                            related_discount, firstWord, getDetailProduct.getData().getRelated().get(j).getName_ar(),
+                                            related_price,related_oldPrice,
                                             getDetailProduct.getData().getRelated().get(j).getFavorite(), getDetailProduct.getData().getRelated().get(j).getCart(), getDetailProduct.getData().getRelated().get(j).getAvailable_quantity()));
                                 } else {
                                     related_products.add(new ProductsCategory(getDetailProduct.getData().getRelated().get(j).getId(), getDetailProduct.getData().getRelated().get(j).getPhotos().get(0).getFilename(),
-                                            getDetailProduct.getData().getRelated().get(j).getDiscount(), firstWord, getDetailProduct.getData().getRelated().get(j).getName_ar(),
-                                            getDetailProduct.getData().getRelated().get(j).getPrice(), getDetailProduct.getData().getRelated().get(j).getOld_price(),
+                                            related_discount, firstWord, getDetailProduct.getData().getRelated().get(j).getName_ar(),
+                                            related_price, related_oldPrice,
                                             getDetailProduct.getData().getRelated().get(j).getFavorite(), getDetailProduct.getData().getRelated().get(j).getCart(), getDetailProduct.getData().getRelated().get(j).getAvailable_quantity()));
                                 }
                             }
@@ -719,12 +756,14 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
             @Override
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
                 GetAddToCardResponse getAddToCardResponse = response.body();
-                if (getAddToCardResponse.getCode() == 200) {
+                if (getAddToCardResponse.getCode() == 200 && getAddToCardResponse.getStatus()) {
                     Toasty.success(DetailItemActivity.this, getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
                     phonesAdapter.getProductsCategoryList().get(position).setCart("0");
                     phonesAdapter.notifyItemChanged(position);
                     isChanged = true;
                     PreferenceUtils.saveCountOfItemsBasket(getApplicationContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                }else {
+                    Toasty.error(DetailItemActivity.this, getAddToCardResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
                 reloadDialog.dismiss();
             }
@@ -761,7 +800,7 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
             public void onResponse(Call<GetAddToCardResponse> call, Response<GetAddToCardResponse> response) {
                 if (response.body() != null) {
                     GetAddToCardResponse getAddToCardResponse = response.body();
-                    if (getAddToCardResponse.getCode() == 200 && getAddToCardResponse.getItemsCount() != null) {
+                    if (getAddToCardResponse.getCode() == 200 && getAddToCardResponse.getStatus()) {
 //                        Toasty.success(DetailItemActivity.this, getString(R.string.add_to_card), Toast.LENGTH_LONG).show();
                         details_add_to_card.setBackgroundColor(Color.parseColor("#46C004"));
                         details_add_to_card.setText(R.string.add_to_card);
@@ -769,6 +808,8 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                         cartCountLinearLayout.setVisibility(View.GONE);
                         isAdded = true;
                         PreferenceUtils.saveCountOfItemsBasket(getApplicationContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
+                    }else {
+                        Toasty.error(DetailItemActivity.this, getAddToCardResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
                 reloadDialog.dismiss();

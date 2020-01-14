@@ -18,6 +18,7 @@ import static com.zeidex.eldalel.FilterActivity.FILTER_HAS_OFFER;
 import static com.zeidex.eldalel.FilterActivity.FILTER_IS_NEW_ARRIVAL;
 import static com.zeidex.eldalel.FilterActivity.FILTER_PRICE_FROM;
 import static com.zeidex.eldalel.FilterActivity.FILTER_PRICE_TO;
+import static com.zeidex.eldalel.FilterActivity.FILTER_PRODUCT_NAME;
 import static com.zeidex.eldalel.FilterActivity.FILTER_SUBCATEGORY_ID;
 import static com.zeidex.eldalel.NewArrivalsFragment.NEW_ARRIVAL;
 import static com.zeidex.eldalel.OfferItemActivity.OFFERS;
@@ -46,6 +47,7 @@ public class SearchActivity extends BaseActivity {
         int filterPriceTo = intent.getIntExtra(FILTER_PRICE_TO, -1);
         boolean filterHasOffer = intent.getBooleanExtra(FILTER_HAS_OFFER, false);
         boolean filterIsNewArrival = intent.getBooleanExtra(FILTER_IS_NEW_ARRIVAL, false);
+        String filterSearchResults = intent.getStringExtra(FILTER_PRODUCT_NAME);
 
 
         Bundle bundle = new Bundle();
@@ -58,6 +60,7 @@ public class SearchActivity extends BaseActivity {
             bundle.putInt(FILTER_SUBCATEGORY_ID, filterSubcategoryId);
             bundle.putInt(FILTER_PRICE_FROM, filterPriceFrom);
             bundle.putInt(FILTER_PRICE_TO, filterPriceTo);
+            if(filterSearchResults != null) bundle.putString(FILTER_PRODUCT_NAME, filterSearchResults);
             if (filterHasOffer) bundle.putString(FILTER_STATUS, OFFERS);
             else if (filterIsNewArrival) bundle.putString(FILTER_STATUS, NEW_ARRIVAL);
         }

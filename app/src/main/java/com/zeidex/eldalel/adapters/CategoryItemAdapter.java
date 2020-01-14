@@ -38,6 +38,7 @@ public class CategoryItemAdapter extends RecyclerView.Adapter<CategoryItemAdapte
     }
     public void setProductsList(List<ProductsCategory> productsList){this.productsList = productsList;}
 
+
     public void setCategoryOperation(CategoryItemOperation categoryOperation) {
         this.categoryOperation = categoryOperation;
     }
@@ -94,7 +95,7 @@ public class CategoryItemAdapter extends RecyclerView.Adapter<CategoryItemAdapte
         }
 
         String oldPrice = currentOffer.getPrice_before();
-        if (oldPrice == null) {
+        if (oldPrice == null || oldPrice.equals("0")) {
             holder.offerItemOldPriceText.setVisibility(View.INVISIBLE);
             holder.discountLabel.setVisibility(View.INVISIBLE);
         } else {
@@ -105,7 +106,7 @@ public class CategoryItemAdapter extends RecyclerView.Adapter<CategoryItemAdapte
         }
 
         String discount = currentOffer.getDiscount();
-        if (discount == null) {
+        if (discount == null || discount.equals("0")) {
             holder.offerItemDiscountText.setVisibility(View.GONE);
         } else {
             double discountDouble = Double.parseDouble(discount);

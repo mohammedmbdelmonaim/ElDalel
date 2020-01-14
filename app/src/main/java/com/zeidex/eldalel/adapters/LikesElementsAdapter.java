@@ -65,7 +65,7 @@ public class LikesElementsAdapter extends RecyclerView.Adapter<LikesElementsAdap
         ProductsCategory productsCategory = productList.get(position);
 
         String discount = productsCategory.getDiscount();
-        if (discount == null) {
+        if (discount == null || discount.equals("0")) {
             holder.discountLinear.setVisibility(View.GONE);
         } else {
             holder.discountLinear.setVisibility(View.VISIBLE);
@@ -79,7 +79,7 @@ public class LikesElementsAdapter extends RecyclerView.Adapter<LikesElementsAdap
         }
 
         String oldPrice = productsCategory.getPrice_before();
-        if (oldPrice == null) {
+        if (oldPrice == null || oldPrice.equals("0.0")) {
             holder.likeItemPriceBeforeText.setVisibility(View.INVISIBLE);
             holder.likeItemPriceBeforeLabel.setVisibility(View.INVISIBLE);
         } else {

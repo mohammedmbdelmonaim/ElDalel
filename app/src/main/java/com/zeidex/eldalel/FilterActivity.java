@@ -56,6 +56,7 @@ public class FilterActivity extends BaseActivity implements View.OnClickListener
     public static final String FILTER_SUBCATEGORY_ID = "filter_subcategory_id";
     public static final String FILTER_HAS_OFFER = "filter_has_offer";
     public static final String FILTER_IS_NEW_ARRIVAL = "filter_is_new_arrival";
+    public static final String FILTER_PRODUCT_NAME = "filter_product_name";
 
     @BindView(R.id.filter_categories_linear)
     LinearLayoutCompat filter_categories_linear;
@@ -164,6 +165,7 @@ public class FilterActivity extends BaseActivity implements View.OnClickListener
         intent.putExtra(FILTER_PRICE_TO, Integer.parseInt(filter_prices_internal_to_text.getText().toString()));
         intent.putExtra(FILTER_HAS_OFFER, filter_offer_radio.isChecked());
         intent.putExtra(FILTER_IS_NEW_ARRIVAL, isNewArrival);
+        intent.putExtra(FILTER_PRODUCT_NAME, getIntent().getStringExtra(FILTER_PRODUCT_NAME));
         startActivity(intent);
         finish();
         Animatoo.animateSwipeRight(this);
@@ -189,7 +191,7 @@ public class FilterActivity extends BaseActivity implements View.OnClickListener
         subCategoryId = getIntent().getIntExtra(SUBCATEGORY_ID_INTENT_EXTRA, -1);
 
         isNewArrival = getIntent().getBooleanExtra("is_new_arrival", false);
-        if(isNewArrival){
+        if (isNewArrival) {
             filter_discount_linear.setVisibility(View.GONE);
         }
         boolean hasOffer = getIntent().getBooleanExtra("has_offer", false);
@@ -236,10 +238,14 @@ public class FilterActivity extends BaseActivity implements View.OnClickListener
                     if (code == 200) {
                         categories = response.body().getData().getCategories();
                         if (categories.size() > 0) {
-                            for (GetAllCategories.Category category : categories) {
-                                if (category.getId() == categoryId) {
-                                    categoryInitialPosition = categories.indexOf(category);
-                                    break;
+                            if (categoryId == -1) {
+                                categories.get(0).getId();
+                            } else {
+                                for (GetAllCategories.Category category : categories) {
+                                    if (category.getId() == categoryId) {
+                                        categoryInitialPosition = categories.indexOf(category);
+                                        break;
+                                    }
                                 }
                             }
                             FilterCategoriesAdapter filterCategoriesAdapter = new FilterCategoriesAdapter(FilterActivity.this, categories, categoryInitialPosition);
@@ -265,10 +271,14 @@ public class FilterActivity extends BaseActivity implements View.OnClickListener
             subcategories = categories.get(position).getSubcategories();
             if (subcategories.size() > 0) {
                 if (isInitialSetup) {
-                    for (GetAllCategories.Subcategory subcategory : subcategories) {
-                        if (subcategory.getId() == subCategoryId) {
-                            subcategoryInitialPosition = subcategories.indexOf(subcategory);
-                            break;
+                    if (subCategoryId == -1) {
+                        subcategories.get(0).getId();
+                    } else {
+                        for (GetAllCategories.Subcategory subcategory : subcategories) {
+                            if (subcategory.getId() == subCategoryId) {
+                                subcategoryInitialPosition = subcategories.indexOf(subcategory);
+                                break;
+                            }
                         }
                     }
                 } else {

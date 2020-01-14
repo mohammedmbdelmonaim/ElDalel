@@ -296,10 +296,10 @@ public class Photo {
         @SerializedName("old_price")
         @Expose
         private String oldPrice;
-        @SerializedName("wholesale_price")
+        @SerializedName("wholesaler_price")
         @Expose
         private String wholesalePrice;
-        @SerializedName("wholesale_old_price")
+        @SerializedName("wholesaler_old_price")
         @Expose
         private String wholesaleOldPrice;
         @SerializedName("weight")
