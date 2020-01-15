@@ -25,6 +25,8 @@ public class MainDetailSharedViewModel extends ViewModel {
     private MutableLiveData<Boolean> isMainChanged;
     private MutableLiveData<Boolean> isFavoritesChanged;
     private MutableLiveData<Map<String,Integer>> offerChangedProps;
+    private MutableLiveData<Map<String,Integer>> mainChangedProps;
+    private MutableLiveData<Map<String,Integer>> favChangedProps;
 
     public MainDetailSharedViewModel() {
 //        home_category1 = new MutableLiveData<>();
@@ -35,6 +37,8 @@ public class MainDetailSharedViewModel extends ViewModel {
         isMainChanged = new MutableLiveData<>();
         isFavoritesChanged = new MutableLiveData<>();
         offerChangedProps = new MutableLiveData<>();
+        mainChangedProps = new MutableLiveData<>();
+        favChangedProps = new MutableLiveData<>();
     }
 
     public void setIsMainChanged(){
@@ -61,9 +65,34 @@ public class MainDetailSharedViewModel extends ViewModel {
         offerChangedProps.setValue(offerPropMap);
     }
 
+    public void setMainChangedProps(int position, int cart, int fav){
+        Map<String, Integer> offerPropMap = new HashMap<>();
+        offerPropMap.put("position", position);
+        offerPropMap.put("cart", cart);
+        offerPropMap.put("fav", fav);
+        mainChangedProps.setValue(offerPropMap);
+    }
+
+    public void setFavChangedProps(int position, int cart, int fav){
+        Map<String, Integer> offerPropMap = new HashMap<>();
+        offerPropMap.put("position", position);
+        offerPropMap.put("cart", cart);
+        offerPropMap.put("fav", fav);
+        favChangedProps.setValue(offerPropMap);
+    }
+
     public LiveData<Map<String,Integer>> getOfferChangedProp(){
         return offerChangedProps;
     }
+
+    public LiveData<Map<String,Integer>> getMainChangedProp(){
+        return mainChangedProps;
+    }
+
+    public LiveData<Map<String,Integer>> getFavChangedProp(){
+        return favChangedProps;
+    }
+
 
     public void resetMainChanged(){
         isMainChanged.setValue(false);
@@ -74,6 +103,10 @@ public class MainDetailSharedViewModel extends ViewModel {
     }
 
     public void resetOffersChanged(){offerChangedProps.setValue(new HashMap<>());}
+
+    public void resetMainProps(){mainChangedProps.setValue(new HashMap<>());}
+
+    public void resetFavProps(){favChangedProps.setValue(new HashMap<>());}
 
 //    public void setHome_category1(ArrayList<ProductsCategory> productsCategories){
 //        home_category1.setValue(productsCategories);

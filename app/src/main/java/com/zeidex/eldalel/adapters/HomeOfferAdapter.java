@@ -107,8 +107,8 @@ public class HomeOfferAdapter extends RecyclerView.Adapter<HomeOfferAdapter.Home
 
         Glide.with(context)
                 .load("https://dleel.com/homepages/get/" + offer.getImgUrl())
-                .placeholder(circularProgressDrawable)
-                .error(R.drawable.condition_logo)
+                .placeholder(R.drawable.condition_logo)
+//                .error(R.drawable.condition_logo)
                 .centerCrop()
                 .into(holder.phone_img_url);
 

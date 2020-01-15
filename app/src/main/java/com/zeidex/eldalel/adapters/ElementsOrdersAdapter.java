@@ -102,8 +102,8 @@ public class ElementsOrdersAdapter extends RecyclerView.Adapter<ElementsOrdersAd
 
         Glide.with(context)
                 .load("https://dleel.com/homepages/get/" + order.getPhotos().get(0).getFilename())
-                .placeholder(circularProgressDrawable)
-                .error(R.drawable.condition_logo)
+                .placeholder(R.drawable.condition_logo)
+//                .error(R.drawable.condition_logo)
                 .centerCrop()
                 .into(holder.order_element_img);
 

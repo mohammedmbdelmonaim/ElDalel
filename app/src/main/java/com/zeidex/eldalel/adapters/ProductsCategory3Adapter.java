@@ -110,8 +110,8 @@ public class ProductsCategory3Adapter extends RecyclerView.Adapter<ProductsCateg
 
         Glide.with(context)
                 .load("https://dleel.com/homepages/get/" + productsCategory.getImgUrl())
-                .placeholder(circularProgressDrawable)
-                .error(R.drawable.condition_logo)
+                .placeholder(R.drawable.condition_logo)
+//                .error(R.drawable.condition_logo)
                 .centerCrop()
                 .into(holder.phone_img_url);
 

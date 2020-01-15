@@ -111,8 +111,8 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
 
             Glide.with(getContext())
                     .load("https://dleel.com/homepages/get/" + imageName)
-                    .placeholder(circularProgressDrawable)
-                    .error(R.drawable.condition_logo)
+                    .placeholder(R.drawable.condition_logo)
+//                    .error(R.drawable.condition_logo)
                     .centerCrop()
                     .into(categoryCardImage);
         }

@@ -101,8 +101,8 @@ public class LikesElementsAdapter extends RecyclerView.Adapter<LikesElementsAdap
         if (productsCategory.getImgUrl() != null) {
             Glide.with(context)
                     .load("https://dleel.com/homepages/get/" + productsCategory.getImgUrl())
-                    .placeholder(circularProgressDrawable)
-                    .error(R.drawable.condition_logo)
+                    .placeholder(R.drawable.condition_logo)
+//                    .error(R.drawable.condition_logo)
                     .centerCrop()
                     .into(holder.likeItemImageView);
         }

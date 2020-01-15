@@ -110,8 +110,8 @@ public class PhonesAdapter extends RecyclerView.Adapter<PhonesAdapter.PhoneHolde
 
         Glide.with(context)
                 .load("https://dleel.com/homepages/get/" + phoneModel.getImgUrl())
-                .placeholder(circularProgressDrawable)
-                .error(R.drawable.condition_logo)
+                .placeholder(R.drawable.condition_logo)
+//                .error(R.drawable.condition_logo)
                 .centerCrop()
                 .into(holder.phone_img_url);
         if (PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) {

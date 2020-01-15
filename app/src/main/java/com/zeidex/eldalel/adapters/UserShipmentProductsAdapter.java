@@ -86,8 +86,8 @@ public class UserShipmentProductsAdapter extends RecyclerView.Adapter<UserShipme
 
         Glide.with(context)
                 .load("https://dleel.com/homepages/get/" + userShipmentProduct.getProduct().getPhotos().get(0).getFilename())
-                .placeholder(mCircularProgressDrawable)
-                .error(R.drawable.condition_logo)
+                .placeholder(R.drawable.condition_logo)
+//                .error(R.drawable.condition_logo)
                 .centerCrop()
                 .into(holder.order_product_iv);
     }

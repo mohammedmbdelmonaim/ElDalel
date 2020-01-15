@@ -634,7 +634,7 @@ public class OffersItemsActivity extends BaseActivity implements CategoryItemAda
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1111) {
-            if (data.getBooleanExtra("databack", false)) {
+            if (data.getBooleanExtra("favorite_databack", false)) {
                 allProductsCategory.get(position_detail).setLike("1");
                 productsAdapter.notifyItemChanged(position_detail);
             }

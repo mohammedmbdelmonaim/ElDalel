@@ -79,8 +79,8 @@ public class BasketElementsAdapter extends RecyclerView.Adapter<BasketElementsAd
 
         Glide.with(context)
                 .load("https://dleel.com/homepages/get/" + basketProductsModel.getImgurl())
-                .placeholder(circularProgressDrawable)
-                .error(R.drawable.condition_logo)
+                .placeholder(R.drawable.condition_logo)
+//                .error(R.drawable.condition_logo)
                 .centerCrop()
                 .into(holder.basket_element_img);
 

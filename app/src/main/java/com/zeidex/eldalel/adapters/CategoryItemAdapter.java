@@ -148,8 +148,8 @@ public class CategoryItemAdapter extends RecyclerView.Adapter<CategoryItemAdapte
 
             Glide.with(context)
                     .load("https://dleel.com/homepages/get/" + currentOffer.getImgUrl())
-                    .placeholder(circularProgressDrawable)
-                    .error(R.drawable.condition_logo)
+                    .placeholder(R.drawable.condition_logo)
+//                    .error(R.drawable.condition_logo)
                     .centerCrop()
                     .into(holder.offerItemImage);
         }

@@ -107,8 +107,8 @@ public class AccessoriesAdapter extends RecyclerView.Adapter<AccessoriesAdapter.
 
         Glide.with(context)
                 .load("https://dleel.com/homepages/get/" + accessory.getImgUrl())
-                .placeholder(circularProgressDrawable)
-                .error(R.drawable.condition_logo)
+                .placeholder(R.drawable.condition_logo)
+//                .error(R.drawable.condition_logo)
                 .centerCrop()
                 .into(holder.phone_img_url);
 
