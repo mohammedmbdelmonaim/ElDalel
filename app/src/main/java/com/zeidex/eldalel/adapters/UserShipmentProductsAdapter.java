@@ -79,10 +79,15 @@ public class UserShipmentProductsAdapter extends RecyclerView.Adapter<UserShipme
         }
         holder.order_date_tv.setText(userShipmentProduct.getCreatedAt() + "");
 
+        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
+        circularProgressDrawable .setStrokeWidth(5f);
+        circularProgressDrawable .setCenterRadius(30f);
+        circularProgressDrawable .start();
+
         Glide.with(context)
                 .load("https://dleel.com/homepages/get/" + userShipmentProduct.getProduct().getPhotos().get(0).getFilename())
                 .placeholder(mCircularProgressDrawable)
-                .error(R.drawable.ic_logo)
+                .error(R.drawable.condition_logo)
                 .centerCrop()
                 .into(holder.order_product_iv);
     }

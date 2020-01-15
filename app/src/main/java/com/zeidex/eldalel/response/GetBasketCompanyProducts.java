@@ -12,6 +12,15 @@ public class GetBasketCompanyProducts {
     @SerializedName("order_total_price")
     @Expose
     private String orderTotalPrice;
+    @SerializedName("taxes_percentage")
+    @Expose
+    private Double taxes_percentage;
+    @SerializedName("total_without_taxes")
+    @Expose
+    private Double total_without_taxes;
+    @SerializedName("taxes_amount")
+    @Expose
+    private Double taxes_amount;
     @SerializedName("empty_cart")
     @Expose
     private String emptyCart;
@@ -38,6 +47,30 @@ public class GetBasketCompanyProducts {
 
     public void setEmptyCart(String emptyCart) {
         this.emptyCart = emptyCart;
+    }
+
+    public Double getTaxes_percentage() {
+        return taxes_percentage;
+    }
+
+    public void setTaxes_percentage(Double taxes_percentage) {
+        this.taxes_percentage = taxes_percentage;
+    }
+
+    public Double getTotal_without_taxes() {
+        return total_without_taxes;
+    }
+
+    public void setTotal_without_taxes(Double total_without_taxes) {
+        this.total_without_taxes = total_without_taxes;
+    }
+
+    public Double getTaxes_amount() {
+        return taxes_amount;
+    }
+
+    public void setTaxes_amount(Double taxes_amount) {
+        this.taxes_amount = taxes_amount;
     }
 
     public class Cart {

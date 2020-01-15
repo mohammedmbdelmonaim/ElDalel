@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
 import com.zeidex.eldalel.R;
@@ -102,9 +103,15 @@ public class PhonesAdapter extends RecyclerView.Adapter<PhonesAdapter.PhoneHolde
         holder.phone_text_price.setText(PriceFormatter.toDecimalString(price, context.getApplicationContext()));
 //        holder.phone_text_price_before.setText(phoneModel.getPrice_before());
 
+        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
+        circularProgressDrawable .setStrokeWidth(5f);
+        circularProgressDrawable .setCenterRadius(30f);
+        circularProgressDrawable .start();
+
         Glide.with(context)
                 .load("https://dleel.com/homepages/get/" + phoneModel.getImgUrl())
-                .placeholder(R.drawable.condition_logo)
+                .placeholder(circularProgressDrawable)
+                .error(R.drawable.condition_logo)
                 .centerCrop()
                 .into(holder.phone_img_url);
         if (PreferenceUtils.getUserLogin(context) || PreferenceUtils.getCompanyLogin(context)) {

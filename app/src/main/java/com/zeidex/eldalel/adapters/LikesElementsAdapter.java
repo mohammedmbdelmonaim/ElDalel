@@ -11,6 +11,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
 import com.zeidex.eldalel.R;
@@ -92,10 +93,16 @@ public class LikesElementsAdapter extends RecyclerView.Adapter<LikesElementsAdap
         holder.likeItemNameText.setText(productsCategory.getName());
         holder.likeItemTypeText.setText(productsCategory.getType());
 
+        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
+        circularProgressDrawable .setStrokeWidth(5f);
+        circularProgressDrawable .setCenterRadius(30f);
+        circularProgressDrawable .start();
+
         if (productsCategory.getImgUrl() != null) {
             Glide.with(context)
                     .load("https://dleel.com/homepages/get/" + productsCategory.getImgUrl())
-                    .placeholder(R.drawable.condition_logo)
+                    .placeholder(circularProgressDrawable)
+                    .error(R.drawable.condition_logo)
                     .centerCrop()
                     .into(holder.likeItemImageView);
         }

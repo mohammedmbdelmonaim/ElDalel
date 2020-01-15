@@ -10,6 +10,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
 import com.zeidex.eldalel.R;
@@ -66,12 +67,20 @@ public class BasketElementsAdapter extends RecyclerView.Adapter<BasketElementsAd
         holder.basket_element_name.setText(basketProductsModel.getTitle());
         holder.basket_element_desc.setText(basketProductsModel.getName());
         Double price = Double.parseDouble(basketProductsModel.getPrice());
-        if (price != null)
-            holder.basket_element_price.setText(PriceFormatter.toDecimalString(price, context.getApplicationContext()));
+        if (price != null) {
+            String priceString = PriceFormatter.toDecimalString(price, context.getApplicationContext());
+            holder.basket_element_price.setText(priceString);
+        }
+
+        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
+        circularProgressDrawable.setStrokeWidth(5f);
+        circularProgressDrawable.setCenterRadius(30f);
+        circularProgressDrawable.start();
 
         Glide.with(context)
                 .load("https://dleel.com/homepages/get/" + basketProductsModel.getImgurl())
-                .placeholder(R.drawable.condition_logo)
+                .placeholder(circularProgressDrawable)
+                .error(R.drawable.condition_logo)
                 .centerCrop()
                 .into(holder.basket_element_img);
 
@@ -104,7 +113,7 @@ public class BasketElementsAdapter extends RecyclerView.Adapter<BasketElementsAd
             basket_element_currency_linear.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    basketOperation.onChangeQuantity(Integer.parseInt(basketProducts.get(getAdapterPosition()).getProduct_id()), getAdapterPosition() , Integer.parseInt(basketProducts.get(getAdapterPosition()).getCart_id()));
+                    basketOperation.onChangeQuantity(Integer.parseInt(basketProducts.get(getAdapterPosition()).getProduct_id()), getAdapterPosition(), Integer.parseInt(basketProducts.get(getAdapterPosition()).getCart_id()));
                 }
             });
 
@@ -127,7 +136,7 @@ public class BasketElementsAdapter extends RecyclerView.Adapter<BasketElementsAd
     public interface BasketOperation {
         void onClickBasketProduct(int id, int pos);
 
-        void onChangeQuantity(int id, int pos , int cart_id);
+        void onChangeQuantity(int id, int pos, int cart_id);
 
         void onDeleteItem(int id, int pos);
     }

@@ -175,6 +175,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
     FirstPageFragmentListener mFirstPageFragmentListener;
     private String navigatedFromFragment; //used to know this detail is navigated to from which main category section
     private int position;
+    private int related_product_position;
 
     @Nullable
     @Override
@@ -751,7 +752,8 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
 //            bundle.putInt("pos", pos);
 //            bundle.putString("getLike",like);
 //            NavHostFragment.findNavController(this).navigate(R.id.action_detailItemActivity_self, bundle);
-            startActivity(new Intent(getContext(), DetailItemActivity.class).putExtra("id", id)/*.putExtra("similar_products", getArguments().getParcelableArray("similar_products"))*/.putExtra("getLike", like).putExtra("pos", pos).putExtra("samethis", true));
+            related_product_position = pos;
+            startActivityForResult(new Intent(getContext(), DetailItemActivity.class).putExtra("id", id)/*.putExtra("similar_products", getArguments().getParcelableArray("similar_products"))*/.putExtra("getLike", like).putExtra("pos", pos)/*.putExtra("samethis", true)*/, 111);
             Animatoo.animateSwipeLeft(getContext());
         }
     }
@@ -895,6 +897,21 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
             post.put("quantity", String.valueOf(quantity));
         }
         reloadDialog.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 111) {
+            if (data.getBooleanExtra("favorite_databack", false)) {
+                related_products.get(related_product_position).setLike("1");
+                phonesAdapter.notifyItemChanged(related_product_position);
+            }
+            if (data.getBooleanExtra("added_to_cart", false)) {
+                related_products.get(related_product_position).setCart("0");
+                phonesAdapter.notifyItemChanged(related_product_position);
+            }
+        }
     }
 
     @Override

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
 import com.zeidex.eldalel.R;
@@ -94,9 +95,15 @@ public class ElementsOrdersAdapter extends RecyclerView.Adapter<ElementsOrdersAd
         if (price != null)
             holder.order_element_price.setText(PriceFormatter.toDecimalString(price, context.getApplicationContext()));
 
+        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
+        circularProgressDrawable .setStrokeWidth(5f);
+        circularProgressDrawable .setCenterRadius(30f);
+        circularProgressDrawable .start();
+
         Glide.with(context)
                 .load("https://dleel.com/homepages/get/" + order.getPhotos().get(0).getFilename())
-                .placeholder(R.drawable.condition_logo)
+                .placeholder(circularProgressDrawable)
+                .error(R.drawable.condition_logo)
                 .centerCrop()
                 .into(holder.order_element_img);
 

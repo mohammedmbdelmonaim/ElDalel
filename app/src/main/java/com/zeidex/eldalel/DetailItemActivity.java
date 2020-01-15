@@ -10,6 +10,7 @@ import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -160,6 +161,8 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
     private boolean isAdded;
     private boolean isChanged;
     Fragment frag = null;
+    private int related_product_position;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -289,9 +292,9 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
             super.onBackPressed();
         } else {
             Intent intent = new Intent();
-            intent.putExtra("databack", isLike);
+            intent.putExtra("favorite_databack", isLike);
             intent.putExtra("added_to_cart", isAdded);
-            intent.putExtra("similar_product_change", isChanged);
+//            intent.putExtra("similar_product_change", isChanged);
             setResult(RESULT_OK, intent);
             finish();
             Animatoo.animateSwipeRight(this);
@@ -706,8 +709,9 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
     public void onClickProduct3(int id, int pos) {
 //        ProductsCategory productsCategory = (ProductsCategory) getIntent().getParcelableArrayListExtra("similar_products").get(pos);
 //        String like = productsCategory.getLike();
+        related_product_position = pos;
         String like = related_products.get(pos).getLike();
-        startActivity(new Intent(this, DetailItemActivity.class).putExtra("id", id)./*putExtra("similar_products", getIntent().getParcelableArrayListExtra("similar_products")).*/putExtra("getLike", like).putExtra("pos", pos).putExtra("samethis", true));
+        startActivityForResult(new Intent(this, DetailItemActivity.class).putExtra("id", id)./*putExtra("similar_products", getIntent().getParcelableArrayListExtra("similar_products")).*/putExtra("getLike", like).putExtra("pos", pos),111)/*.putExtra("samethis", true))*/;
         Animatoo.animateSwipeLeft(this);
     }
 
@@ -843,5 +847,20 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
     public void onClickCapacity(int position) {
         reloadDialog.show();
         getDetarServer(Integer.parseInt(capicities.get(position).getProduct_id()), true);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 111) {
+            if (data.getBooleanExtra("favorite_databack", false)) {
+                related_products.get(related_product_position).setLike("1");
+                phonesAdapter.notifyItemChanged(related_product_position);
+            }
+            if (data.getBooleanExtra("added_to_cart", false)) {
+                related_products.get(related_product_position).setCart("0");
+                phonesAdapter.notifyItemChanged(related_product_position);
+            }
+        }
     }
 }

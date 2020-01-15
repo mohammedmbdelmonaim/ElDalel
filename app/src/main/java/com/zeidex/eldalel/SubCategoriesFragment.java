@@ -19,6 +19,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
 import com.zeidex.eldalel.adapters.SubCategoriesAdapter;
@@ -103,9 +104,15 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
         categoryCardText.setText(categoryName);
         String imageName = getArguments().getString(CATEGORY_IMAGE_NAME);
         if(imageName != null){
+            CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(getContext());
+            circularProgressDrawable .setStrokeWidth(5f);
+            circularProgressDrawable .setCenterRadius(30f);
+            circularProgressDrawable .start();
+
             Glide.with(getContext())
                     .load("https://dleel.com/homepages/get/" + imageName)
-                    .placeholder(R.drawable.condition_logo)
+                    .placeholder(circularProgressDrawable)
+                    .error(R.drawable.condition_logo)
                     .centerCrop()
                     .into(categoryCardImage);
         }
