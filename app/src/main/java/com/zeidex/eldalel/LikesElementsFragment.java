@@ -183,12 +183,27 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
 
         mMainDetailSharedViewModel = ViewModelProviders.of(getActivity()).get(MainDetailSharedViewModel.class);
 
-        mMainDetailSharedViewModel.getIsFavoritesChanged().observe(this, new Observer<Boolean>() {
+//        mMainDetailSharedViewModel.getIsFavoritesChanged().observe(this, new Observer<Boolean>() {
+//            @Override
+//            public void onChanged(Boolean isFavoriteChanged) {
+//                if (isFavoriteChanged) {
+//                    onLoadPage();
+//                    mMainDetailSharedViewModel.resetFavoriteChanged();
+//                }
+//            }
+//        });
+
+        mMainDetailSharedViewModel.getFavChangedProp().observe(this, new Observer<Map<String, Integer>>() {
             @Override
-            public void onChanged(Boolean isFavoriteChanged) {
-                if (isFavoriteChanged) {
-                    onLoadPage();
-                    mMainDetailSharedViewModel.resetFavoriteChanged();
+            public void onChanged(Map<String, Integer> favPropMap) {
+                if(favPropMap.size() > 0){
+                    int changedPos = favPropMap.get("position");
+                    int cartStatus = favPropMap.get("cart");
+                    int favStatus = favPropMap.get("fav");
+                    if(cartStatus == 1) likesElementsAdapter.getProductsList().get(changedPos).setCart("0");
+                    if(favStatus == 1) likesElementsAdapter.getProductsList().get(changedPos).setLike("1");
+                    likesElementsAdapter.notifyItemChanged(changedPos);
+                    mMainDetailSharedViewModel.resetFavProps();
                 }
             }
         });
@@ -390,7 +405,7 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
                 DeleteFavoriteResponse deleteFavoriteResponse = response.body();
                 if (getContext() != null && deleteFavoriteResponse != null) {
                     int code = deleteFavoriteResponse.getCode();
-                    if (code == 200) {
+                    if (code == 200 && deleteFavoriteResponse.getStatus()) {
                         Toasty.success(getContext(), getString(R.string.remove_fav), Toast.LENGTH_LONG).show();
                         likesElementsAdapter.getProductsList().remove(position);
                         likesElementsAdapter.notifyItemRemoved(position);
@@ -402,6 +417,8 @@ public class LikesElementsFragment extends BundleFragment implements LikesElemen
                             likes_text_label_text.setVisibility(View.GONE);
                             noItemsLayout.setVisibility(View.VISIBLE);
                         }
+                    } else {
+                        Toasty.error(getContext(), getString(R.string.server_busy), Toast.LENGTH_SHORT).show();
                     }
                 }
                 reloadDialog.dismiss();

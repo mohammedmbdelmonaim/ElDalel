@@ -209,6 +209,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
     String total_price = BasketFragment.totalString;
     String total_products = BasketFragment.totalwithoutString;
     double finalPriceDouble;
+    String finalTax;
     String couponDiscount;
     String tax = BasketFragment.taxString;
     private double mWalletAmount;
@@ -232,6 +233,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
         getDeliveryFee();
         if (!PreferenceUtils.getCoupoun(getContext()).equals("")) {
             finalPriceDouble = BasketFragment.finalPrice;
+            finalTax = BasketFragment.discountTaxString;
 //            total_price = BasketFragment.totalWithDiscountString;
             couponDiscount = BasketFragment.couponDiscountString;
             fragment_payid_coupon_linear.setVisibility(View.VISIBLE);
@@ -239,13 +241,14 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
             fragment_payid_coupon_text.setText(couponDiscount);
         } else {
             finalPriceDouble = BasketFragment.mTotal_price;
+            finalTax = BasketFragment.taxString;
         }
 
         if (PreferenceUtils.getCompanyLogin(getContext())) {
             fragment_payid_linear_methods.setVisibility(View.GONE);
             fragment_payid_total_products_text.setText(total_products);
             fragment_payid_total_price_text.setText(PriceFormatter.toDecimalRsString(finalPriceDouble, getContext()));
-            fragment_payid_tax_text.setText(tax);
+            fragment_payid_tax_text.setText(finalTax);
             fragment_payid_paying.setOnClickListener(this);
             postPaidPaymentLayout.setVisibility(View.VISIBLE);
             getPostPaidStatus();
@@ -272,7 +275,7 @@ public class PayidFragment extends Fragment implements View.OnClickListener {
 
             fragment_payid_total_products_text.setText(total_products);
             fragment_payid_total_price_text.setText(PriceFormatter.toDecimalRsString(finalPriceDouble, getContext()));
-            fragment_payid_tax_text.setText(tax);
+            fragment_payid_tax_text.setText(finalTax);
             getCountries();
 
             fragment_payid_paying.setOnClickListener(this);

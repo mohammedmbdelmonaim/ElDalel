@@ -120,25 +120,36 @@ public class ElementsOrderActivity extends BaseActivity implements ElementsOrder
 //                    return;
 //                }
                 double total_with_tax = 0;
-                for (int i = 0; i < orders.size(); i++) {
-//                    price += orders.get(i).getProductPrice();
-                    total_with_tax_only += orders.get(i).getProductPrice() * orders.get(i).getQuantity();
-                    total_inc_coupon_tax_delivery += orders.get(i).getTotalPriceWithTax();
-                }
+//                for (int i = 0; i < orders.size(); i++) {
+////                    price += orders.get(i).getProductPrice();
+//                    total_with_tax_only += orders.get(i).getProductPrice() * orders.get(i).getQuantity();
+//                    total_inc_coupon_tax_delivery += orders.get(i).getTotalPriceWithTax();
+//                }
+
+                double totalOriginalPrice = getShipmentOrders.getWhole_original_price();
+                double totalPriceWithoutTaxes = getShipmentOrders.getWhole_price();
+                double totalPriceWithTaxes = getShipmentOrders.getWhole_price_with_taxes();
+
+                double coupon;
+
+                double couponAndDelivery = totalPriceWithoutTaxes - totalOriginalPrice;
+
+                double taxesAmount = getShipmentOrders.getTaxes_amount();
 
                 if (PreferenceUtils.getUserLogin(ElementsOrderActivity.this) && getShipmentOrders.getPaymentType() == 2){
-                    total_with_coupon_and_tax = total_inc_coupon_tax_delivery - 18;
+                    coupon = 18 - couponAndDelivery;
+
                     activity_elemetnts_orders_delivery_linear.setVisibility(View.VISIBLE);
                     activity_elemetnts_orders_delivery_view.setVisibility(View.VISIBLE);
                     activity_elemetnts_orders_delivery_text.setText(PriceFormatter.toDecimalRsString(18.0, ElementsOrderActivity.this));
                 } else {
-                    total_with_coupon_and_tax = total_inc_coupon_tax_delivery;
+                   coupon = couponAndDelivery;
                 }
 
-                double coupon = total_with_tax_only - total_with_coupon_and_tax;
+//                double coupon = total_with_tax_only - total_with_coupon_and_tax;
 
-                double total_without_tax = total_with_tax_only * 100 / 105;
-                double tax = total_with_tax_only - total_without_tax;
+//                double total_without_tax = total_with_tax_only - taxesAmount;
+//                double tax = total_with_tax_only - total_without_tax;
 //                double total_with_tax = total_without_tax + tax;
 
                 if (Math.round(coupon) > 0) {
@@ -147,9 +158,9 @@ public class ElementsOrderActivity extends BaseActivity implements ElementsOrder
                     activity_elemetnts_orders_coupon_text.setText(PriceFormatter.toDecimalRsString(-coupon, ElementsOrderActivity.this));
                 }
 
-                String totalString = PriceFormatter.toDecimalRsString(total_inc_coupon_tax_delivery, ElementsOrderActivity.this);
-                String totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, ElementsOrderActivity.this);
-                String taxString = PriceFormatter.toDecimalRsString(tax, ElementsOrderActivity.this);
+                String totalString = PriceFormatter.toDecimalRsString(totalPriceWithTaxes, ElementsOrderActivity.this);
+                String totalwithoutString = PriceFormatter.toDecimalRsString(totalOriginalPrice, ElementsOrderActivity.this);
+                String taxString = PriceFormatter.toDecimalRsString(taxesAmount, ElementsOrderActivity.this);
 
                 activity_elemetnts_orders_total_price_products_text.setText(totalwithoutString);
                 activity_elemetnts_orders_tax_text.setText(taxString);

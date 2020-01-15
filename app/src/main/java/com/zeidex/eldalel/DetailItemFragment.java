@@ -298,8 +298,9 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                             if (Integer.parseInt(getAddToFavouriteResponse.getCode()) == 200) {
                                 Toasty.success(getContext(), getString(R.string.add_to_favourites), Toast.LENGTH_LONG).show();
                                 isLike = true;
-                                if(navigatedFromFragment.equals("main")) mMainDetailSharedViewModel.setIsMainChanged();
-                                else if (navigatedFromFragment.equals("favorite")) mMainDetailSharedViewModel.setIsFavoritesChanged();
+//                                if(navigatedFromFragment.equals("main")) mMainDetailSharedViewModel.setIsMainChanged();
+                                if(navigatedFromFragment.equals("main")) mMainDetailSharedViewModel.setMainChangedProps(position, 0, 1);
+                                else if (navigatedFromFragment.equals("favorite")) mMainDetailSharedViewModel.setFavChangedProps(position, 0 ,1);
                                 else if (navigatedFromFragment.equals("offer")) mMainDetailSharedViewModel.setOfferChangedProps(position, 0, 1);
                             }
                             reloadDialog.dismiss();
@@ -860,8 +861,9 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
                         isAdded = true;
                         PreferenceUtils.saveCountOfItemsBasket(getContext(), Integer.parseInt(getAddToCardResponse.getItemsCount()));
                         ((MainActivity) getActivity()).updateBasketBadge();
-                        if(navigatedFromFragment.equals("main")) mMainDetailSharedViewModel.setIsMainChanged();
-                        else if (navigatedFromFragment.equals("favorite")) mMainDetailSharedViewModel.setIsFavoritesChanged();
+//                        if(navigatedFromFragment.equals("main")) mMainDetailSharedViewModel.setIsMainChanged();
+                        if(navigatedFromFragment.equals("main")) mMainDetailSharedViewModel.setMainChangedProps(position, 1, 0);
+                        else if (navigatedFromFragment.equals("favorite")) mMainDetailSharedViewModel.setFavChangedProps(position, 1 ,0);
                         else if (navigatedFromFragment.equals("offer")) mMainDetailSharedViewModel.setOfferChangedProps(position, 1, 0);
 
 //                        AddToCartCallback callback = (AddToCartCallback) getArguments().getSerializable("added_to_cart");

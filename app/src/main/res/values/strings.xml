@@ -470,5 +470,6 @@
     <string name="expired">Expired!</string>
     <string name="coupon_discount">Coupon Discount</string>
     <string name="delivery_fee_string">Delivery Fee</string>
+    <string name="server_busy">Server is busy, try again later!</string>
 
 </resources>

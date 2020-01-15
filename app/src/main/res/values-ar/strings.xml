@@ -255,4 +255,5 @@
     <string name="expired">انتهت صلاحيته!</string>
     <string name="coupon_discount">خصم الكوبون</string>
     <string name="delivery_fee_string">تكلفة التوصيل</string>
+    <string name="server_busy">Server is busy, try again later!</string>
 </resources>

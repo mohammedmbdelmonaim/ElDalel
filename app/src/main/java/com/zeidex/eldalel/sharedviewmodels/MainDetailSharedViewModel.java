@@ -24,9 +24,9 @@ public class MainDetailSharedViewModel extends ViewModel {
 
     private MutableLiveData<Boolean> isMainChanged;
     private MutableLiveData<Boolean> isFavoritesChanged;
-    private MutableLiveData<Map<String,Integer>> offerChangedProps;
-    private MutableLiveData<Map<String,Integer>> mainChangedProps;
-    private MutableLiveData<Map<String,Integer>> favChangedProps;
+    private MutableLiveData<Map<String, Integer>> offerChangedProps;
+    private MutableLiveData<Map<String, Integer>> mainChangedProps;
+    private MutableLiveData<Map<String, Integer>> favChangedProps;
 
     public MainDetailSharedViewModel() {
 //        home_category1 = new MutableLiveData<>();
@@ -41,72 +41,102 @@ public class MainDetailSharedViewModel extends ViewModel {
         favChangedProps = new MutableLiveData<>();
     }
 
-    public void setIsMainChanged(){
+    public void setIsMainChanged() {
         isMainChanged.setValue(true);
     }
 
-    public LiveData<Boolean> getIsMainChanged(){
+    public LiveData<Boolean> getIsMainChanged() {
         return isMainChanged;
     }
 
-    public LiveData<Boolean> getIsFavoritesChanged(){
+    public LiveData<Boolean> getIsFavoritesChanged() {
         return isFavoritesChanged;
     }
 
-    public void setIsFavoritesChanged(){
+    public void setIsFavoritesChanged() {
         isFavoritesChanged.setValue(true);
     }
 
-    public void setOfferChangedProps(int position, int cart, int fav){
+    public void setOfferChangedProps(int position, int cart, int fav) {
         Map<String, Integer> offerPropMap = new HashMap<>();
-        offerPropMap.put("position", position);
-        offerPropMap.put("cart", cart);
-        offerPropMap.put("fav", fav);
+        if (offerChangedProps.getValue() != null && offerChangedProps.getValue().size() > 0) {
+            offerPropMap.putAll(offerChangedProps.getValue());
+            if (cart == 1) offerPropMap.put("cart", cart);
+            if (fav == 1) offerPropMap.put("fav", fav);
+        }else {
+            offerPropMap.put("position", position);
+            if (cart == 1) offerPropMap.put("cart", cart);
+            else offerPropMap.put("cart", 0);
+            if (fav == 1) offerPropMap.put("fav", fav);
+            else offerPropMap.put("fav", 0);
+        }
         offerChangedProps.setValue(offerPropMap);
     }
 
-    public void setMainChangedProps(int position, int cart, int fav){
-        Map<String, Integer> offerPropMap = new HashMap<>();
-        offerPropMap.put("position", position);
-        offerPropMap.put("cart", cart);
-        offerPropMap.put("fav", fav);
-        mainChangedProps.setValue(offerPropMap);
+    public void setMainChangedProps(int position, int cart, int fav) {
+        Map<String, Integer> mainPropMap = new HashMap<>();
+        if (mainChangedProps.getValue() != null && mainChangedProps.getValue().size() > 0) {
+            mainPropMap.putAll(mainChangedProps.getValue());
+            if (cart == 1) mainPropMap.put("cart", cart);
+            if (fav == 1) mainPropMap.put("fav", fav);
+        }else {
+            mainPropMap.put("position", position);
+            if (cart == 1) mainPropMap.put("cart", cart);
+            else mainPropMap.put("cart", 0);
+            if (fav == 1) mainPropMap.put("fav", fav);
+            else mainPropMap.put("fav", 0);
+        }
+        mainChangedProps.setValue(mainPropMap);
     }
 
-    public void setFavChangedProps(int position, int cart, int fav){
-        Map<String, Integer> offerPropMap = new HashMap<>();
-        offerPropMap.put("position", position);
-        offerPropMap.put("cart", cart);
-        offerPropMap.put("fav", fav);
-        favChangedProps.setValue(offerPropMap);
+    public void setFavChangedProps(int position, int cart, int fav) {
+        Map<String, Integer> favPropMap = new HashMap<>();
+        if (favChangedProps.getValue() != null && favChangedProps.getValue().size() > 0) {
+            favPropMap.putAll(favChangedProps.getValue());
+            if (cart == 1) favPropMap.put("cart", cart);
+            if (fav == 1) favPropMap.put("fav", fav);
+        }else {
+            favPropMap.put("position", position);
+            if (cart == 1) favPropMap.put("cart", cart);
+            else favPropMap.put("cart", 0);
+            if (fav == 1) favPropMap.put("fav", fav);
+            else favPropMap.put("fav", 0);
+        }
+        favChangedProps.setValue(favPropMap);
     }
 
-    public LiveData<Map<String,Integer>> getOfferChangedProp(){
+    public LiveData<Map<String, Integer>> getOfferChangedProp() {
         return offerChangedProps;
     }
 
-    public LiveData<Map<String,Integer>> getMainChangedProp(){
+    public LiveData<Map<String, Integer>> getMainChangedProp() {
         return mainChangedProps;
     }
 
-    public LiveData<Map<String,Integer>> getFavChangedProp(){
+    public LiveData<Map<String, Integer>> getFavChangedProp() {
         return favChangedProps;
     }
 
 
-    public void resetMainChanged(){
+    public void resetMainChanged() {
         isMainChanged.setValue(false);
     }
 
-    public void resetFavoriteChanged(){
+    public void resetFavoriteChanged() {
         isFavoritesChanged.setValue(false);
     }
 
-    public void resetOffersChanged(){offerChangedProps.setValue(new HashMap<>());}
+    public void resetOffersChanged() {
+        offerChangedProps.setValue(new HashMap<>());
+    }
 
-    public void resetMainProps(){mainChangedProps.setValue(new HashMap<>());}
+    public void resetMainProps() {
+        mainChangedProps.setValue(new HashMap<>());
+    }
 
-    public void resetFavProps(){favChangedProps.setValue(new HashMap<>());}
+    public void resetFavProps() {
+        favChangedProps.setValue(new HashMap<>());
+    }
 
 //    public void setHome_category1(ArrayList<ProductsCategory> productsCategories){
 //        home_category1.setValue(productsCategories);
@@ -180,11 +210,6 @@ public class MainDetailSharedViewModel extends ViewModel {
 //    public void changeFavOfferStatus(int pos){
 //        offers.getValue().get(pos).setLike("1");
 //    }
-
-
-
-
-
 
 
 }

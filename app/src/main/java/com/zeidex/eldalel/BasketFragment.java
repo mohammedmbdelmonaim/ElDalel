@@ -126,9 +126,13 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
         ButterKnife.bind(this, view);
         initializeRecycler();
         fragment_basket_paying.setOnClickListener(this);
+
         if (basketProducts == null) {
             findViews();
         } else {
+            if (PreferenceUtils.getCompanyLogin(getContext())) {
+                fragment_basket_edittext_linear.setVisibility(View.GONE);
+            }
             updateUI();
         }
     }
@@ -161,6 +165,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                                     fragment_basket_coupon_view.setVisibility(View.GONE);
                                     fragment_basket_coupon_text.setText("0");
                                     fragment_basket_total_price_text.setText(totalString);
+                                    fragment_basket_tax_text.setText(taxString);
 
                                     isCouponAlreadyAdded = false;
                                     hasCouponDiscount = false;
@@ -210,6 +215,8 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
     public static String totalString;
     public static String totalwithoutString;
     public static String taxString;
+
+    public static String discountTaxString;
     public static String couponDiscountString;
     public static String totalWithDiscountString;
 
@@ -301,18 +308,12 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                             return;
                         }
 
-
-//                        mTotal_price = Double.parseDouble(getBasketProducts.getOrderTotalPrice());
-//                        double total_without_tax = mTotal_price * 100 / 105;
-//                        double tax = mTotal_price - total_without_tax;
                         mTotal_price = Double.parseDouble(getBasketProducts.getOrderTotalPrice());
                         total_without_tax = getBasketProducts.getTotal_without_taxes();
                         tax = getBasketProducts.getTaxes_amount();
                         tax_percentage = getBasketProducts.getTaxes_percentage();
 
-                        totalString = PriceFormatter.toDecimalRsString(mTotal_price, getContext());
-                        totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getContext());
-                        taxString = PriceFormatter.toDecimalRsString(tax, getContext());
+                        updateRegularPricesStringValues();
 
                         updateUI();
                     }
@@ -389,9 +390,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
 //                            double total_without_tax = mTotal_price * 100 / 105;
 //                            double tax = mTotal_price - total_without_tax;
 
-                            totalString = PriceFormatter.toDecimalRsString(mTotal_price, getContext());
-                            totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getContext());
-                            taxString = PriceFormatter.toDecimalRsString(tax, getContext());
+                            updateRegularPricesStringValues();
 
                             updateUI();
                         }
@@ -411,6 +410,12 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
 
     }
 
+    private void updateRegularPricesStringValues() {
+        totalString = PriceFormatter.toDecimalRsString(mTotal_price, getContext());
+        totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getContext());
+        taxString = PriceFormatter.toDecimalRsString(tax, getContext());
+    }
+
     private void updateUI() {
         if (basketProducts.size() == 0) {
             fragment_basket_elements_recycler_noitems.setVisibility(View.VISIBLE);
@@ -425,7 +430,7 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
             fragment_basket_tax_text.setText(taxString);
             fragment_basket_total_price_text.setText(totalString);
 
-            if (!PreferenceUtils.getCoupoun(getContext()).equals("")) {
+            if (PreferenceUtils.getUserLogin(getContext()) && !PreferenceUtils.getCoupoun(getContext()).equals("")) {
                 isCouponAlreadyAdded = true;
                 hasCouponDiscount = true;
                 showCoupon();
@@ -537,16 +542,16 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                                         tax = changeQuantityResponse.getTaxes_amount();
                                         tax_percentage = changeQuantityResponse.getTaxes_percentage();
 
-                                        totalString = PriceFormatter.toDecimalRsString(mTotal_price, getContext());
-                                        totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getContext());
-                                        taxString = PriceFormatter.toDecimalRsString(tax, getContext());
+                                        updateRegularPricesStringValues();
                                         if (hasCouponDiscount) {
                                             updateCouponDiscount();
                                         } else {
                                             fragment_basket_total_price_text.setText(totalString);
+                                            fragment_basket_tax_text.setText(taxString);
                                         }
+
                                         fragment_basket_total_price_products_text.setText(totalwithoutString);
-                                        fragment_basket_tax_text.setText(taxString);
+
 
                                         Toasty.success(getContext(), changeQuantityResponse.getSuccessMessage(), Toast.LENGTH_LONG).show();
                                         BasketProducts basketProductsModel = basketProducts.get(pos);
@@ -619,17 +624,17 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
                         tax = responseBody.getData().getTaxes_amount();
                         tax_percentage = responseBody.getData().getTaxes_percentage();
 
-                        totalString = PriceFormatter.toDecimalRsString(mTotal_price, getContext());
-                        totalwithoutString = PriceFormatter.toDecimalRsString(total_without_tax, getContext());
-                        taxString = PriceFormatter.toDecimalRsString(tax, getContext());
+                        updateRegularPricesStringValues();
 
                         if (hasCouponDiscount) {
                             updateCouponDiscount();
                         } else {
                             fragment_basket_total_price_text.setText(totalString);
+                            fragment_basket_tax_text.setText(taxString);
                         }
+
                         fragment_basket_total_price_products_text.setText(totalwithoutString);
-                        fragment_basket_tax_text.setText(taxString);
+
 
                         PreferenceUtils.saveCountOfItemsBasket(getContext().getApplicationContext(), responseBody.getData().getAllCartItemsCount());
                         ((MainActivity) getActivity()).updateBasketBadge();
@@ -671,7 +676,9 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
         fragment_basket_coupon_linear.setVisibility(View.GONE);
         fragment_basket_coupon_view.setVisibility(View.GONE);
         fragment_basket_coupon_text.setText("0");
+
         fragment_basket_total_price_text.setText(totalString);
+        fragment_basket_tax_text.setText(taxString);
 
         couponValidIv.setVisibility(View.GONE);
         expiredTextTv.setVisibility(View.GONE);
@@ -694,12 +701,9 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
         fragment_basket_coupon_view.setVisibility(View.VISIBLE);
         couponValidIv.setVisibility(View.VISIBLE);
 
-        double couponDiscount = calculateDiscount(amountType, amount);
+        updatePricesAfterDiscount(amountType, amount);
 
-        couponDiscountString = PriceFormatter.toDecimalRsString(-couponDiscount, getContext());
-
-        double taxNewAmount = (total_without_tax - couponDiscount) * tax_percentage;
-        finalPrice = total_without_tax - couponDiscount + taxNewAmount;
+        fragment_basket_tax_text.setText(discountTaxString);
         fragment_basket_coupon_text.setText(couponDiscountString);
         fragment_basket_total_price_text.setText(totalWithDiscountString);
 
@@ -711,12 +715,9 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
         String amountType = PreferenceUtils.getCoupounAmountType(getContext());
         int amount = PreferenceUtils.getCoupounAmount(getContext());
 
-        double couponDiscount = calculateDiscount(amountType, amount);
-        couponDiscountString = PriceFormatter.toDecimalRsString(-couponDiscount, getContext());
-        double taxNewAmount = (total_without_tax - couponDiscount) * tax_percentage;
-        finalPrice = total_without_tax - couponDiscount + taxNewAmount;
-        totalWithDiscountString = PriceFormatter.toDecimalRsString(finalPrice, getContext());
+        updatePricesAfterDiscount(amountType, amount);
 
+        fragment_basket_tax_text.setText(discountTaxString);
         fragment_basket_coupon_text.setText(couponDiscountString);
         fragment_basket_total_price_text.setText(totalWithDiscountString);
     }
@@ -734,18 +735,26 @@ public class BasketFragment extends androidx.fragment.app.Fragment implements Vi
         fragment_basket_coupon_view.setVisibility(View.VISIBLE);
         couponValidIv.setVisibility(View.VISIBLE);
 
-        double couponDiscount = calculateDiscount(amountType, amount);
+        updatePricesAfterDiscount(amountType, amount);
 
-        couponDiscountString = PriceFormatter.toDecimalRsString(-couponDiscount, getContext());
-        double taxNewAmount = (total_without_tax - couponDiscount) * tax_percentage;
-        finalPrice = total_without_tax - couponDiscount + taxNewAmount;
-        totalWithDiscountString = PriceFormatter.toDecimalRsString(finalPrice, getContext());
-
+        fragment_basket_tax_text.setText(discountTaxString);
         fragment_basket_coupon_text.setText(couponDiscountString);
         fragment_basket_total_price_text.setText(totalWithDiscountString);
 
+        //To check if the code is still valid
         onEnterCoupoun(fragment_basket_elements_enter_code);
 
+    }
+
+    private void updatePricesAfterDiscount(String amountType, int amount) {
+        double couponDiscount = calculateDiscount(amountType, amount);
+        couponDiscountString = PriceFormatter.toDecimalRsString(-couponDiscount, getContext());
+
+        double taxNewAmount = (total_without_tax - couponDiscount) * tax_percentage;
+        discountTaxString = PriceFormatter.toDecimalRsString(taxNewAmount, getContext());
+
+        finalPrice = total_without_tax - couponDiscount + taxNewAmount;
+        totalWithDiscountString = PriceFormatter.toDecimalRsString(finalPrice, getContext());
     }
 
     private double calculateDiscount(String amountType, int amount) {

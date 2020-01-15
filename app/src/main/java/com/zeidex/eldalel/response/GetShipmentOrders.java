@@ -14,6 +14,21 @@ public class GetShipmentOrders {
     @Expose
     private Integer paymentType;
 
+    @SerializedName("whole_price")
+    @Expose
+    private Double whole_price;
+
+    @SerializedName("whole_price_with_taxes")
+    @Expose
+    private Double whole_price_with_taxes;
+
+    @SerializedName("taxes_amount")
+    @Expose
+    private Double taxes_amount;
+    @SerializedName("whole_original_price")
+    @Expose
+    private Double whole_original_price;
+
     public List<Order> getOrders() {
         return orders;
     }
@@ -28,6 +43,38 @@ public class GetShipmentOrders {
 
     public void setPaymentType(Integer paymentType) {
         this.paymentType = paymentType;
+    }
+
+    public Double getWhole_price() {
+        return whole_price;
+    }
+
+    public void setWhole_price(Double whole_price) {
+        this.whole_price = whole_price;
+    }
+
+    public Double getWhole_price_with_taxes() {
+        return whole_price_with_taxes;
+    }
+
+    public void setWhole_price_with_taxes(Double whole_price_with_taxes) {
+        this.whole_price_with_taxes = whole_price_with_taxes;
+    }
+
+    public Double getTaxes_amount() {
+        return taxes_amount;
+    }
+
+    public void setTaxes_amount(Double taxes_amount) {
+        this.taxes_amount = taxes_amount;
+    }
+
+    public Double getWhole_original_price() {
+        return whole_original_price;
+    }
+
+    public void setWhole_original_price(Double whole_original_price) {
+        this.whole_original_price = whole_original_price;
     }
 
     public class Order {

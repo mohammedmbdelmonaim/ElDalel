@@ -119,6 +119,8 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
     private ArrayList<ProductsCategory> mOffersModel;
     private HomeOfferAdapter homeOfferAdapter;
 
+    private int categorySection;
+
     @OnClick(R.id.acc_more)
     void navigateToAcc() {
         subCategoriesModel = new ArrayList<>();
@@ -707,12 +709,47 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
 
         mMainDetailSharedViewModel = ViewModelProviders.of(getActivity()).get(MainDetailSharedViewModel.class);
 
-        mMainDetailSharedViewModel.getIsMainChanged().observe(this, new Observer<Boolean>() {
+//        mMainDetailSharedViewModel.getIsMainChanged().observe(this, new Observer<Boolean>() {
+//            @Override
+//            public void onChanged(Boolean isMainChanged) {
+//                if (isMainChanged) {
+//                    onLoadPage();
+//                    mMainDetailSharedViewModel.resetMainChanged();
+//                }
+//            }
+//        });
+
+        mMainDetailSharedViewModel.getMainChangedProp().observe(this, new Observer<Map<String, Integer>>() {
             @Override
-            public void onChanged(Boolean isMainChanged) {
-                if (isMainChanged) {
-                    onLoadPage();
-                    mMainDetailSharedViewModel.resetMainChanged();
+            public void onChanged(Map<String, Integer> mainPropMap) {
+                if(mainPropMap.size() > 0){
+                    int changedPos = mainPropMap.get("position");
+                    int cartStatus = mainPropMap.get("cart");
+                    int favStatus = mainPropMap.get("fav");
+
+                    switch(categorySection){
+                        case 1:
+                            if(cartStatus == 1) homeOfferAdapter.getOfferList().get(changedPos).setCart("0");
+                            if(favStatus == 1) homeOfferAdapter.getOfferList().get(changedPos).setLike("1");
+                            homeOfferAdapter.notifyItemChanged(changedPos);
+                            break;
+                        case 2:
+                            if(cartStatus == 1) accessoriesAdapter.getAccessoryList().get(changedPos).setCart("0");
+                            if(favStatus == 1) accessoriesAdapter.getAccessoryList().get(changedPos).setLike("1");
+                            accessoriesAdapter.notifyItemChanged(changedPos);
+                            break;
+                        case 3:
+                            if(cartStatus == 1) phonesAdapter.getPhoneList().get(changedPos).setCart("0");
+                            if(favStatus == 1) phonesAdapter.getPhoneList().get(changedPos).setLike("1");
+                            phonesAdapter.notifyItemChanged(changedPos);
+                            break;
+                        case 4:
+                            if(cartStatus == 1) category3Adapter.getProductsCategoryList().get(changedPos).setCart("0");
+                            if(favStatus == 1) category3Adapter.getProductsCategoryList().get(changedPos).setLike("1");
+                            category3Adapter.notifyItemChanged(changedPos);
+                            break;
+                    }
+                    mMainDetailSharedViewModel.resetMainProps();
                 }
             }
         });
@@ -906,6 +943,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
     @Override
     public void onClickProduct3(int id, int pos) {
         position_detail = pos;
+        categorySection = 4;
 
 //        AddToCartCallback callback = new AddToCartCallback() {
 //            @Override
@@ -1016,6 +1054,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
     @Override
     public void onClickPhone(int id, int pos) {
         position_detail = pos;
+        categorySection = 3;
         AddToCartCallback callback = new AddToCartCallback() {
             @Override
             public void setAddToCartResult(String totalItemCount) {
@@ -1126,6 +1165,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
 
     @Override
     public void onClickAcssesory(int id, int pos) {
+        categorySection = 2;
         position_detail = pos;
         AddToCartCallback callback = new AddToCartCallback() {
             @Override
@@ -1239,6 +1279,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
     @Override
     public void onClickOffer(int id, int pos) {
         position_detail = pos;
+        categorySection = 1;
 
         Bundle bundle = new Bundle();
         bundle.putInt("pos", pos);
