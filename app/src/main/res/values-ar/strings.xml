@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">دليل الشبكة</string>
+    <string name="app_name">دليل</string>
     <string name="splash_text_label1">جميع الحقوق محفوظة لمتجر دليل الشبكة</string>
-    <string name="splash_text_label2">مرحبا بك في دليل الشبكة</string>
+    <string name="splash_text_label2">دليل.كوم نحو التميز</string>
     <string name="bottomnavigation_label_main">الرئيسية</string>
     <string name="bottomnavigation_label_cate">الفئات</string>
     <string name="bottomnavigation_label_offers">العروض</string>
@@ -15,7 +15,7 @@
         It should describe the category of notifications that will be sent through this channel
      -->
     <string name="default_notification_channel_name" translatable="true">Weather</string>
-    <string name="no_internet">لا يوجد اتصال بالانترنت</string>
+    <string name="no_internet">تأكد من اتصالك بالانترنت</string>
     <string name="detail_color">اللون</string>
     <string name="detail_size_label">السعة</string>
     <string name="details_like_too">قد يعجبك أيضا</string>
@@ -25,7 +25,7 @@
     <string name="fragment_account_text_register">إشترك الآن</string>
     <string name="fragment_account_region_name">الدولة</string>
     <string name="fragment_account_language_label">اللغة</string>
-    <string name="fragment_shooping_add_address_text0">أضف عنواناً الأن لنتمكن من توصيل طلبك</string>
+    <string name="fragment_shooping_add_address_text0">أضف عنواناً الآن لنتمكن من توصيل طلبك</string>
     <string name="sort_menu_price_descend">السعر: من الأكثر الى الأقل</string>
 
 
@@ -46,17 +46,17 @@
     <string name="fragment_basket_elements_label_header">سلة التسوق</string>
     <string name="fragment_basket_elements_enter_code_label">تطبيق</string>
     <string name="fragment_basket_elements_edittext_hint">أدخل الكوبون</string>
-    <string name="fragment_basket_total_price_products_label">مجموع المنتجات</string>
+    <string name="fragment_basket_total_price_products_label">الإجمالي</string>
     <string name="currancy_label">ر.س</string>
     <string name="fragment_basket_total_shipments_label">الشحن</string>
     <string name="fragment_basket_tax_label">ضريبة القيمة المضافة</string>
-    <string name="fragment_basket_total_price_label">المجموع الكلى</string>
+    <string name="fragment_basket_total_price_label">الاجمالي شامل الضريبة</string>
     <string name="fragment_basket_paying_label">الدفع</string>
     <string name="ragment_account_after_login_profile_text">الملف الشخصى</string>
     <string name="fragment_account_after_login_orders_text">الطلبات</string>
     <string name="fragment_account_after_login_likes_text">المفضلات</string>
     <string name="fragment_account_after_login_wallet_text">المحفظة</string>
-    <string name="login_text_welcome">أهلا بك في دليل الشبكة</string>
+    <string name="login_text_welcome">أهلا بك في دليل.كوم</string>
     <string name="login_mail_edittext">البريد الإلكترونى</string>
     <string name="login_pass_edittext">كلمة المرور</string>
     <string name="login_no_have_account_text">ليس لديك حساب .. ؟ سجل الأن</string>
@@ -98,8 +98,8 @@
     <string name="fragment_shooping_add_address_text">إضافة عنوان جديد</string>
     <string name="fragment_shooping_add_address_text1">أين هي عناوين محفظتك ؟</string>
     <string name="fragment_payment_phone_number_text1">من فضلك قم بتأكيد رقم الموبايل الخاص بك</string>
-    <string name="fragment_payment_phone_number_text2">للمتابعة لعملية الدفع , استخدم الرمز وتحقق من رقم الجوال</string>
-    <string name="fragment_payment_phone_number_text3">تم إرسال الرمز الى رقم الجوال</string>
+    <string name="fragment_payment_phone_number_text2">لمتابعة عملية الدفع , استخدم الرمز وتحقق من رقم الجوال</string>
+    <string name="fragment_payment_phone_number_text3">تم إرسال رمز التحقق الى رقم الجوال</string>
     <string name="search_here">أبحث هنا</string>
     <string name="confirm_internet">من فضلك تأكد من الأتصال بالانترنت</string>
     <string name="safety_shipping_main_fragment">تسوق بأمان</string>
@@ -124,7 +124,7 @@
     <string name="choose_type">من فضلك تأكد من أختيار النوع</string>
     <string name="choose_lang">من فضلك أختر اللغة</string>
     <string name="error_confirm_message">من فضلك تأكد من كلمة المرور</string>
-    <string name="register_responsible_edittext_hint">المسؤول</string>
+    <string name="register_responsible_edittext_hint">اسم المسؤول</string>
     <string name="register_pass_confirm_edittext_hint">تأكيد كلمة المرور</string>
     <string name="country_spinner_label">الدولة</string>
     <string name="regions_spinner_label">المنطقه</string>
@@ -135,7 +135,7 @@
     <string name="choose_city">من فضلك أختر المدينة</string>
     <string name="register_address_edittext_label">العنوان</string>
     <string name="register_name_company_edittext_label">إسم الشركة</string>
-    <string name="fragment_payment_phone_number_text5_label">إعادة إسال الرمز</string>
+    <string name="fragment_payment_phone_number_text5_label">إعادة إرسال الرمز</string>
     <string name="fragment_payment_phone_number_btn_sure">تأكيد</string>
     <string name="fragment_payment_phone_number_text_change">تغير الرقم</string>
     <string name="fragment_shooping_list_addresses_text_add">أضافة عنوان جديد</string>
@@ -179,7 +179,7 @@
     <string name="activity_search_header_text">نتائج البحث</string>
     <string name="offer_radio_button_text">عرض</string>
     <string name="no_offer_radio_button_text">بدون عرض</string>
-    <string name="branch_spinner">الفرع</string>
+    <string name="branch_spinner">الفروع</string>
     <string name="choose_branch">من فضلك أختر الفرع</string>
     <string name="choose_payment_method">من فضلك أختر طريقة الدفع</string>
     <string name="fragment_basket_elements_recycler_noitems">لا يوجد منتجات في السلة</string>
@@ -255,5 +255,5 @@
     <string name="expired">انتهت صلاحيته!</string>
     <string name="coupon_discount">خصم الكوبون</string>
     <string name="delivery_fee_string">تكلفة التوصيل</string>
-    <string name="server_busy">Server is busy, try again later!</string>
+    <string name="server_busy">الخادم مشغول، حاول في وقت لاحق</string>
 </resources>
