@@ -14,20 +14,23 @@ public class GetShipmentOrders {
     @Expose
     private Integer paymentType;
 
-    @SerializedName("whole_price")
+    @SerializedName("discount")
     @Expose
-    private Double whole_price;
+    private Double discount;
 
-    @SerializedName("whole_price_with_taxes")
+    @SerializedName("delivery_fees")
     @Expose
-    private Double whole_price_with_taxes;
+    private Double delivery_fees;
 
     @SerializedName("taxes_amount")
     @Expose
     private Double taxes_amount;
-    @SerializedName("whole_original_price")
+    @SerializedName("net_price")
     @Expose
-    private Double whole_original_price;
+    private Double net_price;
+    @SerializedName("total_price")
+    @Expose
+    private Double total_price;
 
     public List<Order> getOrders() {
         return orders;
@@ -45,21 +48,6 @@ public class GetShipmentOrders {
         this.paymentType = paymentType;
     }
 
-    public Double getWhole_price() {
-        return whole_price;
-    }
-
-    public void setWhole_price(Double whole_price) {
-        this.whole_price = whole_price;
-    }
-
-    public Double getWhole_price_with_taxes() {
-        return whole_price_with_taxes;
-    }
-
-    public void setWhole_price_with_taxes(Double whole_price_with_taxes) {
-        this.whole_price_with_taxes = whole_price_with_taxes;
-    }
 
     public Double getTaxes_amount() {
         return taxes_amount;
@@ -69,12 +57,36 @@ public class GetShipmentOrders {
         this.taxes_amount = taxes_amount;
     }
 
-    public Double getWhole_original_price() {
-        return whole_original_price;
+    public Double getDiscount() {
+        return discount;
     }
 
-    public void setWhole_original_price(Double whole_original_price) {
-        this.whole_original_price = whole_original_price;
+    public void setDiscount(Double discount) {
+        this.discount = discount;
+    }
+
+    public Double getDelivery_fees() {
+        return delivery_fees;
+    }
+
+    public void setDelivery_fees(Double delivery_fees) {
+        this.delivery_fees = delivery_fees;
+    }
+
+    public Double getNet_price() {
+        return net_price;
+    }
+
+    public void setNet_price(Double net_price) {
+        this.net_price = net_price;
+    }
+
+    public Double getTotal_price() {
+        return total_price;
+    }
+
+    public void setTotal_price(Double total_price) {
+        this.total_price = total_price;
     }
 
     public class Order {

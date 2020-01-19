@@ -115,35 +115,29 @@ public class ElementsOrderActivity extends BaseActivity implements ElementsOrder
             public void onResponse(Call<GetShipmentOrders> call, Response<GetShipmentOrders> response) {
                 GetShipmentOrders getShipmentOrders = response.body();
                 orders = (ArrayList<GetShipmentOrders.Order>) getShipmentOrders.getOrders();
-//                if (orders.size() == 0){
-//                    shipments_recycler_noitems.setVisibility(View.VISIBLE);
-//                    return;
-//                }
-                double total_with_tax = 0;
-//                for (int i = 0; i < orders.size(); i++) {
-////                    price += orders.get(i).getProductPrice();
-//                    total_with_tax_only += orders.get(i).getProductPrice() * orders.get(i).getQuantity();
-//                    total_inc_coupon_tax_delivery += orders.get(i).getTotalPriceWithTax();
-//                }
 
-                double totalOriginalPrice = getShipmentOrders.getWhole_original_price();
-                double totalPriceWithoutTaxes = getShipmentOrders.getWhole_price();
-                double totalPriceWithTaxes = getShipmentOrders.getWhole_price_with_taxes();
-
-                double coupon;
-
-                double couponAndDelivery = totalPriceWithoutTaxes - totalOriginalPrice;
-
+                double totalPrice = getShipmentOrders.getTotal_price();
+                double netPriceNoTaxes = getShipmentOrders.getNet_price();
                 double taxesAmount = getShipmentOrders.getTaxes_amount();
 
                 if (PreferenceUtils.getUserLogin(ElementsOrderActivity.this) && getShipmentOrders.getPaymentType() == 2){
-                    coupon = 18 - couponAndDelivery;
-
+                    double deliveryFee = getShipmentOrders.getDelivery_fees();
                     activity_elemetnts_orders_delivery_linear.setVisibility(View.VISIBLE);
                     activity_elemetnts_orders_delivery_view.setVisibility(View.VISIBLE);
-                    activity_elemetnts_orders_delivery_text.setText(PriceFormatter.toDecimalRsString(18.0, ElementsOrderActivity.this));
+                    activity_elemetnts_orders_delivery_text.setText(PriceFormatter.toDecimalRsString(deliveryFee, ElementsOrderActivity.this));
                 } else {
-                   coupon = couponAndDelivery;
+                    activity_elemetnts_orders_delivery_linear.setVisibility(View.GONE);
+                    activity_elemetnts_orders_delivery_view.setVisibility(View.GONE);
+                }
+
+                if (PreferenceUtils.getUserLogin(ElementsOrderActivity.this) && getShipmentOrders.getDiscount() > 0){
+                    double coupon = getShipmentOrders.getDiscount();
+                    activity_elemetnts_orders_coupon_linear.setVisibility(View.VISIBLE);
+                    activity_elemetnts_orders_coupon_view.setVisibility(View.VISIBLE);
+                    activity_elemetnts_orders_coupon_text.setText(PriceFormatter.toDecimalRsString(-coupon, ElementsOrderActivity.this));
+                }else{
+                    activity_elemetnts_orders_coupon_linear.setVisibility(View.GONE);
+                    activity_elemetnts_orders_coupon_view.setVisibility(View.GONE);
                 }
 
 //                double coupon = total_with_tax_only - total_with_coupon_and_tax;
@@ -152,14 +146,8 @@ public class ElementsOrderActivity extends BaseActivity implements ElementsOrder
 //                double tax = total_with_tax_only - total_without_tax;
 //                double total_with_tax = total_without_tax + tax;
 
-                if (Math.round(coupon) > 0) {
-                    activity_elemetnts_orders_coupon_linear.setVisibility(View.VISIBLE);
-                    activity_elemetnts_orders_coupon_view.setVisibility(View.VISIBLE);
-                    activity_elemetnts_orders_coupon_text.setText(PriceFormatter.toDecimalRsString(-coupon, ElementsOrderActivity.this));
-                }
-
-                String totalString = PriceFormatter.toDecimalRsString(totalPriceWithTaxes, ElementsOrderActivity.this);
-                String totalwithoutString = PriceFormatter.toDecimalRsString(totalOriginalPrice, ElementsOrderActivity.this);
+                String totalString = PriceFormatter.toDecimalRsString(totalPrice, ElementsOrderActivity.this);
+                String totalwithoutString = PriceFormatter.toDecimalRsString(netPriceNoTaxes, ElementsOrderActivity.this);
                 String taxString = PriceFormatter.toDecimalRsString(taxesAmount, ElementsOrderActivity.this);
 
                 activity_elemetnts_orders_total_price_products_text.setText(totalwithoutString);

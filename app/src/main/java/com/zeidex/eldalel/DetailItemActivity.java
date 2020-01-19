@@ -702,7 +702,8 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
     @Override
     public void onClickColor(int position) {
         reloadDialog.show();
-        getDetarServer(Integer.parseInt(colors.get(position).getProduct_id()), true);
+        productId = Integer.parseInt(colors.get(position).getProduct_id());
+        getDetarServer(productId, true);
     }
 
     @Override
@@ -846,7 +847,8 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
     @Override
     public void onClickCapacity(int position) {
         reloadDialog.show();
-        getDetarServer(Integer.parseInt(capicities.get(position).getProduct_id()), true);
+        productId = Integer.parseInt(capicities.get(position).getProduct_id());
+        getDetarServer(productId, true);
     }
 
     @Override

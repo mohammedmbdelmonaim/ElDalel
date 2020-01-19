@@ -737,7 +737,8 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
     @Override
     public void onClickColor(int position) {
         reloadDialog.show();
-        getDetarServer(Integer.parseInt(colors.get(position).getProduct_id()), true);
+        productId = Integer.parseInt(colors.get(position).getProduct_id());
+        getDetarServer(productId, true);
     }
 
     @Override
@@ -919,6 +920,7 @@ public class DetailItemFragment extends Fragment implements ProductsCategory3Ada
     @Override
     public void onClickCapacity(int position) {
         reloadDialog.show();
-        getDetarServer(Integer.parseInt(capicities.get(position).getProduct_id()), true);
+        productId = Integer.parseInt(capicities.get(position).getProduct_id());
+        getDetarServer(productId, true);
     }
 }
