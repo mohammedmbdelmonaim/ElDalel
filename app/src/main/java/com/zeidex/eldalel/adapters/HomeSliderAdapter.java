@@ -7,10 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.Transformation;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
 import com.zeidex.eldalel.R;
 import com.zeidex.eldalel.response.GetSliders;
 
@@ -44,12 +45,14 @@ public class HomeSliderAdapter extends SliderViewAdapter<HomeSliderAdapter.Slide
         GetSliders.Data currentSlider = sliders.get(position);
 
 //        if (currentOffer.getPhotos().size() > 0) {
-        Transformation transformation = new RoundedTransformationBuilder()
-                .borderColor(Color.WHITE)
-                .borderWidthDp(2)
-                .cornerRadiusDp(10)
-                .oval(false)
-                .build();
+//        RoundedCornersTransformation transformation = new RoundedCornersTransformation(10, 2);
+
+//        transformation.
+//                .borderColor(Color.WHITE)
+//                .borderWidthDp(2)
+//                .cornerRadiusDp(10)
+//                .oval(false)
+//                .build();
 
 //            Glide.with(context)
 //                    .load("https://daleel.zeidex.info/uploads/" + currentSlider.getImage())
@@ -57,11 +60,16 @@ public class HomeSliderAdapter extends SliderViewAdapter<HomeSliderAdapter.Slide
 //                    .fitCenter()
 //                    .into(viewHolder.sliderProductImageView);
 
-        Picasso.with(context)
-                .load("https://dleel.com/uploads/" + currentSlider.getImage())
-                .fit()
-                .transform(transformation)
-                .into(viewHolder.sliderProductImageView);
+        try {
+            Glide.with(context).asGif().load("https://dleel.com/uploads/" + currentSlider.getImage()).centerCrop().into(viewHolder.sliderProductImageView);
+        }catch (Exception ex){
+            Glide.with(context).load("https://dleel.com/uploads/" + currentSlider.getImage()).centerCrop().into(viewHolder.sliderProductImageView);
+        }
+//        Picasso.with(context)
+//                .load("https://dleel.com/uploads/" + currentSlider.getImage())
+//                .fit()
+//                .transform(transformation)
+//                .into(viewHolder.sliderProductImageView);
 
 //        }
 

@@ -110,7 +110,7 @@ public class SubCategoriesFragment extends Fragment implements SubCategoriesAdap
             circularProgressDrawable .start();
 
             Glide.with(getContext())
-                    .load("https://dleel.com/homepages/get/" + imageName)
+                    .load(imageName)
                     .placeholder(R.drawable.condition_logo)
 //                    .error(R.drawable.condition_logo)
                     .centerCrop()

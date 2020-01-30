@@ -19,13 +19,16 @@ package com.zeidex.eldalel.notifications;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -87,11 +90,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //        sendNotification(title , body);
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-            Map<String , String> notifi = remoteMessage.getData();
+            Map<String, String> notifi = remoteMessage.getData();
             String id = notifi.get("id");
             String message = notifi.get("message");
             String name = notifi.get("name");
-            sendNotification(message , name , id);
+            sendNotification(message, name, id);
 
 //            if (/* Check if data needs to be processed by long running job */ true) {
 //                // For long-running tasks (10 seconds or more) use WorkManager.
@@ -104,15 +107,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
 
 
-
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
     }
 
-    private void sendMyBroadCast()
-    {
-        try
-        {
+    private void sendMyBroadCast() {
+        try {
             Intent broadCastIntent = new Intent();
 //            broadCastIntent.setAction(BROADCAST_ACTION);
 
@@ -121,9 +121,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             sendBroadcast(broadCastIntent);
 
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -177,47 +175,49 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private void sendRegistrationToServer(String token) {
         // TODO: Implement this method to send token to your app server.
-        PreferenceUtils.saveDeviceToken(this , token);
+        PreferenceUtils.saveDeviceToken(this, token);
 //        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 //        SharedPreferences.Editor editor = preferences.edit();
 //        editor.putString(DEVICE_TOKEN, token);
 //        editor.apply();
     }
 
-        /**
-         * Create and show a simple notification containing the received FCM message.
-         *
-         * @param messageBody FCM message body received.
-         */
+    /**
+     * Create and show a simple notification containing the received FCM message.
+     *
+     * @param messageBody FCM message body received.
+     */
 
-        private void sendNotification (String title , String messageBody , String id){
-            Intent intent = new Intent(this, MainActivity.class).putExtra("from_notification" , true).putExtra("product_id" , id);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                    PendingIntent.FLAG_ONE_SHOT);
+    private void sendNotification(String title, String messageBody, String id) {
+        Intent intent = new Intent(this, MainActivity.class).putExtra("from_notification", true).putExtra("product_id", id);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                PendingIntent.FLAG_ONE_SHOT);
 
-            String channelId = getString(R.string.default_notification_channel_id);
-            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            NotificationCompat.Builder notificationBuilder =
-                    new NotificationCompat.Builder(this, channelId)
-                            .setSmallIcon(R.mipmap.ic_launcher)
-                            .setContentTitle(title)
-                            .setContentText(messageBody)
-                            .setAutoCancel(true)
-                            .setSound(defaultSoundUri)
-                            .setContentIntent(pendingIntent);
+        String channelId = getString(R.string.default_notification_channel_id);
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this, channelId)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle(title)
+                        .setContentText(messageBody)
+                        .setAutoCancel(true)
+                        .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+                        .setContentIntent(pendingIntent)
+                        .setOnlyAlertOnce(false);
 
-            NotificationManager notificationManager =
-                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-            // Since android Oreo notification channel is needed.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel channel = new NotificationChannel(channelId,
-                        "Channel human readable title",
-                        NotificationManager.IMPORTANCE_DEFAULT);
-                notificationManager.createNotificationChannel(channel);
-            }
-
-            notificationManager.notify(new Random().nextInt(19999999)/* ID of notification */, notificationBuilder.build());
+        // Since android Oreo notification channel is needed.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId,
+                    "Default Channel",
+                    NotificationManager.IMPORTANCE_HIGH);
+            channel.enableVibration(true);
+            channel.setVibrationPattern(new long[]{500,500,500,500,500});
+            notificationManager.createNotificationChannel(channel);
         }
+
+        notificationManager.notify(new Random().nextInt(19999999)/* ID of notification */, notificationBuilder.build());
     }
+}

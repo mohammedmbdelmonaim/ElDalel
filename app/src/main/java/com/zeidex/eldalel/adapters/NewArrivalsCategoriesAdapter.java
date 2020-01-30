@@ -62,7 +62,7 @@ public class NewArrivalsCategoriesAdapter extends RecyclerView.Adapter<NewArriva
         circularProgressDrawable .start();
 
         Glide.with(context)
-                .load("https://dleel.com/homepages/get/" + currentCategory.getPhoto())
+                .load(currentCategory.getPhoto())
                 .placeholder(R.drawable.condition_logo)
 //                .error(R.drawable.condition_logo)
                 .fitCenter()

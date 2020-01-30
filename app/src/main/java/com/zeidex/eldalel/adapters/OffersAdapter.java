@@ -69,7 +69,7 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.OffersHold
         circularProgressDrawable .start();
 
         Glide.with(context)
-                .load("https://dleel.com/homepages/get/" + currentCategory.getPhoto())
+                .load(currentCategory.getPhoto())
                 .placeholder(R.drawable.condition_logo)
 //                .error(R.drawable.condition_logo)
                 .fitCenter()

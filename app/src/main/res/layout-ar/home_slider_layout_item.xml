@@ -1,17 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/slider_hight"
-    android:elevation="4dp"
-    android:background="@drawable/slider_home_bg"
-   >
+    app:cardCornerRadius="@dimen/dimen_6dp"
+    android:layout_margin="@dimen/dimen_2dp"
+    android:elevation="@dimen/dimen_2dp">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/slider_product_image_view"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/slider_product_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/white_stroke" />
+
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>
+
 
     <!--<androidx.constraintlayout.widget.ConstraintLayout-->
     <!--android:layout_width="0dp"-->
@@ -59,4 +74,3 @@
     <!--tools:text="3300 R.S" />-->
 
     <!--</androidx.constraintlayout.widget.ConstraintLayout>-->
-</androidx.appcompat.widget.LinearLayoutCompat>

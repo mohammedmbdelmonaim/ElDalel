@@ -84,7 +84,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
         circularProgressDrawable .start();
 
         Glide.with(context)
-                .load("https://dleel.com/homepages/get/" + currentSubCategory.getImagePath())
+                .load(currentSubCategory.getImagePath())
                 .placeholder(R.drawable.condition_logo)
 //                .error(R.drawable.condition_logo)
                 .fitCenter()

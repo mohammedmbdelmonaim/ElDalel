@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="slider_hight">175dp</dimen>
+    <dimen name="slider_hight">140dp</dimen>
     <dimen name="margin_tiny">5dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
