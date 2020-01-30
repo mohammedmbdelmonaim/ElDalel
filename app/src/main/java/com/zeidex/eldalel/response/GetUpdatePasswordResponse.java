@@ -9,7 +9,7 @@ public class GetUpdatePasswordResponse {
     private String code;
     @SerializedName("status")
     @Expose
-    private String status;
+    private Boolean status;
     @SerializedName("message")
     @Expose
     private String message;
@@ -26,11 +26,11 @@ public class GetUpdatePasswordResponse {
         this.code = code;
     }
 
-    public String getStatus() {
+    public Boolean getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 

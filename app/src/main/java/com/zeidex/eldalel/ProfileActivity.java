@@ -340,7 +340,7 @@ public class ProfileActivity extends BaseActivity {
                         @Override
                         public void onResponse(Call<GetUpdatePasswordResponse> call, Response<GetUpdatePasswordResponse> response) {
                             GetUpdatePasswordResponse getUpdatePasswordResponse = response.body();
-                            if (getUpdatePasswordResponse.getStatus().equalsIgnoreCase("false")) {
+                            if (!getUpdatePasswordResponse.getStatus()) {
                                 Toasty.error(ProfileActivity.this, getUpdatePasswordResponse.getData().getErrorString(), Toast.LENGTH_LONG).show();
                             } else {
                                 Toasty.success(ProfileActivity.this, getString(R.string.password_update_success), Toast.LENGTH_LONG).show();
