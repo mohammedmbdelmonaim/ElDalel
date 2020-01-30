@@ -722,7 +722,7 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
         mMainDetailSharedViewModel.getMainChangedProp().observe(this, new Observer<Map<String, Integer>>() {
             @Override
             public void onChanged(Map<String, Integer> mainPropMap) {
-                if(mainPropMap.size() > 0){
+                if(mainPropMap != null && mainPropMap.size() > 0){
                     int changedPos = mainPropMap.get("position");
                     int cartStatus = mainPropMap.get("cart");
                     int favStatus = mainPropMap.get("fav");
@@ -945,13 +945,6 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
         position_detail = pos;
         categorySection = 4;
 
-//        AddToCartCallback callback = new AddToCartCallback() {
-//            @Override
-//            public void setAddToCartResult(String totalItemCount) {
-//                updateCategory3CartUI(pos, totalItemCount);
-//            }
-//        };
-
         Bundle bundle = new Bundle();
         bundle.putInt("pos", pos);
         bundle.putInt("id", id);
@@ -961,11 +954,6 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
 //        bundle.putSerializable("added_to_cart", callback);
 //        firstPageListener.onSwitchToNextFragment(bundle);
         NavHostFragment.findNavController(this).navigate(R.id.action_mainFragment_to_detailItemFragment, bundle);
-    }
-
-    private void updateCategory3CartUI(int pos, String totalItemCount) {
-        category3Adapter.getProductsCategoryList().get(pos).setCart("0");
-        category3Adapter.notifyItemChanged(pos);
     }
 
     @Override
@@ -1055,20 +1043,13 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
     public void onClickPhone(int id, int pos) {
         position_detail = pos;
         categorySection = 3;
-        AddToCartCallback callback = new AddToCartCallback() {
-            @Override
-            public void setAddToCartResult(String totalItemCount) {
-                updatePhoneCartUI(pos, totalItemCount);
-            }
-        };
+
         Bundle bundle = new Bundle();
         bundle.putInt("pos", pos);
         bundle.putInt("id", id);
 
         bundle.putString("fragment", "main");
-//        bundle.putParcelableArrayList("similar_products", home_category2);
         bundle.putString("getLike", home_category2.get(pos).getLike());
-//        bundle.putSerializable("added_to_cart", callback);
 
 //        firstPageListener.onSwitchToNextFragment(bundle);
         NavHostFragment.findNavController(this).navigate(R.id.action_mainFragment_to_detailItemFragment, bundle);
@@ -1167,18 +1148,12 @@ public class MainFragment extends androidx.fragment.app.Fragment implements Prod
     public void onClickAcssesory(int id, int pos) {
         categorySection = 2;
         position_detail = pos;
-        AddToCartCallback callback = new AddToCartCallback() {
-            @Override
-            public void setAddToCartResult(String totalItemCount) {
-                updateAccessoryCartUI(pos, totalItemCount);
-            }
-        };
+
         Bundle bundle = new Bundle();
         bundle.putInt("pos", pos);
         bundle.putInt("id", id);
         bundle.putString("fragment", "main");
         bundle.putString("getLike", home_category1.get(pos).getLike());
-//        bundle.putSerializable("added_to_cart", callback);
 
         NavHostFragment.findNavController(this).navigate(R.id.action_mainFragment_to_detailItemFragment, bundle);
 //        NavHostFragment.findNavController(this).navigate(MainFragmentDirections.actionMainFragmentToDetailItemActivity(id, pos, home_category1.toArray(new ProductsCategory[home_category1.size()]),home_category1.get(pos).getLike()));

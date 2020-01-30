@@ -482,15 +482,17 @@ public class DetailItemActivity extends BaseActivity implements ProductsCategory
                             if (cartStatus == 2) {
                                 details_add_to_card.setBackgroundColor(Color.parseColor("#B2B4B4"));
                                 details_add_to_card.setText(R.string.cart_out_of_stock_label);
+                                details_add_to_card.setEnabled(false);
                                 cartCountLinearLayout.setVisibility(View.GONE);
                             } else if (cartStatus == 0) {
                                 details_add_to_card.setBackgroundColor(Color.parseColor("#46C004"));
                                 details_add_to_card.setText(R.string.add_to_card);
+                                details_add_to_card.setEnabled(false);
                                 cartCountLinearLayout.setVisibility(View.GONE);
-
                             } else {
                                 details_add_to_card.setBackgroundColor(Color.parseColor("#047AC0"));
                                 details_add_to_card.setText(R.string.phone_row_add_to_card_txt);
+                                details_add_to_card.setEnabled(true);
                                 details_add_to_card.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {

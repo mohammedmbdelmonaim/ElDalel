@@ -54,7 +54,7 @@ import static com.zeidex.eldalel.utils.Constants.SERVER_API_TEST;
 public class MainActivity extends BaseActivity {
     @BindView(R.id.bottom_nav)
     BottomNavigationView mBottomNav;
-//    @BindView(R.id.main_viewpager)
+    //    @BindView(R.id.main_viewpager)
 //    CustomViewPager mainViewPager;
     private int mSelectedItem;
     public boolean login;
@@ -65,6 +65,7 @@ public class MainActivity extends BaseActivity {
 
     Dialog rate_dialog;
     String token;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,54 +82,56 @@ public class MainActivity extends BaseActivity {
                     channelName, NotificationManager.IMPORTANCE_LOW));
         }
 
-        if (getIntent().getBooleanExtra("from_notification" , false)){
-            rate_dialog = new Dialog(this);
-            rate_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            rate_dialog.setContentView(R.layout.dialog_rating);
-            rate_dialog.setCancelable(true);
-            RatingBar rating = rate_dialog.findViewById(R.id.rating);
-            AppCompatEditText comment_rating = rate_dialog.findViewById(R.id.comment_rating);
-            AppCompatButton btn_rating = rate_dialog.findViewById(R.id.btn_rating);
-            if (PreferenceUtils.getUserLogin(this)) {
-                token = PreferenceUtils.getUserToken(this);
-            } else if (PreferenceUtils.getCompanyLogin(this)) {
-                token = PreferenceUtils.getCompanyToken(this);
-            } else if (PreferenceUtils.getSalesmanLogin(this)){
-                token = PreferenceUtils.getSalesmanToken(this);
-            }
-            btn_rating.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    convertJson(rating.getRating()+"" , comment_rating.getText().toString());
-                    AddRatingApi addRatingApi = APIClient.getClient(SERVER_API_TEST).create(AddRatingApi.class);
-                    Call<GetRatingResponse> getRatingResponseCall;
-                    if (PreferenceUtils.getCompanyLogin(MainActivity.this)) {
-                        getRatingResponseCall = addRatingApi.getCompanyRating(Integer.parseInt(getIntent().getStringExtra("product_id")) , post);
-                    } else {
-                        getRatingResponseCall = addRatingApi.getUserRating(Integer.parseInt(getIntent().getStringExtra("product_id")) , post);
-                    }
-                    getRatingResponseCall.enqueue(new Callback<GetRatingResponse>() {
-                        @Override
-                        public void onResponse(Call<GetRatingResponse> call, Response<GetRatingResponse> response) {
-                            String status = response.body().getStatus();
-                            if (status.equalsIgnoreCase("success")){
-                                Toasty.info(MainActivity.this , "Thank you" , Toast.LENGTH_LONG).show();
-                                KeyboardUtils.hideKeyboard(MainActivity.this);
-                                rate_dialog.dismiss();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<GetRatingResponse> call, Throwable t) {
-                            Toasty.error(MainActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
-                        }
-                    });
+        if (getIntent().getBooleanExtra("from_notification", false)) {
+            if (getIntent().getStringExtra("product_id") != null) {
+                rate_dialog = new Dialog(this);
+                rate_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                rate_dialog.setContentView(R.layout.dialog_rating);
+                rate_dialog.setCancelable(true);
+                RatingBar rating = rate_dialog.findViewById(R.id.rating);
+                AppCompatEditText comment_rating = rate_dialog.findViewById(R.id.comment_rating);
+                AppCompatButton btn_rating = rate_dialog.findViewById(R.id.btn_rating);
+                if (PreferenceUtils.getUserLogin(this)) {
+                    token = PreferenceUtils.getUserToken(this);
+                } else if (PreferenceUtils.getCompanyLogin(this)) {
+                    token = PreferenceUtils.getCompanyToken(this);
+                } else if (PreferenceUtils.getSalesmanLogin(this)) {
+                    token = PreferenceUtils.getSalesmanToken(this);
                 }
-            });
-            rate_dialog.show();
+                btn_rating.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        convertJson(rating.getRating() + "", comment_rating.getText().toString());
+                        AddRatingApi addRatingApi = APIClient.getClient(SERVER_API_TEST).create(AddRatingApi.class);
+                        Call<GetRatingResponse> getRatingResponseCall;
+                        if (PreferenceUtils.getCompanyLogin(MainActivity.this)) {
+                            getRatingResponseCall = addRatingApi.getCompanyRating(Integer.parseInt(getIntent().getStringExtra("product_id")), post);
+                        } else {
+                            getRatingResponseCall = addRatingApi.getUserRating(Integer.parseInt(getIntent().getStringExtra("product_id")), post);
+                        }
+                        getRatingResponseCall.enqueue(new Callback<GetRatingResponse>() {
+                            @Override
+                            public void onResponse(Call<GetRatingResponse> call, Response<GetRatingResponse> response) {
+                                String status = response.body().getStatus();
+                                if (status.equalsIgnoreCase("success")) {
+                                    Toasty.info(MainActivity.this, "Thank you", Toast.LENGTH_LONG).show();
+                                    KeyboardUtils.hideKeyboard(MainActivity.this);
+                                    rate_dialog.dismiss();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<GetRatingResponse> call, Throwable t) {
+                                Toasty.error(MainActivity.this, getString(R.string.confirm_internet), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                });
+                rate_dialog.show();
+            }
         }
 
-        if(PreferenceUtils.getSalesmanLogin(this)){
+        if (PreferenceUtils.getSalesmanLogin(this)) {
             startActivity(new Intent(this, SalesmanActivity.class));
             finish();
         }
@@ -146,15 +149,15 @@ public class MainActivity extends BaseActivity {
         mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.basket_fragment){
-                    if (!PreferenceUtils.getUserLogin(MainActivity.this) &&  !PreferenceUtils.getCompanyLogin(MainActivity.this)) {
-                        Toasty.error(MainActivity.this,getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
+                if (item.getItemId() == R.id.basket_fragment) {
+                    if (!PreferenceUtils.getUserLogin(MainActivity.this) && !PreferenceUtils.getCompanyLogin(MainActivity.this)) {
+                        Toasty.error(MainActivity.this, getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
                         return false;
-                    }else{
+                    } else {
                         selectFragment(item);
                         return true;
                     }
-                }else {
+                } else {
                     selectFragment(item);
                     return true;
                 }
@@ -217,6 +220,7 @@ public class MainActivity extends BaseActivity {
             isBadgeInitialized = false;
         }
     }
+
     Map<String, String> post;
 
     private void convertJson(String rate, String comment) {
@@ -269,7 +273,7 @@ public class MainActivity extends BaseActivity {
 //            homeItem.setChecked(true);
 //
 //        } else {
-            super.onBackPressed();
+        super.onBackPressed();
 //            Animatoo.animateSwipeRight(this);
 //        }
     }
@@ -291,6 +295,7 @@ public class MainActivity extends BaseActivity {
     }
 
     String tag;
+
     public void selectFragment(MenuItem item) {
         Fragment frag = null;
         // init corresponding fragment
@@ -307,10 +312,10 @@ public class MainActivity extends BaseActivity {
 
             case R.id.account_fragment:
                 login = PreferenceUtils.getUserLogin(this);
-                if (!login && !PreferenceUtils.getCompanyLogin(this)){
+                if (!login && !PreferenceUtils.getCompanyLogin(this)) {
                     frag = new AccountFragment();
                     tag = "account_fragment";
-                }else {
+                } else {
                     frag = new AccountAfterLoginHostFragment();
                     tag = "accountafterlogin_fragment";
                 }
